@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<meta name="author" content="Armando Navarro" />
+<title>Sign up for a DHMA Account</title>
+</head>
+<body>
+
+<h1>Sign Up</h1>
+
+<form action="signup.php" enctype="multipart/form-data" method="post">
+    <fieldset>
+        <legend>Required Information</legend>
+        E-mail <input type="email" name="email" size="15" autofocus="autofocus" required="required" tabindex="1" /><br />
+        User Name <input type="text" name="uname" size="15" required="required" tabindex="2" /><br />
+        Password <input type="password" name="password1" size="15" required="required" tabindex="3" /><br />
+        Retype Password <input type="password" name="password2" size="15" required="required" tabindex="4" />
+    </fieldset>
+    <fieldset>
+    	<legend>Profile Preferences</legend>
+        First Name <input type="text" name="fname" size="15" tabindex="5" /><br />
+        Last Name <input type="text" name="lname" size="15" tabindex="6" /><br />
+        Phone # <input type="tel" name="phone" tabindex="7" /><br />
+        Facebook URL <input type="url" name="facebook" size="30" tabindex="8" /><br />
+        Theme Accent Color <input type="color" name="color" tabindex="9" /><br />
+        Sex
+            <input type="radio" id="male" name="sex" tabindex="10" /> <label for="male">Male</label>
+            <input type="radio" id="female" name="sex" tabindex="11" /> <label for="female">Female</label><br />
+        SomeCheckboxOption
+            <input type="checkbox" id="option1" name="someoption" tabindex="12" /> <label for="option1">Option 1</label>
+            <input type="checkbox" id="option2" name="someoption" tabindex="13" /> <label for="option2">Option 2</label>
+            <input type="checkbox" id="option3" name="someoption" tabindex="14" /> <label for="option3">Option 3</label><br />
+        Date of Birth <input type="date" name="dob" tabindex="15" /><br />
+        SomeDropdownOption
+            <select name="someotheroption" id="anotheroption" tabindex="16">
+            	<option value="op1">Option 1</option>
+            	<option value="op2">Option 2</option>
+            	<option value="op3">Option 3</option>
+            </select><br />
+        SomeDataList
+            <input type="text" id="datalist" name="data" list="list" tabindex="17" />
+            <datalist id="list">
+            	<option value="val1">Value 1</option>
+            	<option value="val2">Value 2</option>
+            	<option value="val3">Value 3</option>
+            </datalist>
+        Profile Picture <input type="file" name="pic" accept="image/*" tabindex="18" />
+    </fieldset>
+    <div>
+        <input type="submit" size="15" tabindex="19" />
+    </div>
+</form>
+
+</body>
+</html>
