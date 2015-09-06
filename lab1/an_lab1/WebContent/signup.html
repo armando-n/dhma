@@ -23,40 +23,234 @@
 <form action="signup.php" enctype="multipart/form-data" method="post">
     <fieldset>
         <legend>Required Information</legend>
-        E-mail <input type="email" name="email" size="15" autofocus="autofocus" required="required" tabindex="1" /><br />
-        User Name <input type="text" name="uname" size="15" required="required" tabindex="2" /><br />
-        Password <input type="password" name="password1" size="15" required="required" tabindex="3" /><br />
-        Retype Password <input type="password" name="password2" size="15" required="required" tabindex="4" />
+        E-mail <input type="email" name="email" size="15" autofocus="autofocus" required="required" maxlength="30" tabindex="1" /><br />
+        User Name <input type="text" name="uname" size="15" required="required" maxlength="20" tabindex="2" /><br />
+        Password <input type="password" name="password1" size="15" required="required" maxlength="20" tabindex="3" /><br />
+        Retype Password <input type="password" name="password2" size="15" required="required" maxlength="20" tabindex="4" />
     </fieldset>
     <fieldset>
-    	<legend>Profile Preferences</legend>
-        First Name <input type="text" name="fname" size="15" tabindex="5" /><br />
-        Last Name <input type="text" name="lname" size="15" tabindex="6" /><br />
-        Phone # <input type="tel" name="phone" tabindex="7" /><br />
-        Facebook URL <input type="url" name="facebook" size="30" tabindex="8" /><br />
-        Theme Accent Color <input type="color" name="color" tabindex="9" /><br />
+        <legend>Profile Information</legend>
+        First Name <input type="text" name="fname" size="15" maxlength="30" tabindex="5" /><br />
+        Last Name <input type="text" name="lname" size="15" maxlength="30" tabindex="6" /><br />
+        Phone # <input type="tel" name="phone" size="15" maxlength="20" maxlength="15" placeholder="xxx-xxx-xxxx" pattern="^(1\s*[-\/\.]?)?(\((\d{3})\)|(\d{3}))\s*[-\/\.]?\s*(\d{3})\s*[-\/\.]?\s*(\d{4})\s*(([xX]|[eE][xX][tT])\.?\s*(\d+))*$" title="xxx-xxx-xxx or x-xxx-xxx-xxxx" tabindex="7" /><br />
+        Facebook URL <input type="url" name="facebook" size="30" pattern="((http|https):\/\/)?(www\.)?facebook\.com\/.+" title="Must be a valid Facebook URL" tabindex="8" /><br />
         Sex
-            <input type="radio" id="male" name="sex" tabindex="10" /> <label for="male">Male</label>
-            <input type="radio" id="female" name="sex" tabindex="11" /> <label for="female">Female</label><br />
-        SomeCheckboxOption
-            <input type="checkbox" id="option1" name="someoption" tabindex="12" /> <label for="option1">Option 1</label>
-            <input type="checkbox" id="option2" name="someoption" tabindex="13" /> <label for="option2">Option 2</label>
-            <input type="checkbox" id="option3" name="someoption" tabindex="14" /> <label for="option3">Option 3</label><br />
-        Date of Birth <input type="date" name="dob" tabindex="15" /><br />
-        SomeDropdownOption
-            <select name="someotheroption" id="anotheroption" tabindex="16">
-            	<option value="op1">Option 1</option>
-            	<option value="op2">Option 2</option>
-            	<option value="op3">Option 3</option>
-            </select><br />
-        SomeDataList
-            <input type="text" id="datalist" name="data" list="list" tabindex="17" />
-            <datalist id="list">
-            	<option value="val1">Value 1</option>
-            	<option value="val2">Value 2</option>
-            	<option value="val3">Value 3</option>
+            <input type="radio" id="male" name="sex" tabindex="9" /> <label for="male">Male</label>
+            <input type="radio" id="female" name="sex" tabindex="10" /> <label for="female">Female</label><br />
+        Date of Birth <input type="date" name="dob" placeholder="mm/dd/yyyy" maxlength="10" tabindex="11" /><br />
+        Country
+            <input type="text" id="datalist" name="country" list="country" maxlength="30" tabindex="12" /><br />
+            <datalist id="country">
+                <option>Afghanistan</option>
+                <option>Albania</option>
+                <option>Algeria</option>
+                <option>Andorra</option>
+                <option>Angola</option>
+                <option>Antigua &amp; Deps</option>
+                <option>Argentina</option>
+                <option>Armenia</option>
+                <option>Australia</option>
+                <option>Austria</option>
+                <option>Azerbaijan</option>
+                <option>Bahamas</option>
+                <option>Bahrain</option>
+                <option>Bangladesh</option>
+                <option>Barbados</option>
+                <option>Belarus</option>
+                <option>Belgium</option>
+                <option>Belize</option>
+                <option>Benin</option>
+                <option>Bhutan</option>
+                <option>Bolivia</option>
+                <option>Bosnia Herzegovina</option>
+                <option>Botswana</option>
+                <option>Brazil</option>
+                <option>Brunei</option>
+                <option>Bulgaria</option>
+                <option>Burkina</option>
+                <option>Burundi</option>
+                <option>Cambodia</option>
+                <option>Cameroon</option>
+                <option>Canada</option>
+                <option>Cape Verde</option>
+                <option>Central African Rep</option>
+                <option>Chad</option>
+                <option>Chile</option>
+                <option>China</option>
+                <option>Colombia</option>
+                <option>Comoros</option>
+                <option>Congo</option>
+                <option>Congo {Democratic Rep}</option>
+                <option>Costa Rica</option>
+                <option>Croatia</option>
+                <option>Cuba</option>
+                <option>Cyprus</option>
+                <option>Czech Republic</option>
+                <option>Denmark</option>
+                <option>Djibouti</option>
+                <option>Dominica</option>
+                <option>Dominican Republic</option>
+                <option>East Timor</option>
+                <option>Ecuador</option>
+                <option>Egypt</option>
+                <option>El Salvador</option>
+                <option>Equatorial Guinea</option>
+                <option>Eritrea</option>
+                <option>Estonia</option>
+                <option>Ethiopia</option>
+                <option>Fiji</option>
+                <option>Finland</option>
+                <option>France</option>
+                <option>Gabon</option>
+                <option>Gambia</option>
+                <option>Georgia</option>
+                <option>Germany</option>
+                <option>Ghana</option>
+                <option>Greece</option>
+                <option>Grenada</option>
+                <option>Guatemala</option>
+                <option>Guinea</option>
+                <option>Guinea-Bissau</option>
+                <option>Guyana</option>
+                <option>Haiti</option>
+                <option>Honduras</option>
+                <option>Hungary</option>
+                <option>Iceland</option>
+                <option>India</option>
+                <option>Indonesia</option>
+                <option>Iran</option>
+                <option>Iraq</option>
+                <option>Ireland {Republic}</option>
+                <option>Israel</option>
+                <option>Italy</option>
+                <option>Ivory Coast</option>
+                <option>Jamaica</option>
+                <option>Japan</option>
+                <option>Jordan</option>
+                <option>Kazakhstan</option>
+                <option>Kenya</option>
+                <option>Kiribati</option>
+                <option>Korea North</option>
+                <option>Korea South</option>
+                <option>Kosovo</option>
+                <option>Kuwait</option>
+                <option>Kyrgyzstan</option>
+                <option>Laos</option>
+                <option>Latvia</option>
+                <option>Lebanon</option>
+                <option>Lesotho</option>
+                <option>Liberia</option>
+                <option>Libya</option>
+                <option>Liechtenstein</option>
+                <option>Lithuania</option>
+                <option>Luxembourg</option>
+                <option>Macedonia</option>
+                <option>Madagascar</option>
+                <option>Malawi</option>
+                <option>Malaysia</option>
+                <option>Maldives</option>
+                <option>Mali</option>
+                <option>Malta</option>
+                <option>Marshall Islands</option>
+                <option>Mauritania</option>
+                <option>Mauritius</option>
+                <option>Mexico</option>
+                <option>Micronesia</option>
+                <option>Moldova</option>
+                <option>Monaco</option>
+                <option>Mongolia</option>
+                <option>Montenegro</option>
+                <option>Morocco</option>
+                <option>Mozambique</option>
+                <option>Myanmar, {Burma}</option>
+                <option>Namibia</option>
+                <option>Nauru</option>
+                <option>Nepal</option>
+                <option>Netherlands</option>
+                <option>New Zealand</option>
+                <option>Nicaragua</option>
+                <option>Niger</option>
+                <option>Nigeria</option>
+                <option>Norway</option>
+                <option>Oman</option>
+                <option>Pakistan</option>
+                <option>Palau</option>
+                <option>Panama</option>
+                <option>Papua New Guinea</option>
+                <option>Paraguay</option>
+                <option>Peru</option>
+                <option>Philippines</option>
+                <option>Poland</option>
+                <option>Portugal</option>
+                <option>Qatar</option>
+                <option>Romania</option>
+                <option>Russian Federation</option>
+                <option>Rwanda</option>
+                <option>St Kitts &amp; Nevis</option>
+                <option>St Lucia</option>
+                <option>Saint Vincent &amp; the Grenadines</option>
+                <option>Samoa</option>
+                <option>San Marino</option>
+                <option>Sao Tome &amp; Principe</option>
+                <option>Saudi Arabia</option>
+                <option>Senegal</option>
+                <option>Serbia</option>
+                <option>Seychelles</option>
+                <option>Sierra Leone</option>
+                <option>Singapore</option>
+                <option>Slovakia</option>
+                <option>Slovenia</option>
+                <option>Solomon Islands</option>
+                <option>Somalia</option>
+                <option>South Africa</option>
+                <option>South Sudan</option>
+                <option>Spain</option>
+                <option>Sri Lanka</option>
+                <option>Sudan</option>
+                <option>Suriname</option>
+                <option>Swaziland</option>
+                <option>Sweden</option>
+                <option>Switzerland</option>
+                <option>Syria</option>
+                <option>Taiwan</option>
+                <option>Tajikistan</option>
+                <option>Tanzania</option>
+                <option>Thailand</option>
+                <option>Togo</option>
+                <option>Tonga</option>
+                <option>Trinidad &amp; Tobago</option>
+                <option>Tunisia</option>
+                <option>Turkey</option>
+                <option>Turkmenistan</option>
+                <option>Tuvalu</option>
+                <option>Uganda</option>
+                <option>Ukraine</option>
+                <option>United Arab Emirates</option>
+                <option>United Kingdom</option>
+                <option>United States</option>
+                <option>Uruguay</option>
+                <option>Uzbekistan</option>
+                <option>Vanuatu</option>
+                <option>Vatican City</option>
+                <option>Venezuela</option>
+                <option>Vietnam</option>
+                <option>Yemen</option>
+                <option>Zambia</option>
+                <option>Zimbabwe</option>
             </datalist>
-        Profile Picture <input type="file" name="pic" accept="image/*" tabindex="18" />
+        Profile Picture <input type="file" name="pic" accept="image/*" tabindex="13" /><br />
+        <input type="checkbox" id="showpic" name="showpic" checked="checked" tabindex="14" /> <label for="showpic">Show picture in profile</label><br />
+        <input type="checkbox" id="reminders" name="reminders" tabindex="15" /> <label for="reminders">E-mail reminders after prolonged inactivity</label><br />
+        <input type="checkbox" id="keep-logged-in" name="keep-logged-in" tabindex="16" /> <label for="keep-logged-in">Keep me logged in</label>
+    </fieldset>
+    <fieldset>
+    	<legend>Site Preferences</legend>
+        Theme
+            <select name="theme" tabindex="17">
+                <option>dark</option>
+                <option>light</option>
+            </select><br />
+        Theme Accent Color <input type="color" name="color" value="#00008b" tabindex="18" /><br />
     </fieldset>
     <div>
         <input type="submit" size="15" tabindex="19" />
