@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta name="author" content="Armando Navarro" />
 <title>DHMA | Log In</title>
 </head>
@@ -22,9 +22,10 @@
 
 <form action="login.php">
     <fieldset>
-    	<legend>Log In</legend>
-    	User Name <input type="text" name="uname" size="15" autofocus="autofocus" required="required" maxlength="20" tabindex="1" /><br />
-        Password <input type="password" name="password" size="15" required="required" maxlength="20" tabindex="2" />
+        <legend>Log In</legend>
+        <!-- Pattern attribute absent to avoid hints that weaken security -->
+        User Name <input type="text" name="uname" size="15" autofocus="autofocus" required="required" maxlength="30" tabindex="1" /><br />
+        Password <input type="password" name="password" size="15" required="required" maxlength="30" tabindex="2" />
     </fieldset>
     <div>
         <input type="submit" tabindex="3" />
