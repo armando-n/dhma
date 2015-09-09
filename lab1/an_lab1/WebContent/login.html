@@ -3,13 +3,16 @@
 <head>
 <meta charset="utf-8" />
 <meta name="author" content="Armando Navarro" />
-<title>DHMA | Log In</title>
+<title>DHMA | Member Log In</title>
 </head>
 <body>
+
+<h1>Member Log In</h1>
 
 <header>
     <img src="/images/logo.png" alt="DHMA Logo" width="75" height="75" />
     <nav id="main-nav">
+        <h2>Site Navigation</h2>
         <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="login.html">Login</a></li>
@@ -18,39 +21,40 @@
     </nav>
 </header>
 
-<h1>Log In</h1>
+<section>
+    <h2>Log In</h2>
+    <form action="login.php">
+        <fieldset>
+            <legend>Log In</legend>
+            <!-- Pattern attribute absent to avoid hints that weaken security -->
+            User Name <input type="text" name="uname" size="15" autofocus="autofocus" required="required" maxlength="30" tabindex="1" /><br />
+            Password <input type="password" name="password" size="15" required="required" maxlength="30" tabindex="2" />
+        </fieldset>
+        <div>
+            <input type="submit" tabindex="3" />
+        </div>
+    </form>
+</section>
 
-<form action="login.php">
-    <fieldset>
-        <legend>Log In</legend>
-        <!-- Pattern attribute absent to avoid hints that weaken security -->
-        User Name <input type="text" name="uname" size="15" autofocus="autofocus" required="required" maxlength="30" tabindex="1" /><br />
-        Password <input type="password" name="password" size="15" required="required" maxlength="30" tabindex="2" />
-    </fieldset>
-    <div>
-        <input type="submit" tabindex="3" />
-    </div>
-</form>
-
-<h1>Site Map</h1>
 <footer>
+    <h2>Site Map</h2>
     <ul>
         <li>
-            <h2>Main Site</h2>
+            <h3>Main Site</h3>
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="signup.html">Sign Up</a></li>
             </ul>
         </li>
         <li>
-            <h2>Members</h2>
+            <h3>Members</h3>
             <ul>
                 <li><a href="login.html">Login</a></li>
                 <li><a href="profile.html">My Profile</a></li>
             </ul>
         </li>
         <li>
-            <h2>Help</h2>
+            <h3>Help</h3>
             <ul>
                 <li><a href="faq.html">FAQ</a></li>
             </ul>
