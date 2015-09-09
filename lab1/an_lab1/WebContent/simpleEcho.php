@@ -1,13 +1,12 @@
-<!DOCTYPE html>
+<!DOCTYPE html >
 <html>
 <head>
 <meta charset="utf-8" />
-<meta name="author" content="Armando Navarro" />
-<title>DHMA | Member Log In</title>
+<title>Echo of a form</title>
 </head>
 <body>
 
-<h1>Member Log In</h1>
+<h1>Echo of a form submission</h1>
 
 <header>
     <img src="images/logo.png" alt="DHMA Logo" width="99" height="58" />
@@ -22,18 +21,8 @@
 </header>
 
 <section>
-    <h2>Log In</h2>
-    <form action="simpleEcho.php" method="post">
-        <fieldset>
-            <legend>Log In</legend>
-            <!-- Pattern attribute absent to avoid hints that weaken security -->
-            User Name <input type="text" name="uname" size="15" autofocus="autofocus" required="required" maxlength="30" tabindex="1" /><br />
-            Password <input type="password" name="password" size="15" required="required" maxlength="30" tabindex="2" />
-        </fieldset>
-        <div>
-            <input type="submit" tabindex="3" />
-        </div>
-    </form>
+    <h2>Submitted Form Information</h2>
+    <pre><?php print_r($_POST); ?></pre>
 </section>
 
 <footer>
