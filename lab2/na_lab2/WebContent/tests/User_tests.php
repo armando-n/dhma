@@ -1,44 +1,78 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Basic tests for User</title>
-</head>
-<body>
-<h1>User tests</h1>
-
 <?php
 include_once("../models/User.class.php");
-?>
+
+// test User object creation
+$validInput = array("userName" => "armando-n");
+$validUser = new User($validInput);
+$test1 = (is_object($validUser)) ? '' : 'Failed: It should create a valid object when valid input is provided';
+$test2 = (empty($validUser->getErrors())) ? '' : 'Failed: It should not have errors when valid input is provided';
+
+// test parameter extraction
+$params = $validUser->getParameters();
+
+// test invalid characters in user name input
+$invalidInput = array("userName" => "armando-n$");
+$invalidUser = new User($invalidInput);
+$test3 = (!empty($invalidUser->getErrors())) ? '' : 'Failed: It should have errors when invalid input is provided';
+
+// test missing user name
+$invalidInput2 = array("someKey" => "someValue");
+$invalidUser2 = new User($invalidInput2);
+$test4 = (!empty($invalidUser2->getErrors())) ? '' : 'Failed: It should have errors when user name is missing';
+
+// test missing form input
+$invalidUser3 = new User();
+$test5 = (empty($invalidUser3->getErrors())) ? '' : 'Failed: It should not have errors when form input is missing';
+
+// test user name too long
+$invalidInput3 = array("userName" => "SomeLongUserName");
+$invalidUser4 = new User($invalidInput3);
+$test6 = (!empty($invalidUser4->getErrors())) ? '' : 'Failed: It should have errors when user name is too long';
+
+?><!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="author" content="Armando Navarro" />
+    <title>Basic tests for User class</title>
+</head>
+<body>
+
+<h1>User Tests</h1>
 
 <h2>It should create a valid User object when all input is provided</h2>
-<?php 
-$validTest = array("userName" => "krobbins");
-$s1 = new User($validTest);
-echo "The object is: $s1<br>";
-$test1 = (is_object($s1))?'':
-'Failed:It should create a valid object when valid input is provided<br>';
-echo $test1;
-$test2 = (empty($s1->getErrors()))?'':
-'Failed:It not have errors when valid input is provided<br>';
-echo $test2;
-?>
 
+<!-- output: User object creation test -->
+<?= $test1 ?><br />
+<?= $test2 ?><br />
+The object is: <?= $validUser ?><br />
+
+<!-- output: parameter extraction test -->
 <h2>It should extract the parameters that went in</h2>
-<?php 
-$props = $s1->getParameters();
-print_r($props);
-?>
+<pre><?php print_r($params); ?></pre>
 
+<!-- output: invalid input test -->
 <h2>It should have an error when the user name contains invalid characters</h2>
-<?php 
-$invalidTest = array("userName" => "krobbins$");
-$s1 = new User($invalidTest);
-$test2 = (empty($s1->getErrors()))?'':
-'Failed:It should have errors when invalid input is provided<br>';
-echo $test2;
-echo "The error for userName is: ". $s1->getError('userName') ."<br>";
-echo "The object is: $s1<br>";
-?>
+<?= $test3 ?><br />
+The error for userName is: <?= $invalidUser->getError('userName') ?><br />
+The object is: <?= $invalidUser ?>
+
+<!-- output: missing user name test -->
+<h2>It should have an error when the user name is missing</h2>
+<?= $test4 ?><br />
+The error for userName is: <?= $invalidUser2->getError('userName') ?><br />
+The object is: <?= $invalidUser2 ?>
+
+<!-- output: missing form input test -->
+<h2>It should not have an error when the form input is missing</h2>
+<?= $test5 ?><br />
+The object is: <?= $invalidUser3 ?>
+
+<!-- output: user name too long test -->
+<h2>It should have errors when the user name is too long</h2>
+<?= $test6 ?><br />
+The error for userName is: <?= $invalidUser4->getError('userName') ?><br />
+The object is: <?= $invalidUser4 ?>
+
 </body>
 </html>
