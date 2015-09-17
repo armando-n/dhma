@@ -1,6 +1,31 @@
-LAST_NAME_TOO_SHORT Your last name is too short
+EMAIL_EMPTY Your email cannot be empty or only contain white space
+EMAIL_TOO_LONG Your email address cannot contain more than 30 characters
 EMAIL_INVALID Your email is invalid
+PASSWORDS_DO_NOT_MATCH Your submitted passwords do not match each other
+PASSWORD_EMPTY Your password cannot be empty or only contain white space
+PASSWORD_TOO_SHORT Your password must contain at least 6 characters
+PASSWORD_TOO_LONG Your password cannot contain more than 20 characters
+FIRST_NAME_EMPTY Your first name cannot be empty or only contain white space
+FIRST_NAME_TOO_LONG Your first name cannot contain more than 30 characters
+FIRST_NAME_HAS_INVALID_CHARS Your first name contains invalid characters
+LAST_NAME_EMPTY Your last name cannot be empty or only contain white space
+LAST_NAME_TOO_LONG Your last name cannot contain more than 30 characters
 LAST_NAME_HAS_INVALID_CHARS Your last name contains invalid characters
-USER_NAME_EMPTY Your user name can not be empty or only contain white space
+USER_NAME_EMPTY Your user name cannot be empty or only contain white space
 USER_NAME_HAS_INVALID_CHARS Your user name can only contain letters, numbers, dashes and underscores
 USER_NAME_TOO_LONG Your user name cannot contain more than 15 characters
+PHONE_EMPTY Your phone number cannot be empty or only contain white space
+PHONE_TOO_LONG Your phone number cannot contain more than 15 characters
+PHONE_HAS_INVALID_CHARS Your phone number contains invalid characters
+GENDER_EMPTY Your gender cannot be empty or only contain white space
+GENDER_INVALID Your gender is invalid
+DOB_EMPTY Your date of birth cannot be empty or only contain white space
+DOB_INVALID Your date of birth is invalid
+COUNTRY_EMPTY Your country cannot be empty or only contain white space
+PICTURE_EMPTY Your picture cannot be empty or only contain white space
+FACEBOOK_EMPTY Your facebook cannot be empty or only contain white space
+FACEBOOK_INVALID Your facebook is invalid
+THEME_EMPTY Your theme cannot be empty or only contain white space
+THEME_INVALID Your theme is invalid
+ACCENT_COLOR_EMPTY Your accent color cannot be empty or only contain white space
+ACCENT_COLOR_INVALID Your accent color is invalid

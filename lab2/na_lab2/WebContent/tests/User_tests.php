@@ -2,7 +2,11 @@
 include_once("../models/User.class.php");
 
 // test User object creation
-$validInput = array("userName" => "armando-n");
+$validInput = array(
+        "userName" => "armando-n",
+        "password1" => "password123",
+        "password2" => "password123"
+);
 $validUser = new User($validInput);
 $test1 = (is_object($validUser)) ? '' : 'Failed: It should create a valid object when valid input is provided';
 $test2 = (empty($validUser->getErrors())) ? '' : 'Failed: It should not have errors when valid input is provided';
@@ -32,7 +36,7 @@ $test6 = (!empty($invalidUser4->getErrors())) ? '' : 'Failed: It should have err
 ?><!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <meta name="author" content="Armando Navarro" />
     <title>Basic tests for User class</title>
 </head>
