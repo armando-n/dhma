@@ -26,8 +26,32 @@ $test2 = (empty($validUserData->getErrors())) ? '' : 'Failed: It should not have
 // test parameter extraction
 $params = $validUserData->getParameters();
 
-// test invalid input
-// more tests here
+// test null input
+$emptyUserData1 = new UserData(null);
+$test3 = is_object($emptyUserData1) ? '' : 'Failed: It should create a valid object with empty property values when valid input is provided';
+$test4 = (empty($emptyUserData1->getErrors())) ? '' : 'Failed: It should not have errors when valid input is provided';
+
+// test empty input values
+$emptyInputValues = array(
+        "fname" => "",
+        "lname" => "",
+        "email" => "",
+        "gender" => "",
+        "phone" => "",
+        "facebook" => "",
+        "dob" => "",
+        "country" => "",
+        "theme" => "",
+        "color" => "",
+        "picture" => "",
+        "public-profile" => "",
+        "showpic" => "",
+        "reminders" => "",
+        "keep-logged-in" => ""
+);
+$emptyUserData2 = new UserData($emptyInputValues);
+$test5 = is_object($emptyUserData2) ? '' : 'Failed: It should create a valid object with empty property values when valid input is provided';
+$test6 = (empty($emptyUserData2->getErrors())) ? '' : 'Failed: It should not have errors when valid input is provided';
 
 ?><!DOCTYPE html>
 <html>
@@ -42,12 +66,24 @@ $params = $validUserData->getParameters();
 
 <!-- output: user object creation test -->
 <h2>It should create a valid UserData object when all input is provided</h2>
-<?= $test1 ?><br />
-<?= $test2 ?><br />
+<?= $test1 ?> <?php if (!empty($test1)) {?><br /><?php ; }?>
+<?= $test2 ?> <?php if (!empty($test2)) {?><br /><?php ; }?>
 The object is: <pre><?= $validUserData ?></pre>
 
 <!-- output: parameter extraction test -->
 <h2>It should extract the parameters that went in</h2>
 <pre><?php print_r($params); ?></pre>
 
-<!-- output: invalid input test -->
+<!-- output: null input test -->
+<h2>It should create a valid UserData object with empty property values; Theme, accent color, and boolean properties will be set to default values</h2>
+<?= $test3 ?> <?php if (!empty($test3)) {?><br /><?php ; }?>
+<?= $test4 ?> <?php if (!empty($test4)) {?><br /><?php ; }?>
+The object is:
+<pre><?= $emptyUserData1 ?></pre>
+
+<!-- output: empty input values test -->
+<h2>It should create a valid UserData object with mostly empty property values; Theme, accent color, and boolean properties will be set to default values</h2>
+<?= $test5 ?> <?php if (!empty($test5)) {?><br /><?php ; }?>
+<?= $test6 ?> <?php if (!empty($test6)) {?><br /><?php ; }?>
+The object is:
+<pre><?= $emptyUserData2 ?></pre>

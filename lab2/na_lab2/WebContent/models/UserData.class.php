@@ -3,6 +3,9 @@ include_once("Messages.class.php");
 include_once("../resources/Utilities.class.php");
 class UserData {
     
+    const DEFAULT_THEME = 'dark';
+    const DEFAULT_COLOR = '#00008B';
+    
     private $formInput;
     private $errors;
     private $errorCount;
@@ -120,6 +123,9 @@ class UserData {
                 "dob" => $this->dob,
                 "country" => $this->country,
                 "picture" => $this->picture,
+                "facebook" => $this->facebook,
+                "theme" => $this->theme,
+                "accentColor" => $this->accentColor,
                 "profilePublic" => $this->isProfilePublic,
                 "picturePublic" => $this->isPicturePublic,
                 "sendReminders" => $this->sendReminders,
@@ -139,10 +145,13 @@ class UserData {
                 "Date of birth: [" . $this->dob . "]\n" .
                 "Country: [" . $this->country . "]\n" .
                 "Picture: [" . $this->picture . "]\n" .
-                "Profile public: [" . $this->isProfilePublic . "]\n" .
-                "Picture public: [" . $this->isPicturePublic . "]\n" .
-                "Send reminders: [" . $this->sendReminders . "]\n" .
-                "Stay logged in: [" . $this->stayLoggedIn . "]\n";
+                "Facebook: [" . $this->facebook . "]\n" .
+                "Theme: [" . $this->theme . "]\n" .
+                "Accent color: [" . $this->accentColor . "]\n" .
+                "Profile public: [" . (($this->isProfilePublic === true) ? "true" : "false") . "]\n" .
+                "Picture public: [" . (($this->isPicturePublic === true) ? "true" : "false") . "]\n" .
+                "Send reminders: [" . (($this->sendReminders === true) ? "true" : "false") . "]\n" .
+                "Stay logged in: [" . (($this->stayLoggedIn === true) ? "true" : "false") . "]\n";
         
         return $str;
     }
@@ -160,10 +169,13 @@ class UserData {
             $this->dob = "";
             $this->country = "";
             $this->picture = "";
-            $this->isProfilePublic = "";
-            $this->isPicturePublic = "";
-            $this->sendReminders = "";
-            $this->stayLoggedIn = "";
+            $this->facebook = "";
+            $this->theme = self::DEFAULT_THEME;
+            $this->accentColor = self::DEFAULT_COLOR;
+            $this->isProfilePublic = false;
+            $this->isPicturePublic = false;
+            $this->sendReminders = false;
+            $this->stayLoggedIn = false;
         }
         else {
             $this->validateFirstName();
@@ -174,6 +186,9 @@ class UserData {
             $this->validateDOB();
             $this->validateCountry();
             $this->validatePicture();
+            $this->validateFacebook();
+            $this->validateTheme();
+            $this->validateAccentColor();
             $this->validateIsProfilePublic();
             $this->validateIsPicturePublic();
             $this->validateSendReminders();
@@ -184,7 +199,6 @@ class UserData {
     private function validateFirstName() {
         $this->firstName = Utilities::extractForm($this->formInput, "fname");
         if (empty($this->firstName)) {
-            $this->setError("firstName", "FIRST_NAME_EMPTY");
             return;
         }
         
@@ -193,7 +207,7 @@ class UserData {
             return;
         }
         
-        $options = array("options" => array("regexp" => "/(^$)|(^([^\-!#\$%\^\x26\(\)\*,\.\/:;\?@\[\\\]_\{\|\}¨ˇ“”€\+<=>§°\d\s¤®™©]| )+$)/"));
+        $options = array("options" => array("regexp" => "/[a-zA-Z]/"));
         if (!filter_var($this->firstName, FILTER_VALIDATE_REGEXP, $options)) {
             $this->setError("firstName", "FIRST_NAME_HAS_INVALID_CHARS");
             return;
@@ -203,7 +217,6 @@ class UserData {
     private function validateLastName() {
         $this->lastName = Utilities::extractForm($this->formInput, "lname");
         if (empty($this->lastName)) {
-            $this->setError("lastName", "LAST_NAME_EMPTY");
             return;
         }
         
@@ -212,7 +225,7 @@ class UserData {
             return;
         }
         
-        $options = array("options" => array("regexp" => "/(^$)|(^([^\-!#\$%\^\x26\(\)\*,\.\/:;\?@\[\\\]_\{\|\}¨ˇ“”€\+<=>§°\d\s¤®™©]| )+$)/"));
+        $options = array("options" => array("regexp" => "/[a-zA-Z]/"));
         if (!filter_var($this->lastName, FILTER_VALIDATE_REGEXP, $options)) {
             $this->setError("lastName", "LAST_NAME_HAS_INVALID_CHARS");
             return;
@@ -222,7 +235,6 @@ class UserData {
     private function validateEmail() {
         $this->email = Utilities::extractForm($this->formInput, "email");
         if (empty($this->email)) {
-            $this->setError("email", "EMAIL_EMPTY");
             return;
         }
         
@@ -241,7 +253,6 @@ class UserData {
     private function validatePhone() {
         $this->phone = Utilities::extractForm($this->formInput, "phone");
         if (empty($this->phone)) {
-            $this->setError("phone", "PHONE_EMPTY");
             return;
         }
         
@@ -260,7 +271,6 @@ class UserData {
     private function validateGender() {
         $this->gender = Utilities::extractForm($this->formInput, "gender");
         if (empty($this->gender)) {
-            $this->setError("gender", "GENDER_EMPTY");
             return;
         }
         
@@ -274,11 +284,10 @@ class UserData {
     private function validateDOB() {
         $this->dob = Utilities::extractForm($this->formInput, "dob");
         if (empty($this->dob)) {
-            $this->setError("dob", "DOB_EMPTY");
             return;
         }
         
-        $options = array("options" => array("regexp" => "/^((0?[13578]|10|12)(-|\/)(([1-9])|(0[1-9])|([12])([0-9]?)|(3[01]?))(-|\/)((19)([2-9])(\d{1})|(20)([01])(\d{1})|([8901])(\d{1}))|(0?[2469]|11)(-|\/)(([1-9])|(0[1-9])|([12])([0-9]?)|(3[0]?))(-|\/)((19)([2-9])(\d{1})|(20)([01])(\d{1})|([8901])(\d{1})))$/"));
+        $options = array("options" => array("regexp" => "/^((\d{4}[\/-]\d\d[\/-]\d\d)|(\d\d[\/-]\d\d[\/-]\d{4}))$/"));
         if (!filter_var($this->dob, FILTER_VALIDATE_REGEXP, $options)) {
             $this->setError("dob", "DOB_INVALID");
             return;
@@ -288,23 +297,17 @@ class UserData {
     private function validateCountry() {
         $this->country = Utilities::extractForm($this->formInput, "country");
         if (empty($this->country)) {
-            $this->setError("country", "COUNTRY_EMPTY");
             return;
         }
     }
     
     private function validatePicture() {
         $this->picture = Utilities::extractForm($this->formInput, "picture");
-        if (empty($this->picture)) {
-            $this->setError("picture", "PICTURE_EMPTY");
-            return;
-        }
     }
     
     private function validateFacebook() {
         $this->facebook = Utilities::extractForm($this->formInput, "facebook");
         if (empty($this->facebook)) {
-            $this->setError("facebook", "FACEBOOK_EMPTY");
             return;
         }
         
@@ -318,7 +321,7 @@ class UserData {
     private function validateTheme() {
         $this->theme = Utilities::extractForm($this->formInput, "theme");
         if (empty($this->theme)) {
-            $this->setError("theme", "THEME_EMPTY");
+            $this->theme = self::DEFAULT_THEME;
             return;
         }
         
@@ -332,7 +335,7 @@ class UserData {
     private function validateAccentColor() {
         $this->accentColor = Utilities::extractForm($this->formInput, "color");
         if (empty($this->accentColor)) {
-            $this->setError("accentColor", "ACCENT_COLOR_EMPTY");
+            $this->accentColor = self::DEFAULT_COLOR;
             return;
         }
         
