@@ -57,7 +57,7 @@ class UserData {
     }
     
     public function getLastName() {
-        return $this->firstName;
+        return $this->lastName;
     }
 
     public function getEmail() {
