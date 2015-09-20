@@ -11,7 +11,10 @@ switch ($control) {
     case "login": LoginController::run() ; break;
     case "profile": ; ProfileController::run(); break;
     case "signup": SignUpController::run(); break;
-    default: HomeView::show($loggedIn);
+    default:
+        HeaderView::show("Diabetic Health Management Assistant", $loggedIn);
+        HomeView::show();
+        FooterView::show($loggedIn);
 }
 
 ?>

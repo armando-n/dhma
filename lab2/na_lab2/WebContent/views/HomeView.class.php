@@ -2,8 +2,7 @@
 
 class HomeView {
     
-    public static function show($loggedIn = false) {
-        HeaderView::show("Diabetic Health Management Assistant", $loggedIn);
+    public static function show() {
         ?>
 <section id="site-info">
     <h2>About DHMA</h2>
@@ -39,7 +38,6 @@ class HomeView {
 </aside>
 
 <?php
-        FooterView::show($loggedIn);
     }
 }
 ?>
