@@ -1,7 +1,6 @@
 <?php
 class FooterView {
     public static function show($loggedIn = false) {
-        $loggedIn = isset($_GET["loggedin"]);
         ?>
 <footer>
     <h2>Site Map</h2>
@@ -9,8 +8,10 @@ class FooterView {
         <li>
             <h3>Main Site</h3>
             <ul>
-                <li><a href="home">Home</a></li>
-                <li><a href="signup">Sign Up</a></li>
+                <li><a href="home">Home</a></li><?php
+                if (!$loggedIn) { ?>
+                <li><a href="signup">Sign Up</a></li><?php
+                } ?>
             </ul>
         </li>
         <li>
