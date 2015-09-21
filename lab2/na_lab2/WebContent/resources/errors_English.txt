@@ -13,9 +13,9 @@ USER_NAME_EMPTY Your user name cannot be empty or only contain white space
 USER_NAME_HAS_INVALID_CHARS Your user name can only contain letters, numbers, dashes and underscores
 USER_NAME_TOO_LONG Your user name cannot contain more than 20 characters
 PHONE_TOO_LONG Your phone number cannot contain more than 15 characters
-PHONE_HAS_INVALID_CHARS Your phone number contains invalid characters
+PHONE_INVALID Your phone number is invalid
 GENDER_INVALID Your gender is invalid
 DOB_INVALID Your date of birth is invalid
-FACEBOOK_INVALID Your facebook is invalid
+FACEBOOK_INVALID Your facebook URL is invalid
 THEME_INVALID Your theme is invalid
 ACCENT_COLOR_INVALID Your accent color is invalid

@@ -263,7 +263,7 @@ class UserData {
         
         $options = array("options" => array("regexp" => "/^(1\s*[-\/\.]?)?(\((\d{3})\)|(\d{3}))\s*[-\/\.]?\s*(\d{3})\s*[-\/\.]?\s*(\d{4})\s*(([xX]|[eE][xX][tT])\.?\s*(\d+))*$/"));
         if (!filter_var($this->phone, FILTER_VALIDATE_REGEXP, $options)) {
-            $this->setError("phone", "PHONE_HAS_INVALID_CHARS");
+            $this->setError("phone", "PHONE_INVALID");
             return;
         }
     }
