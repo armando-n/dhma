@@ -1,6 +1,13 @@
 <?php 
 class ProfileView {
+    
     public static function show($user = null, $uData = null) {
+        HeaderView::show("Your Profile", true);
+        ProfileView::showBody($user, $uData);
+        FooterView::show(true);
+    }
+    
+    public static function showBody($user, $uData) {
         ?>
 <section id="profile-info">
     <h2><?= $user->getUserName() ?>'s Profile</h2>

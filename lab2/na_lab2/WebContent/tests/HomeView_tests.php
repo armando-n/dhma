@@ -12,7 +12,7 @@
 
 <?php
 include_once("../views/HomeView.class.php");
-HomeView::show();
+HomeView::showBody();
 ?>
     
 </body>

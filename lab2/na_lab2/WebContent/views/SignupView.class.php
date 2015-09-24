@@ -1,6 +1,13 @@
 <?php
 class SignupView {
+    
     public static function show($user = null, $uData = null) {
+        HeaderView::show("Member Sign Up", false);
+        SignupView::showBody($user, $uData);
+        FooterView::show(false);
+    }
+    
+    public static function showBody($user, $uData) {
         if (is_null($user)) {
             $uNameVal = ''; $uNameErr = '';
             $emailVal = ''; $emailErr = '';
@@ -66,7 +73,7 @@ class SignupView {
             Last Name <input type="text" name="lname" value="<?=$lNameVal?>" size="15" maxlength="30" tabindex="6" pattern="(^$)|(^([^\-!#\$%\^\x26\(\)\*,\./:;\?@\[\\\]_\{\|\}¨ˇ“”€\+<=>§°\d\s¤®™©]| )+$)" title="Remove invalid characters" />
                 <span class="error"><?=$lNameErr?></span><br />
             Phone # <input type="tel" name="phone" value="<?=$phoneVal?>" size="15" maxlength="15"  tabindex="7" placeholder="xxx-xxx-xxxx" pattern="^(1\s*[-\/\.]?)?(\((\d{3})\)|(\d{3}))\s*[-\/\.]?\s*(\d{3})\s*[-\/\.]?\s*(\d{4})\s*(([xX]|[eE][xX][tT])\.?\s*(\d+))*$" title="xxx-xxx-xxx or x-xxx-xxx-xxxx"/>
-                <span class="errro"><?=$phoneErr?></span><br />
+                <span class="error"><?=$phoneErr?></span><br />
             Facebook URL <input type="url" name="facebook" value="<?=$faceVal?>" size="30" tabindex="8" pattern="((http|https):\/\/)?(www\.)?facebook\.com\/.+" title="Must be a valid Facebook URL" />
                 <span class="error"><?=$faceErr?></span><br />
             Gender

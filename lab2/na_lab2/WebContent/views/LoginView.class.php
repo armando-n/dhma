@@ -1,7 +1,14 @@
 <?php
 
 class LoginView {
+    
     public static function show($user = null) {
+        HeaderView::show("Member Log In", false);
+        LoginView::showBody($user);
+        FooterView::show(false);
+    }
+    
+    public static function showBody($user = null) {
         $uNameValue = is_null($user) ? '' : $user->getUserName();
         $uNameError = is_null($user) ? '' : $user->getError("userName");
         ?>

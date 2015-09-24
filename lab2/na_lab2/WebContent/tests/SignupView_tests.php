@@ -12,7 +12,7 @@
 <h2>It should call show and display the view without crashing</h2>
 <?php
 include_once("../views/SignupView.class.php");
-SignupView::show();
+SignupView::showBody();
 ?>
 
 <h2>It should call show and display the view with most fields filled in and some error messages</h2>
@@ -43,7 +43,7 @@ $invalidDataInput = array(
 );
 $user = new User($invalidUserInput);
 $uData= new UserData($invalidDataInput);
-SignupView::show($user, $uData);
+SignupView::showBody($user, $uData);
 ?>
     
 </body>

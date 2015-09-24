@@ -38,7 +38,7 @@ $validUserDataInput = array(
 );
 $user = new User($validUserInput);
 $userData = new UserData($validUserDataInput);
-ProfileView::show($user, $userData);
+ProfileView::showBody($user, $userData);
 ?>
     
 </body>

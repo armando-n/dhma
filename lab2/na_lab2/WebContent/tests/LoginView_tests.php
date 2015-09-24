@@ -12,7 +12,7 @@
 <h2>It should call show and display the view without crashing</h2>
 <?php
 include_once("../views/LoginView.class.php");
-LoginView::show();
+LoginView::showBody();
 ?>
 
 <h2>It should call show and display the view with user name filled in and an error message</h2>
@@ -24,7 +24,7 @@ $invalidUserInput = array(
         "password2" => "password123"
 );
 $user = new User($invalidUserInput);
-LoginView::show($user);
+LoginView::showBody($user);
 ?>
     
 </body>
