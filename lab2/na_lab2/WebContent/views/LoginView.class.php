@@ -8,7 +8,7 @@ class LoginView {
         FooterView::show(false);
     }
     
-    public static function showBody($user = null) {
+    public static function showBody($user) {
         $uNameValue = is_null($user) ? '' : $user->getUserName();
         $uNameError = is_null($user) ? '' : $user->getError("userName");
         ?>
@@ -18,7 +18,7 @@ class LoginView {
         <fieldset>
             <legend>Log In</legend>
             <!-- Pattern attribute absent to avoid hints that weaken security -->
-            User Name <input type="text" name="uname" value="<?=$uNameValue?>" size="15" autofocus="autofocus" required="required" maxlength="30" tabindex="1" />
+            User Name <input type="text" name="userName" value="<?=$uNameValue?>" size="15" autofocus="autofocus" required="required" maxlength="30" tabindex="1" />
             <span class="error"><?=$uNameError?></span><br />
             Password <input type="password" name="password" size="15" required="required" maxlength="30" tabindex="2" />
         </fieldset>

@@ -12,7 +12,9 @@
 <h2>It should call show and display the view without crashing</h2>
 <?php
 include_once("../views/LoginView.class.php");
-LoginView::showBody();
+include_once("../models/Messages.class.php");
+include_once("../resources/Utilities.class.php");
+LoginView::showBody(null);
 ?>
 
 <h2>It should call show and display the view with user name filled in and an error message</h2>

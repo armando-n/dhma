@@ -21,8 +21,7 @@ class FooterView {
                 if ($loggedIn) { ?>
                 <li><a href="logout">Logout</a></li><?php
                 } else { ?>
-                <li><a href="login">Login</a></li>
-                <li><a href="profile">My Profile</a></li><?php
+                <li><a href="login">Login</a></li><?php
                 } ?> 
             </ul>
         </li>

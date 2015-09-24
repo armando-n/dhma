@@ -4,6 +4,7 @@ class LoginController {
         
         // user logging in
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            
             $user = new User($_POST);
             
             // log in successful; go back honme

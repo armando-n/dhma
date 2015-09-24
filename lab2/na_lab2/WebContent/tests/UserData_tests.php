@@ -1,5 +1,7 @@
 <?php
 include_once("../models/UserData.class.php");
+include_once("../models/Messages.class.php");
+include_once("../resources/Utilities.class.php");
 
 // test valid UserData object creation
 $validInput = array(

@@ -14,6 +14,9 @@
 include_once("../views/ProfileView.class.php");
 include_once("../models/UserData.class.php");
 include_once("../models/User.class.php");
+include_once("../models/Messages.class.php");
+include_once("../resources/Utilities.class.php");
+
 $validUserInput = array(
         "userName" => "armando-n",
         "password1" => "password123",
@@ -38,7 +41,7 @@ $validUserDataInput = array(
 );
 $user = new User($validUserInput);
 $userData = new UserData($validUserDataInput);
-ProfileView::showBody($user, $userData);
+ProfileView::showProfile($user, $userData);
 ?>
     
 </body>

@@ -11,7 +11,7 @@ class HomeView {
     public static function showBody($uData) {
         ?>
 <section id="site-info">
-    <?php if (!is_null($uData)) { ?><h2>Welcome back, <?=$uData->firstName?>!</h2><?php } ?>
+    <?php if (!is_null($uData)) { ?><h2>Welcome back, <?=$uData->getUserName()?>!</h2><?php } ?>
     <h2>About DHMA</h2>
     
     <h3>Overview</h3>

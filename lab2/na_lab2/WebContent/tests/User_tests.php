@@ -1,5 +1,7 @@
 <?php
 include_once("../models/User.class.php");
+include_once("../models/Messages.class.php");
+include_once("../resources/Utilities.class.php");
 
 // test User object creation
 $validInput = array(

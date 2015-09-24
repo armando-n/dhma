@@ -1,13 +1,19 @@
 <?php 
 class ProfileView {
     
-    public static function show($user = null, $uData = null) {
-        HeaderView::show("Your Profile", true);
-        ProfileView::showBody($user, $uData);
-        FooterView::show(true);
+    public static function show($user = null, $uData = null, $edit = null) {
+        if (is_null($edit)) {
+            HeaderView::show("Your Profile", true);
+            ProfileView::showProfile($user, $uData);
+            FooterView::show(true);
+        } else {
+            HeaderView::show("Edit Profile", true);
+            ProfileView::showEditForm($user, $uData);
+            FooterView::show(true);
+        }
     }
     
-    public static function showBody($user, $uData) {
+    public static function showProfile($user, $uData) {
         ?>
 <section id="profile-info">
     <h2><?= $user->getUserName() ?>'s Profile</h2>
@@ -31,6 +37,10 @@ class ProfileView {
     <a href="edit-profile">Edit Profile</a>
 </section>
 <?php 
+    }
+    
+    public static function showEditForm($user, $uData) {
+        
     }
 }
 ?>

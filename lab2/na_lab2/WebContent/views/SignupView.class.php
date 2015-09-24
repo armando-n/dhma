@@ -55,12 +55,12 @@ class SignupView {
 <section>
     <h2>Sign Up Form</h2>
     
-    <form action="simpleEcho.php" enctype="multipart/form-data" method="post">
+    <form action="signup" enctype="multipart/form-data" method="post">
         <fieldset>
             <legend>Required Account Information</legend>
             E-mail <input type="email" name="email" value="<?=$emailVal?>" size="15" autofocus="autofocus" required="required" maxlength="30" tabindex="1" />
                 <span class="error"><?=$emailErr?></span><br />
-            User Name <input type="text" name="uname" value="<?=$uNameVal?>" size="15" required="required" maxlength="20" tabindex="2" pattern="^[a-zA-Z0-9_-]+$" title="User name can only contain letters, numbers, dashes (-), and underscores (_)" />
+            User Name <input type="text" name="userName" value="<?=$uNameVal?>" size="15" required="required" maxlength="20" tabindex="2" pattern="^[a-zA-Z0-9_-]+$" title="User name can only contain letters, numbers, dashes (-), and underscores (_)" />
                 <span class="error"><?=$uNameErr?></span><br />
             Password <input type="password" name="password1" size="15" required="required" maxlength="20" tabindex="3" pattern=".{6,}" title="Password must be 6-20 characters long" />
                 <span class="error"><?=$passErr?></span><br />

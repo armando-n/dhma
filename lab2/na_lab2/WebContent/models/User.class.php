@@ -1,6 +1,4 @@
 <?php
-include_once("Messages.class.php");
-include_once("../resources/Utilities.class.php");
 class User {
     
     private $formInput;
@@ -96,25 +94,25 @@ class User {
         $pass2 = Utilities::extractForm($this->formInput, "password2");
         $this->password = $pass1;
     
-        if ($pass1 !== $pass2) {
-            $this->setError("password", "PASSWORDS_DO_NOT_MATCH");
-            return;
-        }
+//         if ($pass1 !== $pass2) {
+//             $this->setError("password", "PASSWORDS_DO_NOT_MATCH");
+//             return;
+//         }
     
-        if (empty($this->password)) {
-            $this->setError("password", "PASSWORD_EMPTY");
-            return;
-        }
+//         if (empty($this->password)) {
+//             $this->setError("password", "PASSWORD_EMPTY");
+//             return;
+//         }
     
-        if (strlen($this->password) < 6) {
-            $this->setError("password", "PASSWORD_TOO_SHORT");
-            return;
-        }
+//         if (strlen($this->password) < 6) {
+//             $this->setError("password", "PASSWORD_TOO_SHORT");
+//             return;
+//         }
     
-        if (strlen($this->password) > 20) {
-            $this->setError("password", "PASSWORD_TOO_LONG");
-            return;
-        }
+//         if (strlen($this->password) > 20) {
+//             $this->setError("password", "PASSWORD_TOO_LONG");
+//             return;
+//         }
     }
     
 }

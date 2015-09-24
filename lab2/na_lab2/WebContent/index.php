@@ -12,6 +12,8 @@ switch ($control) {
     case "logout" : LoginController::run(true); break; 
     case "profile": ProfileController::run(); break;
     case "signup": SignupController::run(); break;
+    case "simpleEcho" :
+        include("simpleEcho.php"); break;
     default: HomeView::show();
 }
 

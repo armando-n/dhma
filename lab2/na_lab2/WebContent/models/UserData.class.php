@@ -1,6 +1,4 @@
 <?php
-include_once("Messages.class.php");
-include_once("../resources/Utilities.class.php");
 class UserData {
     
     const DEFAULT_THEME = 'dark';

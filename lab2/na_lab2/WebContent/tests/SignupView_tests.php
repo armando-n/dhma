@@ -12,7 +12,10 @@
 <h2>It should call show and display the view without crashing</h2>
 <?php
 include_once("../views/SignupView.class.php");
-SignupView::showBody();
+include_once("../models/Messages.class.php");
+include_once("../resources/Utilities.class.php");
+
+SignupView::showBody(null, null);
 ?>
 
 <h2>It should call show and display the view with most fields filled in and some error messages</h2>
