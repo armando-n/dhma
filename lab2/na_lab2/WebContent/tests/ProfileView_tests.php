@@ -49,5 +49,28 @@ ProfileView::showProfile($user, $userData);
 ProfileView::showEditForm($user,$userData, true);
 ?>
 
+<h2>It should call showEditForm and show error messages next to some fields</h2>
+<?php 
+$invalidUserDataInput = array(
+        "fname" => "Some-Really-Really-Super-Duper-Long-Name",
+        "lname" => '$InvaldName',
+        "email" => "fdf786",
+        "gender" => "orange",
+        "phone" => "281-555-218x",
+        "facebook" => "http://face.com/someguy210",
+        "dob" => "1983-11-0x",
+        "country" => "United States of America",
+        "theme" => "middle",
+        "color" => "#00008s",
+        "picture" => "someimage",
+        "public-profile" => "on",
+        "showpic" => "on",
+        "reminders" => "on",
+        "keep-logged-in" => "on"
+);
+$userData2 = new UserData($invalidUserDataInput);
+ProfileView::showEditForm($user, $userData2, true);
+?>
+
 </body>
 </html>

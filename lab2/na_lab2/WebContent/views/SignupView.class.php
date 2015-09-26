@@ -297,7 +297,7 @@ class SignupView {
                 </select>
                 <span class="error"><?=$themeErr?></span><br />
             Theme Accent Color <input type="color" name="color" value="<?=$colorVal?>" tabindex="15" />
-            <span class="error"><?=$colorErr?></span><br />
+                <span class="error"><?=$colorErr?></span><br />
             <input type="checkbox" id="public-profile" name="public-profile"<?=$pubProfileVal?> tabindex="16" /> <label for="public-profile">Make profile public</label><br />
             <input type="checkbox" id="showpic" name="showpic"<?=$pubPicVal?> tabindex="17" /> <label for="showpic">Show picture in profile</label><br />
             <input type="checkbox" id="reminders" name="reminders"<?=$remindVal?> tabindex="18" /> <label for="reminders">E-mail reminders after prolonged inactivity</label><br />

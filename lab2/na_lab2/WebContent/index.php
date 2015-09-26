@@ -3,7 +3,7 @@ include("includer.php");
 
 $loggedIn = isset($_GET["loggedin"]);
 
-// dummy data setup so profile page can be viewed correctly
+// dummy data, so profile page can be viewed correctly (no session support yet)
 $validUserInput = array(
         "userName" => "armando-n",
         "password1" => "password123",

@@ -2,23 +2,18 @@
 class ProfileView {
     
     public static function show($user = null, $uData = null, $edit = false) {
-        if (is_null($user) || is_null($uData)) {
-            HeaderView::show("Profile Page", false);
-            ?>
-            <p>Error: user is null</p>
-            <?php
-            FooterView::show(false);
-            return;
-        }
-        if ($edit) {
-            HeaderView::show("Edit Profile", true);
+        if (is_null($user) || is_null($uData))
+            throw new Exception("Cannot show profile: user information is missing");
+        $title = ($edit) ? "Edit Profile" : "Your Profile";
+        
+        HeaderView::show($title, true);
+        
+        if ($edit)
             ProfileView::showEditForm($user, $uData);
-            FooterView::show(true);
-        } else {
-            HeaderView::show("Your Profile", true);
+        else
             ProfileView::showProfile($user, $uData);
-            FooterView::show(true);
-        }
+        
+        FooterView::show(true);
     }
     
     public static function showProfile($user, $uData) {
@@ -56,12 +51,13 @@ class ProfileView {
         $pubPicVal = ($uData->isPicturePublic()) ? ' checked="checked"' : '';
         $remindVal = ($uData->isSendRemindersSet()) ? ' checked="checked"' : '';
         $stayLoggedVal = ($uData->isStayLoggedInSet()) ? ' checked="checked"' : '';
-        $editActionVal = ($testing) ? '../edit-profile' : 'edit-profile';
         ?>
 <section id="profile-info">
     <h2><?= $user->getUserName() ?>'s Profile</h2>
-    <img src="images/profile/<?= $user->getUserName() ?>.png" alt="<?= $user->getUserName() ?>'s profile picture" />
-    <form action="<?=$editActionVal?>" method="post">
+    
+    <img src="images/profile/<?= $user->getUserName() ?>.png" alt="<?= $user->getUserName() ?>'s profile picture" /><br />
+    Change Picture: <input type="file" name="pic" accept="image/*" tabindex="13" />
+    <form action="edit-profile" method="post">
     <ul>
         <li>First Name: <input type="text" name="fname" value="<?=$uData->getFirstName()?>" size="15" maxlength="30" tabindex="5" pattern="^[a-zA-Z_-]+$" title="Remove invalid characters" />
                 <span class="error"><?=$uData->getError("firstName")?></span></li>
@@ -291,7 +287,7 @@ class ProfileView {
     </ul>
     <div>
             <input type="submit" size="15" tabindex="20" />
-            <input type="button" value="Cancel" size="15" tabindex="21" />
+            <a href="profile" tabindex="21">Cancel</a>
     </div>
     </form>
 </section>
