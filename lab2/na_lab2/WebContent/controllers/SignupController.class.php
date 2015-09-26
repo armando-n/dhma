@@ -9,7 +9,7 @@ class SignupController {
             $uData = new UserData($_POST);
             
             // sign up successful; show profile
-            if ($user->getErrorCount() == 0 && $uData->getErrorCount == 0)
+            if ($user->getErrorCount() == 0 && $uData->getErrorCount() == 0)
                 ProfileView::show($user, $uData);
             
             // sign up failed; load view w/old values
