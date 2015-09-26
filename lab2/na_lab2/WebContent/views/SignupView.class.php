@@ -27,7 +27,9 @@ class SignupView {
             $dobVal = ''; $dobErr = '';
             $countryVal = '';
             $picVal = '';
-            $themeVal = ''; $themeErr = '';
+            $themeDarkVal = '';
+            $themeLightVal = '';
+            $themeErr = '';
             $colorVal = ''; $colorErr = '';
             $pubProfileVal = '';
             $pubPicVal = '';
@@ -44,7 +46,9 @@ class SignupView {
             $dobVal = $uData->getDOB(); $dobErr = $uData->getError('dob');
             $countryVal = $uData->getCountry();
             $picVal = $uData->getPicture();
-            $themeVal = $uData->getTheme(); $themeErr = $uData->getError('theme');
+            $themeDarkVal = ($uData->getTheme() === 'dark') ? ' selected="selected"' : '';
+            $themeLightVal = ($uData->getTheme() === 'light') ? ' selected="selected"' : '';
+            $themeErr = $uData->getError('theme');
             $colorVal = $uData->getAccentColor(); $colorErr = $uData->getError('accentColor');
             $pubProfileVal = ($uData->isProfilePublic()) ? ' checked="checked"' : '';
             $pubPicVal = ($uData->isPicturePublic()) ? ' checked="checked"' : '';
@@ -288,10 +292,12 @@ class SignupView {
             <legend>Site Preferences</legend>
             Theme
                 <select name="theme" tabindex="14">
-                    <option>dark</option>
-                    <option>light</option>
-                </select><br />
-            Theme Accent Color <input type="color" name="color" value="#00008b" tabindex="15" /><br />
+                    <option<?=$themeDarkVal?>>dark</option>
+                    <option<?=$themeLightVal?>>light</option>
+                </select>
+                <span class="error"><?=$themeErr?></span><br />
+            Theme Accent Color <input type="color" name="color" value="<?=$colorVal?>" tabindex="15" />
+            <span class="error"><?=$colorErr?></span><br />
             <input type="checkbox" id="public-profile" name="public-profile"<?=$pubProfileVal?> tabindex="16" /> <label for="public-profile">Make profile public</label><br />
             <input type="checkbox" id="showpic" name="showpic"<?=$pubPicVal?> tabindex="17" /> <label for="showpic">Show picture in profile</label><br />
             <input type="checkbox" id="reminders" name="reminders"<?=$remindVal?> tabindex="18" /> <label for="reminders">E-mail reminders after prolonged inactivity</label><br />

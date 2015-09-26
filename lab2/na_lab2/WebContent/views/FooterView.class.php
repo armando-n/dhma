@@ -8,7 +8,8 @@ class FooterView {
         <li>
             <h3>Main Site</h3>
             <ul>
-                <li><a href="home">Home</a></li><?php
+                <li><a href="home">Home</a></li>
+                <li><a href="profile">Profile</a></li><?php
                 if (!$loggedIn) { ?>
                 <li><a href="signup">Sign Up</a></li><?php
                 } ?>

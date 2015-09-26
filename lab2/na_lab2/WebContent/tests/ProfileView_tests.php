@@ -9,7 +9,7 @@
 
 <h1>ProfileView test</h1>
 
-<h2>It should call show and show without crashing</h2>
+<h2>It should call showProfile and show without crashing</h2>
 <?php
 include_once("../views/ProfileView.class.php");
 include_once("../models/UserData.class.php");
@@ -44,5 +44,10 @@ $userData = new UserData($validUserDataInput);
 ProfileView::showProfile($user, $userData);
 ?>
     
+<h2>It should call showEditForm and show without crashing</h2>
+<?php 
+ProfileView::showEditForm($user,$userData, true);
+?>
+
 </body>
 </html>
