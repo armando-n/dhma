@@ -57,6 +57,13 @@ The object is: <?= $validUser ?><br />
 <h2>It should extract the parameters that went in</h2>
 <pre><?php print_r($params); ?></pre>
 
+<h2>It should call the get methods and retrieve the parameters</h2>
+User name: <?=$validUser->getUserName()?><br />
+Password: <?=$validUser->getPassword()?><br />
+Error count: <?=$validUser->getErrorCount();?><br />
+Errors: <?php print_r($validUser->getErrors()); ?><br />
+Parameters: <pre><?php print_r($validUser->getParameters()); ?></pre>
+
 <!-- output: invalid input test -->
 <h2>It should have an error when the user name contains invalid characters</h2>
 <?= $test3 ?><br />

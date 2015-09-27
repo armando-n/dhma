@@ -14,19 +14,19 @@ include_once("../models/Messages.class.php");
 
 Messages::setErrors("../resources/errors_English.txt");
 
-echo "LAST_NAME_TOO_SHORT: " .Messages::getError("LAST_NAME_TOO_SHORT")."<br>";
+echo "LAST_NAME_TOO_LONG: " .Messages::getError("LAST_NAME_TOO_LONG")."<br>";
 echo "EMAIL_INVALID: " .Messages::getError("EMAIL_INVALID")."<br>";
 echo "LAST_NAME_INVALID: " .Messages::getError("LAST_NAME_HAS_INVALID_CHARS")."<br>";
 
-echo (empty(Messages::getError("LAST_NAME_TOO_SHORT")))?
-      "Failed: it did not set LAST_NAME_TOO_SHORT from file":"";
+echo (empty(Messages::getError("LAST_NAME_TOO_LONG")))?
+      "Failed: it did not set LAST_NAME_TOO_LONG from file":"";
 ?>
 
 <h2>It should allow reset</h2>
 <?php 
 Messages::reset();
 
-echo "LAST_NAME_TOO_SHORT: " .Messages::getError("LAST_NAME_TOO_SHORT")."<br>";
+echo "LAST_NAME_TOO_LONG: " .Messages::getError("LAST_NAME_TOO_LONG")."<br>";
 echo "EMAIL_INVALID: " .Messages::getError("EMAIL_INVALID")."<br>";
 echo "LAST_NAME_HAS_INVALID_CHARS: " .Messages::getError("LAST_NAME_HAS_INVALID_CHARS")."<br>";
 
@@ -37,7 +37,7 @@ echo "LAST_NAME_HAS_INVALID_CHARS: " .Messages::getError("LAST_NAME_HAS_INVALID_
 Messages::$locale = 'Spanish';
 Messages::reset();
 
-echo "LAST_NAME_TOO_SHORT: " .Messages::getError("LAST_NAME_TOO_SHORT")."<br>";
+echo "LAST_NAME_TOO_LONG: " .Messages::getError("LAST_NAME_TOO_LONG")."<br>";
 echo "EMAIL_INVALID: " .Messages::getError("EMAIL_INVALID")."<br>";
 echo "LAST_NAME_HAS_INVALID_CHARS: " .Messages::getError("LAST_NAME_HAS_INVALID_CHARS")."<br>";
 

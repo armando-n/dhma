@@ -76,6 +76,26 @@ The object is: <pre><?= $validUserData ?></pre>
 <h2>It should extract the parameters that went in</h2>
 <pre><?php print_r($params); ?></pre>
 
+<!-- output: get method -->
+<h2>It should call the get methods of a valid UserData object and display its property values</h2>
+Errors: <?php print_r($validUserData->getErrors()); ?><br />
+Error Count: <?=$validUserData->getErrorCount()?><br />
+First Name: <?=$validUserData->getFirstName()?><br />
+Last Name: <?=$validUserData->getLastName()?><br />
+E-mail: <?=$validUserData->getEmail()?><br />
+Phone Number: <?=$validUserData->getPhoneNumber()?><br />
+Gender: <?=$validUserData->getGender()?><br />
+Date of Birth: <?=$validUserData->getDOB()?><br />
+Country: <?=$validUserData->getCountry()?><br />
+Facebook : <?=$validUserData->getFacebook()?><br />
+Theme: <?=$validUserData->getTheme()?><br />
+Accent Color: <?=$validUserData->getAccentColor()?><br />
+is profile public: <?=$validUserData->isProfilePublic()?><br />
+is picture public: <?=$validUserData->isPicturePublic()?><br />
+is send reminders set: <?=$validUserData->isSendRemindersSet()?><br />
+is stay logged in set: <?=$validUserData->isStayLoggedInSet()?><br />
+Parameters: <pre><?php print_r($validUserData->getParameters()); ?></pre>
+
 <!-- output: null input test -->
 <h2>It should create a valid UserData object with empty property values; Theme, accent color, and boolean properties will be set to default values</h2>
 <?= $test3 ?> <?php if (!empty($test3)) {?><br /><?php ; }?>

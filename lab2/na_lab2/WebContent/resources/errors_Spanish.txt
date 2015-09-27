@@ -1,0 +1,21 @@
+EMAIL_EMPTY Tu email no puede estar vacío o sólo contienen espacios en blanco
+EMAIL_TOO_LONG Su dirección de correo electrónico no puede contener más de 30 caracteres
+EMAIL_INVALID Tu email no es válida
+PASSWORDS_DO_NOT_MATCH Sus contraseñas presentados no coinciden entre sí
+PASSWORD_EMPTY La contraseña no puede estar vacío o sólo contienen espacios en blanco
+PASSWORD_TOO_SHORT Su contraseña debe contener como mínimo 6 caracteres
+PASSWORD_TOO_LONG Tu contraseña no puede contener más de 20 caracteres
+FIRST_NAME_TOO_LONG Su nombre no puede contener más de 30 caracteres
+FIRST_NAME_HAS_INVALID_CHARS Su nombre contiene caracteres no válidos
+LAST_NAME_TOO_LONG Su apellido no puede contener más de 30 caracteres
+LAST_NAME_HAS_INVALID_CHARS Su apellido contiene caracteres no válidos
+USER_NAME_EMPTY Tu nombre de usuario no puede estar vacío o sólo contienen espacios en blanco
+USER_NAME_HAS_INVALID_CHARS Tu nombre de usuario sólo puede contener letras, números, guiones y guiones bajos
+USER_NAME_TOO_LONG Tu nombre de usuario no puede contener más de 20 caracteres
+PHONE_TOO_LONG Su número de teléfono no puede contener más de 15 caracteres
+PHONE_INVALID Su número de teléfono no es válido
+GENDER_INVALID Su género no es válido
+DOB_INVALID Su fecha de nacimiento no es válida
+FACEBOOK_INVALID Su facebook URL no es válida
+THEME_INVALID Su tema no es válido
+ACCENT_COLOR_INVALID Su acento de color no es válido
