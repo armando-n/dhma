@@ -9,7 +9,7 @@
 
 <h1>LoginView test</h1>
 
-<h2>It should call show and display the view without crashing</h2>
+<h2>It should call show and display the empty login view</h2>
 <?php
 include_once("../views/LoginView.class.php");
 include_once("../models/Messages.class.php");
