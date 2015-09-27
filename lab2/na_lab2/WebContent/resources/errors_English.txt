@@ -28,3 +28,7 @@ SYSTOLIC_PRESSURE_EMPTY The systolic pressure cannot be empty or contain only wh
 SYSTOLIC_PRESSURE_HAS_INVALID_CHARS The systolic pressure can only contain numbers
 DIASTOLIC_PRESSURE_EMPTY The diastolic pressure cannot be empty or contain only white space
 DIASTOLIC_PRESSURE_HAS_INVALID_CHARS The disastolic pressure can only contain numbers
+UNITS_EMPTY The units cannot be empty or contain only white space
+UNITS_INVALID The specified units are invalid
+GLUCOSE_EMPTY The glucose measurement cannot be empty or contain only white space
+GLUCOSE_HAS_INVALID_CHARS The glucose measurement can only contain numbers, and a decimal point

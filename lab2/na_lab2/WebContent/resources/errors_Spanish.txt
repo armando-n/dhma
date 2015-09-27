@@ -28,3 +28,7 @@ SYSTOLIC_PRESSURE_EMPTY La presión sistólica no puede estar vacío o contener 
 SYSTOLIC_PRESSURE_HAS_INVALID_CHARS La presión sistólica sólo puede contener números
 DIASTOLIC_PRESSURE_EMPTY La presión diastólica no puede estar vacío o contener sólo espacio en blanco
 DIASTOLIC_PRESSURE_HAS_INVALID_CHARS La presión disastolic sólo puede contener números
+UNITS_EMPTY Las unidades no pueden estar vacíos o contienen sólo espacio en blanco
+UNITS_INVALID especifica unidades no son válidos
+GLUCOSE_EMPTY La medición de la glucosa no puede estar vacío o contener sólo espacio en blanco
+GLUCOSE_HAS_INVALID_CHARS La medición de glucosa sólo puede contener números y un punto decimal
