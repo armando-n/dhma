@@ -19,3 +19,12 @@ DOB_INVALID Your date of birth is invalid
 FACEBOOK_INVALID Your facebook URL is invalid
 THEME_INVALID Your theme is invalid
 ACCENT_COLOR_INVALID Your accent color is invalid
+DATE_EMPTY The date cannot be empty or contain only white space
+DATE_HAS_INVALID_CHARS The date contains invalid characters
+TIME_EMPTY The time cannot be empty or contain only white space
+TIME_HAS_INVALID_CHARS The time contains invalid characters
+DATE_AND_TIME_INVALID The date and time are invalid
+SYSTOLIC_PRESSURE_EMPTY The systolic pressure cannot be empty or contain only white space
+SYSTOLIC_PRESSURE_HAS_INVALID_CHARS The systolic pressure can only contain numbers
+DIASTOLIC_PRESSURE_EMPTY The diastolic pressure cannot be empty or contain only white space
+DIASTOLIC_PRESSURE_HAS_INVALID_CHARS The disastolic pressure can only contain numbers
