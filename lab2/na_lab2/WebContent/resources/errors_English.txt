@@ -32,3 +32,5 @@ UNITS_EMPTY The units cannot be empty or contain only white space
 UNITS_INVALID The specified units are invalid
 GLUCOSE_EMPTY The glucose measurement cannot be empty or contain only white space
 GLUCOSE_HAS_INVALID_CHARS The glucose measurement can only contain numbers, and a decimal point
+CALORIES_EMPTY The calories consumed cannot be empty or contain only white space
+CALORIES_HAS_INVALID_CHARS The calories consumed can only contain numbers
