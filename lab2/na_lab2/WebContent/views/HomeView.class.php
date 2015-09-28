@@ -12,6 +12,7 @@ class HomeView {
         ?>
 <section id="site-info">
     <?php if (!is_null($uData)) { ?><h2>Welcome back, <?=$uData->getUserName()?>!</h2><?php } ?>
+    <h2><a href="tests.html">Tests</a></h2>
     <h2>About DHMA</h2>
     
     <h3>Overview</h3>

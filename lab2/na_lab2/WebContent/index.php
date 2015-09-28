@@ -27,22 +27,33 @@ $validUserDataInput = array(
         "keep-logged-in" => "on"
 );
 
+// dummy user info; necessary because sessions are not yet implemented
 $user = new User($validUserInput);
 $uData = new UserData($validUserDataInput);
 
-// determine which page was requested, then load it
+// parse the request URL
 $url = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 $urlPieces = preg_split("/\//", $url, null, PREG_SPLIT_NO_EMPTY);
-$control = (count($urlPieces) < 2) ? "none" : $urlPieces[1];
-print_r ($urlPieces);
+$numPieces = count($urlPieces);
+$testUrlPrefix = '';
+if ($numPieces == 2)
+    $control = $urlPieces[1];
+else if ($numPieces >= 3 && $urlPieces[1] == 'tests') {
+    while (isset($urlPieces[1]) && $urlPieces[1] == 'tests')
+        array_splice($urlPieces, 1, 1);
+    $control = $urlPieces[1];
+}
+else
+    $control = "none";
+
+// run the requested controller
 switch ($control) {
     case "login" : LoginController::run(); break;
     case "logout" : LoginController::run(true); break; 
     case "profile" : ProfileController::run($user, $uData, false); break;
     case "edit-profile" : ProfileController::run($user, $uData, true); break; 
     case "signup" : SignupController::run(); break;
-    case "simpleEcho" :
-        include("simpleEcho.php"); break;
+    case "past-measurements" : PastMeasurementsController::run(); break;
     default: HomeView::show();
 }
 

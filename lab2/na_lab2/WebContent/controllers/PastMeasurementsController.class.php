@@ -1,28 +1,12 @@
 <?php
 class PastMeasurementsController {
     
-    private $measurementData;
+    private static $measurementData;
     
     public static function run() {
         
-        PastMeasurements::initData();
-        // user logging in
-//         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            
-//             $user = new User($_POST);
-            
-//             // log in successful; go back honme
-//             if ($user->getErrorCount() == 0)
-//                 HomeView::show($user);
-            
-//             // log in failed; load view w/old values
-//             else
-//                 PastMeasurementsView::show($user);
-//         }
-        
-//         // user requesting login page
-//         else
-            PastMeasurementsView::show($measurementData);
+        PastMeasurementsController::initData();
+        PastMeasurementsView::show(PastMeasurementsController::$measurementData);
     }
     
     public static function initData() {
@@ -146,23 +130,23 @@ class PastMeasurementsController {
         $exerciseInput2 = array(
                 "userName" => "armando-n",
                 "date" => "2015-09-26",
-                "time" => "20:00",
+                "time" => "20:02",
                 "type" => "running",
-                "duration" => "60"
+                "duration" => "56"
         );
         $exerciseInput3 = array(
                 "userName" => "armando-n",
                 "date" => "2015-09-25",
-                "time" => "20:00",
+                "time" => "20:05",
                 "type" => "running",
-                "duration" => "60"
+                "duration" => "40"
         );
         $exerciseInput4 = array(
                 "userName" => "armando-n",
                 "date" => "2015-09-24",
                 "time" => "20:0",
                 "type" => "running",
-                "duration" => "60"
+                "duration" => "58"
         );
         $exerciseMeasurements[] = new ExerciseMeasurement($exerciseInput1);
         $exerciseMeasurements[] = new ExerciseMeasurement($exerciseInput2);
@@ -201,28 +185,28 @@ class PastMeasurementsController {
         $weightInput1 = array(
                 "userName" => "armando-n",
                 "date" => "2015-09-27",
-                "time" => "17:22",
+                "time" => "20:45",
                 "units" => "lb",
                 "weight" => "140.5"
         );
         $weightInput2 = array(
                 "userName" => "armando-n",
                 "date" => "2015-09-26",
-                "time" => "17:22",
+                "time" => "20:50",
                 "units" => "lb",
                 "weight" => "139.5"
         );
         $weightInput3 = array(
                 "userName" => "armando-n",
                 "date" => "2015-09-25",
-                "time" => "17:22",
+                "time" => "20:28",
                 "units" => "lb",
                 "weight" => "140"
         );
         $weightInput4 = array(
                 "userName" => "armando-n",
                 "date" => "2015-09-24",
-                "time" => "17:22",
+                "time" => "20:46",
                 "units" => "lb",
                 "weight" => "141"
         );
@@ -231,12 +215,12 @@ class PastMeasurementsController {
         $weightMeasurements[] = new WeightMeasurement($weightInput3);
         $weightMeasurements[] = new WeightMeasurement($weightInput4);
         
-        $this->measurementData["glucose"] = $glucoseMeasurements;
-        $this->measurementData["bloodPressure"] = $bloodPressureMeasurements;
-        $this->measurementData["calorie"] = $calorieMeasurements;
-        $this->measurementData["exercise"] = $exerciseMeasurements;
-        $this->measurementData["sleep"] = $sleepMeasurements;
-        $this->measurementData["weight"] = $weightMeasurements;
+        PastMeasurementsController::$measurementData["glucose"] = $glucoseMeasurements;
+        PastMeasurementsController::$measurementData["bloodPressure"] = $bloodPressureMeasurements;
+        PastMeasurementsController::$measurementData["calories"] = $calorieMeasurements;
+        PastMeasurementsController::$measurementData["exercise"] = $exerciseMeasurements;
+        PastMeasurementsController::$measurementData["sleep"] = $sleepMeasurements;
+        PastMeasurementsController::$measurementData["weight"] = $weightMeasurements;
     }
 }
 ?>

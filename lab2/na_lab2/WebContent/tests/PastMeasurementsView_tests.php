@@ -1,15 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Basic tests for PastMeasurementsView</title>
-    <meta charset="utf-8" />
-    <meta name="author" content="Armando Navarro" />
-</head>
-<body>
-
-<h1>PastMeasurementsView test</h1>
-
-<h2>It should call show and display the Past Measurements view</h2>
 <?php
 include_once("../views/PastMeasurementsView.class.php");
 include_once("../models/User.class.php");
@@ -22,9 +10,35 @@ include_once("../models/SleepMeasurement.class.php");
 include_once("../models/WeightMeasurement.class.php");
 include_once("../models/Messages.class.php");
 include_once("../resources/Utilities.class.php");
+?><!DOCTYPE html>
+<html>
+<head>
+    <title>Basic tests for PastMeasurementsView</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Armando Navarro" />
+</head>
+<body>
+
+<h1>PastMeasurementsView test</h1>
+
+<h2>It should call show and display the Past Measurements view</h2>
+<?php
 $measurements = initData();
 PastMeasurementsView::showBody($measurements);
+?>
 
+<h2>It should call show and display an error message when null input is provided</h2>
+<?php PastMeasurementsView::showBody(null); ?>
+
+<h2>It should call show and display a message for each measurement type that has nothing to show when empty input is provided</h2>
+<?php PastMeasurementsView::showBody(array('glucose' => '')); ?>
+
+<h2>It should call show and display a message for each type that has nothing to show when a null value is provided</h2>
+<?php PastMeasurementsView::showBody(array('glucose' => null)); ?>
+    
+</body>
+</html>
+<?php
 function initData() {
     $glucoseMeasurements = array();
     $bloodPressureMeasurements = array();
@@ -146,23 +160,23 @@ function initData() {
     $exerciseInput2 = array(
             "userName" => "armando-n",
             "date" => "2015-09-26",
-            "time" => "20:00",
+            "time" => "20:02",
             "type" => "running",
-            "duration" => "60"
+            "duration" => "56"
     );
     $exerciseInput3 = array(
             "userName" => "armando-n",
             "date" => "2015-09-25",
-            "time" => "20:00",
+            "time" => "20:05",
             "type" => "running",
-            "duration" => "60"
+            "duration" => "40"
     );
     $exerciseInput4 = array(
             "userName" => "armando-n",
             "date" => "2015-09-24",
             "time" => "20:0",
             "type" => "running",
-            "duration" => "60"
+            "duration" => "58"
     );
     $exerciseMeasurements[] = new ExerciseMeasurement($exerciseInput1);
     $exerciseMeasurements[] = new ExerciseMeasurement($exerciseInput2);
@@ -201,28 +215,28 @@ function initData() {
     $weightInput1 = array(
             "userName" => "armando-n",
             "date" => "2015-09-27",
-            "time" => "17:22",
+            "time" => "20:45",
             "units" => "lb",
             "weight" => "140.5"
     );
     $weightInput2 = array(
             "userName" => "armando-n",
             "date" => "2015-09-26",
-            "time" => "17:22",
+            "time" => "20:50",
             "units" => "lb",
             "weight" => "139.5"
     );
     $weightInput3 = array(
             "userName" => "armando-n",
             "date" => "2015-09-25",
-            "time" => "17:22",
+            "time" => "20:28",
             "units" => "lb",
             "weight" => "140"
     );
     $weightInput4 = array(
             "userName" => "armando-n",
             "date" => "2015-09-24",
-            "time" => "17:22",
+            "time" => "20:46",
             "units" => "lb",
             "weight" => "141"
     );
@@ -234,7 +248,7 @@ function initData() {
     $measurementData = array();
     $measurementData["glucose"] = $glucoseMeasurements;
     $measurementData["bloodPressure"] = $bloodPressureMeasurements;
-    $measurementData["calorie"] = $calorieMeasurements;
+    $measurementData["calories"] = $calorieMeasurements;
     $measurementData["exercise"] = $exerciseMeasurements;
     $measurementData["sleep"] = $sleepMeasurements;
     $measurementData["weight"] = $weightMeasurements;
@@ -242,6 +256,3 @@ function initData() {
     return $measurementData;
 }
 ?>
-    
-</body>
-</html>
