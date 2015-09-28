@@ -101,7 +101,7 @@ $_POST = array(
 ProfileController::run(null, null, true);
 ?>
 
-<h2>It should call the run method for empty input and throw an exception</h2>
+<h2>It should call the run method for empty input and only show an error message</h2>
 <?php 
 ProfileController::run();
 ?>

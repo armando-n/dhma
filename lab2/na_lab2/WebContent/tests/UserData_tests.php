@@ -109,3 +109,6 @@ The object is:
 <?= $test6 ?> <?php if (!empty($test6)) {?><br /><?php ; }?>
 The object is:
 <pre><?= $emptyUserData2 ?></pre>
+
+</body>
+</html>

@@ -12,12 +12,12 @@
 <h2>It should call show and display the view as if a user were logged in</h2>
 <?php
 include_once("../views/HeaderView.class.php");
-HeaderView::show("Page Title", false);
+HeaderView::show("Page Title", true);
 ?>
 
 <h2>It should call show and display the view as if a user were logged out</h2>
 <?php
-HeaderView::show("Page Title", true);
+HeaderView::show("Page Title", false);
 ?>
     
 </body>

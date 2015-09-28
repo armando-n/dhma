@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8" />
-<title>Basic tests for Login Controller</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Armando Navarro" />
+    <title>Basic tests for Login Controller</title>
 </head>
 <body>
 <h1>Login controller tests</h1>
@@ -44,5 +45,6 @@ $_POST = array(
 );
 LoginController::run();
 ?>
+
 </body>
 </html>
