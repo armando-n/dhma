@@ -38,3 +38,5 @@ DURATION_EMPTY The duration cannot be empty or contain only white space
 DURATION_HAS_INVALID_CHARS The duration can only contain numbers
 TYPE_EMPTY The type cannot be empty or contain only white space
 TYPE_HAS_INVALID_CHARS The type can only contain letters, numbers, spaces, dashes and underscores
+WEIGHT_EMPTY The weight cannot be empty or contain only white space
+WEIGHT_HAS_INVALID_CHARS The weight can only contain numbers, and a decimal point

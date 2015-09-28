@@ -38,3 +38,5 @@ DURATION_EMPTY La duración no puede estar vacío o contener sólo espacio en bl
 DURATION_HAS_INVALID_CHARS La duración sólo puede contener números
 TYPE_EMPTY El tipo no puede estar vacío o contener sólo espacio en blanco
 TYPE_HAS_INVALID_CHARS El tipo sólo puede contener letras, números, espacios, guiones y guiones bajos
+WEIGHT_EMPTY El peso no puede estar vacío o contener sólo espacio en blanco
+WEIGHT_HAS_INVALID_CHARS El peso sólo puede contener números y un punto decimal
