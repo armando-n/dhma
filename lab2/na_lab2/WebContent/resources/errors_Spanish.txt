@@ -34,3 +34,7 @@ GLUCOSE_EMPTY La medición de la glucosa no puede estar vacío o contener sólo 
 GLUCOSE_HAS_INVALID_CHARS La medición de glucosa sólo puede contener números y un punto decimal
 CALORIES_EMPTY Las calorías consumidas no pueden estar vacías o contienen sólo espacio en blanco
 CALORIES_HAS_INVALID_CHARS Las calorías consumidas sólo puede contener números
+DURATION_EMPTY La duración no puede estar vacío o contener sólo espacio en blanco
+DURATION_HAS_INVALID_CHARS La duración sólo puede contener números
+TYPE_EMPTY El tipo no puede estar vacío o contener sólo espacio en blanco
+TYPE_HAS_INVALID_CHARS El tipo sólo puede contener letras, números, espacios, guiones y guiones bajos

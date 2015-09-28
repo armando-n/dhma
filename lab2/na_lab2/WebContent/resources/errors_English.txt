@@ -34,3 +34,7 @@ GLUCOSE_EMPTY The glucose measurement cannot be empty or contain only white spac
 GLUCOSE_HAS_INVALID_CHARS The glucose measurement can only contain numbers, and a decimal point
 CALORIES_EMPTY The calories consumed cannot be empty or contain only white space
 CALORIES_HAS_INVALID_CHARS The calories consumed can only contain numbers
+DURATION_EMPTY The duration cannot be empty or contain only white space
+DURATION_HAS_INVALID_CHARS The duration can only contain numbers
+TYPE_EMPTY The type cannot be empty or contain only white space
+TYPE_HAS_INVALID_CHARS The type can only contain letters, numbers, spaces, dashes and underscores
