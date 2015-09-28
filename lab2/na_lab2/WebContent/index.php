@@ -34,6 +34,7 @@ $uData = new UserData($validUserDataInput);
 $url = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 $urlPieces = preg_split("/\//", $url, null, PREG_SPLIT_NO_EMPTY);
 $control = (count($urlPieces) < 2) ? "none" : $urlPieces[1];
+print_r ($urlPieces);
 switch ($control) {
     case "login" : LoginController::run(); break;
     case "logout" : LoginController::run(true); break; 
