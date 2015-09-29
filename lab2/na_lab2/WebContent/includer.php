@@ -8,6 +8,17 @@ foreach ($paths as $path) {
             . DIRECTORY_SEPARATOR
             . $path);
 }
-spl_autoload_extensions(".class.php");
-spl_autoload_register();
+
+spl_autoload_register('myClassLoader');
+
+function myClassLoader($className) {
+	$paths = explode (PATH_SEPARATOR, get_include_path ());
+	foreach ($paths as $path) {
+		$file = $path . DIRECTORY_SEPARATOR . $className . '.class.php';
+		if (file_exists($file)) {
+			include_once $file;
+			break;
+		}
+	}
+}
 ?>
