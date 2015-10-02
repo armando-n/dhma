@@ -174,7 +174,7 @@ function initData() {
     $exerciseInput4 = array(
             "userName" => "armando-n",
             "date" => "2015-09-24",
-            "time" => "20:0",
+            "time" => "20:00",
             "type" => "running",
             "duration" => "58"
     );

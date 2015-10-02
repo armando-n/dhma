@@ -8,8 +8,6 @@ class Database {
             try {
                 // read database config info from file
                 $configArray = parse_ini_file('../../../' . $configFile);
-                if ($configArray === FALSE)
-                    throw new Exception("blahblah");
                 $userName = $configArray["username"];
                 $pass = $configArray["password"];
                 
