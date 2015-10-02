@@ -1,0 +1,42 @@
+EMAIL_EMPTY Tu email no puede estar vacío o sólo contienen espacios en blanco
+EMAIL_TOO_LONG Su dirección de correo electrónico no puede contener más de 30 caracteres
+EMAIL_INVALID Tu email no es válida
+PASSWORDS_DO_NOT_MATCH Sus contraseñas presentados no coinciden entre sí
+PASSWORD_EMPTY La contraseña no puede estar vacío o sólo contienen espacios en blanco
+PASSWORD_TOO_SHORT Su contraseña debe contener como mínimo 6 caracteres
+PASSWORD_TOO_LONG Tu contraseña no puede contener más de 20 caracteres
+FIRST_NAME_TOO_LONG Su nombre no puede contener más de 30 caracteres
+FIRST_NAME_HAS_INVALID_CHARS Su nombre contiene caracteres no válidos
+LAST_NAME_TOO_LONG Su apellido no puede contener más de 30 caracteres
+LAST_NAME_HAS_INVALID_CHARS Su apellido contiene caracteres no válidos
+USER_NAME_EMPTY Tu nombre de usuario no puede estar vacío o sólo contienen espacios en blanco
+USER_NAME_HAS_INVALID_CHARS Tu nombre de usuario sólo puede contener letras, números, guiones y guiones bajos
+USER_NAME_TOO_LONG Tu nombre de usuario no puede contener más de 20 caracteres
+PHONE_TOO_LONG Su número de teléfono no puede contener más de 15 caracteres
+PHONE_INVALID Su número de teléfono no es válido
+GENDER_INVALID Su género no es válido
+DOB_INVALID Su fecha de nacimiento no es válida
+FACEBOOK_INVALID Su facebook URL no es válida
+THEME_INVALID Su tema no es válido
+ACCENT_COLOR_INVALID Su acento de color no es válido
+DATE_EMPTY La fecha no puede estar vacío o contener sólo espacio en blanco
+DATE_HAS_INVALID_CHARS La fecha contiene caracteres no válidos
+TIME_EMPTY El tiempo no puede estar vacía o contener sólo espacio en blanco
+TIME_HAS_INVALID_CHARS El tiempo contiene caracteres no válidos
+DATE_AND_TIME_INVALID La fecha y la hora no son válidos
+SYSTOLIC_PRESSURE_EMPTY La presión sistólica no puede estar vacío o contener sólo espacio en blanco
+SYSTOLIC_PRESSURE_HAS_INVALID_CHARS La presión sistólica sólo puede contener números
+DIASTOLIC_PRESSURE_EMPTY La presión diastólica no puede estar vacío o contener sólo espacio en blanco
+DIASTOLIC_PRESSURE_HAS_INVALID_CHARS La presión disastolic sólo puede contener números
+UNITS_EMPTY Las unidades no pueden estar vacíos o contienen sólo espacio en blanco
+UNITS_INVALID especifica unidades no son válidos
+GLUCOSE_EMPTY La medición de la glucosa no puede estar vacío o contener sólo espacio en blanco
+GLUCOSE_HAS_INVALID_CHARS La medición de glucosa sólo puede contener números y un punto decimal
+CALORIES_EMPTY Las calorías consumidas no pueden estar vacías o contienen sólo espacio en blanco
+CALORIES_HAS_INVALID_CHARS Las calorías consumidas sólo puede contener números
+DURATION_EMPTY La duración no puede estar vacío o contener sólo espacio en blanco
+DURATION_HAS_INVALID_CHARS La duración sólo puede contener números
+TYPE_EMPTY El tipo no puede estar vacío o contener sólo espacio en blanco
+TYPE_HAS_INVALID_CHARS El tipo sólo puede contener letras, números, espacios, guiones y guiones bajos
+WEIGHT_EMPTY El peso no puede estar vacío o contener sólo espacio en blanco
+WEIGHT_HAS_INVALID_CHARS El peso sólo puede contener números y un punto decimal
