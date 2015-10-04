@@ -13,7 +13,7 @@ include_once("./makeTestDB.php");
 <h1>makeTestDB test</h1>
 
 <h2>It should create a test database for a particular name</h2>
-<?php $testDB = makeTestDB('makeTestDB'); ?>
+<?php $testDB = makeTestDB('dhma_testDB'); ?>
     
 </body>
 </html>

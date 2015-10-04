@@ -1,9 +1,11 @@
 <?php
 class Database {
     
+    public static $dbName;
     private static $db;
     
     public static function getDB($dbName = 'dhma', $configFile = 'myConfig.ini') {
+        Database::$dbName = $dbName;
         if (!isset(Database::$db)) {
             try {
                 // read database config info from file

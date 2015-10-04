@@ -1,5 +1,5 @@
 <?php
-class UserData {
+class UserProfile {
     
     const DEFAULT_THEME = 'dark';
     const DEFAULT_COLOR = '#00008B';
@@ -7,6 +7,7 @@ class UserData {
     private $formInput;
     private $errors;
     private $errorCount;
+    private $userName;
     private $firstName;
     private $lastName;
     private $email;
@@ -48,6 +49,10 @@ class UserData {
     
     public function getErrors() {
         return $this->errors;
+    }
+    
+    public function getUserName() {
+        return $this->userName;
     }
     
     public function getFirstName() {
@@ -194,8 +199,27 @@ class UserData {
         }
     }
     
+    private function validateUserName() {
+        $this->userName = Utilities::extractForm($this->formInput, "userName");
+        if (empty($this->userName)) {
+            $this->setError("userName", "USER_NAME_EMPTY");
+            return;
+        }
+    
+        if (strlen($this->userName) > 15) {
+            $this->setError("userName", "USER_NAME_TOO_LONG");
+            return;
+        }
+    
+        $options = array("options" => array("regexp" => "/^[a-zA-Z0-9_-]+$/"));
+        if (!filter_var($this->userName, FILTER_VALIDATE_REGEXP, $options)) {
+            $this->setError("userName", "USER_NAME_HAS_INVALID_CHARS");
+            return;
+        }
+    }
+    
     private function validateFirstName() {
-        $this->firstName = Utilities::extractForm($this->formInput, "fname");
+        $this->firstName = Utilities::extractForm($this->formInput, "firstName");
         if (empty($this->firstName)) {
             return;
         }
@@ -213,7 +237,7 @@ class UserData {
     }
     
     private function validateLastName() {
-        $this->lastName = Utilities::extractForm($this->formInput, "lname");
+        $this->lastName = Utilities::extractForm($this->formInput, "lastName");
         if (empty($this->lastName)) {
             return;
         }
@@ -331,7 +355,7 @@ class UserData {
     }
     
     private function validateAccentColor() {
-        $this->accentColor = Utilities::extractForm($this->formInput, "color");
+        $this->accentColor = Utilities::extractForm($this->formInput, "accentColor");
         if (empty($this->accentColor)) {
             $this->accentColor = self::DEFAULT_COLOR;
             return;
@@ -345,22 +369,22 @@ class UserData {
     }
     
     private function validateIsProfilePublic() {
-        $value = Utilities::extractForm($this->formInput, "public-profile");
+        $value = Utilities::extractForm($this->formInput, "isProfilePublic");
         $this->isProfilePublic = (empty($value)) ? false : true;
     }
     
     private function validateIsPicturePublic() {
-        $value = Utilities::extractForm($this->formInput, "showpic");
+        $value = Utilities::extractForm($this->formInput, "isPicturePublic");
         $this->isPicturePublic = (empty($value)) ? false : true;
     }
     
     private function validateSendReminders() {
-        $value = Utilities::extractForm($this->formInput, "reminders");
+        $value = Utilities::extractForm($this->formInput, "sendReminders");
         $this->sendReminders = (empty($value)) ? false : true;
     }
     
     private function validateStayLoggedIn() {
-        $value = Utilities::extractForm($this->formInput, "keep-logged-in");
+        $value = Utilities::extractForm($this->formInput, "stayLoggedIn");
         $this->stayLoggedIn = (empty($value)) ? false : true;
     }
 }
