@@ -21,7 +21,7 @@ SignupView::showBody(null, null);
 <h2>It should call show and display the view with most fields filled in and some error messages</h2>
 <?php
 include_once("../models/User.class.php");
-include_once("../models/UserData.class.php");
+include_once("../models/UserProfile.class.php");
 $invalidUserInput = array(
         "userName" => "A-Really-Long-User-Name",
         "password1" => "password123",
@@ -45,7 +45,7 @@ $invalidDataInput = array(
         "keep-logged-in" => "on"
 );
 $user = new User($invalidUserInput);
-$uData= new UserData($invalidDataInput);
+$uData= new UserProfile($invalidDataInput);
 SignupView::showBody($user, $uData);
 ?>
     

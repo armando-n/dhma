@@ -3,7 +3,7 @@
 <head>
 </head>
 <body>
-<h1>UserData tests</h1>
+<h1>Messages tests</h1>
 
 <?php
 include_once("../models/Messages.class.php");

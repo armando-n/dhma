@@ -2,16 +2,16 @@
 
 class HomeView {
     
-    public static function show($userData = null) {
-        HeaderView::show("Diabetic Health Management Assistant", !is_null($userData));
-        HomeView::showBody($userData);
-        FooterView::show(!is_null($userData));
+    public static function show($UserProfile = null) {
+        HeaderView::show("Diabetic Health Management Assistant", !is_null($UserProfile));
+        HomeView::showBody($UserProfile);
+        FooterView::show(!is_null($UserProfile));
     }
     
-    public static function showBody($uData) {
+    public static function showBody($uProfile) {
         ?>
 <section id="site-info">
-    <?php if (!is_null($uData)) { ?><h2>Welcome back, <?=$uData->getUserName()?>!</h2><?php } ?>
+    <?php if (!is_null($uProfile)) { ?><h2>Welcome back, <?=$uProfile->getUserName()?>!</h2><?php } ?>
     <h2><a href="tests.html">Tests</a></h2>
     <h2>About DHMA</h2>
     

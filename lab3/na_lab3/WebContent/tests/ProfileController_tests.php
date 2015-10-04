@@ -11,7 +11,7 @@
 <?php
 include_once("../controllers/ProfileController.class.php");
 include_once("../models/User.class.php");
-include_once("../models/UserData.class.php");
+include_once("../models/UserProfile.class.php");
 include_once("../models/Messages.class.php");
 include_once("../views/ProfileView.class.php");
 include_once("../views/HomeView.class.php");
@@ -28,7 +28,7 @@ $validUserInput = array(
         "password1" => "password123",
         "password2" => "password123"
 );
-$validUserDataInput = array(
+$validUserProfileInput = array(
         "fname" => "Armando",
         "lname" => "Navarro",
         "email" => "fdf786@my.utsa.edu",
@@ -46,7 +46,7 @@ $validUserDataInput = array(
         "keep-logged-in" => "on"
 );
 $user = new User($validUserInput);
-$uData = new UserData($validUserDataInput);
+$uData = new UserProfile($validUserProfileInput);
 ProfileController::run($user, $uData, false);
 ?>
 

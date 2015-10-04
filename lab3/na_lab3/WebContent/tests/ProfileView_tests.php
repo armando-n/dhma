@@ -12,7 +12,7 @@
 <h2>It should call showProfile and show without crashing</h2>
 <?php
 include_once("../views/ProfileView.class.php");
-include_once("../models/UserData.class.php");
+include_once("../models/UserProfile.class.php");
 include_once("../models/User.class.php");
 include_once("../models/Messages.class.php");
 include_once("../resources/Utilities.class.php");
@@ -22,7 +22,7 @@ $validUserInput = array(
         "password1" => "password123",
         "password2" => "password123"
 );
-$validUserDataInput = array(
+$validUserProfileInput = array(
         "fname" => "Armando",
         "lname" => "Navarro",
         "email" => "fdf786@my.utsa.edu",
@@ -40,18 +40,18 @@ $validUserDataInput = array(
         "keep-logged-in" => "on"
 );
 $user = new User($validUserInput);
-$userData = new UserData($validUserDataInput);
-ProfileView::showProfile($user, $userData);
+$UserProfile = new UserProfile($validUserProfileInput);
+ProfileView::showProfile($user, $UserProfile);
 ?>
     
 <h2>It should call showEditForm and show without crashing</h2>
 <?php 
-ProfileView::showEditForm($user,$userData, true);
+ProfileView::showEditForm($user,$UserProfile, true);
 ?>
 
 <h2>It should call showEditForm and show error messages next to some fields</h2>
 <?php 
-$invalidUserDataInput = array(
+$invalidUserProfileInput = array(
         "fname" => "Some-Really-Really-Super-Duper-Long-Name",
         "lname" => '$InvaldName',
         "email" => "fdf786",
@@ -68,8 +68,8 @@ $invalidUserDataInput = array(
         "reminders" => "on",
         "keep-logged-in" => "on"
 );
-$userData2 = new UserData($invalidUserDataInput);
-ProfileView::showEditForm($user, $userData2, true);
+$UserProfile2 = new UserProfile($invalidUserProfileInput);
+ProfileView::showEditForm($user, $UserProfile2, true);
 ?>
 
 </body>

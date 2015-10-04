@@ -14,7 +14,7 @@ class ProfileController {
                         "password2" => "password123"
                 );
                 $user = new User($validUserInput);
-                $uData = new UserData($_POST);
+                $uData = new UserProfile($_POST);
                 
                 // edit successful; show profile
                 if ($user->getErrorCount() == 0 && $uData->getErrorCount() == 0)

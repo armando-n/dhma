@@ -11,7 +11,7 @@
 <?php
 include_once("../controllers/PastMeasurementsController.class.php");
 include_once("../models/User.class.php");
-include_once("../models/UserData.class.php");
+include_once("../models/UserProfile.class.php");
 include_once("../models/GlucoseMeasurement.class.php");
 include_once("../models/BloodPressureMeasurement.class.php");
 include_once("../models/CalorieMeasurement.class.php");

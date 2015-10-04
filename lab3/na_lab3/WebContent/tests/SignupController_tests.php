@@ -11,7 +11,7 @@
 <?php
 include_once("../controllers/SignupController.class.php");
 include_once("../models/User.class.php");
-include_once("../models/UserData.class.php");
+include_once("../models/UserProfile.class.php");
 include_once("../models/Messages.class.php");
 include_once("../views/SignupView.class.php");
 include_once("../views/ProfileView.class.php");

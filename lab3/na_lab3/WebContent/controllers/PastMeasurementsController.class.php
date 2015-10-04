@@ -23,7 +23,7 @@ class PastMeasurementsController {
                 "password2" => "password123"
         );
         $user = new User($userInput);
-        $uData = new UserData(null);
+        $uData = new UserProfile(null);
     
         $glucoseInput1 = array(
                 "userName" => "armando-n",

@@ -9,7 +9,7 @@ $validUserInput = array(
         "password1" => "password123",
         "password2" => "password123"
 );
-$validUserDataInput = array(
+$validUserProfileInput = array(
         "fname" => "Armando",
         "lname" => "Navarro",
         "email" => "fdf786@my.utsa.edu",
@@ -29,7 +29,7 @@ $validUserDataInput = array(
 
 // dummy user info; necessary because sessions are not yet implemented
 $user = new User($validUserInput);
-$uData = new UserData($validUserDataInput);
+$uData = new UserProfile($validUserProfileInput);
 
 // parse the request URL
 $url = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
