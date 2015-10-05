@@ -1,7 +1,7 @@
 <?php
+include_once("../models/GenericModelObject.class.php");
 include_once("../models/GlucoseMeasurement.class.php");
 include_once("../models/Messages.class.php");
-include_once("../resources/Utilities.class.php");
 
 $validInput = array(
         "userName" => "armando-n",

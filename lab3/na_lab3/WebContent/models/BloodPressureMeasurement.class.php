@@ -1,9 +1,7 @@
 <?php
-class BloodPressureMeasurement {
+class BloodPressureMeasurement extends GenericModelObject {
     
     private $formInput;
-    private $errors;
-    private $errorCount;
     private $userName;
     private $datetime;
     private $systolicPressure;
@@ -13,26 +11,6 @@ class BloodPressureMeasurement {
         $this->formInput = $formInput;
         Messages::reset();
         $this->initialize();
-    }
-    
-    public function getError($errorName) {
-        if (isset($this->errors[$errorName]))
-            return $this->errors[$errorName];
-    
-        return "";
-    }
-    
-    public function setError($errorName, $errorValue) {
-        $this->errors[$errorName] =  Messages::getError($errorValue);
-        $this->errorCount++;
-    }
-    
-    public function getErrors() {
-        return $this->errors;
-    }
-    
-    public function getErrorCount() {
-        return $this->errorCount;
     }
     
     public function getDateTime() {
@@ -91,7 +69,7 @@ class BloodPressureMeasurement {
         return $str;
     }
     
-    private function initialize() {
+    protected function initialize() {
         $this->errors = array();
         $this->errorCount = 0;
         
@@ -109,7 +87,7 @@ class BloodPressureMeasurement {
     }
     
     private function validateUserName() {
-        $this->userName = Utilities::extractForm($this->formInput, "userName");
+        $this->userName = $this->extractForm($this->formInput, "userName");
         if (empty($this->userName)) {
             $this->setError("userName", "USER_NAME_EMPTY");
             return;
@@ -128,8 +106,8 @@ class BloodPressureMeasurement {
     }
     
     private function validateDateAndTime() {
-        $date = Utilities::extractForm($this->formInput, "date");
-        $time = Utilities::extractForm($this->formInput, "time");
+        $date = $this->extractForm($this->formInput, "date");
+        $time = $this->extractForm($this->formInput, "time");
         $this->datetime = '';
         
         if (empty($date)) {
@@ -164,7 +142,7 @@ class BloodPressureMeasurement {
     }
     
     private function validateSystolicPressure() {
-        $this->systolicPressure = Utilities::extractForm($this->formInput, "systolic");
+        $this->systolicPressure = $this->extractForm($this->formInput, "systolic");
         
         if (empty($this->systolicPressure)) {
             $this->setError("systolicPressure", "SYSTOLIC_PRESSURE_EMPTY");
@@ -181,7 +159,7 @@ class BloodPressureMeasurement {
     }
     
     private function validateDiastolicPressure() {
-        $this->diastolicPressure = Utilities::extractForm($this->formInput, "diastolic");
+        $this->diastolicPressure = $this->extractForm($this->formInput, "diastolic");
         
         if (empty($this->diastolicPressure)) {
             $this->setError("diastolicPressure", "DIASTOLIC_PRESSURE_EMPTY");

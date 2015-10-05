@@ -1,17 +1,14 @@
 <?php
-class UserProfile {
+class UserProfile extends GenericModelObject {
     
     const DEFAULT_THEME = 'dark';
     const DEFAULT_COLOR = '#00008B';
     
     private $formInput;
-    private $errors;
-    private $errorCount;
     private $userName;
     private $firstName;
     private $lastName;
     private $email;
-    private $passHash;
     private $phone;
     private $gender;
     private $dob;
@@ -29,26 +26,6 @@ class UserProfile {
         $this->formInput = $formInput;
         Messages::reset();
         $this->initialize();
-    }
-    
-    public function getError($errorName) {
-        if (isset($this->errors[$errorName]))
-            return $this->errors[$errorName];
-        
-        return "";
-    }
-    
-    public function setError($errorName, $errorValue) {
-        $this->errors[$errorName] =  Messages::getError($errorValue);
-        $this->errorCount++;
-    }
-    
-    public function getErrorCount() {
-        return $this->errorCount;
-    }
-    
-    public function getErrors() {
-        return $this->errors;
     }
     
     public function getUserName() {
@@ -159,7 +136,7 @@ class UserProfile {
         return $str;
     }
     
-    private function initialize() {
+    protected function initialize() {
         $this->errorCount = 0;
         $this->errors = array();
         
@@ -201,7 +178,7 @@ class UserProfile {
     }
     
     private function validateUserName() {
-        $this->userName = Utilities::extractForm($this->formInput, "userName");
+        $this->userName = $this->extractForm($this->formInput, "userName");
         if (empty($this->userName)) {
             $this->setError("userName", "USER_NAME_EMPTY");
             return;
@@ -220,7 +197,7 @@ class UserProfile {
     }
     
     private function validateFirstName() {
-        $this->firstName = Utilities::extractForm($this->formInput, "firstName");
+        $this->firstName = $this->extractForm($this->formInput, "firstName");
         if (empty($this->firstName)) {
             return;
         }
@@ -238,7 +215,7 @@ class UserProfile {
     }
     
     private function validateLastName() {
-        $this->lastName = Utilities::extractForm($this->formInput, "lastName");
+        $this->lastName = $this->extractForm($this->formInput, "lastName");
         if (empty($this->lastName)) {
             return;
         }
@@ -256,7 +233,7 @@ class UserProfile {
     }
     
     private function validateEmail() {
-        $this->email = Utilities::extractForm($this->formInput, "email");
+        $this->email = $this->extractForm($this->formInput, "email");
         if (empty($this->email)) {
             return;
         }
@@ -274,7 +251,7 @@ class UserProfile {
     }
     
     private function validatePhone() {
-        $this->phone = Utilities::extractForm($this->formInput, "phone");
+        $this->phone = $this->extractForm($this->formInput, "phone");
         if (empty($this->phone)) {
             return;
         }
@@ -292,7 +269,7 @@ class UserProfile {
     }
     
     private function validateGender() {
-        $this->gender = Utilities::extractForm($this->formInput, "gender");
+        $this->gender = $this->extractForm($this->formInput, "gender");
         if (empty($this->gender)) {
             return;
         }
@@ -305,7 +282,7 @@ class UserProfile {
     }
     
     private function validateDOB() {
-        $this->dob = Utilities::extractForm($this->formInput, "dob");
+        $this->dob = $this->extractForm($this->formInput, "dob");
         if (empty($this->dob)) {
             return;
         }
@@ -318,18 +295,18 @@ class UserProfile {
     }
     
     private function validateCountry() {
-        $this->country = Utilities::extractForm($this->formInput, "country");
+        $this->country = $this->extractForm($this->formInput, "country");
         if (empty($this->country)) {
             return;
         }
     }
     
     private function validatePicture() {
-        $this->picture = Utilities::extractForm($this->formInput, "picture");
+        $this->picture = $this->extractForm($this->formInput, "picture");
     }
     
     private function validateFacebook() {
-        $this->facebook = Utilities::extractForm($this->formInput, "facebook");
+        $this->facebook = $this->extractForm($this->formInput, "facebook");
         if (empty($this->facebook)) {
             return;
         }
@@ -342,7 +319,7 @@ class UserProfile {
     }
     
     private function validateTheme() {
-        $this->theme = Utilities::extractForm($this->formInput, "theme");
+        $this->theme = $this->extractForm($this->formInput, "theme");
         if (empty($this->theme)) {
             $this->theme = self::DEFAULT_THEME;
             return;
@@ -356,7 +333,7 @@ class UserProfile {
     }
     
     private function validateAccentColor() {
-        $this->accentColor = Utilities::extractForm($this->formInput, "accentColor");
+        $this->accentColor = $this->extractForm($this->formInput, "accentColor");
         if (empty($this->accentColor)) {
             $this->accentColor = self::DEFAULT_COLOR;
             return;
@@ -370,22 +347,22 @@ class UserProfile {
     }
     
     private function validateIsProfilePublic() {
-        $value = Utilities::extractForm($this->formInput, "isProfilePublic");
+        $value = $this->extractForm($this->formInput, "isProfilePublic");
         $this->isProfilePublic = (empty($value)) ? false : true;
     }
     
     private function validateIsPicturePublic() {
-        $value = Utilities::extractForm($this->formInput, "isPicturePublic");
+        $value = $this->extractForm($this->formInput, "isPicturePublic");
         $this->isPicturePublic = (empty($value)) ? false : true;
     }
     
     private function validateSendReminders() {
-        $value = Utilities::extractForm($this->formInput, "sendReminders");
+        $value = $this->extractForm($this->formInput, "sendReminders");
         $this->sendReminders = (empty($value)) ? false : true;
     }
     
     private function validateStayLoggedIn() {
-        $value = Utilities::extractForm($this->formInput, "stayLoggedIn");
+        $value = $this->extractForm($this->formInput, "stayLoggedIn");
         $this->stayLoggedIn = (empty($value)) ? false : true;
     }
 }

@@ -1,9 +1,7 @@
 <?php
-class User {
+class User extends GenericModelObject {
     
     private $formInput;
-    private $errors;
-    private $errorCount;
     private $userName;
     private $password;
     
@@ -11,26 +9,6 @@ class User {
         $this->formInput = $formInput;
         Messages::reset();
         $this->initialize();
-    }
-    
-    public function getError($errorName) {
-        if (isset($this->errors[$errorName]))
-            return $this->errors[$errorName];
-
-        return "";
-    }
-    
-    public function setError($errorName, $errorValue) {
-        $this->errors[$errorName] =  Messages::getError($errorValue);
-        $this->errorCount++;
-    }
-    
-    public function getErrorCount() {
-        return $this->errorCount;
-    }
-    
-    public function getErrors() {
-        return $this->errors;
     }
     
     public function getUserName() {
@@ -56,7 +34,7 @@ class User {
         return $str;
     }
     
-    private function initialize() {
+    protected function initialize() {
         $this->errorCount = 0;
         $this->errors = array();
         
@@ -71,7 +49,7 @@ class User {
     }
     
     private function validateUserName() {
-        $this->userName = Utilities::extractForm($this->formInput, "userName");
+        $this->userName = $this->extractForm($this->formInput, "userName");
         if (empty($this->userName)) {
             $this->setError("userName", "USER_NAME_EMPTY");
             return;
@@ -90,9 +68,9 @@ class User {
     }
     
     private function validatePassword() {
-        $pass = Utilities::extractForm($this->formInput, "password");
-        $pass1 = Utilities::extractForm($this->formInput, "password1");
-        $pass2 = Utilities::extractForm($this->formInput, "password2");
+        $pass = $this->extractForm($this->formInput, "password");
+        $pass1 = $this->extractForm($this->formInput, "password1");
+        $pass2 = $this->extractForm($this->formInput, "password2");
         if (!empty($pass1))
             $this->password = $pass1;
         else

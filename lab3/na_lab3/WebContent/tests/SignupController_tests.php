@@ -10,6 +10,7 @@
 
 <?php
 include_once("../controllers/SignupController.class.php");
+include_once("../models/GenericModelObject.class.php");
 include_once("../models/User.class.php");
 include_once("../models/UserProfile.class.php");
 include_once("../models/Messages.class.php");
@@ -18,7 +19,6 @@ include_once("../views/ProfileView.class.php");
 include_once("../views/HomeView.class.php");
 include_once("../views/HeaderView.class.php");
 include_once("../views/FooterView.class.php");
-include_once("../resources/Utilities.class.php");
 ?>
 
 <h2>It should call the run method for empty input and display the empty Signup View</h2>

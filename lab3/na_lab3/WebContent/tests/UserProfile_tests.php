@@ -1,7 +1,7 @@
 <?php
+include_once("../models/GenericModelObject.class.php");
 include_once("../models/UserProfile.class.php");
 include_once("../models/Messages.class.php");
-include_once("../resources/Utilities.class.php");
 
 // test valid UserProfile object creation
 $validInput = array(
@@ -50,7 +50,7 @@ $emptyInputValues = array(
         "isProfilePublic" => "",
         "isPicturePublic" => "",
         "sendReminders" => "",
-        "stayLoggedIn" => ""
+        "stayLoggedIn" => "",
         "userName" => ""
 );
 $emptyUserProfile2 = new UserProfile($emptyInputValues);
@@ -99,7 +99,7 @@ is stay logged in set: <?=$validUserProfile->isStayLoggedInSet()?><br />
 Parameters: <pre><?php print_r($validUserProfile->getParameters()); ?></pre>
 
 <!-- output: null input test -->
-<h2>It should create a valid UserProfile object with empty property values; Theme, accent color, and boolean properties will be set to default values</h2>
+<h2>It should create a valid UserProfile object with mostly empty property values; Theme, accent color, and boolean properties will be set to default values</h2>
 <?= $test3 ?> <?php if (!empty($test3)) {?><br /><?php ; }?>
 <?= $test4 ?> <?php if (!empty($test4)) {?><br /><?php ; }?>
 The object is:

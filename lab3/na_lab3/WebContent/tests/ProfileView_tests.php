@@ -13,9 +13,9 @@
 <?php
 include_once("../views/ProfileView.class.php");
 include_once("../models/UserProfile.class.php");
+include_once("../models/GenericModelObject.class.php");
 include_once("../models/User.class.php");
 include_once("../models/Messages.class.php");
-include_once("../resources/Utilities.class.php");
 
 $validUserInput = array(
         "userName" => "armando-n",

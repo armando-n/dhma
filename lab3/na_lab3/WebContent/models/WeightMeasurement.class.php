@@ -1,9 +1,7 @@
 <?php
-class WeightMeasurement {
+class WeightMeasurement extends GenericModelObject {
     
     private $formInput;
-    private $errors;
-    private $errorCount;
     private $userName;
     private $datetime;
     private $weight;
@@ -13,26 +11,6 @@ class WeightMeasurement {
         $this->formInput = $formInput;
         Messages::reset();
         $this->initialize();
-    }
-    
-    public function getError($errorName) {
-        if (isset($this->errors[$errorName]))
-            return $this->errors[$errorName];
-    
-        return "";
-    }
-    
-    public function setError($errorName, $errorValue) {
-        $this->errors[$errorName] =  Messages::getError($errorValue);
-        $this->errorCount++;
-    }
-    
-    public function getErrors() {
-        return $this->errors;
-    }
-    
-    public function getErrorCount() {
-        return $this->errorCount;
     }
     
     public function getUserName() {
@@ -81,7 +59,7 @@ class WeightMeasurement {
         return $str;
     }
     
-    private function initialize() {
+    protected function initialize() {
         $this->errors = array();
         $this->errorCount = 0;
         
@@ -99,7 +77,7 @@ class WeightMeasurement {
     }
     
     private function validateUserName() {
-        $this->userName = Utilities::extractForm($this->formInput, "userName");
+        $this->userName = $this->extractForm($this->formInput, "userName");
         if (empty($this->userName)) {
             $this->setError("userName", "USER_NAME_EMPTY");
             return;
@@ -118,8 +96,8 @@ class WeightMeasurement {
     }
     
     private function validateDateAndTime() {
-        $date = Utilities::extractForm($this->formInput, "date");
-        $time = Utilities::extractForm($this->formInput, "time");
+        $date = $this->extractForm($this->formInput, "date");
+        $time = $this->extractForm($this->formInput, "time");
         $this->datetime = '';
     
         if (empty($date)) {
@@ -154,7 +132,7 @@ class WeightMeasurement {
     }
     
     private function validateMeasurement() {
-        $this->weight = Utilities::extractForm($this->formInput, "weight");
+        $this->weight = $this->extractForm($this->formInput, "weight");
         
         if (empty($this->weight)) {
             $this->setError("weight", "WEIGHT_EMPTY");
@@ -171,7 +149,7 @@ class WeightMeasurement {
     }
     
     private function validateUnits() {
-        $this->units = Utilities::extractForm($this->formInput, "units");
+        $this->units = $this->extractForm($this->formInput, "units");
         
         if (empty($this->units)) {
             $this->setError("units", "UNITS_EMPTY");

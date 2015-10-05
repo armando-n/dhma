@@ -10,6 +10,7 @@
 
 <?php
 include_once("../controllers/PastMeasurementsController.class.php");
+include_once("../models/GenericModelObject.class.php");
 include_once("../models/User.class.php");
 include_once("../models/UserProfile.class.php");
 include_once("../models/GlucoseMeasurement.class.php");
@@ -22,7 +23,6 @@ include_once("../models/Messages.class.php");
 include_once("../views/PastMeasurementsView.class.php");
 include_once("../views/HeaderView.class.php");
 include_once("../views/FooterView.class.php");
-include_once("../resources/Utilities.class.php");
 ?>
 
 <h2>It should call the run method and display the Past Measurements view without crashing</h2>

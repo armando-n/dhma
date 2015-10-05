@@ -1,9 +1,7 @@
 <?php
-class ExerciseMeasurement {
+class ExerciseMeasurement extends GenericModelObject {
     
     private $formInput;
-    private $errors;
-    private $errorCount;
     private $userName;
     private $datetime;
     private $duration; // in minutes
@@ -13,26 +11,6 @@ class ExerciseMeasurement {
         $this->formInput = $formInput;
         Messages::reset();
         $this->initialize();
-    }
-    
-    public function getError($errorName) {
-        if (isset($this->errors[$errorName]))
-            return $this->errors[$errorName];
-    
-        return "";
-    }
-    
-    public function setError($errorName, $errorValue) {
-        $this->errors[$errorName] =  Messages::getError($errorValue);
-        $this->errorCount++;
-    }
-    
-    public function getErrors() {
-        return $this->errors;
-    }
-    
-    public function getErrorCount() {
-        return $this->errorCount;
     }
     
     public function getUserName() {
@@ -91,7 +69,7 @@ class ExerciseMeasurement {
         return $str;
     }
     
-    private function initialize() {
+    protected function initialize() {
         $this->errors = array();
         $this->errorCount = 0;
         
@@ -108,7 +86,7 @@ class ExerciseMeasurement {
     }
     
     private function validateUserName() {
-        $this->userName = Utilities::extractForm($this->formInput, "userName");
+        $this->userName = $this->extractForm($this->formInput, "userName");
         if (empty($this->userName)) {
             $this->setError("userName", "USER_NAME_EMPTY");
             return;
@@ -127,8 +105,8 @@ class ExerciseMeasurement {
     }
     
     private function validateDateAndTime() {
-        $date = Utilities::extractForm($this->formInput, "date");
-        $time = Utilities::extractForm($this->formInput, "time");
+        $date = $this->extractForm($this->formInput, "date");
+        $time = $this->extractForm($this->formInput, "time");
         $this->datetime = '';
     
         if (empty($date)) {
@@ -163,7 +141,7 @@ class ExerciseMeasurement {
     }
     
     private function validateDuration() {
-        $this->duration = Utilities::extractForm($this->formInput, "duration");
+        $this->duration = $this->extractForm($this->formInput, "duration");
         
         if (empty($this->duration)) {
             $this->setError("duration", "DURATION_EMPTY");
@@ -180,7 +158,7 @@ class ExerciseMeasurement {
     }
     
     private function validateType() {
-        $this->type = Utilities::extractForm($this->formInput, "type");
+        $this->type = $this->extractForm($this->formInput, "type");
         
         if (empty($this->type)) {
             $this->setError("type", "TYPE_EMPTY");

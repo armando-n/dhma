@@ -1,9 +1,9 @@
 <?php
+include_once("../models/GenericModelObject.class.php");
 include_once("../models/UsersDB.class.php");
 include_once("../models/User.class.php");
 include_once("../models/Database.class.php");
 include_once("../models/Messages.class.php");
-include_once("../resources/Utilities.class.php");
 ?><!DOCTYPE html>
 <html>
 <head>
