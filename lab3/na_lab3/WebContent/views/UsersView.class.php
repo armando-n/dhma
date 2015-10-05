@@ -2,13 +2,20 @@
 class UsersView {
     
     // takes an array of UserProfile objects
-    public static function show($users, $loggedIn = false) {
+    public static function show($uProfiles = null, $loggedIn = false) {
         HeaderView::show("User List", $loggedIn);
-        UsersView::show($users);
+        UsersView::show($uProfiles);
         FooterView::show($loggedIn);
     }
     
-    public static function showBody($users) {
+    public static function showBody($uProfiles) {
+        if (is_null($uProfiles)) {
+            ?><p>Error: user profiles not found</p><?php
+            return;
+        } else if (empty($uProfiles)) {
+            ?><p>No users exist yet</p><?php
+            return;
+        }
         ?>
 <section>
     <h2>Users</h2>
@@ -30,22 +37,22 @@ class UsersView {
             <th>Stay Logged In</th>
         </tr>
 <?php
-        foreach ($user as $users) {
+        foreach ($uProfiles as $profile) {
             ?>
         <tr>
-            <td><?=$user->getFirstName()?> <?=$user->getLastName()?></td>
-            <td><?=$user->getEmail()?></td>
-            <td><?=$user->getGender()?></td>
-            <td><?=$user->getDOB()?></td>
-            <td><?=$user->getCountry()?></td>
-            <td><?=$user->getPicture()?></td>
-            <td><?=$user->getFacebook()?></td>
-            <td><?=$user->getTheme()?></td>
-            <td><?=$user->getAccentColor()?></td>
-            <td><?=$user->isProfilePublic()?></td>
-            <td><?=$user->isPicturePublic()?></td>
-            <td><?=$user->isSendRemdersSet()?></td>
-            <td><?=$user->isStayLoggedInSet()?></td>
+            <td><?=$profile->getFirstName()?> <?=$profile->getLastName()?></td>
+            <td><?=$profile->getEmail()?></td>
+            <td><?=$profile->getGender()?></td>
+            <td><?=$profile->getDOB()?></td>
+            <td><?=$profile->getCountry()?></td>
+            <td><?=$profile->getPicture()?></td>
+            <td><?=$profile->getFacebook()?></td>
+            <td><?=$profile->getTheme()?></td>
+            <td><?=$profile->getAccentColor()?></td>
+            <td><?=$profile->isProfilePublic() ? 'yes' : 'no'?></td>
+            <td><?=$profile->isPicturePublic() ? 'yes' : 'no'?></td>
+            <td><?=$profile->isSendRemindersSet() ? 'yes' : 'no'?></td>
+            <td><?=$profile->isStayLoggedInSet() ? 'yes' : 'no'?></td>
         </tr>
 <?php
         }

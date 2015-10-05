@@ -196,6 +196,7 @@ class UserProfile {
             $this->validateIsPicturePublic();
             $this->validateSendReminders();
             $this->validateStayLoggedIn();
+            $this->validateUserName();
         }
     }
     
