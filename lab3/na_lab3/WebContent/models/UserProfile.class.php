@@ -98,7 +98,7 @@ class UserProfile extends GenericModelObject {
                 "firstName" => $this->firstName,
                 "lastName" => $this->lastName,
                 "email" => $this->email,
-                "phoneNumber" => $this->phone,
+                "phone" => $this->phone,
                 "gender" => $this->gender,
                 "dob" => $this->dob,
                 "country" => $this->country,
@@ -106,10 +106,11 @@ class UserProfile extends GenericModelObject {
                 "facebook" => $this->facebook,
                 "theme" => $this->theme,
                 "accentColor" => $this->accentColor,
-                "profilePublic" => $this->isProfilePublic,
-                "picturePublic" => $this->isPicturePublic,
+                "isProfilePublic" => $this->isProfilePublic,
+                "isPicturePublic" => $this->isPicturePublic,
                 "sendReminders" => $this->sendReminders,
-                "stayLoggedIn" => $this->stayLoggedIn
+                "stayLoggedIn" => $this->stayLoggedIn,
+                "userName" => $this->userName
         );
         
         return $paramArray;
