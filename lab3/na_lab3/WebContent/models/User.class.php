@@ -90,9 +90,13 @@ class User {
     }
     
     private function validatePassword() {
+        $pass = Utilities::extractForm($this->formInput, "password");
         $pass1 = Utilities::extractForm($this->formInput, "password1");
         $pass2 = Utilities::extractForm($this->formInput, "password2");
-        $this->password = $pass1;
+        if (!empty($pass1))
+            $this->password = $pass1;
+        else
+            $this->password = $pass;
     
 //         if ($pass1 !== $pass2) {
 //             $this->setError("password", "PASSWORDS_DO_NOT_MATCH");

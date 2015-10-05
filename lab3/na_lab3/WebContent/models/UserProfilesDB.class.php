@@ -35,7 +35,7 @@ class UserProfilesDB {
                 ":stayLoggedIn" => $uProfile->isStayLoggedInSet(),
                 ":userID" => $userID
             ));
-            $returnProfileID = $db->lastInsertId("userID");
+            $returnProfileID = $db->lastInsertId("profileID");
             
         } catch (PDOException $e) {
             echo $e->getMessage();
@@ -67,7 +67,7 @@ class UserProfilesDB {
         return $allUsers;
     }
     
-    // returns a user object whose $type field has value $value
+    // returns a UserProfile object whose $type field has value $value
     public static function getUserProfileBy($type, $value, $dbName = null) {
         $allowed = ['profileID', 'userID', 'email', 'phone'];
         $uProfile = null;

@@ -28,6 +28,11 @@ $db = Database::getDB('dhma_testDB');
 $stmt = $db->prepare("delete from UserProfiles where firstName = 'Elizabeth' and lastName = 'Jones'");
 $stmt->execute();
 $stmt->closeCursor();
+$stmt = $db->prepare("select userID from Users where userName = 'lizzy426'");
+$stmt->execute();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+$stmt->closeCursor();
+
 $input = array(
     "firstName" => "Elizabeth",
     "lastName" => "Jones",
@@ -45,7 +50,7 @@ $input = array(
     "userName" => "lizzy426"
 );
 $uProfile = new UserProfile($input);
-$profileID = UserProfilesDB::addUserProfileTest($uProfile, 6);
+$profileID = UserProfilesDB::addUserProfileTest($uProfile, $row["userID"]);
 ?>
 The new ID is: <?=$profileID?>
 
