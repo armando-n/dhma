@@ -4,6 +4,7 @@ class BloodPressureMeasurement extends GenericModelObject {
     private $formInput;
     private $userName;
     private $datetime;
+    private $notes;
     private $systolicPressure;
     private $diastolicPressure;
     
@@ -29,6 +30,10 @@ class BloodPressureMeasurement extends GenericModelObject {
         return is_object($this->datetime) ? $this->datetime->format("h:i a") : '';
     }
     
+    public function getNotes() {
+        return $this->notes;
+    }
+    
     public function getSystolicPressure() {
         return $this->systolicPressure;
     }
@@ -38,6 +43,9 @@ class BloodPressureMeasurement extends GenericModelObject {
     }
     
     public function getMeasurement() {
+        if (empty($this->systolicPressure))
+            return '';
+        
         $str = $this->systolicPressure . " / " . $this->diastolicPressure;
         return $str;
     }
@@ -51,6 +59,7 @@ class BloodPressureMeasurement extends GenericModelObject {
         $params = array(
                 "userName" => $this->userName,
                 "dateAndTime" => $this->datetime,
+                "notes" => $this->notes,
                 "systolicPressure" => $this->systolicPressure,
                 "diastolicPressure" => $this->diastolicPressure
         );
@@ -61,10 +70,11 @@ class BloodPressureMeasurement extends GenericModelObject {
     public function __toString() {
         $dtVal = is_object($this->datetime) ? $this->datetime->format("Y-m-d h:i:s a") : '';
         $str =
-            "User Name: [" .$this->userName . "]\n" .
+            "User Name: [" . $this->userName . "]\n" .
             "Date and Time: [" . $dtVal . "]\n" .
             "Systolic Pressure: [" . $this->systolicPressure . "]\n" .
-            "Diastolic Pressure: [" . $this->diastolicPressure . "]";
+            "Diastolic Pressure: [" . $this->diastolicPressure . "]\n" .
+            "Notes: [" . $this->notes . "]";
         
         return $str;
     }
@@ -76,11 +86,13 @@ class BloodPressureMeasurement extends GenericModelObject {
         if (is_null($this->formInput)) {
             $this->userName = '';
             $this->datetime = '';
+            $this->notes = '';
             $this->systolicPressure = '';
             $this->diastolicPressure = '';
         } else {
             $this->validateUserName();
             $this->validateDateAndTime();
+            $this->validateNotes();
             $this->validateSystolicPressure();
             $this->validateDiastolicPressure();
         }
@@ -93,14 +105,14 @@ class BloodPressureMeasurement extends GenericModelObject {
             return;
         }
         
-        if (strlen($this->userName) > 15) {
-            $this->setError("userName", "USER_NAME_TOO_LONG");
-            return;
-        }
-        
         $options = array("options" => array("regexp" => "/^[a-zA-Z0-9_-]+$/"));
         if (!filter_var($this->userName, FILTER_VALIDATE_REGEXP, $options)) {
             $this->setError("userName", "USER_NAME_HAS_INVALID_CHARS");
+            return;
+        }
+        
+        if (strlen($this->userName) > 20) {
+            $this->setError("userName", "USER_NAME_TOO_LONG");
             return;
         }
     }
@@ -117,34 +129,46 @@ class BloodPressureMeasurement extends GenericModelObject {
         $this->datetime = '';
         
         if (empty($date)) {
-            $this->setError("datetime", "DATE_EMPTY");
+            $this->setError("dateAndTime", "DATE_EMPTY");
             return;
         }
         
         if (empty($time)) {
-            $this->setError("datetime", "TIME_EMPTY");
+            $this->setError("dateAndTime", "TIME_EMPTY");
             return;
         }
         
         $options = array("options" => array("regexp" => "/^((\d{4}[\/-]\d\d[\/-]\d\d)|(\d\d[\/-]\d\d[\/-]\d{4}))$/"));
         if (!filter_var($date, FILTER_VALIDATE_REGEXP, $options)) {
-            $this->setError("datetime", "DATE_HAS_INVALID_CHARS");
+            $this->setError("dateAndTime", "DATE_HAS_INVALID_CHARS");
             return;
         }
         
         $options = array("options" => array("regexp" => "/^(([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))?$/"));
         if (!filter_var($time, FILTER_VALIDATE_REGEXP, $options)) {
-            $this->setError("datetime", "TIME_HAS_INVALID_CHARS");
+            $this->setError("dateAndTime", "TIME_HAS_INVALID_CHARS");
             return;
         }
         
         try { $dt = new DateTime($date . ' ' . $time); }
         catch (Exception $e) {
-            $this->setError("datetime", "DATE_AND_TIME_INVALID");
+            $this->setError("dateAndTime", "DATE_AND_TIME_INVALID");
             return;
         }
         
         $this->datetime = $dt;
+    }
+    
+    private function validateNotes() {
+        $this->notes = $this->extractForm($this->formInput, "notes");
+    
+        if (empty($this->notes))
+            return;
+    
+        if (strlen($this->notes) > 255) {
+            $this->setError("notes", "NOTES_ARE_TOO_LONG");
+            return;
+        }
     }
     
     private function validateSystolicPressure() {
