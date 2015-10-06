@@ -26,14 +26,14 @@ class BloodPressureMeasurement extends GenericModelObject {
     }
     
     public function getTime() {
-        return is_object($this->datetime) ? $this->datetime->format("h:i:s a") : '';
+        return is_object($this->datetime) ? $this->datetime->format("h:i a") : '';
     }
     
-    public function getSystolic() {
+    public function getSystolicPressure() {
         return $this->systolicPressure;
     }
     
-    public function getDiastolic() {
+    public function getDiastolicPressure() {
         return $this->diastolicPressure;
     }
     
@@ -50,7 +50,7 @@ class BloodPressureMeasurement extends GenericModelObject {
     public function getParameters() {
         $params = array(
                 "userName" => $this->userName,
-                "datetime" => $this->datetime,
+                "dateAndTime" => $this->datetime,
                 "systolicPressure" => $this->systolicPressure,
                 "diastolicPressure" => $this->diastolicPressure
         );
@@ -106,8 +106,14 @@ class BloodPressureMeasurement extends GenericModelObject {
     }
     
     private function validateDateAndTime() {
-        $date = $this->extractForm($this->formInput, "date");
-        $time = $this->extractForm($this->formInput, "time");
+        // the date and time may be present as a single value or as separate values
+        if (array_key_exists('dateAndTime', $this->formInput)) {
+            $datetime = $this->extractForm($this->formInput, "dateAndTime");
+            list($date, $time) = preg_split("/ /", $datetime);
+        } else {
+            $date = $this->extractForm($this->formInput, "date");
+            $time = $this->extractForm($this->formInput, "time");
+        }
         $this->datetime = '';
         
         if (empty($date)) {
@@ -142,7 +148,7 @@ class BloodPressureMeasurement extends GenericModelObject {
     }
     
     private function validateSystolicPressure() {
-        $this->systolicPressure = $this->extractForm($this->formInput, "systolic");
+        $this->systolicPressure = $this->extractForm($this->formInput, "systolicPressure");
         
         if (empty($this->systolicPressure)) {
             $this->setError("systolicPressure", "SYSTOLIC_PRESSURE_EMPTY");
@@ -159,7 +165,7 @@ class BloodPressureMeasurement extends GenericModelObject {
     }
     
     private function validateDiastolicPressure() {
-        $this->diastolicPressure = $this->extractForm($this->formInput, "diastolic");
+        $this->diastolicPressure = $this->extractForm($this->formInput, "diastolicPressure");
         
         if (empty($this->diastolicPressure)) {
             $this->setError("diastolicPressure", "DIASTOLIC_PRESSURE_EMPTY");
