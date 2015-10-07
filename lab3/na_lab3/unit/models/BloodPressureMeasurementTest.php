@@ -121,7 +121,7 @@ class BloodPressureMeasurementTest extends PHPUnit_Framework_TestCase {
         $this->assertEmpty($measurement->getNotes(),
             'It should return an empty value for the getNotes method of the BloodPressureMeasurement object when null input is provided');
         $this->assertEmpty($measurement->getSystolicPressure(),
-            'It should return an empty value for the getSysotlicPressure method of the BloodPressureMeasurement object when null input is provided');
+            'It should return an empty value for the getSystolicPressure method of the BloodPressureMeasurement object when null input is provided');
         $this->assertEmpty($measurement->getDiastolicPressure(),
             'It should return an empty value for the getDiastolicPressure method of the BloodPressureMeasurement object when null input is provided');
         $this->assertEmpty($measurement->getMeasurement(),
@@ -155,7 +155,7 @@ class BloodPressureMeasurementTest extends PHPUnit_Framework_TestCase {
         $this->assertEmpty($measurement->getNotes(),
             'It should return an empty value for the getNotes method of the BloodPressureMeasurement object when no input is provided');
         $this->assertEmpty($measurement->getSystolicPressure(),
-            'It should return an empty value for the getSysotlicPressure method of the BloodPressureMeasurement object when no input is provided');
+            'It should return an empty value for the getSystolicPressure method of the BloodPressureMeasurement object when no input is provided');
         $this->assertEmpty($measurement->getDiastolicPressure(),
             'It should return an empty value for the getDiastolicPressure method of the BloodPressureMeasurement object when no input is provided');
         $this->assertEmpty($measurement->getMeasurement(),
@@ -207,7 +207,7 @@ class BloodPressureMeasurementTest extends PHPUnit_Framework_TestCase {
         $this->assertEmpty($measurement->getNotes(),
             'It should return an empty value for the getNotes method of the BloodPressureMeasurement object when empty input is provided');
         $this->assertEmpty($measurement->getSystolicPressure(),
-            'It should return an empty value for the getSysotlicPressure method of the BloodPressureMeasurement object when empty input is provided');
+            'It should return an empty value for the getSystolicPressure method of the BloodPressureMeasurement object when empty input is provided');
         $this->assertEmpty($measurement->getDiastolicPressure(),
             'It should return an empty value for the getDiastolicPressure method of the BloodPressureMeasurement object when empty input is provided');
         $this->assertEmpty($measurement->getMeasurement(),
