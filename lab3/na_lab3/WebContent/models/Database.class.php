@@ -10,7 +10,7 @@ class Database {
             try {
                 // read database config info from file
                 $configArray = parse_ini_file(dirname(__FILE__).DIRECTORY_SEPARATOR.
-                        '..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.$configFile);
+                        '..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.$configFile);
                 $userName = $configArray["username"];
                 $pass = $configArray["password"];
                 

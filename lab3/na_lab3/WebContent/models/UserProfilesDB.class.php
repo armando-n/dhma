@@ -2,11 +2,11 @@
 class UserProfilesDB {
     
     // adds the specified UserProfile object to the database, associating it with the specified userID
-    public static function addUserProfile($uProfile, $userID, $dbName = null) {
+    public static function addUserProfile($uProfile, $userID, $dbName = null, $configFile = null) {
         $returnProfileID = -1;
         
         try {
-            $db = Database::getDB($dbName);
+            $db = Database::getDB($dbName, $configFile);
             $stmt = $db->prepare(
                 "insert into UserProfiles (firstName, lastName, email, phone,
                 gender, dob, country, picture, facebook, theme, accentColor,
@@ -45,11 +45,11 @@ class UserProfilesDB {
     }
     
     // returns an array of UserProfile objects for all user profiles in the database
-    public static function getAllUserProfiles($dbName = null) {
+    public static function getAllUserProfiles($dbName = null, $configFile = null) {
         $allUsers = array();
         
         try {
-            $db = Database::getDB($dbName);
+            $db = Database::getDB($dbName, $configFile);
             $stmt = $db->prepare(
                 "select Users.userID, userName, dateCreated, profileID, firstName, lastName, email,
                 phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,
@@ -73,7 +73,7 @@ class UserProfilesDB {
     }
     
     // returns a UserProfile object whose $type field has value $value
-    public static function getUserProfileBy($type, $value, $dbName = null) {
+    public static function getUserProfileBy($type, $value, $dbName = null, $configFile = null) {
         $allowed = ['profileID', 'userID', 'email', 'phone'];
         $uProfile = null;
         
@@ -81,7 +81,7 @@ class UserProfilesDB {
             if (!in_array($type, $allowed))
                 throw new PDOException("$type not allowed search criterion for UserProfile");
             
-            $db = Database::getDB($dbName);
+            $db = Database::getDB($dbName, $configFile);
             $stmt = $db->prepare("select * from UserProfiles where ($type = :$type)");
             $stmt->execute(array(":$type" => $value));
             
@@ -97,15 +97,15 @@ class UserProfilesDB {
     }
     
     public static function getAllUserProfilesTest() {
-        return UserProfilesDB::getAllUserProfiles('dhma_testDB');
+        return UserProfilesDB::getAllUserProfiles('dhma_testDB', 'na_lab3/myConfig.ini');
     }
     
     public static function addUserProfileTest($uProfile, $userID) {
-        return UserProfilesDB::addUserProfile($uProfile, $userID, 'dhma_testDB');
+        return UserProfilesDB::addUserProfile($uProfile, $userID, 'dhma_testDB', 'na_lab3/myConfig.ini');
     }
     
     public static function getUserProfileByTest($type, $value) {
-        return UserProfilesDB::getUserProfileBy($type, $value, 'dhma_testDB');
+        return UserProfilesDB::getUserProfileBy($type, $value, 'dhma_testDB', 'na_lab3/myConfig.ini');
     }
     
 }

@@ -2,11 +2,11 @@
 class BloodPressureMeasurementsDB {
     
     // returns an array of all BloodPressureMeasurement objects found in the database
-    public static function getAllMeasurements($dbName = null) {
+    public static function getAllMeasurements($dbName = null, $configFile = null) {
         $allMeasurements = array();
         
         try {
-            $db = Database::getDB($dbName);
+            $db = Database::getDB($dbName, $configFile);
             $stmt = $db->prepare("select * from BloodPressureMeasurementsView");
             $stmt->execute();
             $str = '';
