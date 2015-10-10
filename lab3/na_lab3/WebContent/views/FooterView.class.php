@@ -10,7 +10,8 @@ class FooterView {
             <ul>
                 <li><a href="home">Home</a></li><?php
                 if (!$loggedIn) { ?>
-                <li><a href="signup">Sign Up</a></li><?php
+                <li><a href="signup">Sign Up</a></li>
+                <li><a href="members">Member List</a></li><?php
                 } ?>
             </ul>
         </li>
