@@ -39,6 +39,8 @@ class UserProfilesDB {
             
         } catch (PDOException $e) {
             echo $e->getMessage();
+        } catch (RuntimeException $e) {
+            echo $e->getMessage();
         }
         
         return $returnProfileID;
@@ -67,6 +69,8 @@ class UserProfilesDB {
             }
         } catch (PDOException $e) {
             echo $e->getMessage();
+        } catch (RuntimeException $e) {
+            echo $e->getMessage();
         }
         
         return $allUsers;
@@ -90,6 +94,8 @@ class UserProfilesDB {
                 $uProfile = new UserProfile($row);
             
         } catch (PDOException $e) {
+            echo $e->getMessage();
+        } catch (RuntimeException $e) {
             echo $e->getMessage();
         }
         

@@ -5,12 +5,18 @@ class Database {
     private static $db;
     
     public static function getDB($dbName = 'dhma', $configFile = 'myConfig.ini') {
+        if (is_null($dbName))
+            $dbName = 'dhma';
+        if (is_null($configFile))
+            $configFile = 'myConfig.ini';
         Database::$dbName = $dbName;
         if (!isset(Database::$db)) {
             try {
                 // read database config info from file
                 $configArray = parse_ini_file(dirname(__FILE__).DIRECTORY_SEPARATOR.
                         '..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.$configFile);
+                if ($configArray === false)
+                    throw new RuntimeException("Database configuration file not found");
                 $userName = $configArray["username"];
                 $pass = $configArray["password"];
                 

@@ -18,6 +18,8 @@ class UsersDB {
             
         } catch (PDOException $e) {
             echo $e->getMessage();
+        } catch (RuntimeException $e) {
+            echo $e->getMessage();
         }
         
         return $returnUserID;
@@ -42,6 +44,8 @@ class UsersDB {
             
         } catch (PDOException $e) {
             echo $e->getMessage();
+        } catch (RuntimeException $e) {
+            echo $e->getMessage();
         }
         
         return $allUsers;
@@ -65,6 +69,8 @@ class UsersDB {
                 $user = new User($row);
             
         } catch (PDOException $e) {
+            echo $e->getMessage();
+        } catch (RuntimeException $e) {
             echo $e->getMessage();
         }
         

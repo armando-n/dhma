@@ -20,6 +20,8 @@ class BloodPressureMeasurementsDB {
             
         } catch (PDOException $e) {
             echo $e->getMessage();
+        } catch (RuntimeException $e) {
+            echo $e->getMessage();
         }
         
         return $allMeasurements;
