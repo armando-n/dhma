@@ -11,9 +11,9 @@
 
 <h2>It should call showProfile and show without crashing</h2>
 <?php
+include_once("../models/GenericModelObject.class.php");
 include_once("../views/ProfileView.class.php");
 include_once("../models/UserProfile.class.php");
-include_once("../models/GenericModelObject.class.php");
 include_once("../models/User.class.php");
 include_once("../models/Messages.class.php");
 
