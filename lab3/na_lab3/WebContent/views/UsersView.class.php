@@ -4,17 +4,18 @@ class UsersView {
     // takes an array of UserProfile objects
     public static function show($uProfiles = null, $loggedIn = false) {
         HeaderView::show("User List", $loggedIn);
-        UsersView::showBody($uProfiles);
+        $return = UsersView::showBody($uProfiles);
         FooterView::show($loggedIn);
+        return $return;
     }
     
     public static function showBody($uProfiles) {
         if (is_null($uProfiles)) {
             ?><p>Error: user profiles not found</p><?php
-            return;
+            return false;
         } else if (empty($uProfiles)) {
             ?><p>No users exist yet</p><?php
-            return;
+            return true;
         }
         ?>
 <section>
@@ -62,6 +63,7 @@ class UsersView {
 
 
 <?php
+        return true;
     }
 }
 ?>

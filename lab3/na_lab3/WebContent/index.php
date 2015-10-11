@@ -10,8 +10,8 @@ $validUserInput = array(
         "password2" => "password123"
 );
 $validUserProfileInput = array(
-        "fname" => "Armando",
-        "lname" => "Navarro",
+        "firstName" => "Armando",
+        "lastName" => "Navarro",
         "email" => "fdf786@my.utsa.edu",
         "gender" => "male",
         "phone" => "281-555-2180",
@@ -19,12 +19,12 @@ $validUserProfileInput = array(
         "dob" => "1983-11-02",
         "country" => "United States of America",
         "theme" => "dark",
-        "color" => "#00008b",
+        "accentColor" => "#00008b",
         "picture" => "someimage",
-        "public-profile" => "on",
-        "showpic" => "on",
-        "reminders" => "on",
-        "keep-logged-in" => "on"
+        "isProfilePublic" => "on",
+        "isPicturePublic" => "on",
+        "sendReminders" => "on",
+        "stayLoggedIn" => "on"
 );
 
 // dummy user info; necessary because sessions are not yet implemented

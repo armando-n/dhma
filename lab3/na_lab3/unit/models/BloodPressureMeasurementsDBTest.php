@@ -8,7 +8,7 @@ require_once dirname(__FILE__).'\..\..\WebContent\models\Messages.class.php';
 class BloodPressureMeasurementsDBTest extends PHPUnit_Framework_TestCase {
     
     public function testGetAllMeasurements() {
-        $measurements = BloodPressureMeasurementsDB::getAllMeasurements('dhma_testDB', 'na_lab3/myConfig.ini');
+        $measurements = BloodPressureMeasurementsDB::getAllMeasurements('dhma_testDB', 'na_lab3'.DIRECTORY_SEPARATOR.'myConfig.ini');
         
         $this->assertNotNull($measurements,
             'It should return an array');
