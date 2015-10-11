@@ -37,7 +37,6 @@ class PastMeasurementsView{
     <table>
         <tr>
             <th>Gluclose Levels</th>
-            <th>Units</th>
             <th>Date / Time</th>
         </tr><?php
             foreach ($measurements["glucose"] as $glucose) {
@@ -45,7 +44,6 @@ class PastMeasurementsView{
 
         <tr>
             <td><?=$glucose->getMeasurement()?></td>
-            <td><?=$glucose->getUnits()?></td>
             <td><?=$glucose->getDate() . ' / ' . $glucose->getTime()?></td>
         </tr>
 <?php
@@ -181,7 +179,6 @@ class PastMeasurementsView{
     <table>
         <tr>
             <th>Weight</th>
-            <th>Units</th>
             <th>Date / Time</th>
         </tr><?php
             foreach ($measurements["weight"] as $weight) {
@@ -189,7 +186,6 @@ class PastMeasurementsView{
             
         <tr>
             <td><?=$weight->getMeasurement()?></td>
-            <td><?=$weight->getUnits()?></td>
             <td><?=$weight->getDate() . ' / ' . $weight->getTime()?></td>
         </tr>
 <?php

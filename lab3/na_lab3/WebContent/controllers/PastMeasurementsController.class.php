@@ -29,28 +29,24 @@ class PastMeasurementsController {
                 "userName" => "armando-n",
                 "date" => "2015-09-27",
                 "time" => "8:15",
-                "units" => "mg/dL",
                 "glucose" => "95"
         );
         $glucoseInput2 = array(
                 "userName" => "armando-n",
                 "date" => "2015-09-26",
                 "time" => "8:22",
-                "units" => "mg/dL",
                 "glucose" => "120"
         );
         $glucoseInput3 = array(
                 "userName" => "armando-n",
                 "date" => "2015-09-25",
                 "time" => "8:15",
-                "units" => "mg/dL",
                 "glucose" => "110"
         );
         $glucoseInput4 = array(
                 "userName" => "armando-n",
                 "date" => "2015-09-24",
                 "time" => "8:12",
-                "units" => "mg/dL",
                 "glucose" => "112"
         );
         $glucoseMeasurements[] = new GlucoseMeasurement($glucoseInput1);
@@ -62,29 +58,29 @@ class PastMeasurementsController {
                 "userName" => "armando-n",
                 "date" => "2015-09-27",
                 "time" => "14:00",
-                "systolic" => "120",
-                "diastolic" => "80"
+                "systolicPressure" => "120",
+                "diastolicPressure" => "80"
         );
         $bloodPressureInput2 = array(
                 "userName" => "armando-n",
                 "date" => "2015-09-26",
                 "time" => "14:05",
-                "systolic" => "110",
-                "diastolic" => "90"
+                "systolicPressure" => "110",
+                "diastolicPressure" => "90"
         );
         $bloodPressureInput3 = array(
                 "userName" => "armando-n",
                 "date" => "2015-09-25",
                 "time" => "14:02",
-                "systolic" => "115",
-                "diastolic" => "95"
+                "systolicPressure" => "115",
+                "diastolicPressure" => "95"
         );
         $bloodPressureInput4 = array(
                 "userName" => "armando-n",
                 "date" => "2015-09-24",
                 "time" => "14:00",
-                "systolic" => "125",
-                "diastolic" => "78"
+                "systolicPressure" => "125",
+                "diastolicPressure" => "78"
         );
         $bloodPressureMeasurements[] = new BloodPressureMeasurement($bloodPressureInput1);
         $bloodPressureMeasurements[] = new BloodPressureMeasurement($bloodPressureInput2);
@@ -186,28 +182,24 @@ class PastMeasurementsController {
                 "userName" => "armando-n",
                 "date" => "2015-09-27",
                 "time" => "20:45",
-                "units" => "lb",
                 "weight" => "140.5"
         );
         $weightInput2 = array(
                 "userName" => "armando-n",
                 "date" => "2015-09-26",
                 "time" => "20:50",
-                "units" => "lb",
                 "weight" => "139.5"
         );
         $weightInput3 = array(
                 "userName" => "armando-n",
                 "date" => "2015-09-25",
                 "time" => "20:28",
-                "units" => "lb",
                 "weight" => "140"
         );
         $weightInput4 = array(
                 "userName" => "armando-n",
                 "date" => "2015-09-24",
                 "time" => "20:46",
-                "units" => "lb",
                 "weight" => "141"
         );
         $weightMeasurements[] = new WeightMeasurement($weightInput1);

@@ -103,15 +103,15 @@ class UserProfilesDB {
     }
     
     public static function getAllUserProfilesTest() {
-        return UserProfilesDB::getAllUserProfiles('dhma_testDB', 'na_lab3/myConfig.ini');
+        return UserProfilesDB::getAllUserProfiles('dhma_testDB', 'myConfig.ini');
     }
     
     public static function addUserProfileTest($uProfile, $userID) {
-        return UserProfilesDB::addUserProfile($uProfile, $userID, 'dhma_testDB', 'na_lab3/myConfig.ini');
+        return UserProfilesDB::addUserProfile($uProfile, $userID, 'dhma_testDB', 'myConfig.ini');
     }
     
     public static function getUserProfileByTest($type, $value) {
-        return UserProfilesDB::getUserProfileBy($type, $value, 'dhma_testDB', 'na_lab3/myConfig.ini');
+        return UserProfilesDB::getUserProfileBy($type, $value, 'dhma_testDB', 'myConfig.ini');
     }
     
 }

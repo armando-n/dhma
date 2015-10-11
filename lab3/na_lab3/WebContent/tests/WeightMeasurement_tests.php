@@ -7,7 +7,6 @@ $validInput = array(
         "userName" => "armando-n",
         "date" => "2015-09-27",
         "time" => "17:22",
-        "units" => "lb",
         "weight" => "140.5"
 );
 
@@ -15,7 +14,6 @@ $emptyInputValues = array(
         "userName" => "",
         "date" => "",
         "time" => "",
-        "units" => "",
         "weight" => ""
 );
 
@@ -23,7 +21,6 @@ $invalidInputValues = array(
         "userName" => "Invalid#User",
         "date" => "201-12-56",
         "time" => "42:21",
-        "units" => "metric",
         "weight" => "180kg"
 );
 
@@ -61,7 +58,6 @@ User Name: <?=$validMeasurement->getUserName()?><br />
 DateTime: <pre><?php print_r($validMeasurement->getDateTime()); ?></pre><br />
 Date: <?=$validMeasurement->getDate()?><br />
 Time: <?=$validMeasurement->getTime()?><br />
-Units: <?=$validMeasurement->getUnits()?><br />
 Weight: <?=$validMeasurement->getMeasurement()?>
 
 <!-- output: null input test -->

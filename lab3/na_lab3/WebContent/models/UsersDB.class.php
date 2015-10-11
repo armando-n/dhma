@@ -78,15 +78,15 @@ class UsersDB {
     }
     
     public static function addUserTest($user) {
-        return UsersDB::addUser($user, 'dhma_testDB', 'na_lab3/myConfig.ini');
+        return UsersDB::addUser($user, 'dhma_testDB', 'myConfig.ini');
     }
     
     public static function getAllUsersTest() {
-        return UsersDB::getAllUsers('dhma_testDB', 'na_lab3/myConfig.ini');
+        return UsersDB::getAllUsers('dhma_testDB', 'myConfig.ini');
     }
     
     public static function getUserByTest($type, $value) {
-        return UsersDB::getUserBy($type, $value, 'dhma_testDB', 'na_lab3/myConfig.ini');
+        return UsersDB::getUserBy($type, $value, 'dhma_testDB', 'myConfig.ini');
     }
 }
 ?>
