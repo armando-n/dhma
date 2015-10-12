@@ -53,10 +53,9 @@ class UserProfilesDB {
         try {
             $db = Database::getDB($dbName, $configFile);
             $stmt = $db->prepare(
-                "select Users.userID, userName, dateCreated, profileID, firstName, lastName, email,
+                "select userID, userName, dateCreated, profileID, firstName, lastName, email,
                 phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,
-                isPicturePublic, sendReminders, stayLoggedIn from Users, UserProfiles
-                where Users.userID = UserProfiles.userID"
+                isPicturePublic, sendReminders, stayLoggedIn from Users join UserProfiles using (userID)"
             );
             $stmt->execute();
         
