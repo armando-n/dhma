@@ -85,7 +85,11 @@ class UserProfilesDB {
                 throw new PDOException("$type not allowed search criterion for UserProfile");
             
             $db = Database::getDB($dbName, $configFile);
-            $stmt = $db->prepare("select * from UserProfiles where ($type = :$type)");
+            $stmt = $db->prepare(
+                "select userID, userName, dateCreated, profileID, firstName, lastName, email,
+                    phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,
+                    isPicturePublic, sendReminders, stayLoggedIn from Users join UserProfiles using (userID)
+                where ($type = :$type)");
             $stmt->execute(array(":$type" => $value));
             
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -101,6 +105,86 @@ class UserProfilesDB {
         return $uProfile;
     }
     
+    public static function getAllUserProfilesSortedByDateCreated($order, $dbName = null, $configFile = null) {
+        $allowedOrders = array('asc', 'desc');
+        $allProfiles = array();
+    
+        try {
+            if (!in_array($order, $allowedOrders))
+                throw new Exception("$order is not an allowed order");
+    
+            $db = Database::getDB($dbName, $configFile);
+            $stmt = $db->prepare(
+                "select userID, userName, dateCreated, profileID, firstName, lastName, email,
+                    phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,
+                    isPicturePublic, sendReminders, stayLoggedIn from Users join UserProfiles using (userID)
+                order by dateCreated $order");
+            $stmt->execute();
+    
+            foreach ($stmt as $row) {
+                $profile = new UserProfile($row);
+                if (!is_object($profile) || !empty($profile->getErrors()))
+                    throw new PDOException("Failed to create valid user profile");
+    
+                $allProfiles[] = $profile;
+            }
+    
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        } catch (RuntimeException $e) {
+            echo $e->getMessage();
+        }
+    
+        return $allProfiles;
+    }
+    
+    // returns an array of UserProfile objects created since the specified date string
+    public static function getUserProfilesCreatedSince($dateString, $dbName = null, $configFile = null) {
+        return UserProfilesDB::getUserProfilesByDate($dateString, 'after', $dbName, $configFile);
+    }
+    
+    // returns an array of UserProfile objects created by the specified date string
+    public static function getUserProfilesCreatedBy($dateString, $dbName = null, $configFile = null) {
+        return UserProfilesDB::getUserProfilesByDate($dateString, 'before', $dbName, $configFile);
+    }
+    
+    private static function getUserProfilesByDate($dateString, $direction, $dbName = null, $configFile = null) {
+        $allowedDirections = array('before', 'after');
+        $profiles = array();
+    
+        try {
+            if (!in_array($direction, $allowedDirections))
+                throw new PDOException("$direction is not an allowed direction");
+            $operator = ($direction === 'before') ? '<=' : '>=';
+    
+            $datetime = new DateTime($dateString);
+            $db = Database::getDB($dbName, $configFile);
+            $stmt = $db->prepare(
+                "select userID, userName, dateCreated, profileID, firstName, lastName, email,
+                    phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,
+                    isPicturePublic, sendReminders, stayLoggedIn from Users join UserProfiles using (userID)
+                where dateCreated $operator :date");
+            $stmt->execute(array(":date" => $datetime->format('Y-m-d')));
+    
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($rows !== false)
+                foreach ($rows as $row)
+                    $profiles[] = new UserProfile($row);
+    
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        } catch (RuntimeException $e) {
+            echo $e->getMessage();
+        } catch (Exception $e) {
+            if (stristr($e->getMessage(), 'Failed to parse') !== false)
+                throw new Exception("Invalid date: $dateString");
+            else
+                throw $e;
+        }
+    
+        return $profiles;
+    }
+    
     public static function getAllUserProfilesTest() {
         return UserProfilesDB::getAllUserProfiles('dhma_testDB', 'myConfig.ini');
     }
@@ -111,6 +195,18 @@ class UserProfilesDB {
     
     public static function getUserProfileByTest($type, $value) {
         return UserProfilesDB::getUserProfileBy($type, $value, 'dhma_testDB', 'myConfig.ini');
+    }
+    
+    public static function getUserProfilesCreatedSinceTest($dateString) {
+        return UserProfilesDB::getUserProfilesCreatedSince($dateString, 'dhma_testDB', 'myConfig.ini');
+    }
+    
+    public static function getUserProfilesCreatedByTest($dateString) {
+        return UserProfilesDB::getUserProfilesCreatedBy($dateString, 'dhma_testDB', 'myConfig.ini');
+    }
+    
+    public static function getAllUserProfilesSortedByDateCreatedTest($order) {
+        return UserProfilesDB::getAllUserProfilesSortedByDateCreated($order, 'dhma_testDB', 'myConfig.ini');
     }
     
 }

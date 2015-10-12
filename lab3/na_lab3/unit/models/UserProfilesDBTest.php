@@ -123,6 +123,164 @@ class UserProfilesDBTest extends PHPUnit_Framework_TestCase {
         }
     }
     
+    /** @expectedException PHPUnit_Framework_Error_Warning
+     * @expectedExceptionMessage Missing argument
+     */
+    public function testGetUserProfileByWithNoParameters() {
+        $profile = UserProfilesDB::getUserProfileByTest();
+    }
+    
+    /** @expectedException PHPUnit_Framework_Error_Warning
+     * @expectedExceptionMessage Missing argument
+     */
+    public function testGetUserProfileByWithNoValueParameter() {
+        $user = UserProfilesDB::getUserProfileByTest('phone');
+    }
+    
+    public function testGetUserProfileByWithValidParameters() {
+        $profile = UserProfilesDB::getUserProfileByTest('phone', '210-555-2170');
+        
+        $this->assertInstanceOf('UserProfile', $profile,
+            'It should return a UserProfile object when valid parameters are provided');
+        $this->assertEquals('210-555-2170', $profile->getPhoneNumber(),
+            'It should return a UserProfile object whose phone number field matches the provided input when valid input is provided');
+        $this->assertCount(0, $profile->getErrors(),
+            'It should return a UserProfile object without errors when valid input is provided:' . "\n" . array_shift($profile->getErrors()));
+        $this->assertEquals(0, $profile->getErrorCount(),
+            'It should return a UserProfile object with an error count of 0 when valid input is provided');
+    }
+    
+    public function testGetUserProfileByWithNoResults() {
+        $profile = UserProfilesDB::getUserProfileByTest('phone', '555-555-5515');
+        
+        $this->assertNull($profile,
+            'It should return NULL when an unknown attribute-value pair is provided');
+    }
+    
+    // ----------------------------------- paste starts here ----------------------------------- \\
+    
+    public function testGetUserProfilesCreatedSinceWithValidDateAndResults() {
+        $profiles = UserProfilesDB::getUserProfilesCreatedSinceTest('2015-10-11');
+    
+        $this->assertNotNull($profiles,
+            'It should call getUserProfilesCreatedSince and return an array when a valid date is provided');
+        $this->assertGreaterThan(0, count($profiles),
+            'It should call getUserProfilesCreatedSince and return a non-empty array when a valid date is provided');
+    
+        foreach ($profiles as $profile) {
+            $this->assertInstanceOf('UserProfile', $profile,
+                'It should call getUserProfilesCreatedSince and return an array of UserProfile objects when a valid date is provided');
+            $this->assertEmpty($profile->getErrors(),
+                'It should call getUserProfilesCreatedSince and not have errors in the returned UserProfile objects when a valid date is provided');
+            $this->assertEquals(0, $profile->getErrorCount(),
+                'It should call getUserProfilesCreatedSince and have an error count of 0 in the returned UserProfile objects when a valid date is provided');
+        }
+    }
+    
+    public function testGetUserProfilesCreatedSinceWithInvalidDateAndNoResults() {
+        $profiles = UserProfilesDB::getUserProfilesCreatedSinceTest('2050-10-11');
+    
+        $this->assertNotNull($profiles,
+            'It should call getUserProfilesCreatedSince and return an array when an invalid date is provided');
+        $this->assertCount(0, $profiles,
+            'It should call getUserProfilesCreatedSince and return an empty array when an invalid date is provided');
+    }
+    
+    /** @expectedException Exception
+     *  @expectedExceptionMessage Invalid date
+     */
+    public function testGetUserProfilesCreatedSinceWithInvalidDateString() {
+        $profiles = UserProfilesDB::getUserProfilesCreatedSinceTest('invalid date string');
+    }
+    
+    public function testGetUserProfilesCreatedByWithValidDateAndResults() {
+        $profiles = UserProfilesDB::getUserProfilesCreatedByTest('2015-10-05');
+    
+        $this->assertNotNull($profiles,
+            'It should call getUserProfilesCreatedBy and return an array when a valid date is provided');
+        $this->assertGreaterThan(0, count($profiles),
+            'It should call getUserProfilesCreatedBy and return a non-empty array when a valid date is provided');
+    
+        foreach ($profiles as $profile) {
+            $this->assertInstanceOf('UserProfile', $profile,
+                'It should call getUserProfilesCreatedBy and return an array of UserProfile objects when a valid date is provided');
+            $this->assertEmpty($profile->getErrors(),
+                'It should call getUserProfilesCreatedBy and not have errors in the returned UserProfile objects when a valid date is provided');
+            $this->assertEquals(0, $profile->getErrorCount(),
+                'It should call getUserProfilesCreatedBy and have an error count of 0 in the returned UserProfile objects when a valid date is provided');
+        }
+    }
+    
+    public function testGetUserProfilesCreatedByWithInvalidDateAndNoResults() {
+        $profiles = UserProfilesDB::getUserProfilesCreatedByTest('1950-10-05');
+    
+        $this->assertNotNull($profiles,
+            'It should call getUserProfilesCreatedBy and return an array when an invalid date is provided');
+        $this->assertCount(0, $profiles,
+            'It should call getUserProfilesCreatedBy and return an empty array when an invalid date is provided');
+    }
+    
+    /** @expectedException Exception
+     *  @expectedExceptionMessage Invalid date
+     */
+    public function testGetUserProfilesCreatedByWithInvalidDateString() {
+        $profiles = UserProfilesDB::getUserProfilesCreatedByTest('invalid date string');
+    }
+    
+    /** @expectedException Exception
+     *  @expectedExceptionMessage Missing argument
+     */
+    public function testGetAllUserProfilesSortedByDateCreatedWithNoParameters() {
+        UserProfilesDB::getAllUserProfilesSortedByDateCreatedTest();
+    }
+    
+    public function testGetAllUserProfilesSortedByDateCreatedAscending() {
+        $profiles = UserProfilesDB::getAllUserProfilesSortedByDateCreatedTest('asc');
+    
+        $this->assertGreaterThan(0, count($profiles),
+            'It should call getAllUserProfilesSortedByDateCreated and return an array with at least 1 element when a valid order is provided');
+        $previousDate = new DateTime('1950-01-01');
+    
+        foreach ($profiles as $profile) {
+            $this->assertInstanceOf('UserProfile', $profile,
+                'It should call getAllUserProfilesSortedByDateCreated and return an array of UserProfile objects when a valid order is provided');
+            $this->assertEmpty($profile->getErrors(),
+                'It should call getAllUserProfilesSortedByDateCreated and not have errors in the returned UserProfile objects when a valid order is provided');
+            $this->assertEquals(0, $profile->getErrorCount(),
+                'It should call getAllUserProfilesSortedByDateCreated and have an error count of 0 in the returned UserProfile objects when a valid order is provided');
+//             $this->assertGreaterThan($previousDate, $profile->getDateTime(),
+//                 'It should call getAllUserProfilesSortedByDateCreated and return array of UserProfile objects in ascending date order');
+        }
+    }
+    
+    public function testGetAllUserProfilesSortedByDateCreatedDescending() {
+        $profiles = UserProfilesDB::getAllUserProfilesSortedByDateCreatedTest('desc');
+    
+        $this->assertGreaterThan(0, count($profiles),
+            'It should call getAllUserProfilesSortedByDateCreated and return an array with at least 1 element when a valid order is provided');
+        $previousDate = new DateTime('1950-01-01');
+    
+        foreach ($profiles as $profile) {
+            $this->assertInstanceOf('UserProfile', $profile,
+                'It should call getAllUserProfilesSortedByDateCreated and return an array of UserProfile objects when a valid order is provided');
+            $this->assertEmpty($profile->getErrors(),
+                'It should call getAllUserProfilesSortedByDateCreated and not have errors in the returned UserProfile objects when a valid order is provided');
+            $this->assertEquals(0, $profile->getErrorCount(),
+                'It should call getAllUserProfilesSortedByDateCreated and have an error count of 0 in the returned UserProfile objects when a valid order is provided');
+//             $this->assertGreaterThan($previousDate, $profile->getDateTime(),
+//                 'It should call getAllUserProfilesSortedByDateCreated and return array of UserProfile objects in ascending date order');
+        }
+    }
+    
+    /** @expectedException Exception
+     *  @expectedExceptionMessage not an allowed order
+     */
+    public function testGetAllUserProfilesSortedByDateCreatedWithInvalidOrder() {
+        $profiles = UserProfilesDB::getAllUserProfilesSortedByDateCreatedTest('invalid order');
+    }
+    
+    // --------------------------------- paste ends here --------------------------------------- \\
+    
     private function dbQuery($query, $dbName = null, $configFile = null) {
         try {
             $db = Database::getDB($dbName, $configFile);

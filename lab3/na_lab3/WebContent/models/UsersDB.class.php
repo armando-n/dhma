@@ -109,12 +109,12 @@ class UsersDB {
         return $allUsers;
     }
     
-    // returns an array of User objects whose created since the specified date string
+    // returns an array of User objects created since the specified date string
     public static function getUsersCreatedSince($dateString, $dbName = null, $configFile = null) {
         return UsersDB::getUsersByDate($dateString, 'after', $dbName, $configFile);
     }
     
-    // returns an array of User objects whose created by the specified date string
+    // returns an array of User objects created by the specified date string
     public static function getUsersCreatedBy($dateString, $dbName = null, $configFile = null) {
         return UsersDB::getUsersByDate($dateString, 'before', $dbName, $configFile);
     }

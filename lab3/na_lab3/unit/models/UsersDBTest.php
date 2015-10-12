@@ -81,12 +81,14 @@ class UsersDBTest extends PHPUnit_Framework_TestCase {
     }
     
     /** @expectedException PHPUnit_Framework_Error_Warning
+     * @expectedExceptionMessage Missing argument
      */
     public function testGetUserByWithNoParameters() {
         $user = UsersDB::getUserByTest();
     }
     
     /** @expectedException PHPUnit_Framework_Error_Warning
+     * @expectedExceptionMessage Missing argument
      */
     public function testGetUserByWithNoValueParameter() {
         $user = UsersDB::getUserByTest('userName');
@@ -99,6 +101,10 @@ class UsersDBTest extends PHPUnit_Framework_TestCase {
             'It should return a User object when valid parameters are provided');
         $this->assertEquals('armando-n', $user->getUserName(),
             'It should return a User object with the provided user name when valid parameters are provided');
+        $this->assertCount(0, $user->getErrors(),
+            'It should return a User object without errors when valid input is provided:' . "\n" . array_shift($user->getErrors()));
+        $this->assertEquals(0, $user->getErrorCount(),
+            'It should return a User object with an error count of 0 when valid input is provided');
     }
     
     public function testGetUserByWithUnknownUser() {
