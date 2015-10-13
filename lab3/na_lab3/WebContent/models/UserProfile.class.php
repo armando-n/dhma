@@ -349,22 +349,22 @@ class UserProfile extends GenericModelObject {
     
     private function validateIsProfilePublic() {
         $value = $this->extractForm($this->formInput, "isProfilePublic");
-        $this->isProfilePublic = (empty($value)) ? false : true;
+        $this->isProfilePublic = ($value) ? true : false;
     }
     
     private function validateIsPicturePublic() {
         $value = $this->extractForm($this->formInput, "isPicturePublic");
-        $this->isPicturePublic = (empty($value)) ? false : true;
+        $this->isPicturePublic = ($value) ? true : false;
     }
     
     private function validateSendReminders() {
         $value = $this->extractForm($this->formInput, "sendReminders");
-        $this->sendReminders = (empty($value)) ? false : true;
+        $this->sendReminders = ($value) ? true : false;
     }
     
     private function validateStayLoggedIn() {
         $value = $this->extractForm($this->formInput, "stayLoggedIn");
-        $this->stayLoggedIn = (empty($value)) ? false : true;
+        $this->stayLoggedIn = ($value) ? true : false;
     }
 }
 ?>

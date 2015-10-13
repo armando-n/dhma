@@ -53,9 +53,9 @@ class ProfileView {
     <form action="profile_edit_post" enctype="multipart/form-data" method="post">
     Change Picture: <input type="file" name="pic" accept="image/*" tabindex="13" />
     <ul>
-        <li>First Name: <input type="text" name="fname" value="<?=$profile->getFirstName()?>" size="15" maxlength="30" tabindex="5" pattern="^[a-zA-Z_-]+$" title="Remove invalid characters" />
+        <li>First Name: <input type="text" name="firstName" value="<?=$profile->getFirstName()?>" size="15" maxlength="30" tabindex="5" pattern="^[a-zA-Z_-]+$" title="Remove invalid characters" />
                 <span class="error"><?=$profile->getError("firstName")?></span></li>
-        <li>Last Name: <input type="text" name="lname" value="<?=$profile->getLastName()?>" size="15" maxlength="30" tabindex="6" pattern="(^$)|(^([^\-!#\$%\^\x26\(\)\*,\./:;\?@\[\\\]_\{\|\}¨ˇ“”€\+<=>§°\d\s¤®™©]| )+$)" title="Remove invalid characters" />
+        <li>Last Name: <input type="text" name="lastName" value="<?=$profile->getLastName()?>" size="15" maxlength="30" tabindex="6" pattern="(^$)|(^([^\-!#\$%\^\x26\(\)\*,\./:;\?@\[\\\]_\{\|\}¨ˇ“”€\+<=>§°\d\s¤®™©]| )+$)" title="Remove invalid characters" />
                 <span class="error"><?=$profile->getError("lastName")?></span></li>
         <li>E-mail: <input type="email" name="email" value="<?=$profile->getEmail()?>" size="15" autofocus="autofocus" required="required" maxlength="30" tabindex="1" />
                 <span class="error"><?=$profile->getError("email")?></span></li>
@@ -272,14 +272,15 @@ class ProfileView {
                     <option<?=$themeLightVal?>>light</option>
                 </select>
                 <span class="error"><?=$profile->getError("theme")?></span></li>
-        <li>Theme Accent Color: <input type="color" name="color" value="<?=$profile->getAccentColor()?>" tabindex="15" />
+        <li>Theme Accent Color: <input type="color" name="accentColor" value="<?=$profile->getAccentColor()?>" tabindex="15" />
                 <span class="error"><?=$profile->getError("accentColor")?></span></li>
-        <li><label for="public-profile">Profile Public:</label> <input type="checkbox" id="public-profile" name="public-profile"<?=$pubProfileVal?> tabindex="16" /></li>
-        <li><label for="showpic">Picture Public:</label> <input type="checkbox" id="showpic" name="showpic"<?=$pubPicVal?> tabindex="17" /></li>
-        <li><label for="reminders">E-mail Reminders:</label> <input type="checkbox" id="reminders" name="reminders"<?=$remindVal?> tabindex="18" /></li>
-        <li><label for="keep-logged-in">Stay Logged In:</label> <input type="checkbox" id="keep-logged-in" name="keep-logged-in"<?=$stayLoggedVal?> tabindex="19" /></li>
+        <li><label for="isProfilePublic">Profile Public:</label> <input type="checkbox" id="public-profile" name="public-profile"<?=$pubProfileVal?> tabindex="16" /></li>
+        <li><label for="isPicturePublic">Picture Public:</label> <input type="checkbox" id="showpic" name="showpic"<?=$pubPicVal?> tabindex="17" /></li>
+        <li><label for="sendReminders">E-mail Reminders:</label> <input type="checkbox" id="reminders" name="reminders"<?=$remindVal?> tabindex="18" /></li>
+        <li><label for="stayLoggedIn">Stay Logged In:</label> <input type="checkbox" id="keep-logged-in" name="keep-logged-in"<?=$stayLoggedVal?> tabindex="19" /></li>
     </ul>
     <div>
+        <input type="hidden" name="userName" value="<?=$profile->getUserName()?>" />
         <input type="submit" size="15" tabindex="20" />
         <a href="profile_view" tabindex="21">Cancel</a>
     </div>

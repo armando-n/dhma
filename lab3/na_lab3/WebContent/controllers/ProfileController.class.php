@@ -72,6 +72,20 @@ class ProfileController {
         // posting profile edits
         else if ($_SESSION['arguments'] === 'post') {
             // TODO send database request to edit profile
+            $profile = new UserProfile($_POST);
+            
+            // edit failed
+            if ($profile->getErrorCount() > 0) {
+                $_SESSION['flash'] = 'Edit failed. Correct any errors before submitting changes.';
+                ProfileView::showProfile($profile);
+            }
+            
+            // edit succeeded
+            else {
+                UserProfilesDB::editUserProfile($_SESSION['profile'], $profile);
+                $_SESSION['profile'] = UserProfilesDB::getUserProfileBy('userName', $profile->getUserName());
+                ProfileView::showProfile($_SESSION['profile']);
+            }
         }
     }
     

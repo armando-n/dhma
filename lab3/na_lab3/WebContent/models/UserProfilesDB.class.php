@@ -46,6 +46,37 @@ class UserProfilesDB {
         return $returnProfileID;
     }
     
+    public static function editUserProfile($oldProfile, $newProfile, $dbName = null, $configFile = null) {
+        try {
+            $db = Database::getDB($dbName, $configFile);
+            $oldParams = $oldProfile->getParameters();
+            $newParams = $newProfile->getParameters();
+            $numParams = count($oldProfile);
+            
+            foreach ($newParams as $key => $value) {
+                
+                if (!array_key_exists($key, $oldParams))
+                    throw new PDOException('Key ' . htmlspecialchars($key) . ' is invalid');
+                
+                if ($oldParams[$key] !== $newParams[$key]) {
+                    $stmt = $db->prepare(
+                        "update UserProfiles set $key = :value
+                         where userID in
+                            (select userID from Users where userName = :userName)");
+                    $stmt->execute(array(
+                        ":value" => $value,
+                        "userName" => $newParams['userName']
+                    ));
+                }
+            }
+            
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        } catch (RuntimeException $e) {
+            echo $e->getMessage();
+        }
+    }
+    
     // returns an array of UserProfile objects for all user profiles in the database
     public static function getAllUserProfiles($dbName = null, $configFile = null) {
         $allUsers = array();
