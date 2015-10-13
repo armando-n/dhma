@@ -156,9 +156,7 @@ class UserProfilesDBTest extends PHPUnit_Framework_TestCase {
         $this->assertNull($profile,
             'It should return NULL when an unknown attribute-value pair is provided');
     }
-    
-    // ----------------------------------- paste starts here ----------------------------------- \\
-    
+
     public function testGetUserProfilesCreatedSinceWithValidDateAndResults() {
         $profiles = UserProfilesDB::getUserProfilesCreatedSinceTest('2015-10-11');
     
@@ -278,8 +276,6 @@ class UserProfilesDBTest extends PHPUnit_Framework_TestCase {
     public function testGetAllUserProfilesSortedByDateCreatedWithInvalidOrder() {
         $profiles = UserProfilesDB::getAllUserProfilesSortedByDateCreatedTest('invalid order');
     }
-    
-    // --------------------------------- paste ends here --------------------------------------- \\
     
     private function dbQuery($query, $dbName = null, $configFile = null) {
         try {

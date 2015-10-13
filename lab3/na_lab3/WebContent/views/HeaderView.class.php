@@ -1,6 +1,11 @@
 <?php
+if (!isset($_COOKIE['PHPSESSID']))
+    session_start();
+    
 class HeaderView {
-    public static function show($title = null, $loggedIn = false) {
+    
+    public static function show($title = null) {
+        
 ?><!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +13,11 @@ class HeaderView {
     <meta name="author" content="Armando Navarro" />
     <title>DHMA | <?= $title ?></title>
 </head>
-<body>
+<body><?php
+        if (isset($_SESSION['flash'])): ?>
+<div><?= $_SESSION['flash'] ?></div><?php
+        endif;
+        ?>
 
 <h1><?= $title ?></h1>
 
@@ -19,17 +28,18 @@ class HeaderView {
         <ul>
             <li><a href="home">Home</a></li>
             <li><a href="past-measurements">Past Measurements</a></li><?php
-            if ($loggedIn) { ?>
-            <li><a href="logout">Logout</a></li><?php
-            } else { ?> 
+            if (isset($_SESSION['profile'])): ?>
+            <li><a href="login_logout">Logout</a></li><?php
+            else: ?> 
             <li><a href="login">Login</a></li>
             <li><a href="signup">Sign Up</a></li><?php
-            } ?> 
+            endif; ?> 
         </ul>
     </nav>
 </header>
 
 <?php
+        unset($_SESSION['flash']);
     }
 }
 ?>

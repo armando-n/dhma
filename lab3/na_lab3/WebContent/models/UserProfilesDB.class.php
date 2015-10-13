@@ -77,7 +77,7 @@ class UserProfilesDB {
     
     // returns a UserProfile object whose $type field has value $value
     public static function getUserProfileBy($type, $value, $dbName = null, $configFile = null) {
-        $allowed = ['profileID', 'userID', 'email', 'phone'];
+        $allowed = ['profileID', 'userID', 'email', 'phone', 'userName', 'dateCreated'];
         $uProfile = null;
         
         try {

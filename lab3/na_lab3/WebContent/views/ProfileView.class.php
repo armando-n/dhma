@@ -2,22 +2,22 @@
 class ProfileView {
     
     public static function show($user = null, $uData = null, $edit = false) {
-        if (is_null($user) || is_null($uData)) {
+        if (is_null($user) || is_null($uData)):
             ?>
             <p>Error: unable to show profile. User data is missing.</p>
             <?php
             return;
-        }
+        endif;
         $title = ($edit) ? "Edit Profile" : "Your Profile";
         
-        HeaderView::show($title, true);
+        HeaderView::show($title);
         
         if ($edit)
             ProfileView::showEditForm($user, $uData);
         else
             ProfileView::showProfile($user, $uData);
         
-        FooterView::show(true);
+        FooterView::show();
     }
     
     public static function showProfile($user, $uData) {

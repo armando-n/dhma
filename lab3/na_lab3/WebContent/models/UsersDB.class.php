@@ -54,7 +54,7 @@ class UsersDB {
         return $allUsers;
     }
     
-    // returns a User object whose $type field has value $value
+    // returns a User object whose $type field has value $value, or null if no matching user is found
     public static function getUserBy($type, $value, $dbName = null, $configFile = null) {
         $allowed = array('userID', 'userName', 'dateCreated');
         $user = null;

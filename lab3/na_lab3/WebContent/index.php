@@ -1,5 +1,9 @@
 <?php
+ob_start();
 include("includer.php");
+if (!isset($_COOKIE['PHPSESSID']))
+    session_start();
+
 
 $loggedIn = isset($_GET["loggedin"]);
 
@@ -46,6 +50,18 @@ else if ($numPieces >= 3 && $urlPieces[1] == 'tests') {
 else
     $control = "none";
 
+$_SESSION['base'] = $urlPieces[0];    
+$controlParts = preg_split("/_/", $control, null, PREG_SPLIT_NO_EMPTY);
+$numParts = count($controlParts);
+if ($numParts > 0) {
+    $_SESSION['control'] = $controlParts[0];
+    $control = $controlParts[0];
+}
+if ($numParts > 1)
+    $_SESSION['action'] = $controlParts[1];
+if ($numParts > 2)
+    $_SESSION['arguments'] = $controlParts[2];
+
 // run the requested controller
 switch ($control) {
     case "login" : LoginController::run(); break;
@@ -58,4 +74,5 @@ switch ($control) {
     default: HomeView::show();
 }
 
+ob_end_flush();
 ?>

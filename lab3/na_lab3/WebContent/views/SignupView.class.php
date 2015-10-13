@@ -2,9 +2,9 @@
 class SignupView {
     
     public static function show($user = null, $uData = null) {
-        HeaderView::show("Member Sign Up", false);
+        HeaderView::show("Member Sign Up");
         SignupView::showBody($user, $uData);
-        FooterView::show(false);
+        FooterView::show();
     }
     
     public static function showBody($user, $uData) {

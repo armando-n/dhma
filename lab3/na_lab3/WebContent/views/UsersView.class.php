@@ -3,20 +3,20 @@ class UsersView {
     
     // takes an array of UserProfile objects
     public static function show($uProfiles = null, $loggedIn = false) {
-        HeaderView::show("User List", $loggedIn);
+        HeaderView::show("User List");
         $return = UsersView::showBody($uProfiles);
-        FooterView::show($loggedIn);
+        FooterView::show();
         return $return;
     }
     
     public static function showBody($uProfiles) {
-        if (is_null($uProfiles)) {
+        if (is_null($uProfiles)):
             ?><p>Error: user profiles not found</p><?php
             return false;
-        } else if (empty($uProfiles)) {
+        elseif (empty($uProfiles)):
             ?><p>No users exist yet</p><?php
             return true;
-        }
+        endif;
         ?>
 <section>
     <h2>Users</h2>
@@ -38,7 +38,7 @@ class UsersView {
             <th>Stay Logged In</th>
         </tr>
 <?php
-        foreach ($uProfiles as $profile) {
+        foreach ($uProfiles as $profile):
             ?>
         <tr>
             <td><?=$profile->getFirstName()?> <?=$profile->getLastName()?></td>
@@ -56,7 +56,7 @@ class UsersView {
             <td><?=$profile->isStayLoggedInSet() ? 'yes' : 'no'?></td>
         </tr>
 <?php
-        }
+        endforeach;
         ?>
     </table>
 </section>

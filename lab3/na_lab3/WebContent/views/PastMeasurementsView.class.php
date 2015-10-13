@@ -2,16 +2,16 @@
 class PastMeasurementsView{
     
     public static function show($measurements = null) {
-        HeaderView::show("Your Past Measurements", true);
+        HeaderView::show("Your Past Measurements");
         PastMeasurementsView::showBody($measurements);
-        FooterView::show(true);
+        FooterView::show();
     }
     
     public static function showBody($measurements) {
-        if (is_null($measurements)) {
+        if (is_null($measurements)):
             ?><p>Error: unable to show measurements. Data is missing.</p><?php
             return;
-        }
+        endif;
         ?>
 <nav id="page-nav">
     <h2>Jump to a measurement</h2>
@@ -28,18 +28,18 @@ class PastMeasurementsView{
 <section>
     <h2><a id="glucose">Glucose Measurements</a></h2>
 <?php
-        if (!isset($measurements["glucose"]) || empty($measurements["glucose"])) {
+        if (!isset($measurements["glucose"]) || empty($measurements["glucose"])):
             ?>
     <p>No glucose measurements to show yet</p>
 <?php
-        } else {
+        else:
             ?>
     <table>
         <tr>
             <th>Gluclose Levels</th>
             <th>Date / Time</th>
         </tr><?php
-            foreach ($measurements["glucose"] as $glucose) {
+            foreach ($measurements["glucose"] as $glucose):
                 ?>
 
         <tr>
@@ -47,27 +47,27 @@ class PastMeasurementsView{
             <td><?=$glucose->getDate() . ' / ' . $glucose->getTime()?></td>
         </tr>
 <?php
-            }
+            endforeach;
             ?>
     </table><?php
-        }
+        endif;
         ?>
 </section>
 
 <section>
     <h2><a id="bloodPressure">Blood Pressure Measurements</a></h2>
     <?php
-        if (!isset($measurements["bloodPressure"]) || empty($measurements["bloodPressure"])) {
+        if (!isset($measurements["bloodPressure"]) || empty($measurements["bloodPressure"])):
             ?><p>No blood pressure measurements to show yet</p>
 <?php
-        } else {
+        else:
             ?>
     <table>
         <tr>
             <th>Blood Pressure (systolic / diastolic)</th>
             <th>Date / Time</th>
         </tr><?php
-            foreach ($measurements["bloodPressure"] as $bloodPressure) {
+            foreach ($measurements["bloodPressure"] as $bloodPressure):
                 ?>
             
         <tr>
@@ -75,27 +75,27 @@ class PastMeasurementsView{
             <td><?=$bloodPressure->getDate() . ' / ' . $bloodPressure->getTime()?></td>
         </tr>
 <?php
-            }
+            endforeach;
             ?>
     </table><?php
-        }
+        endif;
     ?>
 </section>
 
 <section>
     <h2><a id="calories">Calorie Measurements</a></h2>
     <?php
-        if (!isset($measurements["calories"]) || empty($measurements["calories"])) {
+        if (!isset($measurements["calories"]) || empty($measurements["calories"])):
             ?><p>No calorie measurements to show yet</p>
 <?php
-        } else {
+        else:
             ?>
     <table>
         <tr>
             <th>Calories Consumed</th>
             <th>Date / Time</th>
         </tr><?php
-            foreach ($measurements["calories"] as $calories) {
+            foreach ($measurements["calories"] as $calories):
                 ?>
             
         <tr>
@@ -103,20 +103,20 @@ class PastMeasurementsView{
             <td><?=$calories->getDate() . ' / ' . $calories->getTime()?></td>
         </tr>
 <?php
-            }
+            endforeach;
             ?>
     </table><?php
-        }
+        endif;
         ?>
 </section>
 
 <section>
     <h2><a id="exercise">Exercise Measurements</a></h2>
     <?php
-        if (!isset($measurements["exercise"]) || empty($measurements["exercise"])) {
+        if (!isset($measurements["exercise"]) || empty($measurements["exercise"])):
             ?><p>No exercise to show yet</p>
 <?php
-        } else {
+        else:
         ?>
     <table>
         <tr>
@@ -124,7 +124,7 @@ class PastMeasurementsView{
             <th>Type</th>
             <th>Date / Time</th>
         </tr><?php
-            foreach ($measurements["exercise"] as $exercise) {
+            foreach ($measurements["exercise"] as $exercise):
                 ?>
             
         <tr>
@@ -133,27 +133,27 @@ class PastMeasurementsView{
             <td><?=$exercise->getDate() . ' / ' . $exercise->getTime()?></td>
         </tr>
 <?php
-            }
+            endforeach;
             ?>
     </table><?php
-        }
+        endif;
         ?>
 </section>
 
 <section>
     <h2><a id="sleep">Sleep Measurements</a></h2>
     <?php
-        if (!isset($measurements["sleep"]) || empty($measurements["sleep"])) {
+        if (!isset($measurements["sleep"]) || empty($measurements["sleep"])):
             ?><p>No sleep to show yet</p>
 <?php
-        } else {
+        else:
         ?>
     <table>
         <tr>
             <th>Sleep Duration (minutes)</th>
             <th>Date / Time</th>
         </tr><?php
-            foreach ($measurements["sleep"] as $sleep) {
+            foreach ($measurements["sleep"] as $sleep):
                 ?>
             
         <tr>
@@ -161,27 +161,27 @@ class PastMeasurementsView{
             <td><?=$sleep->getDate() . ' / ' . $sleep->getTime()?></td>
         </tr>
 <?php
-            }
+            endforeach;
             ?>
     </table><?php
-        }
+        endif;
         ?>
 </section>
 
 <section>
     <h2><a id="weight">Weight Measurements</a></h2>
     <?php
-        if (!isset($measurements["weight"]) || empty($measurements["weight"])) {
+        if (!isset($measurements["weight"]) || empty($measurements["weight"])):
             ?><p>No weight measurements to show yet</p>
 <?php
-        } else {
+        else:
         ?>
     <table>
         <tr>
             <th>Weight</th>
             <th>Date / Time</th>
         </tr><?php
-            foreach ($measurements["weight"] as $weight) {
+            foreach ($measurements["weight"] as $weight):
                 ?>
             
         <tr>
@@ -189,10 +189,10 @@ class PastMeasurementsView{
             <td><?=$weight->getDate() . ' / ' . $weight->getTime()?></td>
         </tr>
 <?php
-            }
+            endforeach;
             ?>
     </table><?php
-        }
+        endif;
         ?>
 </section>
         

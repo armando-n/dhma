@@ -1,17 +1,20 @@
 <?php
+if (!isset($_COOKIE['PHPSESSID']))
+    session_start();
 
 class HomeView {
     
-    public static function show($UserProfile = null) {
-        HeaderView::show("Diabetic Health Management Assistant", !is_null($UserProfile));
-        HomeView::showBody($UserProfile);
-        FooterView::show(!is_null($UserProfile));
+    public static function show() {
+        HeaderView::show("Diabetic Health Management Assistant");
+        HomeView::showBody();
+        FooterView::show();
     }
     
-    public static function showBody($uProfile) {
+    public static function showBody() {
+        if (isset($_SESSION['profile']))
+            $profile = $_SESSION['profile'];
         ?>
 <section id="site-info">
-    <?php if (!is_null($uProfile)) { ?><h2>Welcome back, <?=$uProfile->getUserName()?>!</h2><?php } ?>
     <h2><a href="tests.html">Tests</a></h2>
     <h2>About DHMA</h2>
     
