@@ -1,40 +1,90 @@
 <?php
+if (!isset($_SESSION))
+    session_start();
+
 class ProfileController {
     
-    public static function run($user = null, $uData = null, $edit = false) {
+    public static function run($dbName = null, $configFile = null) {
         
-        // user is editing profile
-        if ($edit === true) {
+        if (!isset($_SESSION['action'])) {
+            ProfileController::redirect('home', 'Unrecognized command');
+            return;
+        }
+        
+        // action: view -> arguments: none or userName of existing user
+        if ($_SESSION['action'] === 'view')
+            ProfileController::view($dbName, $configFile);
+        
+        // action: edit -> arguments: view or post
+        else if ($_SESSION['action'] === 'edit')
+            ProfileController::edit();
+    }
+    
+    private static function view($dbName, $configFile) {
+        
+        // requesting own profile; show it
+        if (!isset($_SESSION['arguments'])) {
             
-            // data passed in post vars, instead of in parameters
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                $validUserInput = array(
-                        "userName" => "armando-n",
-                        "password1" => "password123",
-                        "password2" => "password123"
-                );
-                $user = new User($validUserInput);
-                $uData = new UserProfile($_POST);
-                
-                // edit successful; show profile
-                if ($user->getErrorCount() == 0 && $uData->getErrorCount() == 0)
-                    ProfileView::show($user, $uData, false);
-                
-                // edit failed; load view w/old values
-                else
-                    ProfileView::show($user, $uData, true);
-                
+            // send user to login view if not logged in;
+            if (!isset($_SESSION['profile'])) {
+                ProfileController::redirect('login_view', 'You must be logged in to edit your profile');
+                return;
             }
-            
-            // data passed in parameters
-            else if (!is_null($user) && !is_null($uData))
-                ProfileView::show($user, $uData, true);
+        
+            // user logged in; show profile
+            ProfileView::showProfile($_SESSION['profile']);
             
         }
         
-        // user is viewing profile
-        else
-            ProfileView::show($user, $uData, false);
+        // requesting someone else's profile
+        else {
+            $profile = UserProfilesDB::getUserProfileBy('userName', $_SESSION['arguments'], $dbName, $configFile);
+        
+            // go to users view if requested profile not found
+            if ($profile === null) {
+                ProfileController::redirect('members_view', 'Unable to find theese user "' . htmlspecialchars($_SESSION['arguments']) . '"');
+                return;
+            }
+        
+            // profile found; show it
+            ProfileView::showProfile($profile);
+        }
+    }
+    
+    private static function edit() {
+        
+        // send user to login view if not logged in
+        if (!isset($_SESSION['profile'])) {
+            ProfileController::redirect('login_view', 'You must be logged in to edit your profile');
+            return;
+        }
+        
+        // arguments must be set for edit action; redirect if not
+        if (!isset($_SESSION['arguments'])) {
+            ProfileController::redirect('home', 'Unrecognized command');
+            return;
+        }
+        
+        // requesting edit form
+        if ($_SESSION['arguments'] === 'view')
+            ProfileView::showEditForm();
+        
+        // posting profile edits
+        else if ($_SESSION['arguments'] === 'post') {
+            // TODO send database request to edit profile
+        }
+    }
+    
+    private static function redirect($control = '', $message = null) {
+        if (!is_null($message))
+            $_SESSION['flash'] = $message;
+        if (!empty($control))
+            $control = '/' . $control;
+        
+        unset($_SESSION['control']);
+        unset($_SESSION['action']);
+        unset($_SESSION['arguments']);
+        header('Location: http://' . $_SERVER['HTTP_HOST'] . '/' . $_SESSION['base'] . $control);
     }
     
 }

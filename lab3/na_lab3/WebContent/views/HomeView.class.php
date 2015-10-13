@@ -1,5 +1,5 @@
 <?php
-if (!isset($_COOKIE['PHPSESSID']))
+if (!isset($_SESSION))
     session_start();
 
 class HomeView {
@@ -11,8 +11,6 @@ class HomeView {
     }
     
     public static function showBody() {
-        if (isset($_SESSION['profile']))
-            $profile = $_SESSION['profile'];
         ?>
 <section id="site-info">
     <h2><a href="tests.html">Tests</a></h2>

@@ -1,7 +1,8 @@
 <?php
-ob_start();
-include("includer.php");
-if (!isset($_COOKIE['PHPSESSID']))
+if (ob_get_contents() === false)
+    ob_start();
+include_once("includer.php");
+if (!isset($_SESSION))
     session_start();
 
 
@@ -56,11 +57,16 @@ $numParts = count($controlParts);
 if ($numParts > 0) {
     $_SESSION['control'] = $controlParts[0];
     $control = $controlParts[0];
-}
+} else
+    unset($_SESSION['control']);
 if ($numParts > 1)
     $_SESSION['action'] = $controlParts[1];
+else
+    unset($_SESSION['action']);
 if ($numParts > 2)
     $_SESSION['arguments'] = $controlParts[2];
+else
+    unset($_SESSION['arguments']);
 
 // run the requested controller
 switch ($control) {
@@ -71,6 +77,7 @@ switch ($control) {
     case "signup" : SignupController::run(); break;
     case "past-measurements" : PastMeasurementsController::run(); break;
     case "members" : UsersController::run(); break;
+    case "home":
     default: HomeView::show();
 }
 

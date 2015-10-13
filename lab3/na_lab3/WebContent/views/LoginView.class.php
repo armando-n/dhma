@@ -1,5 +1,5 @@
 <?php
-if (!isset($_COOKIE['PHPSESSID']))
+if (!isset($_SESSION))
     session_start();
 
 class LoginView {
@@ -16,7 +16,7 @@ class LoginView {
         ?>
 <section>
     <h2>Log In</h2>
-    <form action="login" method="post">
+    <form action="login_login" method="post">
         <fieldset>
             <legend>Log In</legend>
             <!-- Pattern attribute and specific error reporting absent to avoid hints that weaken security -->

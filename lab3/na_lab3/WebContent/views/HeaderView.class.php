@@ -1,5 +1,5 @@
 <?php
-if (!isset($_COOKIE['PHPSESSID']))
+if (!isset($_SESSION))
     session_start();
     
 class HeaderView {
@@ -31,7 +31,7 @@ class HeaderView {
             if (isset($_SESSION['profile'])): ?>
             <li><a href="login_logout">Logout</a></li><?php
             else: ?> 
-            <li><a href="login">Login</a></li>
+            <li><a href="login_view">Login</a></li>
             <li><a href="signup">Sign Up</a></li><?php
             endif; ?> 
         </ul>

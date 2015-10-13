@@ -1,84 +1,74 @@
 <?php 
+if (!isset($_SESSION))
+    session_start();
+
 class ProfileView {
     
-    public static function show($user = null, $uData = null, $edit = false) {
-        if (is_null($user) || is_null($uData)):
-            ?>
-            <p>Error: unable to show profile. User data is missing.</p>
-            <?php
-            return;
-        endif;
-        $title = ($edit) ? "Edit Profile" : "Your Profile";
-        
-        HeaderView::show($title);
-        
-        if ($edit)
-            ProfileView::showEditForm($user, $uData);
-        else
-            ProfileView::showProfile($user, $uData);
-        
+    public static function showProfile($profile) {
+        HeaderView::show($profile->getUserName() . '\'s Profile');
+        ?>
+<section id="profile-info">
+    <h2><?= $profile->getUserName() ?>'s Profile</h2>
+    <img src="images/profile/<?= $profile->getUserName() ?>.png" alt="<?= $profile->getUserName() ?>'s profile picture" />
+    <ul>
+        <li>First Name: <?= $profile->getFirstName() ?></li>
+        <li>Last Name: <?= $profile->getLastName() ?></li>
+        <li>E-mail: <?= $profile->getEmail() ?></li>
+        <li>Phone #: <?= $profile->getPhoneNumber() ?></li>
+        <li>Gender: <?= $profile->getGender() ?></li>
+        <li>Facebook: <?= $profile->getFacebook() ?></li>
+        <li>Date of Birth: <?= $profile->getDOB() ?></li>
+        <li>Country: <?= $profile->getCountry() ?></li>
+        <li>Theme: <?= $profile->getTheme() ?></li>
+        <li>Theme Accent Color: <?= $profile->getAccentColor() ?></li>
+        <li>Profile Public: <?= $profile->isProfilePublic() ? "yes" : "no" ?></li>
+        <li>Picture Public: <?= $profile->isPicturePublic() ? "yes" : "no" ?></li>
+        <li>E-mail Reminders: <?= $profile->isSendRemindersSet() ? "yes" : "no" ?></li>
+        <li>Stay Logged In: <?= $profile->isStayLoggedInSet() ? "yes" : "no" ?></li>
+    </ul>
+    <a href="profile_edit_view">Edit Profile</a>
+</section>
+<?php
         FooterView::show();
     }
     
-    public static function showProfile($user, $uData) {
+    public static function showEditForm($testing = false) {
+        
+        $profile = $_SESSION['profile'];
+        HeaderView::show($profile->getUserName() . '\'s Profile');
+        
+        $genderMaleVal = ($profile->getGender() === 'male') ? ' checked="checked"' : '';
+        $genderFemaleVal = ($profile->getGender() === 'female') ? ' checked="checked"' : '';
+        $themeDarkVal = ($profile->getTheme() === 'dark') ? ' selected="selected"' : '';
+        $themeLightVal = ($profile->getTheme() === 'light') ? ' selected="selected"' : '';
+        $pubProfileVal = ($profile->isProfilePublic()) ? ' checked="checked"' : '';
+        $pubPicVal = ($profile->isPicturePublic()) ? ' checked="checked"' : '';
+        $remindVal = ($profile->isSendRemindersSet()) ? ' checked="checked"' : '';
+        $stayLoggedVal = ($profile->isStayLoggedInSet()) ? ' checked="checked"' : '';
         ?>
 <section id="profile-info">
-    <h2><?= $user->getUserName() ?>'s Profile</h2>
-    <img src="images/profile/<?= $user->getUserName() ?>.png" alt="<?= $user->getUserName() ?>'s profile picture" />
-    <ul>
-        <li>First Name: <?= $uData->getFirstName() ?></li>
-        <li>Last Name: <?= $uData->getLastName() ?></li>
-        <li>E-mail: <?= $uData->getEmail() ?></li>
-        <li>Phone #: <?= $uData->getPhoneNumber() ?></li>
-        <li>Gender: <?= $uData->getGender() ?></li>
-        <li>Facebook: <?= $uData->getFacebook() ?></li>
-        <li>Date of Birth: <?= $uData->getDOB() ?></li>
-        <li>Country: <?= $uData->getCountry() ?></li>
-        <li>Theme: <?= $uData->getTheme() ?></li>
-        <li>Theme Accent Color: <?= $uData->getAccentColor() ?></li>
-        <li>Profile Public: <?= $uData->isProfilePublic() ? "yes" : "no" ?></li>
-        <li>Picture Public: <?= $uData->isPicturePublic() ? "yes" : "no" ?></li>
-        <li>E-mail Reminders: <?= $uData->isSendRemindersSet() ? "yes" : "no" ?></li>
-        <li>Stay Logged In: <?= $uData->isStayLoggedInSet() ? "yes" : "no" ?></li>
-    </ul>
-    <a href="edit-profile">Edit Profile</a>
-</section>
-<?php 
-    }
+    <h2><?= $profile->getUserName() ?>'s Profile</h2>
     
-    public static function showEditForm($user, $uData, $testing = false) {
-        $genderMaleVal = ($uData->getGender() === 'male') ? ' checked="checked"' : '';
-        $genderFemaleVal = ($uData->getGender() === 'female') ? ' checked="checked"' : '';
-        $themeDarkVal = ($uData->getTheme() === 'dark') ? ' selected="selected"' : '';
-        $themeLightVal = ($uData->getTheme() === 'light') ? ' selected="selected"' : '';
-        $pubProfileVal = ($uData->isProfilePublic()) ? ' checked="checked"' : '';
-        $pubPicVal = ($uData->isPicturePublic()) ? ' checked="checked"' : '';
-        $remindVal = ($uData->isSendRemindersSet()) ? ' checked="checked"' : '';
-        $stayLoggedVal = ($uData->isStayLoggedInSet()) ? ' checked="checked"' : '';
-        ?>
-<section id="profile-info">
-    <h2><?= $user->getUserName() ?>'s Profile</h2>
-    
-    <img src="images/profile/<?= $user->getUserName() ?>.png" alt="<?= $user->getUserName() ?>'s profile picture" /><br />
+    <img src="images/profile/<?= $profile->getUserName() ?>.png" alt="<?= $profile->getUserName() ?>'s profile picture" /><br />
+    <form action="profile_edit_post" enctype="multipart/form-data" method="post">
     Change Picture: <input type="file" name="pic" accept="image/*" tabindex="13" />
-    <form action="edit-profile" method="post">
     <ul>
-        <li>First Name: <input type="text" name="fname" value="<?=$uData->getFirstName()?>" size="15" maxlength="30" tabindex="5" pattern="^[a-zA-Z_-]+$" title="Remove invalid characters" />
-                <span class="error"><?=$uData->getError("firstName")?></span></li>
-        <li>Last Name: <input type="text" name="lname" value="<?=$uData->getLastName()?>" size="15" maxlength="30" tabindex="6" pattern="(^$)|(^([^\-!#\$%\^\x26\(\)\*,\./:;\?@\[\\\]_\{\|\}¨ˇ“”€\+<=>§°\d\s¤®™©]| )+$)" title="Remove invalid characters" />
-                <span class="error"><?=$uData->getError("lastName")?></span></li>
-        <li>E-mail: <input type="email" name="email" value="<?=$uData->getEmail()?>" size="15" autofocus="autofocus" required="required" maxlength="30" tabindex="1" />
-                <span class="error"><?=$uData->getError("email")?></span></li>
-        <li>Phone #: <input type="tel" name="phone" value="<?=$uData->getPhoneNumber()?>" size="15" maxlength="15"  tabindex="7" placeholder="xxx-xxx-xxxx" pattern="^(1\s*[-\/\.]?)?(\((\d{3})\)|(\d{3}))\s*[-\/\.]?\s*(\d{3})\s*[-\/\.]?\s*(\d{4})\s*(([xX]|[eE][xX][tT])\.?\s*(\d+))*$" title="xxx-xxx-xxx or x-xxx-xxx-xxxx"/>
-                <span class="error"><?=$uData->getError("phone")?></span></li>
+        <li>First Name: <input type="text" name="fname" value="<?=$profile->getFirstName()?>" size="15" maxlength="30" tabindex="5" pattern="^[a-zA-Z_-]+$" title="Remove invalid characters" />
+                <span class="error"><?=$profile->getError("firstName")?></span></li>
+        <li>Last Name: <input type="text" name="lname" value="<?=$profile->getLastName()?>" size="15" maxlength="30" tabindex="6" pattern="(^$)|(^([^\-!#\$%\^\x26\(\)\*,\./:;\?@\[\\\]_\{\|\}¨ˇ“”€\+<=>§°\d\s¤®™©]| )+$)" title="Remove invalid characters" />
+                <span class="error"><?=$profile->getError("lastName")?></span></li>
+        <li>E-mail: <input type="email" name="email" value="<?=$profile->getEmail()?>" size="15" autofocus="autofocus" required="required" maxlength="30" tabindex="1" />
+                <span class="error"><?=$profile->getError("email")?></span></li>
+        <li>Phone #: <input type="tel" name="phone" value="<?=$profile->getPhoneNumber()?>" size="15" maxlength="15"  tabindex="7" placeholder="xxx-xxx-xxxx" pattern="^(1\s*[-\/\.]?)?(\((\d{3})\)|(\d{3}))\s*[-\/\.]?\s*(\d{3})\s*[-\/\.]?\s*(\d{4})\s*(([xX]|[eE][xX][tT])\.?\s*(\d+))*$" title="xxx-xxx-xxx or x-xxx-xxx-xxxx"/>
+                <span class="error"><?=$profile->getError("phone")?></span></li>
         <li>Gender: <input type="radio" id="male" name="gender" value="male"<?=$genderMaleVal?> tabindex="9" /> <label for="male">Male</label>
                 <input type="radio" id="female" name="gender" value="female"<?=$genderFemaleVal?> tabindex="10" /> <label for="female">Female</label>
-                <span class="error"><?=$uData->getError("gender")?></span></li>
-        <li>Facebook: <input type="url" name="facebook" value="<?=$uData->getFacebook()?>" size="30" tabindex="8" pattern="((http|https):\/\/)?(www\.)?facebook\.com\/.+" title="Must be a valid Facebook URL" />
-                <span class="error"><?=$uData->getError("facebook")?></span></li>
-        <li>Date of Birth: <input type="date" name="dob" value="<?=$uData->getDOB()?>" tabindex="11" title="mm/dd/yyyy or mm-dd-yyyy" />
-                <span class="error"><?=$uData->getError("dob")?></span></li>
-        <li>Country: <input type="text" name="country" list="country" value="<?=$uData->getCountry()?>" maxlength="30" tabindex="12" pattern="^[a-zA-Z& \{\}\(\)]{2,}$" title="Allowed characters: letters, spaces, &amp;, {}, ()" />
+                <span class="error"><?=$profile->getError("gender")?></span></li>
+        <li>Facebook: <input type="url" name="facebook" value="<?=$profile->getFacebook()?>" size="30" tabindex="8" pattern="((http|https):\/\/)?(www\.)?facebook\.com\/.+" title="Must be a valid Facebook URL" />
+                <span class="error"><?=$profile->getError("facebook")?></span></li>
+        <li>Date of Birth: <input type="date" name="dob" value="<?=$profile->getDOB()?>" tabindex="11" title="mm/dd/yyyy or mm-dd-yyyy" />
+                <span class="error"><?=$profile->getError("dob")?></span></li>
+        <li>Country: <input type="text" name="country" list="country" value="<?=$profile->getCountry()?>" maxlength="30" tabindex="12" pattern="^[a-zA-Z& \{\}\(\)]{2,}$" title="Allowed characters: letters, spaces, &amp;, {}, ()" />
                 <datalist id="country">
                     <option>Afghanistan</option>
                     <option>Albania</option>
@@ -281,21 +271,22 @@ class ProfileView {
                     <option<?=$themeDarkVal?>>dark</option>
                     <option<?=$themeLightVal?>>light</option>
                 </select>
-                <span class="error"><?=$uData->getError("theme")?></span></li>
-        <li>Theme Accent Color: <input type="color" name="color" value="<?=$uData->getAccentColor()?>" tabindex="15" />
-                <span class="error"><?=$uData->getError("accentColor")?></span></li>
+                <span class="error"><?=$profile->getError("theme")?></span></li>
+        <li>Theme Accent Color: <input type="color" name="color" value="<?=$profile->getAccentColor()?>" tabindex="15" />
+                <span class="error"><?=$profile->getError("accentColor")?></span></li>
         <li><label for="public-profile">Profile Public:</label> <input type="checkbox" id="public-profile" name="public-profile"<?=$pubProfileVal?> tabindex="16" /></li>
         <li><label for="showpic">Picture Public:</label> <input type="checkbox" id="showpic" name="showpic"<?=$pubPicVal?> tabindex="17" /></li>
         <li><label for="reminders">E-mail Reminders:</label> <input type="checkbox" id="reminders" name="reminders"<?=$remindVal?> tabindex="18" /></li>
         <li><label for="keep-logged-in">Stay Logged In:</label> <input type="checkbox" id="keep-logged-in" name="keep-logged-in"<?=$stayLoggedVal?> tabindex="19" /></li>
     </ul>
     <div>
-            <input type="submit" size="15" tabindex="20" />
-            <a href="profile" tabindex="21">Cancel</a>
+        <input type="submit" size="15" tabindex="20" />
+        <a href="profile_view" tabindex="21">Cancel</a>
     </div>
     </form>
 </section>
         <?php
+        FooterView::show();
     }
 }
 ?>

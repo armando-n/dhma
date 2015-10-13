@@ -2,7 +2,7 @@
 class UsersView {
     
     // takes an array of UserProfile objects
-    public static function show($uProfiles = null, $loggedIn = false) {
+    public static function show($uProfiles = null) {
         HeaderView::show("User List");
         $return = UsersView::showBody($uProfiles);
         FooterView::show();

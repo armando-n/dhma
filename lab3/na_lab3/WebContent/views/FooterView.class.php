@@ -1,5 +1,5 @@
 <?php
-if (!isset($_COOKIE['PHPSESSID']))
+if (!isset($_SESSION))
     session_start();
 
 class FooterView {
@@ -23,12 +23,12 @@ class FooterView {
             <h3>Members</h3>
             <ul>
                 <li><a href="past-measurements">Past Measurements</a></li>
-                <li><a href="profile">Profile</a></li>
+                <li><a href="profile_view">Profile</a></li>
 <?php // odd spacing here is for proper spacing when Viewing Page Source (behavior seems inconsistent)
                 if (isset($_SESSION['profile'])): ?>
                 <li><a href="login_logout">Logout</a></li><?php
                 else: ?>
-                <li><a href="login">Login</a></li><?php
+                <li><a href="login_view">Login</a></li><?php
                 endif; ?> 
             </ul>
         </li>
