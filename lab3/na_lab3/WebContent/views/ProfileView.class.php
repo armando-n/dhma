@@ -1,10 +1,11 @@
 <?php 
-if (!isset($_SESSION))
-    session_start();
-
 class ProfileView {
     
     public static function showProfile($profile) {
+        if (is_null($profile) || !($profile instanceof UserProfile) || $profile->getErrorCount() > 0) {
+            ?><p>Error: profile has errors or is invalid and cannot be shown</p><?php
+            return;
+        }
         HeaderView::show($profile->getUserName() . '\'s Profile');
         ?>
 <section id="profile-info">
@@ -32,9 +33,14 @@ class ProfileView {
         FooterView::show();
     }
     
-    public static function showEditForm($testing = false) {
+    public static function showEditForm() {
+        if (isset($_SESSION['profileEdit']))
+            $profile = $_SESSION['profileEdit'];
+        else if (isset($_SESSION['profile']))
+            $profile = $_SESSION['profile'];
+        else
+            throw new Exception('Error: profile not found. Unable to edit profile.');
         
-        $profile = $_SESSION['profile'];
         HeaderView::show($profile->getUserName() . '\'s Profile');
         
         $genderMaleVal = ($profile->getGender() === 'male') ? ' checked="checked"' : '';
@@ -49,7 +55,7 @@ class ProfileView {
 <section id="profile-info">
     <h2><?= $profile->getUserName() ?>'s Profile</h2>
     
-    <img src="images/profile/<?= $profile->getUserName() ?>.png" alt="<?= $profile->getUserName() ?>'s profile picture" /><br />
+    <img src="images/profile/<?=$profile->getUserName()?>.png" alt="<?=$profile->getUserName()?>'s profile picture" /><br />
     <form action="profile_edit_post" enctype="multipart/form-data" method="post">
     Change Picture: <input type="file" name="pic" accept="image/*" tabindex="13" />
     <ul>
@@ -274,10 +280,10 @@ class ProfileView {
                 <span class="error"><?=$profile->getError("theme")?></span></li>
         <li>Theme Accent Color: <input type="color" name="accentColor" value="<?=$profile->getAccentColor()?>" tabindex="15" />
                 <span class="error"><?=$profile->getError("accentColor")?></span></li>
-        <li><label for="isProfilePublic">Profile Public:</label> <input type="checkbox" id="public-profile" name="public-profile"<?=$pubProfileVal?> tabindex="16" /></li>
-        <li><label for="isPicturePublic">Picture Public:</label> <input type="checkbox" id="showpic" name="showpic"<?=$pubPicVal?> tabindex="17" /></li>
-        <li><label for="sendReminders">E-mail Reminders:</label> <input type="checkbox" id="reminders" name="reminders"<?=$remindVal?> tabindex="18" /></li>
-        <li><label for="stayLoggedIn">Stay Logged In:</label> <input type="checkbox" id="keep-logged-in" name="keep-logged-in"<?=$stayLoggedVal?> tabindex="19" /></li>
+        <li><label for="isProfilePublic">Profile Public:</label> <input type="checkbox" id="isProfilePublic" name="isProfilePublic"<?=$pubProfileVal?> tabindex="16" /></li>
+        <li><label for="isPicturePublic">Picture Public:</label> <input type="checkbox" id="isPicturePublic" name="isPicturePublic"<?=$pubPicVal?> tabindex="17" /></li>
+        <li><label for="sendReminders">E-mail Reminders:</label> <input type="checkbox" id="sendReminders" name="sendReminders"<?=$remindVal?> tabindex="18" /></li>
+        <li><label for="stayLoggedIn">Stay Logged In:</label> <input type="checkbox" id="stayLoggedIn" name="stayLoggedIn"<?=$stayLoggedVal?> tabindex="19" /></li>
     </ul>
     <div>
         <input type="hidden" name="userName" value="<?=$profile->getUserName()?>" />
