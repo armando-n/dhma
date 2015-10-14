@@ -4,7 +4,13 @@ class Database {
     public static $dbName;
     private static $db;
     
-    public static function getDB($dbName = 'dhma', $configFile = 'myConfig.ini') {
+    public static function getDB() {
+        if (!isset($_SESSION['dbName']) || !isset($_SESSION['configFile']))
+            throw new Exception("Error: session database and configuration file not set");
+        
+        $dbName = $_SESSION['dbName'];
+        $configFile = $_SESSION['configFile'];
+        
         if (is_null($dbName))
             $dbName = 'dhma';
         if (is_null($configFile))

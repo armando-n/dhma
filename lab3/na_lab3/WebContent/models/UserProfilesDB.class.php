@@ -2,11 +2,11 @@
 class UserProfilesDB {
     
     // adds the specified UserProfile object to the database, associating it with the specified userID
-    public static function addUserProfile($uProfile, $userID, $dbName = null, $configFile = null) {
+    public static function addUserProfile($uProfile, $userID) {
         $returnProfileID = -1;
         
         try {
-            $db = Database::getDB($dbName, $configFile);
+            $db = Database::getDB();
             $stmt = $db->prepare(
                 "insert into UserProfiles (firstName, lastName, email, phone,
                 gender, dob, country, picture, facebook, theme, accentColor,
@@ -46,9 +46,9 @@ class UserProfilesDB {
         return $returnProfileID;
     }
     
-    public static function editUserProfile($oldProfile, $newProfile, $dbName = null, $configFile = null) {
+    public static function editUserProfile($oldProfile, $newProfile) {
         try {
-            $db = Database::getDB($dbName, $configFile);
+            $db = Database::getDB();
             $oldParams = $oldProfile->getParameters();
             $newParams = $newProfile->getParameters();
             $numParams = count($oldProfile);
@@ -78,11 +78,11 @@ class UserProfilesDB {
     }
     
     // returns an array of UserProfile objects for all user profiles in the database
-    public static function getAllUserProfiles($dbName = null, $configFile = null) {
+    public static function getAllUserProfiles() {
         $allUsers = array();
         
         try {
-            $db = Database::getDB($dbName, $configFile);
+            $db = Database::getDB();
             $stmt = $db->prepare(
                 "select userID, userName, dateCreated, profileID, firstName, lastName, email,
                 phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,
@@ -107,7 +107,7 @@ class UserProfilesDB {
     }
     
     // returns a UserProfile object whose $type field has value $value
-    public static function getUserProfileBy($type, $value, $dbName = null, $configFile = null) {
+    public static function getUserProfileBy($type, $value) {
         $allowed = ['profileID', 'userID', 'email', 'phone', 'userName', 'dateCreated'];
         $uProfile = null;
         
@@ -115,7 +115,7 @@ class UserProfilesDB {
             if (!in_array($type, $allowed))
                 throw new PDOException("$type not allowed search criterion for UserProfile");
             
-            $db = Database::getDB($dbName, $configFile);
+            $db = Database::getDB();
             $stmt = $db->prepare(
                 "select userID, userName, dateCreated, profileID, firstName, lastName, email,
                     phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,
@@ -136,7 +136,7 @@ class UserProfilesDB {
         return $uProfile;
     }
     
-    public static function getAllUserProfilesSortedByDateCreated($order, $dbName = null, $configFile = null) {
+    public static function getAllUserProfilesSortedByDateCreated($order) {
         $allowedOrders = array('asc', 'desc');
         $allProfiles = array();
     
@@ -144,7 +144,7 @@ class UserProfilesDB {
             if (!in_array($order, $allowedOrders))
                 throw new Exception("$order is not an allowed order");
     
-            $db = Database::getDB($dbName, $configFile);
+            $db = Database::getDB();
             $stmt = $db->prepare(
                 "select userID, userName, dateCreated, profileID, firstName, lastName, email,
                     phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,
@@ -170,16 +170,16 @@ class UserProfilesDB {
     }
     
     // returns an array of UserProfile objects created since the specified date string
-    public static function getUserProfilesCreatedSince($dateString, $dbName = null, $configFile = null) {
-        return UserProfilesDB::getUserProfilesByDate($dateString, 'after', $dbName, $configFile);
+    public static function getUserProfilesCreatedSince($dateString) {
+        return UserProfilesDB::getUserProfilesByDate($dateString, 'after');
     }
     
     // returns an array of UserProfile objects created by the specified date string
-    public static function getUserProfilesCreatedBy($dateString, $dbName = null, $configFile = null) {
-        return UserProfilesDB::getUserProfilesByDate($dateString, 'before', $dbName, $configFile);
+    public static function getUserProfilesCreatedBy($dateString) {
+        return UserProfilesDB::getUserProfilesByDate($dateString, 'before');
     }
     
-    private static function getUserProfilesByDate($dateString, $direction, $dbName = null, $configFile = null) {
+    private static function getUserProfilesByDate($dateString, $direction) {
         $allowedDirections = array('before', 'after');
         $profiles = array();
     
@@ -189,7 +189,7 @@ class UserProfilesDB {
             $operator = ($direction === 'before') ? '<=' : '>=';
     
             $datetime = new DateTime($dateString);
-            $db = Database::getDB($dbName, $configFile);
+            $db = Database::getDB();
             $stmt = $db->prepare(
                 "select userID, userName, dateCreated, profileID, firstName, lastName, email,
                     phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,
@@ -214,30 +214,6 @@ class UserProfilesDB {
         }
     
         return $profiles;
-    }
-    
-    public static function getAllUserProfilesTest() {
-        return UserProfilesDB::getAllUserProfiles('dhma_testDB', 'myConfig.ini');
-    }
-    
-    public static function addUserProfileTest($uProfile, $userID) {
-        return UserProfilesDB::addUserProfile($uProfile, $userID, 'dhma_testDB', 'myConfig.ini');
-    }
-    
-    public static function getUserProfileByTest($type, $value) {
-        return UserProfilesDB::getUserProfileBy($type, $value, 'dhma_testDB', 'myConfig.ini');
-    }
-    
-    public static function getUserProfilesCreatedSinceTest($dateString) {
-        return UserProfilesDB::getUserProfilesCreatedSince($dateString, 'dhma_testDB', 'myConfig.ini');
-    }
-    
-    public static function getUserProfilesCreatedByTest($dateString) {
-        return UserProfilesDB::getUserProfilesCreatedBy($dateString, 'dhma_testDB', 'myConfig.ini');
-    }
-    
-    public static function getAllUserProfilesSortedByDateCreatedTest($order) {
-        return UserProfilesDB::getAllUserProfilesSortedByDateCreated($order, 'dhma_testDB', 'myConfig.ini');
     }
     
 }

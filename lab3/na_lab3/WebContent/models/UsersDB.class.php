@@ -2,14 +2,14 @@
 class UsersDB {
     
     // adds the specified User object to the database
-    public static function addUser($user, $dbName = null, $configFile = null) {
+    public static function addUser($user) {
         $returnUserID = -1;
         
         if (!($user instanceof User))
             throw new InvalidArgumentException("Error: Not valid User object");
         
         try {
-            $db = Database::getDB($dbName, $configFile);
+            $db = Database::getDB();
             $stmt = $db->prepare(
                 "insert into Users (userName, password)
                     values (:userName, :password)");
@@ -29,11 +29,11 @@ class UsersDB {
     }
     
     // returns an array of User objects for all users in the database
-    public static function getAllUsers($dbName = null, $configFile = null) {
+    public static function getAllUsers() {
         $allUsers = array();
         
         try {
-            $db = Database::getDB($dbName, $configFile);
+            $db = Database::getDB();
             $stmt = $db->prepare("select * from Users");
             $stmt->execute();
             
@@ -55,7 +55,7 @@ class UsersDB {
     }
     
     // returns a User object whose $type field has value $value, or null if no matching user is found
-    public static function getUserBy($type, $value, $dbName = null, $configFile = null) {
+    public static function getUserBy($type, $value) {
         $allowed = array('userID', 'userName', 'dateCreated');
         $user = null;
         
@@ -63,7 +63,7 @@ class UsersDB {
             if (!in_array($type, $allowed))
                 throw new PDOException("$type not allowed search criterion for User");
             
-            $db = Database::getDB($dbName, $configFile);
+            $db = Database::getDB();
             $stmt = $db->prepare("select * from Users where ($type = :$type)");
             $stmt->execute(array(":$type" => $value));
             
@@ -80,7 +80,7 @@ class UsersDB {
         return $user;
     }
     
-    public static function getAllUsersSortedByDateCreated($order, $dbName = null, $configFile = null) {
+    public static function getAllUsersSortedByDateCreated($order) {
         $allowedOrders = array('asc', 'desc');
         $allUsers = array();
         
@@ -88,7 +88,7 @@ class UsersDB {
             if (!in_array($order, $allowedOrders))
                 throw new Exception("$order is not an allowed order");
             
-            $db = Database::getDB($dbName, $configFile);
+            $db = Database::getDB();
             $stmt = $db->prepare("select * from Users order by dateCreated $order");
             $stmt->execute();
         
@@ -151,29 +151,6 @@ class UsersDB {
     
         return $users;
     }
-    
-    public static function addUserTest($user) {
-        return UsersDB::addUser($user, 'dhma_testDB', 'myConfig.ini');
-    }
-    
-    public static function getAllUsersTest() {
-        return UsersDB::getAllUsers('dhma_testDB', 'myConfig.ini');
-    }
-    
-    public static function getUserByTest($type, $value) {
-        return UsersDB::getUserBy($type, $value, 'dhma_testDB', 'myConfig.ini');
-    }
-    
-    public static function getUsersCreatedSinceTest($dateString) {
-        return UsersDB::getUsersCreatedSince($dateString, 'dhma_testDB', 'myConfig.ini');
-    }
-    
-    public static function getUsersCreatedByTest($dateString) {
-        return UsersDB::getUsersCreatedBy($dateString, 'dhma_testDB', 'myConfig.ini');
-    }
-    
-    public static function getAllUsersSortedByDateCreatedTest($order) {
-        return UsersDB::getAllUsersSortedByDateCreated($order, 'dhma_testDB', 'myConfig.ini');
-    }
+
 }
 ?>

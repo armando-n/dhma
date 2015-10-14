@@ -1,6 +1,4 @@
 <?php
-if (!isset($_SESSION))
-    session_start();
 require_once dirname(__FILE__) . '\..\..\WebContent\views\ProfileView.class.php';
 require_once dirname(__FILE__) . '\..\..\WebContent\views\HeaderView.class.php';
 require_once dirname(__FILE__) . '\..\..\WebContent\views\FooterView.class.php';
@@ -69,7 +67,8 @@ class ProfileViewTest extends PHPUnit_Framework_TestCase {
     }
     
     public function testShowProfile_ValidProfile() {
-        $profile = UserProfilesDB::getUserProfileByTest('userName', 'armando-n');
+        self::checkSession();
+        $profile = UserProfilesDB::getUserProfileBy('userName', 'armando-n');
         if ($profile === false)
             throw new Exception("Test Error: null returned from call to UserProfilesDB::getUserProfilesByTest");
         
@@ -114,6 +113,7 @@ class ProfileViewTest extends PHPUnit_Framework_TestCase {
     }
     
     public function testShowEditForm_InvalidProfile_NoProfileEdit() {
+        self::checkSession();
         unset($_SESSION['profileEdit']);
         $_SESSION['profile'] = new UserProfile(self::$invalidInput);
         
@@ -130,6 +130,7 @@ class ProfileViewTest extends PHPUnit_Framework_TestCase {
     }
     
     public function testShowEditForm_NoProfile_InvalidProfileEdit() {
+        self::checkSession();
         unset($_SESSION['profile']);
         $_SESSION['profileEdit'] = new UserProfile(self::$invalidInput);
         
@@ -146,6 +147,7 @@ class ProfileViewTest extends PHPUnit_Framework_TestCase {
     }
     
     public function testShowEditForm_ValidProfile_InvalidProfileEdit() {
+        self::checkSession();
         $_SESSION['profile'] = new UserProfile(self::$validInput);
         $_SESSION['profileEdit'] = new UserProfile(self::$invalidInput);
         
@@ -163,6 +165,7 @@ class ProfileViewTest extends PHPUnit_Framework_TestCase {
     }
     
     public function testShowEditForm_ValidProfile_NoProfileEdit() {
+        self::checkSession();
         unset($_SESSION['profileEdit']);
         $_SESSION['profile'] = new UserProfile(self::$validInput);
         
@@ -179,6 +182,7 @@ class ProfileViewTest extends PHPUnit_Framework_TestCase {
     }
     
     public function testShowEditForm_NoProfile_ValidProfileEdit() {
+        self::checkSession();
         unset($_SESSION['profile']);
         $_SESSION['profileEdit'] = new UserProfile(self::$validInput);
         
@@ -193,5 +197,15 @@ class ProfileViewTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue(strstr($output, 'First Name: <input type="text" name="firstName" value="Armando"') !== false,
                 'It should call showEditForm and include in the output a reference to the user\'s first name in a text input element when a valid profile is provided in a "profileEdit" session variable');
     }
+    
+    private function checkSession() {
+        if (!isset($_SESSION))
+            session_start();
+        if (!isset($_SESSION['dbName']) || $_SESSION['dbName'] !== 'dhma_testDB')
+            $_SESSION['dbName'] = 'dhma_testDB';
+        if (!isset($_SESSION['configFile']) || $_SESSION['configFile'] !== 'na_lab3' . DIRECTORY_SEPARATOR . 'myConfig.ini')
+            $_SESSION['configFile'] = 'na_lab3' . DIRECTORY_SEPARATOR . 'myConfig.ini';
+    }
+    
 }
 ?>

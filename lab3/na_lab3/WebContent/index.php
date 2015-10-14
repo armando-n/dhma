@@ -5,8 +5,8 @@ include_once("includer.php");
 if (!isset($_SESSION))
     session_start();
 
-
-$loggedIn = isset($_GET["loggedin"]);
+$_SESSION['dbName'] = 'dhma';
+$_SESSION['configFile'] = 'myConfig.ini';
 
 // dummy data, so profile page can be viewed correctly (no session support yet)
 $validUserInput = array(

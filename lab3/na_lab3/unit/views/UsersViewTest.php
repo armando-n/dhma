@@ -6,7 +6,8 @@ require_once dirname(__FILE__) . '\..\..\WebContent\models\Database.class.php';
 require_once dirname(__FILE__) . '\..\..\WebContent\models\GenericModelObject.class.php';
 require_once dirname(__FILE__) . '\..\..\WebContent\models\UserProfile.class.php';
 require_once dirname(__FILE__) . '\..\..\WebContent\models\UserProfilesDB.class.php';
-class UsersViewTests extends PHPUnit_Framework_TestCase {
+
+class UsersViewTest extends PHPUnit_Framework_TestCase {
     
     public function testShowWithNoParameters() {
         ob_start();
@@ -35,6 +36,7 @@ class UsersViewTests extends PHPUnit_Framework_TestCase {
     }
     
     public function testShowWithParameters() {
+        self::checkSession();
         $profiles = UserProfilesDB::getAllUserProfiles();
         
         ob_start();
@@ -50,6 +52,7 @@ class UsersViewTests extends PHPUnit_Framework_TestCase {
     }
     
     public function testShowWithProfilesParameter() {
+        self::checkSession();
         $profiles = UserProfilesDB::getAllUserProfiles();
         
         ob_start();
@@ -65,6 +68,7 @@ class UsersViewTests extends PHPUnit_Framework_TestCase {
     }
     
     public function testShowWithNullLoggedInParameter() {
+        self::checkSession();
         $profiles = UserProfilesDB::getAllUserProfiles();
     
         ob_start();
@@ -121,6 +125,7 @@ class UsersViewTests extends PHPUnit_Framework_TestCase {
     }
     
     public function testShowBodyWithProfilesParameter() {
+        self::checkSession();
         $profiles = UserProfilesDB::getAllUserProfiles();
         
         ob_start();
@@ -133,6 +138,15 @@ class UsersViewTests extends PHPUnit_Framework_TestCase {
             'It should not show errors when showBody is called with a profiles parameter');
         $this->assertTrue($return,
             'It should return true to indicate success when showBody is called with a profiles parameter');
+    }
+    
+    private function checkSession() {
+        if (!isset($_SESSION))
+            session_start();
+        if (!isset($_SESSION['dbName']) || $_SESSION['dbName'] !== 'dhma_testDB')
+            $_SESSION['dbName'] = 'dhma_testDB';
+        if (!isset($_SESSION['configFile']) || $_SESSION['configFile'] !== 'na_lab3' . DIRECTORY_SEPARATOR . 'myConfig.ini')
+            $_SESSION['configFile'] = 'na_lab3' . DIRECTORY_SEPARATOR . 'myConfig.ini';
     }
     
 }

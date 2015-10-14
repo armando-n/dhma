@@ -11,10 +11,12 @@ class UsersDBTest extends PHPUnit_Framework_TestCase {
     /** @expectedException Exception
      */
     public function testAddUserWithNoParameters() {
-        UsersDB::addUserTest();
+        self::checkSession();
+        UsersDB::addUser();
     }
     
     public function testAddUserWithUserParameter() {
+        self::checkSession();
         $input = array(
             "userName" => "nathan-m",
             "password" => "password123",
@@ -25,7 +27,7 @@ class UsersDBTest extends PHPUnit_Framework_TestCase {
         $this->dbQuery("delete from Users where userName = 'nathan-m'");
         
         $rowsBeforeAdd = $this->dbSelect("select * from Users where userName = 'nathan-m'");
-        $userID = UsersDB::addUserTest($user);
+        $userID = UsersDB::addUser($user);
         $rowsAfterAdd = $this->dbSelect("select * from Users where userName = 'nathan-m'");
         
         $this->assertEmpty($rowsBeforeAdd,
@@ -44,12 +46,14 @@ class UsersDBTest extends PHPUnit_Framework_TestCase {
     /** @expectedException InvalidArgumentException
      */
     public function testAddUserWithInvalidUserParameter() {
+        self::checkSession();
         $profile = new UserProfile();
-        UsersDB::addUserTest($profile);
+        UsersDB::addUser($profile);
     }
     
     public function testGetAllUsers() {
-        $users = UsersDB::getAllUsersTest();
+        self::checkSession();
+        $users = UsersDB::getAllUsers();
         
         $this->assertGreaterThan(0, count($users),
             'It should call getAllUsers and return an array with at least 1 element');
@@ -65,7 +69,8 @@ class UsersDBTest extends PHPUnit_Framework_TestCase {
     }
     
     public function testGetAllUsersWithNullParameter() {
-        $users = UsersDB::getAllUsersTest(null);
+        self::checkSession();
+        $users = UsersDB::getAllUsers(null);
         
         $this->assertGreaterThan(0, count($users),
             'It should call getAllUsers with a null parameter and return an array with at least 1 element');
@@ -84,18 +89,21 @@ class UsersDBTest extends PHPUnit_Framework_TestCase {
      * @expectedExceptionMessage Missing argument
      */
     public function testGetUserByWithNoParameters() {
-        $user = UsersDB::getUserByTest();
+        
+        $user = UsersDB::getUserBy();
     }
     
     /** @expectedException PHPUnit_Framework_Error_Warning
      * @expectedExceptionMessage Missing argument
      */
     public function testGetUserByWithNoValueParameter() {
-        $user = UsersDB::getUserByTest('userName');
+        self::checkSession();
+        $user = UsersDB::getUserBy('userName');
     }
     
     public function testGetUserByWithValidParameters() {
-        $user = UsersDB::getUserByTest('userName', 'armando-n');
+        self::checkSession();
+        $user = UsersDB::getUserBy('userName', 'armando-n');
         
         $this->assertInstanceOf('User', $user,
             'It should return a User object when valid parameters are provided');
@@ -108,14 +116,16 @@ class UsersDBTest extends PHPUnit_Framework_TestCase {
     }
     
     public function testGetUserByWithUnknownUser() {
-        $user = UsersDB::getUserByTest('userName', 'unkown-user');
+        self::checkSession();
+        $user = UsersDB::getUserBy('userName', 'unkown-user');
     
         $this->assertNull($user,
             'It should return NULL when an unknown user name is provided');
     }
     
     public function testGetUsersCreatedSinceWithValidDateAndResults() {
-        $users = UsersDB::getUsersCreatedSinceTest('2015-10-11');
+        self::checkSession();
+        $users = UsersDB::getUsersCreatedSince('2015-10-11');
         
         $this->assertNotNull($users,
             'It should call getUsersCreatedSince and return an array when a valid date is provided');
@@ -133,7 +143,8 @@ class UsersDBTest extends PHPUnit_Framework_TestCase {
     }
     
     public function testGetUsersCreatedSinceWithInvalidDateAndNoResults() {
-        $users = UsersDB::getUsersCreatedSinceTest('2050-10-11');
+        self::checkSession();
+        $users = UsersDB::getUsersCreatedSince('2050-10-11');
     
         $this->assertNotNull($users,
             'It should call getUsersCreatedSince and return an array when an invalid date is provided');
@@ -145,11 +156,13 @@ class UsersDBTest extends PHPUnit_Framework_TestCase {
      *  @expectedExceptionMessage Invalid date
      */
     public function testGetUsersCreatedSinceWithInvalidDateString() {
-        $users = UsersDB::getUsersCreatedSinceTest('invalid date string');
+        self::checkSession();
+        $users = UsersDB::getUsersCreatedSince('invalid date string');
     }
     
     public function testGetUsersCreatedByWithValidDateAndResults() {
-        $users = UsersDB::getUsersCreatedByTest('2015-10-05');
+        self::checkSession();
+        $users = UsersDB::getUsersCreatedBy('2015-10-05');
     
         $this->assertNotNull($users,
             'It should call getUsersCreatedBy and return an array when a valid date is provided');
@@ -167,7 +180,8 @@ class UsersDBTest extends PHPUnit_Framework_TestCase {
     }
     
     public function testGetUsersCreatedByWithInvalidDateAndNoResults() {
-        $users = UsersDB::getUsersCreatedByTest('1950-10-05');
+        self::checkSession();
+        $users = UsersDB::getUsersCreatedBy('1950-10-05');
     
         $this->assertNotNull($users,
             'It should call getUsersCreatedBy and return an array when an invalid date is provided');
@@ -179,18 +193,21 @@ class UsersDBTest extends PHPUnit_Framework_TestCase {
      *  @expectedExceptionMessage Invalid date
      */
     public function testGetUsersCreatedByWithInvalidDateString() {
-        $users = UsersDB::getUsersCreatedByTest('invalid date string');
+        self::checkSession();
+        $users = UsersDB::getUsersCreatedBy('invalid date string');
     }
     
     /** @expectedException Exception
      *  @expectedExceptionMessage Missing argument
      */
     public function testGetAllUsersSortedByDateCreatedWithNoParameters() {
-        UsersDB::getAllUsersSortedByDateCreatedTest();
+        self::checkSession();
+        UsersDB::getAllUsersSortedByDateCreated();
     }
     
     public function testGetAllUsersSortedByDateCreatedAscending() {
-        $users = UsersDB::getAllUsersSortedByDateCreatedTest('asc');
+        self::checkSession();
+        $users = UsersDB::getAllUsersSortedByDateCreated('asc');
         
         $this->assertGreaterThan(0, count($users),
             'It should call getAllUsersSortedByDateCreated and return an array with at least 1 element when a valid order is provided');
@@ -209,7 +226,8 @@ class UsersDBTest extends PHPUnit_Framework_TestCase {
     }
     
     public function testGetAllUsersSortedByDateCreatedDescending() {
-        $users = UsersDB::getAllUsersSortedByDateCreatedTest('desc');
+        self::checkSession();
+        $users = UsersDB::getAllUsersSortedByDateCreated('desc');
     
         $this->assertGreaterThan(0, count($users),
             'It should call getAllUsersSortedByDateCreated and return an array with at least 1 element when a valid order is provided');
@@ -231,12 +249,13 @@ class UsersDBTest extends PHPUnit_Framework_TestCase {
      *  @expectedExceptionMessage not an allowed order
      */
     public function testGetAllUsersSortedByDateCreatedWithInvalidOrder() {
-        $users = UsersDB::getAllUsersSortedByDateCreatedTest('invalid order');
+        self::checkSession();
+        $users = UsersDB::getAllUsersSortedByDateCreated('invalid order');
     }
     
-    private function dbQuery($query, $dbName = null, $configFile = null) {
+    private function dbQuery($query) {
         try {
-            $db = Database::getDB($dbName, $configFile);
+            $db = Database::getDB();
             $stmt = $db->prepare($query);
             $stmt->execute();
             
@@ -247,9 +266,9 @@ class UsersDBTest extends PHPUnit_Framework_TestCase {
         }
     }
     
-    private function dbSelect($query, $dbName = null, $configFile = null) {
+    private function dbSelect($query) {
         try {
-            $db = Database::getDB($dbName, $configFile);
+            $db = Database::getDB();
             $stmt = $db->prepare($query);
             $stmt->execute();
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -262,6 +281,15 @@ class UsersDBTest extends PHPUnit_Framework_TestCase {
         }
         
         return $rows;
+    }
+    
+    private function checkSession() {
+        if (!isset($_SESSION))
+            session_start();
+        if (!isset($_SESSION['dbName']) || $_SESSION['dbName'] !== 'dhma_testDB')
+            $_SESSION['dbName'] = 'dhma_testDB';
+        if (!isset($_SESSION['configFile']) || $_SESSION['configFile'] !== 'myConfig.ini')
+            $_SESSION['configFile'] = 'myConfig.ini';
     }
     
 }

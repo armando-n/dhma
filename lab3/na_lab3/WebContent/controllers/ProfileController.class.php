@@ -22,7 +22,7 @@ class ProfileController {
     
     private static function view($dbName, $configFile) {
         
-        // requesting own profile; show it
+        // no arguments: requesting own profile; show it
         if (!isset($_SESSION['arguments'])) {
             
             // send user to login view if not logged in;
@@ -36,7 +36,7 @@ class ProfileController {
             
         }
         
-        // requesting someone else's profile
+        // argument exists: requesting someone else's profile
         else {
             $profile = UserProfilesDB::getUserProfileBy('userName', $_SESSION['arguments'], $dbName, $configFile);
         
@@ -53,31 +53,28 @@ class ProfileController {
     
     private static function edit() {
         
-        // send user to login view if not logged in
-        if (!isset($_SESSION['profile'])) {
+        // not logged in: send user to login view
+        if (!isset($_SESSION['profile']))
             ProfileController::redirect('login_view', 'You must be logged in to edit your profile');
-            return;
-        }
         
-        // arguments must be set for edit action; redirect if not
-        if (!isset($_SESSION['arguments'])) {
+        // no arguments: arguments must be set for edit action; redirect if not
+        else if (!isset($_SESSION['arguments']))
             ProfileController::redirect('home', 'Unrecognized command');
-            return;
-        }
         
-        // requesting edit form
-        if ($_SESSION['arguments'] === 'view')
+        // argument 'view': requesting edit form
+        else if ($_SESSION['arguments'] === 'view')
             ProfileView::showEditForm();
         
-        // posting profile edits
+        // argument 'post' posting profile edits
         else if ($_SESSION['arguments'] === 'post') {
-            // TODO send database request to edit profile
             $profile = new UserProfile($_POST);
-            
-            // edit failed
+            // TODO fix this
+            // submission had errors; re-show edit form
             if ($profile->getErrorCount() > 0) {
+                $_SESSION['profileEdit'] = $profile;
                 $_SESSION['flash'] = 'Edit failed. Correct any errors before submitting changes.';
-                ProfileView::showProfile($profile);
+                ProfileView::showEditForm();
+                unset($_SESSION['profileEdit']);
             }
             
             // edit succeeded
@@ -95,9 +92,6 @@ class ProfileController {
         if (!empty($control))
             $control = '/' . $control;
         
-        unset($_SESSION['control']);
-        unset($_SESSION['action']);
-        unset($_SESSION['arguments']);
         header('Location: http://' . $_SERVER['HTTP_HOST'] . '/' . $_SESSION['base'] . $control);
     }
     
