@@ -4,27 +4,32 @@ if (!isset($_SESSION))
 
 class ProfileController {
     
-    public static function run($dbName = null, $configFile = null) {
+    public static function run() {
         
-        if (!isset($_SESSION['action'])) {
-            ProfileController::redirect('home', 'Unrecognized command');
+        if (!isset($_SESSION) || !isset($_SESSION['base'])) {
+            ?><p>Error: session data not found.</p><?php
             return;
         }
         
-        // action: view -> arguments: none or userName of existing user
-        if ($_SESSION['action'] === 'view')
-            ProfileController::view($dbName, $configFile);
+        if (!isset($_SESSION['action']))
+            ProfileController::redirect('home', 'Error: Unrecognized command');
+        
+        // action: show -> arguments: none or userName of existing user
+        else if ($_SESSION['action'] === 'show')
+            ProfileController::show();
         
         // action: edit -> arguments: view or post
         else if ($_SESSION['action'] === 'edit')
             ProfileController::edit();
+        else
+            ProfileController::redirect('home', 'Error: Unrecognized action requested');
     }
     
-    private static function view($dbName, $configFile) {
+    private static function show() {
         
         // no arguments: requesting own profile; show it
         if (!isset($_SESSION['arguments'])) {
-            
+
             // send user to login view if not logged in;
             if (!isset($_SESSION['profile'])) {
                 ProfileController::redirect('login_view', 'You must be logged in to edit your profile');
@@ -38,11 +43,11 @@ class ProfileController {
         
         // argument exists: requesting someone else's profile
         else {
-            $profile = UserProfilesDB::getUserProfileBy('userName', $_SESSION['arguments'], $dbName, $configFile);
-        
+            $profile = UserProfilesDB::getUserProfileBy('userName', $_SESSION['arguments']);
+
             // go to users view if requested profile not found
             if ($profile === null) {
-                ProfileController::redirect('members_view', 'Unable to find theese user "' . htmlspecialchars($_SESSION['arguments']) . '"');
+                ProfileController::redirect('members_show', 'Unable to find user "' . htmlspecialchars($_SESSION['arguments']) . '"');
                 return;
             }
         
@@ -62,13 +67,15 @@ class ProfileController {
             ProfileController::redirect('home', 'Unrecognized command');
         
         // argument 'view': requesting edit form
-        else if ($_SESSION['arguments'] === 'view')
+        else if ($_SESSION['arguments'] === 'show')
             ProfileView::showEditForm();
         
         // argument 'post' posting profile edits
         else if ($_SESSION['arguments'] === 'post') {
+            if (!isset($_POST))
+                throw new Exception("Cannot process profile edit: post data not found");
             $profile = new UserProfile($_POST);
-            // TODO fix this
+
             // submission had errors; re-show edit form
             if ($profile->getErrorCount() > 0) {
                 $_SESSION['profileEdit'] = $profile;

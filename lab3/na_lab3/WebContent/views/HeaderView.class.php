@@ -13,7 +13,8 @@ class HeaderView {
     <meta name="author" content="Armando Navarro" />
     <title>DHMA | <?= $title ?></title>
 </head>
-<body><?php
+<body>
+<?php
         if (isset($_SESSION['flash'])): ?>
 <div><?= $_SESSION['flash'] ?></div><?php
         endif;
