@@ -199,7 +199,7 @@ class ProfileViewTest extends PHPUnit_Framework_TestCase {
     }
     
     private function checkSession() {
-        if (!isset($_SESSION))
+        if (session_status() == PHP_SESSION_NONE)
             session_start();
         if (!isset($_SESSION['dbName']) || $_SESSION['dbName'] !== 'dhma_testDB')
             $_SESSION['dbName'] = 'dhma_testDB';

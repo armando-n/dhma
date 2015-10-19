@@ -31,22 +31,21 @@ class ProfileControllerTest extends PHPUnit_Framework_TestCase {
     );
     
     private static $badInput = array(
-            "firstName" => "Armando",
-            "lastName" => "Navarro",
-            "email" => "fdf786@my.utsa.edu",
-            "gender" => "male",
-            "phone" => "281-555-2180",
-            "facebook" => "http://facebook.com/someguy210",
-            "dob" => "1983-11-02",
+            "firstName" => "Some-Really-Really-Super-Duper-Long-Name",
+            "lastName" => '$InvaldName',
+            "email" => "fdf786",
+            "gender" => "orange",
+            "phone" => "281-555-218x",
+            "facebook" => "http://face.com/someguy210",
+            "dob" => "1983-11-0x",
             "country" => "United States of America",
-            "theme" => "dark",
-            "accentColor" => "#00008b",
+            "theme" => "middle",
+            "accentColor" => "#00008s",
             "picture" => "someimage",
             "isProfilePublic" => "on",
             "isPicturePublic" => "on",
-            "sendReminders" => "on",
-            "stayLoggedIn" => "on",
-            "userName" => "armando-n"
+            "showReminders" => "on",
+            "stayLoggedIn" => "on"
     );
     
     public function testRun_NoSessionVariables() {
@@ -213,7 +212,7 @@ class ProfileControllerTest extends PHPUnit_Framework_TestCase {
     }
     
     private function checkSession() {
-        if (!isset($_SESSION))
+        if (session_status() == PHP_SESSION_NONE)
             session_start();
         if (!isset($_SERVER['HTTP_HOST']))
             $_SERVER['HTTP_HOST'] = 'localhost';

@@ -40,7 +40,8 @@ class HeaderView {
 </header>
 
 <?php
-        unset($_SESSION['flash']);
+        if (isset($_SESSION['flash']))
+            unset($_SESSION['flash']);
     }
 }
 ?>

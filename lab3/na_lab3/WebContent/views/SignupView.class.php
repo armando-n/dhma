@@ -2,23 +2,49 @@
 class SignupView {
     
     public static function show($user = null, $uData = null) {
+        if (!isset($_SESSION)) {
+            ?><p>Error: session data not found.</p><?php
+            return;
+        }
+        
         HeaderView::show("Member Sign Up");
         SignupView::showBody($user, $uData);
         FooterView::show();
     }
     
-    public static function showBody($user, $uData) {
-        if (is_null($user)) {
+    public static function showBody() {
+        if (isset($_SESSION['user'])) {
+            $user = $_SESSION['user'];
+            $uNameVal = $user->getUserName(); $uNameErr = $user->getError('userName');
+            $passErr = $user->getError('password');
+        } else {
             $uNameVal = ''; $uNameErr = '';
             $emailVal = ''; $emailErr = '';
             $passErr = '';
-        } else {
-            $uNameVal = $user->getUserName(); $uNameErr = $user->getError('userName');
-            $emailVal = $uData->getEmail(); $emailErr = $uData->getError('email');
-            $passErr = $user->getError('password');
         }
         
-        if (is_null($uData)) {
+        if (isset($_SESSION['profile'])) {
+            $profile = $_SESSION['profile'];
+            $fNameVal = $profile->getFirstName(); $fNameErr = $profile->getError('firstName');
+            $lNameVal = $profile->getLastName(); $lNameErr = $profile->getError('lastName');
+            $emailVal = $profile->getEmail(); $emailErr = $profile->getError('email');
+            $phoneVal = $profile->getPhoneNumber(); $phoneErr = $profile->getError('phone');
+            $faceVal = $profile->getFacebook(); $faceErr = $profile->getError('facebook');
+            $genderMaleVal = ($profile->getGender() === 'male') ? ' checked="checked"' : '';
+            $genderFemaleVal = ($profile->getGender() === 'female') ? ' checked="checked"' : '';
+            $genderErr = $profile->getError('gender');
+            $dobVal = $profile->getDOB(); $dobErr = $profile->getError('dob');
+            $countryVal = $profile->getCountry();
+            $picVal = $profile->getPicture();
+            $themeDarkVal = ($profile->getTheme() === 'dark') ? ' selected="selected"' : '';
+            $themeLightVal = ($profile->getTheme() === 'light') ? ' selected="selected"' : '';
+            $themeErr = $profile->getError('theme');
+            $colorVal = $profile->getAccentColor(); $colorErr = $profile->getError('accentColor');
+            $pubProfileVal = ($profile->isProfilePublic()) ? ' checked="checked"' : '';
+            $pubPicVal = ($profile->isPicturePublic()) ? ' checked="checked"' : '';
+            $remindVal = ($profile->isSendRemindersSet()) ? ' checked="checked"' : '';
+            $stayLoggedVal = ($profile->isStayLoggedInSet()) ? ' checked="checked"' : '';
+        } else  {
             $fNameVal = ''; $fNameErr = '';
             $lNameVal = ''; $lNameErr = '';
             $phoneVal = ''; $phoneErr = '';
@@ -35,26 +61,8 @@ class SignupView {
             $pubPicVal = '';
             $remindVal = '';
             $stayLoggedVal = '';
-        } else {
-            $fNameVal = $uData->getFirstName(); $fNameErr = $uData->getError('firstName');
-            $lNameVal = $uData->getLastName(); $lNameErr = $uData->getError('lastName');
-            $phoneVal = $uData->getPhoneNumber(); $phoneErr = $uData->getError('phone');
-            $faceVal = $uData->getFacebook(); $faceErr = $uData->getError('facebook');
-            $genderMaleVal = ($uData->getGender() === 'male') ? ' checked="checked"' : '';
-            $genderFemaleVal = ($uData->getGender() === 'female') ? ' checked="checked"' : '';
-            $genderErr = $uData->getError('gender');
-            $dobVal = $uData->getDOB(); $dobErr = $uData->getError('dob');
-            $countryVal = $uData->getCountry();
-            $picVal = $uData->getPicture();
-            $themeDarkVal = ($uData->getTheme() === 'dark') ? ' selected="selected"' : '';
-            $themeLightVal = ($uData->getTheme() === 'light') ? ' selected="selected"' : '';
-            $themeErr = $uData->getError('theme');
-            $colorVal = $uData->getAccentColor(); $colorErr = $uData->getError('accentColor');
-            $pubProfileVal = ($uData->isProfilePublic()) ? ' checked="checked"' : '';
-            $pubPicVal = ($uData->isPicturePublic()) ? ' checked="checked"' : '';
-            $remindVal = ($uData->isSendRemindersSet()) ? ' checked="checked"' : '';
-            $stayLoggedVal = ($uData->isStayLoggedInSet()) ? ' checked="checked"' : '';
         }
+        
         ?>
 <section>
     <h2>Sign Up Form</h2>
