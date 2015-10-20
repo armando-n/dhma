@@ -7,7 +7,10 @@ class BloodPressureMeasurementsDB {
         
         try {
             $db = Database::getDB($dbName, $configFile);
-            $stmt = $db->prepare("select * from BloodPressureMeasurementsView");
+            $stmt = $db->prepare(
+                "select userName, bpID, systolicPressure, diastolicPressure,
+                    dateAndTime, notes, userID
+                from Users join BloodPressureMeasurements using (userID)");
             $stmt->execute();
             $str = '';
             foreach ($stmt as $row) {

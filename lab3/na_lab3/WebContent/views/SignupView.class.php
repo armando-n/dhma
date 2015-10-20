@@ -1,14 +1,14 @@
 <?php
 class SignupView {
     
-    public static function show($user = null, $uData = null) {
+    public static function show() {
         if (!isset($_SESSION)) {
             ?><p>Error: session data not found.</p><?php
             return;
         }
         
         HeaderView::show("Member Sign Up");
-        SignupView::showBody($user, $uData);
+        SignupView::showBody();
         FooterView::show();
     }
     

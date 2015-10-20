@@ -5,6 +5,10 @@ function makeTestDB($dbName) {
         throw new Exception("Error: cannot overwite dhma database");
     
     try {
+        if (session_status() == PHP_SESSION_NONE)
+            session_start();
+        $_SESSION['dbName'] = $dbName;
+        $_SESSION['configFile'] = 'myConfig.ini';
         $db = Database::getDB('');
         
         $stmt = $db->prepare("drop database if exists $dbName");

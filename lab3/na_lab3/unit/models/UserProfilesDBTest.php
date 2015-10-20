@@ -90,8 +90,8 @@ class UserProfilesDBTest extends PHPUnit_Framework_TestCase {
         ob_start();
         $profileID = UserProfilesDB::addUserProfile($profile, 1000);
         $output = ob_get_clean();
-        $this->assertTrue(stristr($output, 'a foreign key constraint fails') !== false,
-            'It should output an error message when an invalid user ID is provided');
+        $this->assertEquals('Failed to add profile to the database', $profile->getError('userProfilesDB'),
+            'It should have an error when an invalid user ID is provided');
     }
     
     public function testGetAllUserProfiles() {
@@ -205,7 +205,7 @@ class UserProfilesDBTest extends PHPUnit_Framework_TestCase {
     
     public function testGetUserProfilesCreatedByWithValidDateAndResults() {
         self::checkSession();
-        $profiles = UserProfilesDB::getUserProfilesCreatedBy('2015-10-05');
+        $profiles = UserProfilesDB::getUserProfilesCreatedBy('2016-10-22');
     
         $this->assertNotNull($profiles,
             'It should call getUserProfilesCreatedBy and return an array when a valid date is provided');
@@ -327,8 +327,10 @@ class UserProfilesDBTest extends PHPUnit_Framework_TestCase {
     }
     
     private function checkSession() {
-        if (!isset($_SESSION))
+        if (session_status() == PHP_SESSION_NONE)
             session_start();
+        if (!isset($_SESSION))
+            $_SESSION = array();
         if (!isset($_SESSION['dbName']) || $_SESSION['dbName'] !== 'dhma_testDB')
             $_SESSION['dbName'] = 'dhma_testDB';
         if (!isset($_SESSION['configFile']) || $_SESSION['configFile'] !== 'na_lab3' . DIRECTORY_SEPARATOR . 'myConfig.ini')

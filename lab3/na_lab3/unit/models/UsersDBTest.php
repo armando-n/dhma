@@ -162,7 +162,7 @@ class UsersDBTest extends PHPUnit_Framework_TestCase {
     
     public function testGetUsersCreatedByWithValidDateAndResults() {
         self::checkSession();
-        $users = UsersDB::getUsersCreatedBy('2015-10-05');
+        $users = UsersDB::getUsersCreatedBy('2016-10-22');
     
         $this->assertNotNull($users,
             'It should call getUsersCreatedBy and return an array when a valid date is provided');
@@ -284,8 +284,10 @@ class UsersDBTest extends PHPUnit_Framework_TestCase {
     }
     
     private function checkSession() {
-        if (!isset($_SESSION))
+        if (session_status() == PHP_SESSION_NONE)
             session_start();
+        if (!isset($_SESSION))
+            $_SESSION = array();
         if (!isset($_SESSION['dbName']) || $_SESSION['dbName'] !== 'dhma_testDB')
             $_SESSION['dbName'] = 'dhma_testDB';
         if (!isset($_SESSION['configFile']) || $_SESSION['configFile'] !== 'myConfig.ini')

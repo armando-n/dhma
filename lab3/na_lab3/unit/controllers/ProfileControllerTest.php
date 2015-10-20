@@ -49,8 +49,8 @@ class ProfileControllerTest extends PHPUnit_Framework_TestCase {
     );
     
     public function testRun_NoSessionVariables() {
-        unset($_SESSION['base']);
         ob_start();
+        self::removeSession();
         ProfileController::run();
         $output = ob_get_clean();
         
@@ -61,9 +61,9 @@ class ProfileControllerTest extends PHPUnit_Framework_TestCase {
 //    /** @runInSeparateProcess
 //     */
 //     public function testRun_NoAction() {
+//         ob_start();
 //         self::checkSession();
 //         unset($_SESSION['action']);
-//         ob_start();
 //         ProfileController::run();
 //         $output = ob_get_clean();
         
@@ -76,9 +76,9 @@ class ProfileControllerTest extends PHPUnit_Framework_TestCase {
 //    /** @runInSeparateProcess
 //     */
 //     public function testRun_InvalidAction() {
+//         ob_start();
 //         self::checkSession();
 //         $_SESSION['action'] = 'invalidAction';
-//         ob_start();
 //         ProfileController::run();
 //         $output = ob_get_clean();
         
@@ -91,11 +91,11 @@ class ProfileControllerTest extends PHPUnit_Framework_TestCase {
 //     /** @runInSeparateProcess
 //      */
 //     public function testRun_Show_NoArgs_LoggedOut() {
+//         ob_start();
 //         self::checkSession();
 //         unset($_SESSION['arguments']);
 //         unset($_SESSION['profile']);
 //         $_SESSION['action'] = 'show';
-//         ob_start();
 //         ProfileController::run();
 //         $output = ob_get_clean();
         
@@ -106,11 +106,11 @@ class ProfileControllerTest extends PHPUnit_Framework_TestCase {
 //     }
     
     public function testRun_Show_NoArgs_LoggedIn() {
+        ob_start();
         self::checkSession();
         unset($_SESSION['arguments']);
         $_SESSION['profile'] = new UserProfile(self::$profileInput);
         $_SESSION['action'] = 'show';
-        ob_start();
         ProfileController::run();
         $output = ob_get_clean();
         
@@ -214,6 +214,8 @@ class ProfileControllerTest extends PHPUnit_Framework_TestCase {
     private function checkSession() {
         if (session_status() == PHP_SESSION_NONE)
             session_start();
+        if (!isset($_SESSION))
+            $_SESSION = array();
         if (!isset($_SERVER['HTTP_HOST']))
             $_SERVER['HTTP_HOST'] = 'localhost';
         if (!isset($_SESSION['base']))
@@ -224,6 +226,22 @@ class ProfileControllerTest extends PHPUnit_Framework_TestCase {
             $_SESSION['configFile'] = 'na_lab3' . DIRECTORY_SEPARATOR . 'myConfig.ini';
         if (!isset($_SESSION['testing']))
             $_SESSION['testing'] = true;
+    }
+    
+    private function removeSession() {
+        if (!isset($_SESSION))
+            return;
+        unset($_SESSION['base']);
+        unset($_SESSION['control']);
+        unset($_SESSION['action']);
+        unset($_SESSION['arguments']);
+        unset($_SESSION['dbName']);
+        unset($_SESSION['configFile']);
+        unset($_SESSION['testing']);
+        unset($_SESSION['user']);
+        unset($_SESSION['profile']);
+        unset($_SESSION['profileEdit']);
+        unset($_SESSION);
     }
     
 }

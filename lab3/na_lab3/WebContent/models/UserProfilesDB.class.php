@@ -2,7 +2,7 @@
 class UserProfilesDB {
     
     // adds the specified UserProfile object to the database, associating it with the specified userID
-    public static function addUserProfile($uProfile, $userID) {
+    public static function addUserProfile($profile, $userID) {
         $returnProfileID = -1;
         
         try {
@@ -18,29 +18,29 @@ class UserProfilesDB {
                     :stayLoggedIn, :userID)"
             );
             $stmt->execute(array(
-                ":firstName" => $uProfile->getFirstName(),
-                ":lastName" => $uProfile->getLastName(),
-                ":email" => $uProfile->getEmail(),
-                ":phone" => $uProfile->getPhoneNumber(),
-                ":gender" => $uProfile->getGender(),
-                ":dob" => $uProfile->getDOB(),
-                ":country" => $uProfile->getCountry(),
-                ":picture" => $uProfile->getPicture(),
-                ":facebook" => $uProfile->getFacebook(),
-                ":theme" => $uProfile->getTheme(),
-                ":accentColor" => $uProfile->getAccentColor(),
-                ":isProfilePublic" => $uProfile->isProfilePublic(),
-                ":isPicturePublic" => $uProfile->isPicturePublic(),
-                ":sendReminders" => $uProfile->isSendRemindersSet(),
-                ":stayLoggedIn" => $uProfile->isStayLoggedInSet(),
+                ":firstName" => $profile->getFirstName(),
+                ":lastName" => $profile->getLastName(),
+                ":email" => $profile->getEmail(),
+                ":phone" => $profile->getPhoneNumber(),
+                ":gender" => $profile->getGender(),
+                ":dob" => $profile->getDOB(),
+                ":country" => $profile->getCountry(),
+                ":picture" => $profile->getPicture(),
+                ":facebook" => $profile->getFacebook(),
+                ":theme" => $profile->getTheme(),
+                ":accentColor" => $profile->getAccentColor(),
+                ":isProfilePublic" => $profile->isProfilePublic(),
+                ":isPicturePublic" => $profile->isPicturePublic(),
+                ":sendReminders" => $profile->isSendRemindersSet(),
+                ":stayLoggedIn" => $profile->isStayLoggedInSet(),
                 ":userID" => $userID
             ));
             $returnProfileID = $db->lastInsertId("profileID");
             
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            $profile->setError("userProfilesDB", "ADD_USER_PROFILE_FAILED");
         } catch (RuntimeException $e) {
-            echo $e->getMessage();
+            $profile->setError("database", "DB_CONFIG_NOT_FOUND");
         }
         
         return $returnProfileID;
@@ -85,8 +85,9 @@ class UserProfilesDB {
             $db = Database::getDB();
             $stmt = $db->prepare(
                 "select userID, userName, dateCreated, profileID, firstName, lastName, email,
-                phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,
-                isPicturePublic, sendReminders, stayLoggedIn from Users join UserProfiles using (userID)"
+                    phone, gender, dob, country, picture, facebook, theme, accentColor,
+                    isProfilePublic, isPicturePublic, sendReminders, stayLoggedIn
+                from Users join UserProfiles using (userID)"
             );
             $stmt->execute();
         

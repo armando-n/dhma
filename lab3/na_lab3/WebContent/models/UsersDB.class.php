@@ -20,9 +20,9 @@ class UsersDB {
             $returnUserID = $db->lastInsertId("userID");
             
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            $user->setError("usersDB", "ADD_USER_FAILED");
         } catch (RuntimeException $e) {
-            echo $e->getMessage();
+            $user->setError("database", "DB_CONFIG_NOT_FOUND");
         }
         
         return $returnUserID;

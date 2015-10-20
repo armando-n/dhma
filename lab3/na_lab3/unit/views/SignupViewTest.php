@@ -61,9 +61,12 @@ class SignupViewTest extends PHPUnit_Framework_TestCase {
         "stayLoggedIn" => "on"
     );
     
+    /*
+     * @runInSeparateProcess
+     */
     public function testShow_NoSession() {
-        unset($_SESSION);
         ob_start();
+        self::removeSession();
         SignupView::show();
         $output = ob_get_clean();
         
@@ -72,10 +75,10 @@ class SignupViewTest extends PHPUnit_Framework_TestCase {
     }
     
     public function testShow_WithSession_NoData() {
+        ob_start();
         self::checkSession();
         unset($_SESSION['user']);
         unset($_SESSION['profile']);
-        ob_start();
         SignupView::show();
         $output = ob_get_clean();
         
@@ -86,10 +89,10 @@ class SignupViewTest extends PHPUnit_Framework_TestCase {
     }
     
     public function testShow_InvalidData() {
+        ob_start();
         self::checkSession();
         $_SESSION['user'] = new User(self::$invalidUserInput);
         $_SESSION['profile'] = new UserProfile(self::$invalidProfileInput);
-        ob_start();
         SignupView::show();
         $output = ob_get_clean();
         
@@ -104,10 +107,10 @@ class SignupViewTest extends PHPUnit_Framework_TestCase {
     }
     
     public function testShow_ValidData() {
+        ob_start();
         self::checkSession();
         $_SESSION['user'] = new User(self::$validUserInput);
         $_SESSION['profile'] = new UserProfile(self::$validProfileInput);
-        ob_start();
         SignupView::show();
         $output = ob_get_clean();
         
@@ -120,10 +123,28 @@ class SignupViewTest extends PHPUnit_Framework_TestCase {
     private function checkSession() {
         if (session_status() == PHP_SESSION_NONE)
             session_start();
+        if (!isset($_SESSION))
+            $_SESSION = array();
         if (!isset($_SESSION['dbName']) || $_SESSION['dbName'] !== 'dhma_testDB')
             $_SESSION['dbName'] = 'dhma_testDB';
         if (!isset($_SESSION['configFile']) || $_SESSION['configFile'] !== 'na_lab3' . DIRECTORY_SEPARATOR . 'myConfig.ini')
             $_SESSION['configFile'] = 'na_lab3' . DIRECTORY_SEPARATOR . 'myConfig.ini';
+    }
+    
+    private function removeSession() {
+        if (!isset($_SESSION))
+            return;
+        unset($_SESSION['base']);
+        unset($_SESSION['control']);
+        unset($_SESSION['action']);
+        unset($_SESSION['arguments']);
+        unset($_SESSION['dbName']);
+        unset($_SESSION['configFile']);
+        unset($_SESSION['testing']);
+        unset($_SESSION['user']);
+        unset($_SESSION['profile']);
+        unset($_SESSION['profileEdit']);
+        unset($_SESSION);
     }
     
 }

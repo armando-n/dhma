@@ -1,7 +1,4 @@
 <?php
-if (!isset($_SESSION))
-    session_start();
-    
 class HeaderView {
     
     public static function show($title = null) {
