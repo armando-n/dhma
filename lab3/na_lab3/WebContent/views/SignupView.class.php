@@ -13,8 +13,8 @@ class SignupView {
     }
     
     public static function showBody() {
-        if (isset($_SESSION['user'])) {
-            $user = $_SESSION['user'];
+        if (isset($_SESSION['userSignup'])) {
+            $user = $_SESSION['userSignup'];
             $uNameVal = $user->getUserName(); $uNameErr = $user->getError('userName');
             $passErr = $user->getError('password');
         } else {
@@ -23,8 +23,8 @@ class SignupView {
             $passErr = '';
         }
         
-        if (isset($_SESSION['profile'])) {
-            $profile = $_SESSION['profile'];
+        if (isset($_SESSION['profileSignup'])) {
+            $profile = $_SESSION['profileSignup'];
             $fNameVal = $profile->getFirstName(); $fNameErr = $profile->getError('firstName');
             $lNameVal = $profile->getLastName(); $lNameErr = $profile->getError('lastName');
             $emailVal = $profile->getEmail(); $emailErr = $profile->getError('email');
@@ -67,7 +67,7 @@ class SignupView {
 <section>
     <h2>Sign Up Form</h2>
     
-    <form action="signup" enctype="multipart/form-data" method="post">
+    <form action="signup_post" enctype="multipart/form-data" method="post">
         <fieldset>
             <legend>Required Account Information</legend>
             E-mail <input type="email" name="email" value="<?=$emailVal?>" size="15" autofocus="autofocus" required="required" maxlength="30" tabindex="1" />

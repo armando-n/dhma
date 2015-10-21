@@ -41,3 +41,7 @@ TYPE_HAS_INVALID_CHARS El tipo sólo puede contener letras, números, espacios, 
 WEIGHT_EMPTY El peso no puede estar vacío o contener sólo espacio en blanco
 WEIGHT_HAS_INVALID_CHARS El peso sólo puede contener números y un punto decimal
 NOTES_ARE_TOO_LONG Las notas no pueden contener más de 255 caracteres
+ADD_USER_FAILED Error al agregar el usuario a la base de datos
+DB_CONFIG_NOT_FOUND No se ha podido base de datos de acceso: el archivo de configuración de base de datos no encontrado
+USER_NAME_EXISTS nombre de usuario ya existe. Por favor, pruebe con otra.
+ADD_USER_PROFILE_FAILED Error al añadir el perfil a la base de datos

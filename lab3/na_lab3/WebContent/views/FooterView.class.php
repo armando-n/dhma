@@ -12,7 +12,7 @@ class FooterView {
                 <li><a href="home">Home</a></li>
                 <li><a href="members">Member List</a></li><?php
                 if (!isset($_SESSION['profile'])) { ?>
-                <li><a href="signup">Sign Up</a></li><?php
+                <li><a href="signup_show">Sign Up</a></li><?php
                 } ?>
             </ul>
         </li>
@@ -20,7 +20,7 @@ class FooterView {
             <h3>Members</h3>
             <ul>
                 <li><a href="past-measurements">Past Measurements</a></li>
-                <li><a href="profile_view">Profile</a></li>
+                <li><a href="profile_show">Profile</a></li>
 <?php // odd spacing here is for proper spacing when Viewing Page Source (behavior seems inconsistent)
                 if (isset($_SESSION['profile'])): ?>
                 <li><a href="login_logout">Logout</a></li><?php

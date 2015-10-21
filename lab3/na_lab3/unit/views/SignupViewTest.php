@@ -77,8 +77,8 @@ class SignupViewTest extends PHPUnit_Framework_TestCase {
     public function testShow_WithSession_NoData() {
         ob_start();
         self::checkSession();
-        unset($_SESSION['user']);
-        unset($_SESSION['profile']);
+        unset($_SESSION['userSignup']);
+        unset($_SESSION['profileSignup']);
         SignupView::show();
         $output = ob_get_clean();
         
@@ -91,8 +91,8 @@ class SignupViewTest extends PHPUnit_Framework_TestCase {
     public function testShow_InvalidData() {
         ob_start();
         self::checkSession();
-        $_SESSION['user'] = new User(self::$invalidUserInput);
-        $_SESSION['profile'] = new UserProfile(self::$invalidProfileInput);
+        $_SESSION['userSignup'] = new User(self::$invalidUserInput);
+        $_SESSION['profileSignup'] = new UserProfile(self::$invalidProfileInput);
         SignupView::show();
         $output = ob_get_clean();
         
@@ -109,8 +109,8 @@ class SignupViewTest extends PHPUnit_Framework_TestCase {
     public function testShow_ValidData() {
         ob_start();
         self::checkSession();
-        $_SESSION['user'] = new User(self::$validUserInput);
-        $_SESSION['profile'] = new UserProfile(self::$validProfileInput);
+        $_SESSION['userSignup'] = new User(self::$validUserInput);
+        $_SESSION['profileSignup'] = new UserProfile(self::$validProfileInput);
         SignupView::show();
         $output = ob_get_clean();
         
@@ -142,8 +142,10 @@ class SignupViewTest extends PHPUnit_Framework_TestCase {
         unset($_SESSION['configFile']);
         unset($_SESSION['testing']);
         unset($_SESSION['user']);
+        unset($_SESSION['userSignup']);
         unset($_SESSION['profile']);
         unset($_SESSION['profileEdit']);
+        unset($_SESSION['profileSignup']);
         unset($_SESSION);
     }
     

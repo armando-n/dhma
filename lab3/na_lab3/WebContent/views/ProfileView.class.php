@@ -27,7 +27,7 @@ class ProfileView {
         <li>E-mail Reminders: <?= $profile->isSendRemindersSet() ? "yes" : "no" ?></li>
         <li>Stay Logged In: <?= $profile->isStayLoggedInSet() ? "yes" : "no" ?></li>
     </ul>
-    <a href="profile_edit_view">Edit Profile</a>
+    <a href="profile_edit_show">Edit Profile</a>
 </section>
 <?php
         FooterView::show();
@@ -288,7 +288,7 @@ class ProfileView {
     <div>
         <input type="hidden" name="userName" value="<?=$profile->getUserName()?>" />
         <input type="submit" size="15" tabindex="20" />
-        <a href="profile_view" tabindex="21">Cancel</a>
+        <a href="profile_show" tabindex="21">Cancel</a>
     </div>
     </form>
 </section>

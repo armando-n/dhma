@@ -41,3 +41,7 @@ TYPE_HAS_INVALID_CHARS The type can only contain letters, numbers, spaces, dashe
 WEIGHT_EMPTY The weight cannot be empty or contain only white space
 WEIGHT_HAS_INVALID_CHARS The weight can only contain numbers, and a decimal point
 NOTES_ARE_TOO_LONG The notes cannot contain more than 255 characters
+ADD_USER_FAILED Failed to add user to the database
+DB_CONFIG_NOT_FOUND Failed to access database: database config file not found
+USER_NAME_EXISTS User name already exists. Please try another.
+ADD_USER_PROFILE_FAILED Failed to add profile to the database

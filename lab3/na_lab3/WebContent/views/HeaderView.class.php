@@ -30,7 +30,7 @@ class HeaderView {
             <li><a href="login_logout">Logout</a></li><?php
             else: ?> 
             <li><a href="login_view">Login</a></li>
-            <li><a href="signup">Sign Up</a></li><?php
+            <li><a href="signup_show">Sign Up</a></li><?php
             endif; ?> 
         </ul>
     </nav>
