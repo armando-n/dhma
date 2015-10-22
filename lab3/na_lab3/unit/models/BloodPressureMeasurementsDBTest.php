@@ -13,12 +13,36 @@ class BloodPressureMeasurementsDBTest extends PHPUnit_Framework_TestCase {
         
         $this->assertNotNull($measurements,
             'It should return an array');
-        $this->assertGreaterThan(0, count($measurements));
-        $this->assertNotEmpty($measurements);
+        $this->assertNotEmpty($measurements,
+            'It should return a non-empty array');
         foreach ($measurements as $bp) {
-            $this->assertInstanceOf('BloodPressureMeasurement', $bp);
+            $this->assertInstanceOf('BloodPressureMeasurement', $bp,
+                'It should return an array of only BloodPressureMeasurement objects');
             $this->assertCount(0, $bp->getErrors(),
                 'It should not have errors in any returned BloodPressureMeasurement objects');
+        }
+    }
+    
+    public function testGetMeasurementsBy_UserName() {
+        self::checkSession();
+        $measurements = BloodPressureMeasurementsDB::getMeasurementsBy('userName', 'armando-n');
+        
+        $this->assertNotNull($measurements,
+            'It should return an array');
+        $this->assertNotEmpty($measurements,
+            'It should return a non-empty array');
+        foreach ($measurements as $bp) {
+            if (!isset($previousDate))
+                $previousDate = $bp->getDateTime();
+            
+            $this->assertInstanceOf('BloodPressureMeasurement', $bp,
+                'It should return an array of only BloodPressureMeasurement objects');
+            $this->assertCount(0, $bp->getErrors(),
+                'It should not have errors in any returned BloodPressureMeasurement objects');
+            $this->assertEquals('armando-n', $bp->getUserName(),
+                'It should only return measurements belonging to the user name provided');
+            $this->assertLessThanOrEqual($previousDate, $bp->getDateTime(),
+                'It should return an array of measurements in descending order when no order is provided');
         }
     }
     
