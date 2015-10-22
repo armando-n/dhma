@@ -1,52 +1,57 @@
 <?php
-if (!isset($_SESSION))
-    session_start();
-
 class LoginController {
     public static function run() {
         
-        if (!isset($_SESSION['action'])) {
-            LoginController::redirect('home', 'Unrecognized command');
+        if (!isset($_SESSION) || !isset($_SESSION['action'])) {
+            LoginView::show();
             return;
         }
         
         switch ($_SESSION['action']) {
-            case 'logout': LoginController::logout(); break;
-            case 'login': LoginController::login(); break;
-            case 'view': LoginView::show(); break;
+            case 'logout': self::logout(); break;
+            case 'login': self::login(); break;
+            case 'show': LoginView::show(); break;
             default:
-                self::redirect('home', 'Unrecognized command');
+                $_SESSION['flash'] = 'Unrecognized command';
+                LoginView::show();
                 return;
         }
     }
     
     private static function login() {
         
-        if (!isset($_POST['userName']) || !isset($_POST['password'])) {
-            self::redirect('login_view', 'An error occured. Try again.');
+        if (!isset($_POST) || !isset($_POST['userName']) || !isset($_POST['password1']) || !isset($_POST['password2'])) {
+            $_SESSION['flash'] = 'Error: Login data not found. Try again.';
+            LoginView::show();
             return;
         }
         
         $user = UsersDB::getUserBy('userName', $_POST['userName']);
         $profile = UserProfilesDB::getUserProfileBy('userName', $_POST['userName']);
         
-        // log in successful; go back home
-        if (!is_null($user) && $user->getErrorCount() == 0
-                && !is_null($profile) && $profile->getErrorCount() == 0
-                && $user->getPassword() === $_POST['password']) {
-                    unset($_POST['userName']);
-                    unset($_POST['password']);
-                    unset($_POST['user']);
-                    unset($_POST['loginFailed']);
-                    $_SESSION['profile'] = $profile;
-                    self::redirect('home', 'Welcome back, ' . $profile->getFirstName() . '!');
+        // passwords do not match
+        if ($_POST['password1'] !== $_POST['password2']) {
+            $_SESSION['flash'] = 'Login failed. Passwords did not match.';
+            $_SESSION['user'] = $user;
+            LoginView::show();
         }
         
-        // log in failed; load view w/old values
-        else {
-            $_SESSION['user'] = $user;
+        // user name not found or wrong password
+        if (is_null($user) || is_null($profile) || $user->getPassword() !== $_POST['password1']) {
+            $_SESSION['flash'] = 'Login failed.';
             $_SESSION['loginFailed'] = true;
+            $_SESSION['user'] = $user;
             LoginView::show();
+            return;
+        }
+        
+        // login success
+        else {
+            foreach ($_POST as $key => $value)
+                unset($_POST[$key]);
+            
+            $_SESSION['profile'] = $profile;
+            self::redirect('home', 'Welcome back, ' . $profile->getFirstName() . '!');
         }
     }
     

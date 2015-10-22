@@ -10,11 +10,9 @@ class LoginView {
     public static function showBody() {
         $userSet =          isset($_SESSION) && isset($_SESSION['user']);
         $loginFailedSet =   isset($_SESSION) && isset($_SESSION['loginFailed']);
-        $nameExistsSet =    isset($_SESSION) && isset($_SESSION['userNameExists']);
         
         $uNameValue =   ($userSet)          ? $_SESSION['user']->getUserName()          : ''; 
         $loginError =   ($loginFailedSet)   ? 'User name or password invalid'           : ''; 
-        $nameError =    ($nameExistsSet)    ? $_SESSION['user']->getError('userName')   : '';
         ?>
 <section>
     <h2>Log In</h2>
@@ -25,7 +23,6 @@ class LoginView {
             <!-- Pattern attribute and specific error reporting absent to avoid hints that weaken security -->
             <div class="error"><?=$loginError?></div>
             User Name <input type="text" name="userName" value="<?=$uNameValue?>" size="15" autofocus="autofocus" required="required" maxlength="30" tabindex="1" /><br />
-            <span class="error"><?=$nameError?></span><br />
             Password <input type="password" name="password" size="15" required="required" maxlength="30" tabindex="2" />
         </fieldset>
         <div>
@@ -36,7 +33,8 @@ class LoginView {
 <?php
         if (isset($_SESSION)) {
             unset($_SESSION['loginFailed']);
-            unset($_SESSION['userNameExists']);
+            unset($_SESSION['userNameNotFound']);
+            unset($_SESSION['user']);
         }
     }
 }

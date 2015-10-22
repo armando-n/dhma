@@ -21,6 +21,12 @@ class LoginViewTest extends PHPUnit_Framework_TestCase {
         "password2" => "pass"
     );
     
+    private static $wrongInput = array(
+        "userName" => 'armandon',
+        "password1" => "password123",
+        "password2" => "password123"
+    );
+    
     public function testShow_NoSession() {
         ob_start();
         self::removeSession();
@@ -57,21 +63,20 @@ class LoginViewTest extends PHPUnit_Framework_TestCase {
             'It should call show and display an error message when invalid data is provided and "loginFailed" session variable is set');
     }
     
-    public function testShow_ValidData_UserNameExists() {
+    public function testShow_ValidData_UserNameNotFound() {
         ob_start();
         self::checkSession();
-        $_SESSION['user'] = new User(self::$goodInput);
-        $_SESSION['user']->setError('userName', 'USER_NAME_EXISTS');
-        $_SESSION['userNameExists'] = true;
+        $_SESSION['user'] = new User(self::$wrongInput);
+        $_SESSION['loginFailed'] = true;
         LoginView::show();
         $output = ob_get_clean();
     
         $this->assertTrue(stristr($output, '<h2>Log In</h2>') !== false,
             'It should call show and display the login view when valid data is provided');
-        $this->assertTrue(stristr($output, 'name="userName" value="' . self::$goodInput['userName'] . '"') !== false,
+        $this->assertTrue(stristr($output, 'name="userName" value="' . self::$wrongInput['userName'] . '"') !== false,
             'It should call show and fill in the user name of the login view when valid data is provided');
-        $this->assertTrue(stristr($output, 'User name already exists') !== false,
-            'It should call show and display an error message when ialid data is provided and "userNameExists" session variable is set');
+        $this->assertTrue(stristr($output, 'User name or password invalid') !== false,
+            'It should call show and display an error message when the wrong user name is provided and "loginFailed" session variable is set');
     }
     
     public function testShow_ValidData() {

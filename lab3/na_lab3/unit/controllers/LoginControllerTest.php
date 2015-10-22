@@ -11,7 +11,37 @@ require_once dirname(__FILE__) . '\..\..\WebContent\models\UsersDB.class.php';
 require_once dirname(__FILE__) . '\..\..\WebContent\models\UserProfile.class.php';
 require_once dirname(__FILE__) . '\..\..\WebContent\models\UserProfilesDB.class.php';
 
-class LoginControllerTest {
+class LoginControllerTest extends PHPUnit_Framework_TestCase {
+    
+    private static $goodInput = array(
+        "userName" => "armando-n",
+        "password1" => "pass123",
+        "password2" => "pass123"
+    );
+    
+    private static $invalidCharsInput = array(
+        "userName" => 'armando$n',
+        "password1" => "pass",
+        "password2" => "pass"
+    );
+    
+    private static $wrongUserNameInput = array(
+        "userName" => 'armandon',
+        "password1" => "pass",
+        "password2" => "pass"
+    );
+    
+    private static $passMismatchInput = array(
+        "userName" => 'armando-n',
+        "password1" => "password123",
+        "password2" => "password1234"
+    );
+    
+    private static $wrongPassInput = array(
+        "userName" => 'armando-n',
+        "password1" => "wrongPass",
+        "password2" => "wrongPass"
+    );
     
     public function testRun_NoSession() {
         ob_start();
@@ -38,7 +68,7 @@ class LoginControllerTest {
         $output = ob_get_clean();
     
         $this->assertTrue(stristr($output, '<h2>Log In</h2>') !== false,
-            'It should call run and display the login view when no action is provided');
+            'It should call run and display the login view when an invalid action is provided');
         $this->assertTrue(stristr($output, 'Unrecognized command') !== false,
             'It should call run and display an error message when an invalid action is provided');
     }
@@ -53,6 +83,105 @@ class LoginControllerTest {
         $this->assertTrue(stristr($output, '<h2>Log In</h2>') !== false,
             'It should call run and display the login view when the action is "show"');
     }
+    
+    public function testRun_Login_NoData() {
+        ob_start();
+        self::checkSession();
+        $_SESSION['action'] = 'login';
+        unset($_POST);
+        LoginController::run();
+        $output = ob_get_clean();
+        
+        $this->assertTrue(stristr($output, '<h2>Log In</h2>') !== false,
+            'It should call run and display the login view when the action is "login" and post data is missing');
+        $this->assertTrue(stristr($output, 'Login data not found') !== false,
+            'It should call run and display an error message when the action is "login" and post data is missing');
+    }
+    
+    public function testRun_Login_PasswordMismatch() {
+        ob_start();
+        self::checkSession();
+        $_SESSION['action'] = 'login';
+        $_POST = self::$passMismatchInput;
+        LoginController::run();
+        $output = ob_get_clean();
+        
+        $this->assertTrue(stristr($output, '<h2>Log In</h2>') !== false,
+            'It should call run and display the login view when the action is "login" and mismatched passwords are provided');
+        $this->assertTrue(stristr($output, 'Passwords did not match') !== false,
+            'It should call run and display an error message when the action is "login" and mismatched passwords are provided');
+    }
+    
+    public function testRun_Login_InvalidData() {
+        ob_start();
+        self::checkSession();
+        $_SESSION['action'] = 'login';
+        $_POST = self::$invalidCharsInput;
+        LoginController::run();
+        $output = ob_get_clean();
+        
+        $this->assertTrue(stristr($output, '<h2>Log In</h2>') !== false,
+            'It should call run and display the login view when the action is "login" and invalid post data is provided');
+    }
+    
+    public function testRun_Login_UserNameNotFound() {
+        ob_start();
+        self::checkSession();
+        $_SESSION['action'] = 'login';
+        $_POST = self::$wrongUserNameInput;
+        LoginController::run();
+        $output = ob_get_clean();
+        
+        $this->assertTrue(stristr($output, '<h2>Log In</h2>') !== false,
+            'It should call run and display the login view when the action is "login" and a non-existent user name is provided');
+        $this->assertTrue(stristr($output, 'Login failed') !== false,
+            'It should call run and display an error message when the action is "login" and a non-existent user name is provided');
+    }
+    
+    public function testRun_Login_WrongPassword() {
+        ob_start();
+        self::checkSession();
+        $_SESSION['action'] = 'login';
+        $_POST = self::$wrongPassInput;
+        LoginController::run();
+        $output = ob_get_clean();
+    
+        $this->assertTrue(stristr($output, '<h2>Log In</h2>') !== false,
+            'It should call run and display the login view when the action is "login" and an incorrect password is provided');
+        $this->assertTrue(stristr($output, 'Login failed') !== false,
+            'It should call run and display an error message when the action is "login" and an incorrect password is provided');
+    }
+    
+//     /** @runInSeparateProcess
+//      */
+//     public function testRun_Login_CorrectInput() {
+//         ob_start();
+//         self::checkSession();
+//         $_SESSION['action'] = 'login';
+//         $_POST = self::$goodInput;
+//         LoginController::run();
+//         $output = ob_get_clean();
+        
+//         $this->assertTrue(stristr($output, '<section id="site-info">') !== false,
+//             'It should call run and redirect to the home page when the action is "login" and correct input is provided. Output: ' . $output);
+//         $this->assertTrue(stristr($output, 'Welcome back') !== false,
+//             'It should call run and display a welcome message when the action is "login" and correct input is provided');
+//     }
+
+//     /** @runInSeparateProcess
+//      */
+//     public function testRun_Logout() {
+//         ob_start();
+//         self::checkSession();
+//         $_SESSION['action'] = 'logout';
+//         LoginController::run();
+//         $output = ob_get_clean();
+        
+//         $this->assertTrue(stristr($output, '<section id="site-info">') !== false,
+//             'It should call run and redirect to the home page when the action is "logout"');
+//         $this->assertTrue(stristr($output, 'You have been successfully logged out') !== false,
+//             'It should call run and display a logout confirmation message when the action is "logout"');
+//     }
     
     private function checkSession() {
         if (session_status() == PHP_SESSION_NONE)
