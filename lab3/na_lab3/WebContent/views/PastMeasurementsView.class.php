@@ -1,17 +1,18 @@
 <?php 
 class PastMeasurementsView{
     
-    public static function show($measurements = null) {
+    public static function show() {
         HeaderView::show("Your Past Measurements");
-        PastMeasurementsView::showBody($measurements);
+        PastMeasurementsView::showBody();
         FooterView::show();
     }
     
-    public static function showBody($measurements) {
-        if (is_null($measurements)):
+    public static function showBody() {
+        if (!isset($_SESSION) || !isset($_SESSION['measurements'])):
             ?><p>Error: unable to show measurements. Data is missing.</p><?php
             return;
         endif;
+        $measurements = $_SESSION['measurements'];
         ?>
 <nav id="page-nav">
     <h2>Jump to a measurement</h2>
@@ -197,6 +198,8 @@ class PastMeasurementsView{
 </section>
         
 <?php
+        if (isset($_SESSION))
+            unset($_SESSION['measurements']);
     }
 }
 ?>
