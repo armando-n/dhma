@@ -7,9 +7,9 @@ function makeTestDB($dbName) {
     try {
         if (session_status() == PHP_SESSION_NONE)
             session_start();
-        $_SESSION['dbName'] = $dbName;
+        $_SESSION['dbName'] = '';
         $_SESSION['configFile'] = 'myConfig.ini';
-        $db = Database::getDB('');
+        $db = Database::getDB();
         
         $stmt = $db->prepare("drop database if exists $dbName");
         $stmt->execute();

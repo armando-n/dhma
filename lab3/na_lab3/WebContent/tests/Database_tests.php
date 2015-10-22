@@ -1,4 +1,6 @@
 <?php
+if (session_status() == PHP_SESSION_NONE)
+    session_start();
 include_once("../models/Database.class.php");
 ?><!DOCTYPE html>
 <html>
@@ -12,13 +14,25 @@ include_once("../models/Database.class.php");
 <h1>Tests for Database class</h1>
 
 <h2>It should show an error when the wrong database name is provided</h2>
-<?php $db = Database::getDB('wrongname'); ?>
+<?php
+$_SESSION['dbName'] = 'wrongname';
+$_SESSION['configFile'] = null;
+$db = Database::getDB();
+?>
 
 <h2>It should show an error when a config file is provided with the wrong username in the config</h2>
-<?php $db = Database::getDB('dhma', 'wrongNameConfig.ini'); ?>
+<?php
+$_SESSION['dbName'] = 'dhma_testDB';
+$_SESSION['configFile'] = 'wrongNameConfig.ini';
+$db = Database::getDB();
+?>
 
 <h2>It should show an error when config file is provided with the wrong password in the config</h2>
-<?php $db = Database::getDB('dhma', 'wrongPassConfig.ini'); ?>
+<?php
+$_SESSION['dbName'] = 'dhma_testDB';
+$_SESSION['configFile'] = 'wrongPassConfig.ini';
+$db = Database::getDB();
+?>
 
 <h2>It should create a database object with no errors the first time called</h2>
 <?php
