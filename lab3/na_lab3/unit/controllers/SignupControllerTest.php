@@ -175,22 +175,14 @@ class SignupControllerTest extends PHPUnit_Framework_TestCase {
     }
     
     private function removeSession() {
-        if (!isset($_SESSION))
-            return;
-        unset($_SESSION['base']);
-        unset($_SESSION['control']);
-        unset($_SESSION['action']);
-        unset($_SESSION['arguments']);
-        unset($_SESSION['dbName']);
-        unset($_SESSION['configFile']);
-        unset($_SESSION['testing']);
-        unset($_SESSION['user']);
-        unset($_SESSION['profile']);
-        unset($_SESSION['profileEdit']);
+        if (isset($_SESSION))
+            foreach ($_SESSION as $key => $value)
+                unset($_SESSION[$key]);
         unset($_SESSION);
-        if (!isset($_POST))
-        foreach ($_POST as $key => $value)
-            unset($_POST[$key]);
+        
+        if (isset($_POST))
+            foreach ($_POST as $key => $value)
+                unset($_POST[$key]);
     }
     
     private function dbQuery($query) {

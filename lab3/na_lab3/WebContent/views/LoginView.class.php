@@ -8,11 +8,17 @@ class LoginView {
     }
     
     public static function showBody() {
-        $uNameValue = !isset($_SESSION['user']) ? '' : $_SESSION['user']->getUserName();
-        $uNameError = !isset($_SESSION['user']) ? '' : $_SESSION['user']->getError("userName");
+        if (!isset($_SESSION) || !isset($_SESSION['user'])) {
+            $uNameValue = '';
+            $uNameError = '';
+        } else {
+            $uNameValue = $_SESSION['user']->getUserName();
+            $uNameError = $_SESSION['user']->getError("userName");
+        }
         ?>
 <section>
     <h2>Log In</h2>
+    
     <form action="login_login" method="post">
         <fieldset>
             <legend>Log In</legend>
