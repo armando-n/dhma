@@ -45,3 +45,5 @@ ADD_USER_FAILED Failed to add user to the database
 DB_CONFIG_NOT_FOUND Failed to access database: database config file not found
 USER_NAME_EXISTS User name already exists. Please try another.
 ADD_USER_PROFILE_FAILED Failed to add profile to the database
+ADD_MEASUREMENT_FAILED Failed to add measurement to database
+EDIT_MEASUREMENT_FAILED Failed to edit measurement in database

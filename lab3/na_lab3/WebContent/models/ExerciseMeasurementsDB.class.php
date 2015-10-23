@@ -1,6 +1,66 @@
 <?php
 class ExerciseMeasurementsDB {
     
+    public static function addMeasurement($measurement, $userID) {
+        $measurementID = -1;
+    
+        try {
+            $db = Database::getDB();
+            $stmt = $db->prepare(
+                "insert into ExerciseMeasurements (duration,
+                    type, dateAndTime, notes, userID)
+                values (:duration, :type, :dateAndTime,
+                    :notes, :userID)"
+            );
+            $stmt->execute(array(
+                ":duration" => $measurement->getDuration(),
+                ":type" => $measurement->getType(),
+                ":dateAndTime" => $measurement->getDateTime()->format("Y-m-d H:i"),
+                ":notes" => $measurement->getNotes(),
+                ":userID" => $userID
+            ));
+            $measurementID = $db->lastInsertId("exerciseID");
+    
+        } catch (PDOException $e) {
+            $measurement->setError('exerciseMeasurementsDB', 'ADD_MEASUREMENT_FAILED');
+        } catch (RuntimeException $e) {
+            $measurement->setError('database', 'DB_CONFIG_NOT_FOUND');
+        }
+    
+        return $measurementID;
+    }
+    
+    public static function editMeasurement($oldMeasurement, $newMeasurement) {
+        try {
+            $db = Database::getDB();
+            $oldParams = $oldMeasurement->getParameters();
+            $newParams = $newMeasurement->getParameters();
+            $numParams = count($oldMeasurement);
+    
+            foreach ($newParams as $key => $value) {
+    
+                if (!array_key_exists($key, $oldParams))
+                    throw new PDOException('Key ' . htmlspecialchars($key) . ' is invalid');
+    
+                    if ($oldParams[$key] !== $newParams[$key]) {
+                        $stmt = $db->prepare(
+                            "update ExerciseMeasurements set $key = :value
+                            where userID in
+                                (select userID from Users where userName = :userName)");
+                        $stmt->execute(array(
+                            ":value" => $value,
+                            "userName" => $newParams['userName']
+                        ));
+                    }
+            }
+    
+        } catch (PDOException $e) {
+            $measurement->setError('exerciseMeasurementsDB', 'EDIT_MEASUREMENT_FAILED');
+        } catch (RuntimeException $e) {
+            $measurement->setError('database', 'DB_CONFIG_NOT_FOUND');
+        }
+    }
+    
     // returns an array of all ExerciseMeasurement objects found in the database
     public static function getAllMeasurements() {
         $allMeasurements = array();

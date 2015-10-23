@@ -90,7 +90,7 @@ class UserProfilesDBTest extends PHPUnit_Framework_TestCase {
         ob_start();
         $profileID = UserProfilesDB::addUserProfile($profile, 1000);
         $output = ob_get_clean();
-        $this->assertEquals('Failed to add profile to the database', $profile->getError('userProfilesDB'),
+        $this->assertEquals('Failed to add profile to the database', trim($profile->getError('userProfilesDB')),
             'It should have an error when an invalid user ID is provided');
     }
     

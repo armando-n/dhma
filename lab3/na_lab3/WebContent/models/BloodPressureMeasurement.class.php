@@ -58,7 +58,7 @@ class BloodPressureMeasurement extends GenericModelObject {
     public function getParameters() {
         $params = array(
                 "userName" => $this->userName,
-                "dateAndTime" => $this->datetime,
+                "dateAndTime" => $this->datetime->format("Y-m-d H:i"),
                 "notes" => $this->notes,
                 "systolicPressure" => $this->systolicPressure,
                 "diastolicPressure" => $this->diastolicPressure
@@ -85,7 +85,7 @@ class BloodPressureMeasurement extends GenericModelObject {
         
         if (is_null($this->formInput)) {
             $this->userName = '';
-            $this->datetime = '';
+            $this->datetime = new DateTime();
             $this->notes = '';
             $this->systolicPressure = '';
             $this->diastolicPressure = '';
@@ -126,7 +126,7 @@ class BloodPressureMeasurement extends GenericModelObject {
             $date = $this->extractForm($this->formInput, "date");
             $time = $this->extractForm($this->formInput, "time");
         }
-        $this->datetime = '';
+        $this->datetime = new DateTime();
         
         if (empty($date)) {
             $this->setError("dateAndTime", "DATE_EMPTY");

@@ -45,3 +45,5 @@ ADD_USER_FAILED Error al agregar el usuario a la base de datos
 DB_CONFIG_NOT_FOUND No se ha podido base de datos de acceso: el archivo de configuración de base de datos no encontrado
 USER_NAME_EXISTS nombre de usuario ya existe. Por favor, pruebe con otra.
 ADD_USER_PROFILE_FAILED Error al añadir el perfil a la base de datos
+ADD_MEASUREMENT_FAILED Error al añadir la medición de la base de datos
+EDIT_MEASUREMENT_FAILED Error al editar medición de la base de datos
