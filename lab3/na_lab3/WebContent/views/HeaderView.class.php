@@ -24,9 +24,9 @@ class HeaderView {
     <nav id="main-nav">
         <h2>Site Navigation</h2>
         <ul>
-            <li><a href="home">Home</a></li>
-            <li><a href="measurements_show">Past Measurements</a></li><?php
+            <li><a href="home">Home</a></li><?php
             if (isset($_SESSION['profile'])): ?>
+            <li><a href="measurements_show">Past Measurements</a></li>
             <li><a href="login_logout">Logout</a></li><?php
             else: ?> 
             <li><a href="login_show">Login</a></li>
