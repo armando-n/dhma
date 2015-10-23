@@ -9,24 +9,6 @@ require_once dirname(__FILE__) . '\..\..\WebContent\models\UsersDB.class.php';
 
 class LoginViewTest extends PHPUnit_Framework_TestCase {
     
-    private static $goodInput = array(
-        "userName" => "armando-n",
-        "password1" => "password123",
-        "password2" => "password123"
-    );
-    
-    private static $badInput = array(
-        "userName" => 'armando$n',
-        "password1" => "pass",
-        "password2" => "pass"
-    );
-    
-    private static $wrongInput = array(
-        "userName" => 'armandon',
-        "password1" => "password123",
-        "password2" => "password123"
-    );
-    
     public function testShow_NoSession() {
         ob_start();
         self::removeSession();
@@ -50,14 +32,14 @@ class LoginViewTest extends PHPUnit_Framework_TestCase {
     public function testShow_InvalidData_LoginFailed() {
         ob_start();
         self::checkSession();
-        $_SESSION['user'] = new User(self::$badInput);
+        $_SESSION['user'] = 'armando$n';
         $_SESSION['loginFailed'] = true;
         LoginView::show();
         $output = ob_get_clean();
         
         $this->assertTrue(stristr($output, '<h2>Log In</h2>') !== false,
             'It should call show and display the login view when invalid data is provided');
-        $this->assertTrue(stristr($output, 'name="userName" value="' . self::$badInput['userName'] . '"') !== false,
+        $this->assertTrue(stristr($output, 'name="userName" value="armando$n"') !== false,
             'It should call show and fill in the user name of the login view when invalid data is provided. Output is: ' . $output);
         $this->assertTrue(stristr($output, 'User name or password invalid') !== false,
             'It should call show and display an error message when invalid data is provided and "loginFailed" session variable is set');
@@ -66,14 +48,14 @@ class LoginViewTest extends PHPUnit_Framework_TestCase {
     public function testShow_ValidData_UserNameNotFound() {
         ob_start();
         self::checkSession();
-        $_SESSION['user'] = new User(self::$wrongInput);
+        $_SESSION['user'] = 'armandon';
         $_SESSION['loginFailed'] = true;
         LoginView::show();
         $output = ob_get_clean();
     
         $this->assertTrue(stristr($output, '<h2>Log In</h2>') !== false,
             'It should call show and display the login view when valid data is provided');
-        $this->assertTrue(stristr($output, 'name="userName" value="' . self::$wrongInput['userName'] . '"') !== false,
+        $this->assertTrue(stristr($output, 'name="userName" value="armandon"') !== false,
             'It should call show and fill in the user name of the login view when valid data is provided');
         $this->assertTrue(stristr($output, 'User name or password invalid') !== false,
             'It should call show and display an error message when the wrong user name is provided and "loginFailed" session variable is set');
@@ -82,13 +64,13 @@ class LoginViewTest extends PHPUnit_Framework_TestCase {
     public function testShow_ValidData() {
         ob_start();
         self::checkSession();
-        $_SESSION['user'] = new User(self::$goodInput);
+        $_SESSION['user'] = 'armando-n';
         LoginView::show();
         $output = ob_get_clean();
         
         $this->assertTrue(stristr($output, '<h2>Log In</h2>') !== false,
             'It should call show and display the login view when valid data is provided');
-        $this->assertTrue(stristr($output, 'name="userName" value="' . self::$goodInput['userName'] . '"') !== false,
+        $this->assertTrue(stristr($output, 'name="userName" value="armando-n"') !== false,
             'It should call show and fill in the user name of the login view when valid data is provided');
     }
     

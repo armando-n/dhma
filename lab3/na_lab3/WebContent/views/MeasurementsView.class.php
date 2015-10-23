@@ -1,9 +1,9 @@
 <?php 
-class PastMeasurementsView{
+class MeasurementsView{
     
     public static function show() {
         HeaderView::show("Your Past Measurements");
-        PastMeasurementsView::showBody();
+        MeasurementsView::showBody();
         FooterView::show();
     }
     

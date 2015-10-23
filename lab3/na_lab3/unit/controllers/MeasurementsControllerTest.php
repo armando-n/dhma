@@ -1,7 +1,9 @@
 <?php
-require_once dirname(__FILE__) . '\..\..\WebContent\views\PastMeasurementsView.class.php';
+require_once dirname(__FILE__) . '\..\..\WebContent\controllers\MeasurementsController.class.php';
+require_once dirname(__FILE__) . '\..\..\WebContent\views\MeasurementsView.class.php';
 require_once dirname(__FILE__) . '\..\..\WebContent\views\HeaderView.class.php';
 require_once dirname(__FILE__) . '\..\..\WebContent\views\FooterView.class.php';
+require_once dirname(__FILE__) . '\..\..\WebContent\views\HomeView.class.php';
 require_once dirname(__FILE__) . '\..\..\WebContent\models\Database.class.php';
 require_once dirname(__FILE__) . '\..\..\WebContent\models\GenericModelObject.class.php';
 require_once dirname(__FILE__) . '\..\..\WebContent\models\BloodPressureMeasurement.class.php';
@@ -17,51 +19,58 @@ require_once dirname(__FILE__) . '\..\..\WebContent\models\SleepMeasurementsDB.c
 require_once dirname(__FILE__) . '\..\..\WebContent\models\WeightMeasurement.class.php';
 require_once dirname(__FILE__) . '\..\..\WebContent\models\WeightMeasurementsDB.class.php';
 
-class PastMeasurementsViewTest extends PHPUnit_Framework_TestCase {
+class MeasurementsControllerTest extends PHPUnit_Framework_TestCase {
     
-    public function testShow_NoSession() {
+    private static $profileInput = array(
+        "firstName" => "Armando",
+        "lastName" => "Navarro",
+        "email" => "fdf786@my.utsa.edu",
+        "gender" => "male",
+        "phone" => "281-555-2180",
+        "facebook" => "http://facebook.com/someguy210",
+        "dob" => "1983-11-02",
+        "country" => "United States of America",
+        "theme" => "dark",
+        "accentColor" => "#00008b",
+        "picture" => "someimage",
+        "isProfilePublic" => "on",
+        "isPicturePublic" => "on",
+        "sendReminders" => "on",
+        "stayLoggedIn" => "on",
+        "userName" => "armando-n"
+    );
+    
+    public function testRun_NoSession() {
         ob_start();
         self::removeSession();
-        PastMeasurementsView::show();
+        MeasurementsController::run();
         $output = ob_get_clean();
         
-        $this->assertTrue(stristr($output, 'unable to show measurements') !== false,
-            'It should call show and output an error message when no session exists');
+        $this->assertTrue(stristr($output, 'session data not found') !== false,
+            'It should call run and output an error message when no session exists');
     }
     
-    public function testShow_NoData() {
+    public function testRun_NoProfile() {
         ob_start();
         self::checkSession();
-        unset($_SESSION['measurements']);
-        PastMeasurementsView::show();
+        unset($_SESSION['profile']);
+        MeasurementsController::run();
         $output = ob_get_clean();
         
-        $this->assertTrue(stristr($output, 'unable to show measurements') !== false,
-            'It should call show and output an error message when no measurement data is provided ("measurements" not set)');
+        $this->assertTrue(stristr($output, 'profile not found') !== false,
+            'It should call run and output an error message when no profile is provided');
     }
     
-    public function testShow_ValidData() {
+    public function testRun_ValidProfile() {
         ob_start();
         self::checkSession();
-        $bpMeasurements = BloodPressureMeasurementsDB::getMeasurementsBy('userName', 'armando-n');
-        $calorieMeasurements = CalorieMeasurementsDB::getMeasurementsBy('userName', 'armando-n');
-        $exerciseMeasurements = ExerciseMeasurementsDB::getMeasurementsBy('userName', 'armando-n');
-        $glucoseMeasurements = GlucoseMeasurementsDB::getMeasurementsBy('userName', 'armando-n');
-        $sleepMeasurements = SleepMeasurementsDB::getMeasurementsBy('userName', 'armando-n');
-        $weightMeasurements = WeightMeasurementsDB::getMeasurementsBy('userName', 'armando-n');
-        $_SESSION['measurements'] = array(
-            'bloodPressure' => $bpMeasurements,
-            'calories' => $calorieMeasurements,
-            'exercise' => $exerciseMeasurements,
-            'glucose' => $glucoseMeasurements,
-            'sleep' => $sleepMeasurements,
-            'weight' => $weightMeasurements
-        );
-        PastMeasurementsView::show();
+        $_SESSION['action'] = 'show';
+        $_SESSION['profile'] = new UserProfile(self::$profileInput);
+        MeasurementsController::run();
         $output = ob_get_clean();
         
         $this->assertTrue(stristr($output, '<h2>Jump to a measurement</h2>') !== false,
-            'It should call show and display the past measurements view when valid measurement data is provided');
+            'It should call run and display the past measurements view when a valid profile is provided');
     }
     
     private function checkSession() {

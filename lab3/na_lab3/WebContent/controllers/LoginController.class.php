@@ -20,7 +20,7 @@ class LoginController {
     
     private static function login() {
         
-        if (!isset($_POST) || !isset($_POST['userName']) || !isset($_POST['password1']) || !isset($_POST['password2'])) {
+        if (!isset($_POST) || !isset($_POST['userName']) || !isset($_POST['password'])) {
             $_SESSION['flash'] = 'Error: Login data not found. Try again.';
             LoginView::show();
             return;
@@ -29,18 +29,11 @@ class LoginController {
         $user = UsersDB::getUserBy('userName', $_POST['userName']);
         $profile = UserProfilesDB::getUserProfileBy('userName', $_POST['userName']);
         
-        // passwords do not match
-        if ($_POST['password1'] !== $_POST['password2']) {
-            $_SESSION['flash'] = 'Login failed. Passwords did not match.';
-            $_SESSION['user'] = $user;
-            LoginView::show();
-        }
-        
         // user name not found or wrong password
-        if (is_null($user) || is_null($profile) || $user->getPassword() !== $_POST['password1']) {
+        if (is_null($user) || is_null($profile) || $user->getPassword() !== $_POST['password']) {
             $_SESSION['flash'] = 'Login failed.';
             $_SESSION['loginFailed'] = true;
-            $_SESSION['user'] = $user;
+            $_SESSION['user'] = $_POST['userName'];
             LoginView::show();
             return;
         }

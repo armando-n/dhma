@@ -1,5 +1,5 @@
 <?php
-include_once("../views/PastMeasurementsView.class.php");
+include_once("../views/MeasurementsView.class.php");
 include_once("../models/GenericModelObject.class.php");
 include_once("../models/User.class.php");
 include_once("../models/UserProfile.class.php");
@@ -13,28 +13,28 @@ include_once("../models/Messages.class.php");
 ?><!DOCTYPE html>
 <html>
 <head>
-    <title>Basic tests for PastMeasurementsView</title>
+    <title>Basic tests for MeasurementsView</title>
     <meta charset="utf-8" />
     <meta name="author" content="Armando Navarro" />
 </head>
 <body>
 
-<h1>PastMeasurementsView test</h1>
+<h1>MeasurementsView test</h1>
 
 <h2>It should call show and display the Past Measurements view</h2>
 <?php
 $measurements = initData();
-PastMeasurementsView::showBody($measurements);
+MeasurementsView::showBody($measurements);
 ?>
 
 <h2>It should call show and display an error message when null input is provided</h2>
-<?php PastMeasurementsView::showBody(null); ?>
+<?php MeasurementsView::showBody(null); ?>
 
 <h2>It should call show and display a message for each measurement type that has nothing to show when empty input is provided</h2>
-<?php PastMeasurementsView::showBody(array('glucose' => '')); ?>
+<?php MeasurementsView::showBody(array('glucose' => '')); ?>
 
 <h2>It should call show and display a message for each type that has nothing to show when a null value is provided</h2>
-<?php PastMeasurementsView::showBody(array('glucose' => null)); ?>
+<?php MeasurementsView::showBody(array('glucose' => null)); ?>
     
 </body>
 </html>

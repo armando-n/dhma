@@ -15,32 +15,22 @@ class LoginControllerTest extends PHPUnit_Framework_TestCase {
     
     private static $goodInput = array(
         "userName" => "armando-n",
-        "password1" => "pass123",
-        "password2" => "pass123"
+        "password" => "pass123"
     );
     
     private static $invalidCharsInput = array(
         "userName" => 'armando$n',
-        "password1" => "pass",
-        "password2" => "pass"
+        "password" => "pass"
     );
     
     private static $wrongUserNameInput = array(
         "userName" => 'armandon',
-        "password1" => "pass",
-        "password2" => "pass"
-    );
-    
-    private static $passMismatchInput = array(
-        "userName" => 'armando-n',
-        "password1" => "password123",
-        "password2" => "password1234"
+        "password" => "pass"
     );
     
     private static $wrongPassInput = array(
         "userName" => 'armando-n',
-        "password1" => "wrongPass",
-        "password2" => "wrongPass"
+        "password" => "wrongPass"
     );
     
     public function testRun_NoSession() {
@@ -96,20 +86,6 @@ class LoginControllerTest extends PHPUnit_Framework_TestCase {
             'It should call run and display the login view when the action is "login" and post data is missing');
         $this->assertTrue(stristr($output, 'Login data not found') !== false,
             'It should call run and display an error message when the action is "login" and post data is missing');
-    }
-    
-    public function testRun_Login_PasswordMismatch() {
-        ob_start();
-        self::checkSession();
-        $_SESSION['action'] = 'login';
-        $_POST = self::$passMismatchInput;
-        LoginController::run();
-        $output = ob_get_clean();
-        
-        $this->assertTrue(stristr($output, '<h2>Log In</h2>') !== false,
-            'It should call run and display the login view when the action is "login" and mismatched passwords are provided');
-        $this->assertTrue(stristr($output, 'Passwords did not match') !== false,
-            'It should call run and display an error message when the action is "login" and mismatched passwords are provided');
     }
     
     public function testRun_Login_InvalidData() {

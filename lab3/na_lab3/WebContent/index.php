@@ -74,7 +74,7 @@ switch ($control) {
     case "logout" : LoginController::run(true); break; 
     case "profile" : ProfileController::run($user, $uData, false); break;
     case "signup" : SignupController::run(); break;
-    case "past-measurements" : PastMeasurementsController::run(); break;
+    case "measurements" : MeasurementsController::run(); break;
     case "members_show" :
     case "members" : UsersController::run(); break;
     case "home":

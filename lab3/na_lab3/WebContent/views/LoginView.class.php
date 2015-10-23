@@ -11,8 +11,8 @@ class LoginView {
         $userSet =          isset($_SESSION) && isset($_SESSION['user']);
         $loginFailedSet =   isset($_SESSION) && isset($_SESSION['loginFailed']);
         
-        $uNameValue =   ($userSet)          ? $_SESSION['user']->getUserName()          : ''; 
-        $loginError =   ($loginFailedSet)   ? 'User name or password invalid'           : ''; 
+        $uNameValue =   ($userSet)          ? $_SESSION['user']                 : ''; 
+        $loginError =   ($loginFailedSet)   ? 'User name or password invalid'   : ''; 
         ?>
 <section>
     <h2>Log In</h2>
