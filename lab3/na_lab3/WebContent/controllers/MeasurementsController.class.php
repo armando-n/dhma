@@ -36,11 +36,26 @@ class MeasurementsController {
                 );
                 MeasurementsView::show();
                 break;
+            case 'add':
+                self::add();
+                break;
             default:
                 self::error('Error: unrecognized command');
         }
         
+    }
+    
+    private static function add() {
+        if (!isset($_SESSION['arguments'])) {
+            self::error('Error: arguments expected');
+            return;
+        }
         
+        switch ($_SESSION['arguments']) {
+            default:
+                MeasurementsView::add();
+                break;
+        }
     }
     
     private static function error($message = '') {

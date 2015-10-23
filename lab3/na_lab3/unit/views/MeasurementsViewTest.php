@@ -19,6 +19,25 @@ require_once dirname(__FILE__) . '\..\..\WebContent\models\WeightMeasurementsDB.
 
 class MeasurementsViewTest extends PHPUnit_Framework_TestCase {
     
+    private static $profileInput = array(
+        "firstName" => "Armando",
+        "lastName" => "Navarro",
+        "email" => "fdf786@my.utsa.edu",
+        "gender" => "male",
+        "phone" => "281-555-2180",
+        "facebook" => "http://facebook.com/someguy210",
+        "dob" => "1983-11-02",
+        "country" => "United States of America",
+        "theme" => "dark",
+        "accentColor" => "#00008b",
+        "picture" => "someimage",
+        "isProfilePublic" => "on",
+        "isPicturePublic" => "on",
+        "sendReminders" => "on",
+        "stayLoggedIn" => "on",
+        "userName" => "armando-n"
+    );
+    
     public function testShow_NoSession() {
         ob_start();
         self::removeSession();
@@ -62,6 +81,17 @@ class MeasurementsViewTest extends PHPUnit_Framework_TestCase {
         
         $this->assertTrue(stristr($output, '<h2>Jump to a measurement</h2>') !== false,
             'It should call show and display the past measurements view when valid measurement data is provided');
+    }
+    
+    public function testAdd() {
+        ob_start();
+        self::checkSession();
+        $_SESSION['profile'] = new UserProfile(self::$profileInput);
+        MeasurementsView::add();
+        $output = ob_get_clean();
+        
+        $this->assertTrue(stristr($output, '<form action="measurements_add_bloodPressure" method="post">') !== false,
+            'It should call add and show the add measurements form');
     }
     
     private function checkSession() {
