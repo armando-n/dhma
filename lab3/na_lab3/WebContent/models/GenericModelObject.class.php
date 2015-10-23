@@ -3,7 +3,7 @@ abstract class GenericModelObject {
     protected $errors;
     protected $errorCount;
     
-    public function extractForm($formInput, $valueName) {
+    protected function extractForm($formInput, $valueName) {
         $value = "";
         if (isset($formInput[$valueName])) {
             $value = trim($formInput[$valueName]);
