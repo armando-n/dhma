@@ -21,7 +21,7 @@ class FooterView {
             <ul>
 <?php // odd spacing here is for proper spacing when Viewing Page Source (behavior seems inconsistent)
         if (isset($_SESSION) && isset($_SESSION['profile'])): ?>
-        		<li><a href="measurements_show">Past Measurements</a></li>
+        		<li><a href="measurements_show_all">Past Measurements</a></li>
         		<li><a href="profile_show">Profile</a></li>
                 <li><a href="login_logout">Logout</a></li><?php
         else: ?>

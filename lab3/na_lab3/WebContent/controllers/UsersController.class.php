@@ -1,12 +1,9 @@
 <?php
-if (!isset($_SESSION))
-    session_start();
-
 class UsersController {
     
-    public static function run($dbName = null, $configFile = null) {
+    public static function run() {
         
-        $profiles = UserProfilesDB::getAllUserProfiles($dbName, $configFile);
+        $profiles = UserProfilesDB::getAllUserProfiles();
         UsersView::show($profiles);
     }
     

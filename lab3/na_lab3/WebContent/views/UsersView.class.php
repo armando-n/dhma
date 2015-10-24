@@ -40,8 +40,12 @@ class UsersView {
 <?php
         foreach ($uProfiles as $profile):
             ?>
-        <tr>
-            <td><?=$profile->getFirstName()?> <?=$profile->getLastName()?></td>
+        <tr><?php
+            if (isset($_SESSION) && isset($_SESSION['profile'])): ?>
+            <td><a href="profile_show_<?=$profile->getUserName()?>"><?=$profile->getFirstName()?> <?=$profile->getLastName()?></a></td><?php
+            else: ?>
+            <td><?=$profile->getFirstName()?> <?=$profile->getLastName()?></td><?php
+            endif; ?>
             <td><?=$profile->getEmail()?></td>
             <td><?=$profile->getGender()?></td>
             <td><?=$profile->getDOB()?></td>

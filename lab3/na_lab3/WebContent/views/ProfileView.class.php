@@ -26,8 +26,10 @@ class ProfileView {
         <li>Picture Public: <?= $profile->isPicturePublic() ? "yes" : "no" ?></li>
         <li>E-mail Reminders: <?= $profile->isSendRemindersSet() ? "yes" : "no" ?></li>
         <li>Stay Logged In: <?= $profile->isStayLoggedInSet() ? "yes" : "no" ?></li>
-    </ul>
-    <a href="profile_edit_show">Edit Profile</a>
+    </ul><?php
+    if (isset($_SESSION) && isset($_SESSION['profile']) && $_SESSION['profile']->getUserName() == $profile->getUserName()): ?>
+    <a href="profile_edit_show">Edit Profile</a><?php
+    endif; ?>
 </section>
 <?php
         FooterView::show();

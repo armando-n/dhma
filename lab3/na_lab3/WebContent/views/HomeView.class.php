@@ -19,6 +19,7 @@ class HomeView {
     	<li><a href="measurements_show_glucose">Glucose Measurements</a></li>
     	<li><a href="measurements_show_sleep">Sleep Measurements</a></li>
     	<li><a href="measurements_show_weight">Weight Measurements</a></li>
+    	<li><a href="members">Members</a></li>
     </ul>
     
     <h2>About DHMA</h2>

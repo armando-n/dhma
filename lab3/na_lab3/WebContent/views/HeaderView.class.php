@@ -26,7 +26,7 @@ class HeaderView {
         <ul>
             <li><a href="home">Home</a></li><?php
             if (isset($_SESSION['profile'])): ?>
-            <li><a href="measurements_show">Past Measurements</a></li>
+            <li><a href="measurements_show_all">Past Measurements</a></li>
             <li><a href="login_logout">Logout</a></li><?php
             else: ?> 
             <li><a href="login_show">Login</a></li>
