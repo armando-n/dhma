@@ -53,7 +53,7 @@ class MeasurementsController {
                 GlucoseMeasurementsView::show();
                 break;
             case 'sleep':
-                $_SESSION['measurements']['sleep'] = SLeepMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+                $_SESSION['measurements']['sleep'] = SleepMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
                 SleepMeasurementsView::show();
                 break;
             case 'weight':
