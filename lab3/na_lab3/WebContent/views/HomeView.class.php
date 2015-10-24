@@ -16,6 +16,9 @@ class HomeView {
     	<li><a href="measurements_show_bloodPressure">Blood Pressure Measurements</a></li>
     	<li><a href="measurements_show_calories">Calorie Measurements</a></li>
     	<li><a href="measurements_show_exercise">Exercise Measurements</a></li>
+    	<li><a href="measurements_show_glucose">Glucose Measurements</a></li>
+    	<li><a href="measurements_show_sleep">Sleep Measurements</a></li>
+    	<li><a href="measurements_show_weight">Weight Measurements</a></li>
     </ul>
     
     <h2>About DHMA</h2>

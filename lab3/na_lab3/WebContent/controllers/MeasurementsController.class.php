@@ -48,6 +48,18 @@ class MeasurementsController {
                 $_SESSION['measurements']['exercise'] = ExerciseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
                 ExerciseMeasurementsView::show();
                 break;
+            case 'glucose':
+                $_SESSION['measurements']['glucose'] = GlucoseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+                GlucoseMeasurementsView::show();
+                break;
+            case 'sleep':
+                $_SESSION['measurements']['sleep'] = SLeepMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+                SleepMeasurementsView::show();
+                break;
+            case 'weight':
+                $_SESSION['measurements']['weight'] = WeightMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+                WeightMeasurementsView::show();
+                break;
             case 'all':
                 $bpMeasurements = BloodPressureMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
                 $calorieMeasurements = CalorieMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
@@ -83,6 +95,9 @@ class MeasurementsController {
             case 'bloodPressure': $measurement = new BloodPressureMeasurement($_POST); break;
             case 'calories': $measurement = new CalorieMeasurement($_POST); break;
             case 'exercise': $measurement = new ExerciseMeasurement($_POST); break;
+            case 'glucose': $measurement = new GlucoseMeasurement($_POST); break;
+            case 'sleep': $measurement = new SleepMeasurement($_POST); break;
+            case 'weight': $measurement = new WeightMeasurement($_POST); break;
             default:
                 MeasurementsView::add();
         }
@@ -96,6 +111,9 @@ class MeasurementsController {
             case 'bloodPressure': $measurementID = BloodPressureMeasurementsDB::addMeasurement($measurement); break;
             case 'calories': $measurementID = CalorieMeasurementsDB::addMeasurement($measurement); break;
             case 'exercise': $measurementID = ExerciseMeasurementsDB::addMeasurement($measurement); break;
+            case 'glucose': $measurementID = GlucoseMeasurementsDB::addMeasurement($measurement); break;
+            case 'sleep': $measurementID = SleepMeasurementsDB::addMeasurement($measurement); break;
+            case 'weight': $measurementID = WeightMeasurementsDB::addMeasurement($measurement); break;
             default:
                 MeasurementsView::add();
         }
@@ -137,6 +155,18 @@ class MeasurementsController {
                         $_SESSION['measurement'] = ExerciseMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $dateAndTime);
                         ExerciseMeasurementsView::edit();
                         break;
+                    case 'glucose':
+                        $_SESSION['measurement'] = GlucoseMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $dateAndTime);
+                        GlucoseMeasurementsView::edit();
+                        break;
+                    case 'sleep':
+                        $_SESSION['measurement'] = SleepMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $dateAndTime);
+                        SleepMeasurementsView::edit();
+                        break;
+                    case 'weight':
+                        $_SESSION['measurement'] = WeightMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $dateAndTime);
+                        WeightMeasurementsView::edit();
+                        break;
                 }
                 break;
             case 'post':
@@ -168,6 +198,18 @@ class MeasurementsController {
             case 'exercise':
                 $newMeasurement = new ExerciseMeasurement($_POST);
                 $newMeasurement = ExerciseMeasurementsDB::editMeasurement($oldMeasurement, $newMeasurement);
+                break;
+            case 'glucose':
+                $newMeasurement = new GlucoseMeasurement($_POST);
+                $newMeasurement = GlucoseMeasurementsDB::editMeasurement($oldMeasurement, $newMeasurement);
+                break;
+            case 'sleep':
+                $newMeasurement = new SleepMeasurement($_POST);
+                $newMeasurement = SleepMeasurementsDB::editMeasurement($oldMeasurement, $newMeasurement);
+                break;
+            case 'weight':
+                $newMeasurement = new WeightMeasurement($_POST);
+                $newMeasurement = WeightMeasurementsDB::editMeasurement($oldMeasurement, $newMeasurement);
                 break;
         }
         

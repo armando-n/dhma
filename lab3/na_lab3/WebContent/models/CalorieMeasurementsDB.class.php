@@ -1,7 +1,7 @@
 <?php
 class CalorieMeasurementsDB {
     
-    // takes a CalorieMeasuremet object as its first argument. No other argument is required. A second argument
+    // takes a CalorieMeasurement object as its first argument. No other argument is required. A second argument
     // can be the userID, which reduces the amount of work necessary by 1 query
     public static function addMeasurement() {
         $measurementID = -1;

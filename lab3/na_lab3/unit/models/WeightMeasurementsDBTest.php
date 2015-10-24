@@ -8,7 +8,7 @@ require_once dirname(__FILE__).'\..\..\WebContent\models\Messages.class.php';
 class WeightMeasurementsDBTest extends PHPUnit_Framework_TestCase {
     
     /** @expectedException Exception
-     * @expectedExceptionMessage Missing argument
+     * @expectedExceptionMessage Undefined variable
      */
     public function testAddMeasurement_NoParameters() {
         self::checkSession();
