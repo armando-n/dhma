@@ -40,7 +40,8 @@ create table BloodPressureMeasurements(
     dateAndTime         datetime not null,
     notes               varchar(255),
     userID              integer not null,
-    foreign key (userID) references Users (userID) on delete cascade
+    foreign key (userID) references Users (userID) on delete cascade,
+    constraint uniq_meas unique (dateAndTime, userID)
 );
 
 drop table if exists CalorieMeasurements;
@@ -50,7 +51,8 @@ create table CalorieMeasurements(
     dateAndTime         datetime not null,
     notes               varchar(255),
     userID              integer not null,
-    foreign key (userID) references Users (userID) on delete cascade
+    foreign key (userID) references Users (userID) on delete cascade,
+    constraint uniq_meas unique (dateAndTime, userID)
 );
 
 drop table if exists ExerciseMeasurements;
@@ -61,7 +63,8 @@ create table ExerciseMeasurements(
     dateAndTime         datetime not null,
     notes               varchar(255),
     userID              integer not null,
-    foreign key (userID) references Users (userID) on delete cascade
+    foreign key (userID) references Users (userID) on delete cascade,
+    constraint uniq_meas unique (dateAndTime, userID)
 );
 
 drop table if exists GlucoseMeasurements;
@@ -71,7 +74,8 @@ create table GlucoseMeasurements(
     dateAndTime         datetime not null,
     notes               varchar(255),
     userID              integer not null,
-    foreign key (userID) references Users (userID) on delete cascade
+    foreign key (userID) references Users (userID) on delete cascade,
+    constraint uniq_meas unique (dateAndTime, userID)
 );
 
 drop table if exists SleepMeasurements;
@@ -81,7 +85,8 @@ create table SleepMeasurements(
     dateAndTime         datetime not null,
     notes               varchar(255),
     userID              integer not null,
-    foreign key (userID) references Users (userID) on delete cascade
+    foreign key (userID) references Users (userID) on delete cascade,
+    constraint uniq_meas unique (dateAndTime, userID)
 );
 
 drop table if exists WeightMeasurements;
@@ -91,7 +96,8 @@ create table WeightMeasurements(
     dateAndTime         datetime not null,
     notes               varchar(255),
     userID              integer not null,
-    foreign key (userID) references Users (userID) on delete cascade
+    foreign key (userID) references Users (userID) on delete cascade,
+    constraint uniq_meas unique (dateAndTime, userID)
 );
 
 -- test data
