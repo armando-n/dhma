@@ -144,7 +144,7 @@ class BloodPressureMeasurement extends GenericModelObject {
             return;
         }
         
-        $options = array("options" => array("regexp" => "/^(([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))?$/"));
+        $options = array("options" => array("regexp" => "/^(([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))?( ((am|pm)|(AM|PM)))?$/"));
         if (!filter_var($time, FILTER_VALIDATE_REGEXP, $options)) {
             $this->setError("dateAndTime", "TIME_HAS_INVALID_CHARS");
             return;

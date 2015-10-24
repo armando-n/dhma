@@ -65,6 +65,7 @@ class MeasurementsControllerTest extends PHPUnit_Framework_TestCase {
         ob_start();
         self::checkSession();
         $_SESSION['action'] = 'show';
+        $_SESSION['arguments'] = 'all';
         $_SESSION['profile'] = new UserProfile(self::$profileInput);
         MeasurementsController::run();
         $output = ob_get_clean();

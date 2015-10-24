@@ -11,6 +11,13 @@ class HomeView {
         ?>
 <section id="site-info">
     <h2><a href="tests.html">Tests</a></h2>
+    <h2>Views Showing All Objects</h2>
+    <ul>
+    	<li><a href="measurements_show_bloodPressure">Blood Pressure Measurements</a></li>
+    	<li><a href="measurements_show_calories">Calorie Measurements</a></li>
+    	<li><a href="measurements_show_exercise">Exercise Measurements</a></li>
+    </ul>
+    
     <h2>About DHMA</h2>
     
     <h3>Overview</h3>

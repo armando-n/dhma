@@ -54,6 +54,7 @@ else
 $_SESSION['base'] = $urlPieces[0];    
 $controlParts = preg_split("/_/", $control, null, PREG_SPLIT_NO_EMPTY);
 $numParts = count($controlParts);
+$_SESSION['arguments'] = '';
 if ($numParts > 0) {
     $_SESSION['control'] = $controlParts[0];
     $control = $controlParts[0];
@@ -63,8 +64,11 @@ if ($numParts > 1)
     $_SESSION['action'] = $controlParts[1];
 else
     unset($_SESSION['action']);
-if ($numParts > 2)
+if ($numParts > 2) {
     $_SESSION['arguments'] = $controlParts[2];
+    for ($i = 3; $i < $numParts; $i++)
+        $_SESSION['arguments'] = $_SESSION['arguments'] . '_' . $controlParts[$i];
+}
 else
     unset($_SESSION['arguments']);
 

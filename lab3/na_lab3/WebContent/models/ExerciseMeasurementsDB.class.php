@@ -1,11 +1,31 @@
 <?php
 class ExerciseMeasurementsDB {
     
-    public static function addMeasurement($measurement, $userID) {
+    // takes a ExercisePressureMeasuremet object as its first argument. No other argument is required. A second argument
+    // can be the userID, which reduces the amount of work necessary by 1 query
+    public static function addMeasurement() {
         $measurementID = -1;
+        $userID = -1;
     
         try {
             $db = Database::getDB();
+            
+            if (func_num_args() < 1)
+                throw new PDOException('ExerciseMeasurementsDB.addMeasurement: arguments expected');
+            
+            $measurement = func_get_arg(0);
+        
+            if (func_num_args() < 2) {
+                $stmt = $db->prepare('select userID from Users where userName = :userName');
+                $stmt->execute(array(":userName" => $measurement->getUserName()));
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($row !== false)
+                    $userID = $row['userID'];
+                else
+                    throw new PDOException('User name "' . $measurement->getUserName() . '" not found');
+            } else
+                $userID = func_get_arg(1);
+            
             $stmt = $db->prepare(
                 "insert into ExerciseMeasurements (duration,
                     type, dateAndTime, notes, userID)
@@ -36,6 +56,7 @@ class ExerciseMeasurementsDB {
             $oldParams = $oldMeasurement->getParameters();
             $newParams = $newMeasurement->getParameters();
             $numParams = count($oldMeasurement);
+            $dateAndTime = $oldParams['dateAndTime'];
     
             foreach ($newParams as $key => $value) {
     
@@ -46,19 +67,26 @@ class ExerciseMeasurementsDB {
                         $stmt = $db->prepare(
                             "update ExerciseMeasurements set $key = :value
                             where userID in
-                                (select userID from Users where userName = :userName)");
+                                (select userID from Users where userName = :userName)
+                            and dateAndTime = :dateAndTime");
                         $stmt->execute(array(
                             ":value" => $value,
-                            "userName" => $newParams['userName']
+                            "userName" => $newParams['userName'],
+                            ":dateAndTime" => $dateAndTime
                         ));
                     }
+                    
+                    if ($key === 'dateAndTime')
+                        $dateAndTime = $value;
             }
     
         } catch (PDOException $e) {
-            $measurement->setError('exerciseMeasurementsDB', 'EDIT_MEASUREMENT_FAILED');
+            $newMeasurement->setError('exerciseMeasurementsDB', 'EDIT_MEASUREMENT_FAILED');
         } catch (RuntimeException $e) {
-            $measurement->setError('database', 'DB_CONFIG_NOT_FOUND');
+            $newMeasurement->setError('database', 'DB_CONFIG_NOT_FOUND');
         }
+        
+        return $newMeasurement;
     }
     
     // returns an array of all ExerciseMeasurement objects found in the database
@@ -74,10 +102,8 @@ class ExerciseMeasurementsDB {
 
             foreach ($stmt as $row) {
                 $measurement = new ExerciseMeasurement($row);
-                if (!is_object($measurement) || $measurement->getErrorCount() > 0)
-                    throw new PDOException('Failed to create valid exercise measurement:\n' . array_shift($measurement->getErrors()));
-                
-                $allMeasurements[] = $measurement;
+                if (is_object($measurement) && $measurement->getErrorCount() == 0)
+                    $allMeasurements[] = $measurement;
             }
             
         } catch (PDOException $e) {
@@ -87,6 +113,31 @@ class ExerciseMeasurementsDB {
         }
         
         return $allMeasurements;
+    }
+    
+    public static function getMeasurement($userName, $dateAndTime) {
+        $measurement = null;
+        try {
+            $db = Database::getDB();
+            $stmt = $db->prepare(
+                "select userName, exerciseID, duration, type,
+                    dateAndTime, notes, userID
+                from Users join ExerciseMeasurements using (userID)
+                where userName = :userName and dateAndTime = :dateAndTime"
+            );
+            $stmt->execute(array(":userName" => $userName, ":dateAndTime" => $dateAndTime));
+    
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row !== false)
+                $measurement = new ExerciseMeasurement($row);
+    
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        } catch (RuntimeException $e) {
+            echo $e->getMessage();
+        }
+    
+        return $measurement;
     }
     
     // returns an array of ExerciseMeasurement objects, sorted by date
@@ -111,10 +162,8 @@ class ExerciseMeasurementsDB {
             
             foreach ($stmt as $row) {
                 $measurement = new ExerciseMeasurement($row);
-                if (!is_object($measurement) || $measurement->getErrorCount() > 0)
-                    throw new PDOException('Failed to create valid exercise measurement:\n' . array_shift($measurement->getErrors()));
-    
-                $measurementsArray[] = $measurement;
+                if (is_object($measurement) && $measurement->getErrorCount() == 0)
+                    $measurementsArray[] = $measurement;
             }
     
         } catch (PDOException $e) {

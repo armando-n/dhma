@@ -15,17 +15,15 @@ class MeasurementsView{
         $measurements = $_SESSION['measurements'];
         ?>
 <section>
-	<h2>Add Measurements</h2>
-	<ul>
-		<li>
-			<a href="measurements_add_bloodPressure">Blood Pressure</a>
-			<a href="measurements_add_calories">Calories</a>
-			<a href="measurements_add_exercise">Exercise</a>
-			<a href="measurements_add_glucose">Glucose</a>
-			<a href="measurements_add_sleep">Sleep</a>
-			<a href="measurements_add_weight">Weight</a>
-		</li>
-	</ul>
+    <h2>Add Measurements</h2>
+    <ul>
+        <li><a href="measurements_add_bloodPressure">Blood Pressure</a></li>
+        <li><a href="measurements_add_calories">Calories</a></li>
+        <li><a href="measurements_add_exercise">Exercise</a></li>
+        <li><a href="measurements_add_glucose">Glucose</a></li>
+        <li><a href="measurements_add_sleep">Sleep</a></li>
+        <li><a href="measurements_add_weight">Weight</a></li>
+    </ul>
 </section>
 
 <nav id="page-nav">
@@ -228,14 +226,14 @@ class MeasurementsView{
         ?>
         
 <section>
-	<form action="measurements_add_bloodPressure" method="post">
+    <form action="measurements_add_bloodPressure" method="post">
         <fieldset>
             <legend>Blood Pressure</legend>
             <!-- Pattern attribute and specific error reporting absent to avoid hints that weaken security -->
-            Systolic Pressure <input type="text" name="systolicPressure" size="10" autofocus="autofocus" required="required" maxlength="4" tabindex="1" pattern="$[0-9]+^" /><br />
-            Diastolic Pressure <input type="text" name="diastolicPressure" size="10" required="required" maxlength="4" tabindex="2" pattern="$[0-9]+^" /><br />
-            Date <input type="date" name="date" required="required" tabindex="3" title="mm/dd/yyyy or mm-dd-yyyy" />
-            Time <input type="time" name="time" required="required" tabindex="4" title="H:M" />
+            Systolic Pressure <input type="text" name="systolicPressure" size="10" autofocus="autofocus" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" /><br />
+            Diastolic Pressure <input type="text" name="diastolicPressure" size="10" required="required" maxlength="4" tabindex="2" pattern="^[0-9]+$" /><br />
+            Date <input type="date" name="date" required="required" tabindex="3" title="mm/dd/yyyy or mm-dd-yyyy" /><br />
+            Time <input type="time" name="time" required="required" tabindex="4" title="H:M" /><br />
             Notes <input type="text" name="notes" size="30" maxlength="4" tabindex="5" /><br />
         </fieldset>
         <div>
