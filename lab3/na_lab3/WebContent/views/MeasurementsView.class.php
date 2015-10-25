@@ -17,12 +17,12 @@ class MeasurementsView{
 <section>
     <h2>Add Measurements</h2>
     <ul>
-        <li><a href="measurements_add_bloodPressure">Blood Pressure</a></li>
-        <li><a href="measurements_add_calories">Calories</a></li>
-        <li><a href="measurements_add_exercise">Exercise</a></li>
-        <li><a href="measurements_add_glucose">Glucose</a></li>
-        <li><a href="measurements_add_sleep">Sleep</a></li>
-        <li><a href="measurements_add_weight">Weight</a></li>
+        <li><a href="measurements_show_bloodPressure">Blood Pressure</a></li>
+        <li><a href="measurements_show_calories">Calories</a></li>
+        <li><a href="measurements_show_exercise">Exercise</a></li>
+        <li><a href="measurements_show_glucose">Glucose</a></li>
+        <li><a href="measurements_show_sleep">Sleep</a></li>
+        <li><a href="measurements_show_weight">Weight</a></li>
     </ul>
 </section>
 
