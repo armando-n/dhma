@@ -9,7 +9,7 @@ class MeasurementsController {
         }
         
         if (!isset($_SESSION['profile'])) {
-            self::error('Error: profile not found');
+            self::redirect('login_show', 'You must log in before you can see your measurements. For professor/grader: Use &quot;armando-n&quot; for user name, and &quot;pass123&quot; for password.');
             return;
         }
         
@@ -243,6 +243,15 @@ class MeasurementsController {
     
     private static function error($message = '') {
         ?><p><?=$message?></p><?php
+    }
+    
+    private static function redirect($control = '', $message = null) {
+        if (!is_null($message))
+            $_SESSION['flash'] = $message;
+        if (!empty($control))
+            $control = '/' . $control;
+
+        header('Location: http://' . $_SERVER['HTTP_HOST'] . '/' . $_SESSION['base'] . $control);
     }
 }
 ?>
