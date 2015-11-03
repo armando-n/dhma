@@ -294,7 +294,11 @@ class SignupView {
                     <option>Zambia</option>
                     <option>Zimbabwe</option>
                 </datalist>
-            Profile Picture <input type="file" class="btn btn-info btn-sm" name="pic" accept="image/*" tabindex="13" /><br />
+            <label for="choosePicture" class="btn btn-info btn-sm">
+                <span class="glyphicon glyphicon-user"></span>
+                &nbsp;Choose Profile Picture
+            </label>
+            <input type="file" id="choosePicture" class="hidden" name="pic" accept="image/*" tabindex="13" /><br />
         </fieldset>
         <fieldset>
             <legend>Site Preferences</legend>
@@ -312,7 +316,15 @@ class SignupView {
             <input type="checkbox" id="keep-logged-in" name="keep-logged-in"<?=$stayLoggedVal?> tabindex="19" /> <label for="keep-logged-in">Keep me logged in</label>
         </fieldset>
         <div>
-            <input type="submit" class="btn btn-primary" value="Submit" size="15" tabindex="20" />
+            <label for="submitSignup" class="btn btn-primary">
+                <span class="glyphicon glyphicon-ok"></span>
+                &nbsp;Submit
+            </label>
+            <input type="submit" id="submitSignup" class="hidden" value="Submit" size="15" tabindex="20" />
+            <a href="home" class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-remove"></span>
+                &nbsp;Cancel
+            </a>
         </div>
     </form>
 </section>

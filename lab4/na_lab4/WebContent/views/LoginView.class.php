@@ -26,7 +26,15 @@ class LoginView {
             Password <input type="password" name="password" size="15" required="required" maxlength="30" tabindex="2" />
         </fieldset>
         <div>
-            <input type="submit" class="btn btn-primary" value="Submit" tabindex="3" />
+            <label for="submitLogin" class="btn btn-primary">
+                <span class="glyphicon glyphicon-ok"></span>
+                &nbsp;Submit
+            </label>
+            <input type="submit" id="submitLogin" class="hidden" value="Submit" tabindex="3" />
+            <a href="home" class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-remove"></span>
+                &nbsp;Cancel
+            </a>
         </div>
     </form>
 </section>

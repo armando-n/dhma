@@ -28,7 +28,10 @@ class ProfileView {
         <li>Stay Logged In: <?= $profile->isStayLoggedInSet() ? "yes" : "no" ?></li>
     </ul><?php
     if (isset($_SESSION) && isset($_SESSION['profile']) && $_SESSION['profile']->getUserName() == $profile->getUserName()): ?>
-    <a href="profile_edit_show" class="btn btn-info btn-sm">Edit Profile</a><?php
+    <a href="profile_edit_show" class="btn btn-info btn-sm">
+        <span class="glyphicon glyphicon-pencil"></span>
+        &nbsp;Edit Profile
+    </a><?php
     endif; ?>
 </section>
 <?php
@@ -59,7 +62,11 @@ class ProfileView {
     
     <img src="images/profile/<?=$profile->getUserName()?>.png" alt="<?=$profile->getUserName()?>'s profile picture" /><br />
     <form action="profile_edit_post" enctype="multipart/form-data" method="post">
-    Change Picture: <input type="file" class="btn btn-info btn-sm" name="pic" accept="image/*" tabindex="13" />
+    <label for="choosePicture" class="btn btn-info btn-sm">
+        <span class="glyphicon glyphicon-user"></span>
+        &nbsp;Change Profile Picture
+    </label>
+    <input type="file" id="choosePicture" class="hidden" name="pic" accept="image/*" tabindex="13" />
     <ul>
         <li>First Name: <input type="text" name="firstName" value="<?=$profile->getFirstName()?>" size="15" maxlength="30" tabindex="5" pattern="^[a-zA-Z_-]+$" title="Remove invalid characters" />
                 <span class="error"><?=$profile->getError("firstName")?></span></li>
@@ -289,8 +296,15 @@ class ProfileView {
     </ul>
     <div>
         <input type="hidden" name="userName" value="<?=$profile->getUserName()?>" />
-        <input type="submit" class="btn btn-primary" value="Submit" size="15" tabindex="20" />
-        <a href="profile_show" class="btn btn-default btn-sm" tabindex="21">Cancel</a>
+        <label for="submitSave" class="btn btn-primary">
+            <span class="glyphicon glyphicon-ok"></span>
+            &nbsp;Save Changes
+        </label>
+        <input type="submit" id="submitSave" class="hidden" value="Save Changes" size="15" tabindex="20" />
+        <a href="profile_show" class="btn btn-default btn-sm" tabindex="21">
+            <span class="glyphicon glyphicon-remove"></span>
+            &nbsp;Cancel
+        </a>
     </div>
     </form>
 </section>
