@@ -24,22 +24,37 @@ class HeaderView {
         endif;
         ?>
 
-<h1><?= $title ?></h1>
+<h1 class="hidden"><?= $title ?></h1>
 
 <header>
-    <img src="images/logo.png" alt="DHMA Logo" width="99" height="58" />
-    <nav id="main-nav"><!-- class="navbar navbar-inverse navbar-fixed-top">-->
-        <h2>Site Navigation</h2>
-        <ul class="list-inline">
-            <li><a href="home">Home</a></li><?php
-            if (isset($_SESSION['profile'])): ?>
-            <li><a href="measurements_show_all">Past Measurements</a></li>
-            <li><a href="login_logout">Logout</a></li><?php
-            else: ?> 
-            <li><a href="login_show">Login</a></li>
-            <li><a href="signup_show">Sign Up</a></li><?php
-            endif; ?> 
-        </ul>
+    <nav id="main-nav" class="navbar navbar-default navbar-fixed-top"><!-- class="navbar navbar-inverse navbar-fixed-top">-->
+        <div class="container-fluid">
+            <h2 class="hidden">Site Navigation</h2>
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNav">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <img src="images/logo.png" class="img-responsive" alt="DHMA Logo" width="99" height="58" />
+            </div>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="nav navbar-nav">
+                    <li><a href="home">Home</a></li><?php
+                    if (isset($_SESSION['profile'])): ?>
+                    <li><a href="measurements_show_all">Measurements</a></li><?php
+                    endif; ?>
+                </ul>
+                <ul class="nav navbar-nav navbar-right"><?php
+                    if (isset($_SESSION['profile'])): ?>
+                    <li><a href="login_logout">Logout</a></li><?php
+                    else: ?> 
+                    <li><a href="signup_show">Sign Up</a></li>
+                    <li><a href="login_show">Login</a></li><?php
+                    endif; ?> 
+                </ul>
+            </div>
+        </div>
     </nav>
 </header>
 
