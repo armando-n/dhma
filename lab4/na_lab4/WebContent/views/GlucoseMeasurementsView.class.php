@@ -42,12 +42,12 @@ class GlucoseMeasurementsView {
                 <td><?=$glucose->getNotes()?></td>
                 <td>
                 	<form action="measurements_edit_show_glucose_<?=$glucose->getDateTime()->format('Y-m-d H-i')?>" method="post">
-                		<input type="submit" value="Edit" />
+                		<input type="submit" class="btn btn-primary btn-sm" value="Edit" />
                 	</form>
             	</td>
             	<td>
                 	<form action="measurements_delete_<?=$glucose->getDateTime()->format('Y-m-d H-i')?>" method="post">
-                		<input type="submit" value="Delete" disabled="disabled" />
+                		<input type="submit" class="btn btn-danger btn-sm" value="Delete" disabled="disabled" />
                 	</form>
             	</td>
         </tr>
@@ -62,7 +62,7 @@ class GlucoseMeasurementsView {
             Date <input type="date" name="date" required="required" tabindex="2" title="mm/dd/yyyy or mm-dd-yyyy" /><br />
             Time <input type="time" name="time" required="required" tabindex="3" title="H:M" /><br />
             Notes <input type="text" name="notes" size="30" maxlength="50" tabindex="4" /><br />
-        	<input type="submit" value="Add" tabindex="5" />
+        	<input type="submit" class="btn btn-primary" value="Add" tabindex="5" />
             <input type="hidden" name="userName" value="<?=$_SESSION['profile']->getUserName()?>" tabindex="6" />
     	</fieldset>
     </form>
@@ -90,7 +90,8 @@ class GlucoseMeasurementsView {
             Date <input type="date" name="date" value="<?=$measurement->getDate()?>" required="required" tabindex="2" title="mm/dd/yyyy or mm-dd-yyyy" /><br />
             Time <input type="time" name="time" value="<?=$measurement->getTime()?>" required="required" tabindex="3" title="H:M" /><br />
             Notes <input type="text" name="notes" value="<?=$measurement->getNotes()?>" size="30" maxlength="50" tabindex="4" /><br />
-        	<input type="submit" value="Save Changes" tabindex="5" />
+        	<input type="submit" class="btn btn-primary" value="Save Changes" tabindex="5" />
+            <a href="measurements_show_glucose" class="btn btn-default btn-sm">Cancel</a>
             <input type="hidden" name="userName" value="<?=$_SESSION['profile']->getUserName()?>" tabindex="6" />
     	</fieldset>
     </form>

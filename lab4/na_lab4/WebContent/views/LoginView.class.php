@@ -26,7 +26,7 @@ class LoginView {
             Password <input type="password" name="password" size="15" required="required" maxlength="30" tabindex="2" />
         </fieldset>
         <div>
-            <input type="submit" tabindex="3" />
+            <input type="submit" class="btn btn-primary" value="Submit" tabindex="3" />
         </div>
     </form>
 </section>

@@ -294,7 +294,7 @@ class SignupView {
                     <option>Zambia</option>
                     <option>Zimbabwe</option>
                 </datalist>
-            Profile Picture <input type="file" name="pic" accept="image/*" tabindex="13" /><br />
+            Profile Picture <input type="file" class="btn btn-info btn-sm" name="pic" accept="image/*" tabindex="13" /><br />
         </fieldset>
         <fieldset>
             <legend>Site Preferences</legend>
@@ -304,7 +304,7 @@ class SignupView {
                     <option<?=$themeLightVal?>>light</option>
                 </select>
                 <span class="error"><?=$themeErr?></span><br />
-            Theme Accent Color <input type="color" name="color" value="<?=$colorVal?>" tabindex="15" />
+            Theme Accent Color <input type="color" class="btn btn-default btn-sm" name="color" value="<?=$colorVal?>" tabindex="15" />
                 <span class="error"><?=$colorErr?></span><br />
             <input type="checkbox" id="public-profile" name="public-profile"<?=$pubProfileVal?> tabindex="16" /> <label for="public-profile">Make profile public</label><br />
             <input type="checkbox" id="showpic" name="showpic"<?=$pubPicVal?> tabindex="17" /> <label for="showpic">Show picture in profile</label><br />
@@ -312,7 +312,7 @@ class SignupView {
             <input type="checkbox" id="keep-logged-in" name="keep-logged-in"<?=$stayLoggedVal?> tabindex="19" /> <label for="keep-logged-in">Keep me logged in</label>
         </fieldset>
         <div>
-            <input type="submit" size="15" tabindex="20" />
+            <input type="submit" class="btn btn-primary" value="Submit" size="15" tabindex="20" />
         </div>
     </form>
 </section>

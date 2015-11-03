@@ -28,7 +28,7 @@ class ProfileView {
         <li>Stay Logged In: <?= $profile->isStayLoggedInSet() ? "yes" : "no" ?></li>
     </ul><?php
     if (isset($_SESSION) && isset($_SESSION['profile']) && $_SESSION['profile']->getUserName() == $profile->getUserName()): ?>
-    <a href="profile_edit_show">Edit Profile</a><?php
+    <a href="profile_edit_show" class="btn btn-info btn-sm">Edit Profile</a><?php
     endif; ?>
 </section>
 <?php
@@ -59,7 +59,7 @@ class ProfileView {
     
     <img src="images/profile/<?=$profile->getUserName()?>.png" alt="<?=$profile->getUserName()?>'s profile picture" /><br />
     <form action="profile_edit_post" enctype="multipart/form-data" method="post">
-    Change Picture: <input type="file" name="pic" accept="image/*" tabindex="13" />
+    Change Picture: <input type="file" class="btn btn-info btn-sm" name="pic" accept="image/*" tabindex="13" />
     <ul>
         <li>First Name: <input type="text" name="firstName" value="<?=$profile->getFirstName()?>" size="15" maxlength="30" tabindex="5" pattern="^[a-zA-Z_-]+$" title="Remove invalid characters" />
                 <span class="error"><?=$profile->getError("firstName")?></span></li>
@@ -280,7 +280,7 @@ class ProfileView {
                     <option<?=$themeLightVal?>>light</option>
                 </select>
                 <span class="error"><?=$profile->getError("theme")?></span></li>
-        <li>Theme Accent Color: <input type="color" name="accentColor" value="<?=$profile->getAccentColor()?>" tabindex="15" />
+        <li>Theme Accent Color: <input type="color" class="btn btn-default btn-sm" name="accentColor" value="<?=$profile->getAccentColor()?>" tabindex="15" />
                 <span class="error"><?=$profile->getError("accentColor")?></span></li>
         <li><label for="isProfilePublic">Profile Public:</label> <input type="checkbox" id="isProfilePublic" name="isProfilePublic"<?=$pubProfileVal?> tabindex="16" /></li>
         <li><label for="isPicturePublic">Picture Public:</label> <input type="checkbox" id="isPicturePublic" name="isPicturePublic"<?=$pubPicVal?> tabindex="17" /></li>
@@ -289,8 +289,8 @@ class ProfileView {
     </ul>
     <div>
         <input type="hidden" name="userName" value="<?=$profile->getUserName()?>" />
-        <input type="submit" size="15" tabindex="20" />
-        <a href="profile_show" tabindex="21">Cancel</a>
+        <input type="submit" class="btn btn-primary" value="Submit" size="15" tabindex="20" />
+        <a href="profile_show" class="btn btn-default btn-sm" tabindex="21">Cancel</a>
     </div>
     </form>
 </section>
