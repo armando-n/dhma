@@ -17,7 +17,10 @@ class HeaderView {
 <body>
 <?php
         if (isset($_SESSION['flash'])): ?>
-<div><?= $_SESSION['flash'] ?></div><?php
+<div class="alert alert-<?=$_SESSION['alertType']?> fade in">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <?= $_SESSION['flash'] ?>
+</div><?php
         endif;
         ?>
 
@@ -25,9 +28,9 @@ class HeaderView {
 
 <header>
     <img src="images/logo.png" alt="DHMA Logo" width="99" height="58" />
-    <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top">
+    <nav id="main-nav"><!-- class="navbar navbar-inverse navbar-fixed-top">-->
         <h2>Site Navigation</h2>
-        <ul>
+        <ul class="list-inline">
             <li><a href="home">Home</a></li><?php
             if (isset($_SESSION['profile'])): ?>
             <li><a href="measurements_show_all">Past Measurements</a></li>
@@ -43,6 +46,8 @@ class HeaderView {
 <?php
         if (isset($_SESSION['flash']))
             unset($_SESSION['flash']);
+        if (isset($_SESSION['alertType']))
+            unset($_SESSION['alertType']);
     }
 }
 ?>

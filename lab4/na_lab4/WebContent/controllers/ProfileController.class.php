@@ -12,7 +12,7 @@ class ProfileController {
         }
         
         if (!isset($_SESSION['action']))
-            ProfileController::redirect('home', 'Error: Unrecognized command');
+            ProfileController::redirect('home', 'danger', 'Error: Unrecognized command');
         
         // action: show -> arguments: none or userName of existing user
         else if ($_SESSION['action'] === 'show')
@@ -22,7 +22,7 @@ class ProfileController {
         else if ($_SESSION['action'] === 'edit')
             ProfileController::edit();
         else
-            ProfileController::redirect('home', 'Error: Unrecognized action requested');
+            ProfileController::redirect('home', 'danger', 'Error: Unrecognized action requested');
     }
     
     private static function show() {
@@ -32,7 +32,7 @@ class ProfileController {
 
             // send user to login view if not logged in;
             if (!isset($_SESSION['profile'])) {
-                ProfileController::redirect('login_view', 'You must be logged in to edit your profile');
+                ProfileController::redirect('login_view', 'warning', 'You must be logged in to edit your profile');
                 return;
             }
         
@@ -47,7 +47,7 @@ class ProfileController {
 
             // go to users view if requested profile not found
             if ($profile === null) {
-                ProfileController::redirect('members_show', 'Unable to find user "' . htmlspecialchars($_SESSION['arguments']) . '"');
+                ProfileController::redirect('members_show', 'danger', 'Unable to find user "' . htmlspecialchars($_SESSION['arguments']) . '"');
                 return;
             }
         
@@ -60,11 +60,11 @@ class ProfileController {
         
         // not logged in: send user to login view
         if (!isset($_SESSION['profile']))
-            ProfileController::redirect('login_view', 'You must be logged in to edit your profile');
+            ProfileController::redirect('login_view', 'warning', 'You must be logged in to edit your profile');
         
         // no arguments: arguments must be set for edit action; redirect if not
         else if (!isset($_SESSION['arguments']))
-            ProfileController::redirect('home', 'Unrecognized command');
+            ProfileController::redirect('home', 'danger', 'Unrecognized command');
         
         // argument 'view': requesting edit form
         else if ($_SESSION['arguments'] === 'show')
@@ -79,6 +79,7 @@ class ProfileController {
             // submission had errors; re-show edit form
             if ($profile->getErrorCount() > 0) {
                 $_SESSION['profileEdit'] = $profile;
+                $_SESSION['alertType'] = 'danger';
                 $_SESSION['flash'] = 'Edit failed. Correct any errors before submitting changes.';
                 ProfileView::showEditForm();
                 unset($_SESSION['profileEdit']);
@@ -88,14 +89,18 @@ class ProfileController {
             else {
                 UserProfilesDB::editUserProfile($_SESSION['profile'], $profile);
                 $_SESSION['profile'] = UserProfilesDB::getUserProfileBy('userName', $profile->getUserName());
+                $_SESSION['alertType'] = 'success';
+                $_SESSION['flash'] = 'Profile edited';
                 ProfileView::showProfile($_SESSION['profile']);
             }
         }
     }
     
-    private static function redirect($control = '', $message = null) {
-        if (!is_null($message))
+    private static function redirect($control = '', $alertType = 'info', $message = null) {
+        if (!is_null($message)) {
+            $_SESSION['alertType'] = $alertType;
             $_SESSION['flash'] = $message;
+        }
         if (!empty($control))
             $control = '/' . $control;
         

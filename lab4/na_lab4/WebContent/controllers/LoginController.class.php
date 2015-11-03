@@ -12,7 +12,7 @@ class LoginController {
             case 'login': self::login(); break;
             case 'show': LoginView::show(); break;
             default:
-                $_SESSION['flash'] = 'Unrecognized command';
+                self::alertMessage('danger', 'Unrecognized command');
                 LoginView::show();
                 return;
         }
@@ -21,7 +21,7 @@ class LoginController {
     private static function login() {
         
         if (!isset($_POST) || !isset($_POST['userName']) || !isset($_POST['password'])) {
-            $_SESSION['flash'] = 'Error: Login data not found. Try again.';
+            self::alertMessage('danger', 'Error: Login data not found. Try again.');
             LoginView::show();
             return;
         }
@@ -31,7 +31,7 @@ class LoginController {
         
         // user name not found or wrong password
         if (is_null($user) || is_null($profile) || $user->getPassword() !== $_POST['password']) {
-            $_SESSION['flash'] = 'Login failed.';
+            self::alertMessage('danger', 'Login failed.');
             $_SESSION['loginFailed'] = true;
             $_SESSION['user'] = $_POST['userName'];
             LoginView::show();
@@ -44,7 +44,7 @@ class LoginController {
                 unset($_POST[$key]);
             
             $_SESSION['profile'] = $profile;
-            self::redirect('home', 'Welcome back, ' . $profile->getFirstName() . '!');
+            self::redirect('home', 'success', 'Welcome back, ' . $profile->getFirstName() . '!');
         }
     }
     
@@ -57,16 +57,21 @@ class LoginController {
         // start new session
         session_start();
         $_SESSION['base'] = $base;
-        self::redirect('home', 'You have been successfully logged out');
+        self::redirect('home', 'success', 'You have been successfully logged out');
     }
     
-    private static function redirect($control = '', $message = '') {
+    private static function redirect($control = '', $alertType = 'info', $message = '') {
         if (strlen($message) > 0)
-            $_SESSION['flash'] = $message;
+            self::alertMessage($alertType, $message);
         if (!empty($control))
             $control = '/' . $control;
     
         header('Location: http://' . $_SERVER['HTTP_HOST'] . '/' . $_SESSION['base'] . $control);
+    }
+    
+    private static function alertMessage($alertType, $alertMessage) {
+        $_SESSION['alertType'] = $alertType;
+        $_SESSION['flash'] = $alertMessage;
     }
 }
 ?>

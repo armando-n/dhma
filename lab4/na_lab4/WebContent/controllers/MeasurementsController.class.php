@@ -9,7 +9,7 @@ class MeasurementsController {
         }
         
         if (!isset($_SESSION['profile'])) {
-            self::redirect('login_show', 'You must log in before you can see your measurements. For professor/grader: Use &quot;armando-n&quot; for user name, and &quot;pass123&quot; for password.');
+            self::redirect('login_show', 'warning', 'You must log in before you can see your measurements. For professor/grader: Use &quot;armando-n&quot; for user name, and &quot;pass123&quot; for password.');
             return;
         }
         
@@ -103,7 +103,7 @@ class MeasurementsController {
         }
         
         if ($measurement->getErrorCount() > 0) {
-            self::setVars('Add failed. Correct any errors and try again.', 'show', $_SESSION['arguments'], 'show');
+            self::setVars('danger', 'Add failed. Correct any errors and try again.', 'show', $_SESSION['arguments'], 'show');
             return;
         }
         
@@ -119,9 +119,9 @@ class MeasurementsController {
         }
             
         if ($measurementID < 0)
-            self::setVars('Add failed. Internal error. Try again.', 'show', $_SESSION['arguments'], 'show');
+            self::setVars('danger', 'Add failed. Internal error. Try again.', 'show', $_SESSION['arguments'], 'show');
         else
-            self::setVars(null, 'show', $_SESSION['arguments'], 'show');
+            self::setVars('success', 'Measurement added', 'show', $_SESSION['arguments'], 'show');
     }
     
     private static function edit() {
@@ -214,16 +214,18 @@ class MeasurementsController {
         }
         
         if ($newMeasurement->getErrorCount() > 0)
-            self::setVars('Edit failed. Correct any errors and try again.', null, 'show_' . $args[1] . '_' . $oldMeasurement->getDateTime()->format('Y-m-d H-i'), 'edit');
+            self::setVars('danger', 'Edit failed. Correct any errors and try again.', null, 'show_' . $args[1] . '_' . $oldMeasurement->getDateTime()->format('Y-m-d H-i'), 'edit');
         else
-            self::setVars(null, null, $args[1], 'show');
+            self::setVars('success', 'Measurement edited', null, $args[1], 'show');
         
         unset($_SESSION['measurement']);
     }
     
-    private static function setVars($flash = null, $action = null, $arguments = null, $method = null) {
-        if (!is_null($flash))
+    private static function setVars($alertType = 'info', $flash = null, $action = null, $arguments = null, $method = null) {
+        if (!is_null($flash)) {
+            $_SESSION['alertType'] = $alertType;
             $_SESSION['flash'] = $flash;
+        }
         if (!is_null($action))
             $_SESSION['action'] = $action;
         if (!is_null($arguments))
@@ -245,9 +247,11 @@ class MeasurementsController {
         ?><p><?=$message?></p><?php
     }
     
-    private static function redirect($control = '', $message = null) {
-        if (!is_null($message))
+    private static function redirect($control = '', $alertType = 'info', $message = null) {
+        if (!is_null($message)) {
+            $_SESSION['alertType'] = $alertType;
             $_SESSION['flash'] = $message;
+        }
         if (!empty($control))
             $control = '/' . $control;
 
