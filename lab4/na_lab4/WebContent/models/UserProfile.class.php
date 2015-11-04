@@ -208,7 +208,7 @@ class UserProfile extends GenericModelObject {
             return;
         }
         
-        $options = array("options" => array("regexp" => "/[a-zA-Z ]/"));
+        $options = array("options" => array("regexp" => "/^[a-zA-Z ']+$/"));
         if (!filter_var($this->firstName, FILTER_VALIDATE_REGEXP, $options)) {
             $this->setError("firstName", "FIRST_NAME_HAS_INVALID_CHARS");
             return;
@@ -226,7 +226,7 @@ class UserProfile extends GenericModelObject {
             return;
         }
         
-        $options = array("options" => array("regexp" => "/[a-zA-Z ]/"));
+        $options = array("options" => array("regexp" => "/^[a-zA-Z ']+$/"));
         if (!filter_var($this->lastName, FILTER_VALIDATE_REGEXP, $options)) {
             $this->setError("lastName", "LAST_NAME_HAS_INVALID_CHARS");
             return;
