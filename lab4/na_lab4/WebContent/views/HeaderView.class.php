@@ -8,6 +8,7 @@ class HeaderView {
 <head>
     <meta charset="utf-8" />
     <meta name="author" content="Armando Navarro" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css" />
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" type="text/css" /> -->
     <link rel="stylesheet" href="http://<?=$_SERVER['HTTP_HOST'].'/'.$_SESSION['base'].'/resources/myStyles.css'?>" type="text/css" />

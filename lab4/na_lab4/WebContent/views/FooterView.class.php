@@ -6,6 +6,11 @@ class FooterView {
 </div>  <!-- closes .container for header and body -->
 
 <div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <hr />
+        </div>
+    </div>
     <footer class="row">
         <!-- <h2 class="hidden">Site Map</h2> -->
         <div class="col-sm-3 col-sm-offset-2">
