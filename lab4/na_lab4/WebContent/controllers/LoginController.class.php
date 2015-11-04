@@ -31,8 +31,7 @@ class LoginController {
         
         // user name not found or wrong password
         if (is_null($user) || is_null($profile) || $user->getPassword() !== $_POST['password']) {
-            self::alertMessage('danger', 'Login failed.');
-            $_SESSION['loginFailed'] = true;
+            self::alertMessage('danger', 'Login failed. User name or password incorrect.');
             $_SESSION['user'] = $_POST['userName'];
             LoginView::show();
             return;
