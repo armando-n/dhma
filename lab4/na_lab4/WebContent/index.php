@@ -82,7 +82,9 @@ switch ($control) {
     case "members_show" :
     case "members" : UsersController::run(); break;
     case "home":
-    default: HomeView::show();
+    default:
+        $_SESSION['styles'] = array('HomeStyles.css');
+        HomeView::show();
 }
 
 ob_end_flush();

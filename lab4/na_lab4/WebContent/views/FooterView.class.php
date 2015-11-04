@@ -3,40 +3,50 @@ class FooterView {
     
     public static function show() {
         ?>
-<footer>
-    <h2>Site Map</h2>
-    <ul>
-        <li>
+</div>  <!-- closes .container for header and body -->
+
+<div class="container-fluid">
+    <footer class="row">
+        <!-- <h2 class="hidden">Site Map</h2> -->
+        <div class="col-sm-3 col-sm-offset-2">
             <h3>Main Site</h3>
-            <ul>
+            <ul class="list-unstyled">
                 <li><a href="home">Home</a></li>
                 <li><a href="members">Member List</a></li><?php
-        if (!isset($_SESSION) || !isset($_SESSION['profile'])): ?>
+            if (!isset($_SESSION) || !isset($_SESSION['profile'])): ?>
                 <li><a href="signup_show">Sign Up</a></li><?php
-        endif; ?>
+            endif; ?>
             </ul>
-        </li>
-        <li>
+        </div>
+        
+        <div class="col-sm-3">
             <h3>Members</h3>
-            <ul>
-<?php // odd spacing here is for proper spacing when Viewing Page Source (behavior seems inconsistent)
-        if (isset($_SESSION) && isset($_SESSION['profile'])): ?>
+            <ul class="list-unstyled">
+<?php
+            if (isset($_SESSION) && isset($_SESSION['profile'])): ?>
         		<li><a href="measurements_show_all">Past Measurements</a></li>
         		<li><a href="profile_show">Profile</a></li>
                 <li><a href="login_logout">Logout</a></li><?php
-        else: ?>
+            else: ?>
                 <li><a href="login_show">Login</a></li><?php
-        endif; ?> 
+            endif; ?> 
             </ul>
-        </li>
-        <li>
+        </div>
+        
+        <div class="col-sm-3">
             <h3>Help</h3>
-            <ul>
+            <ul class="list-unstyled">
                 <li><a href="faq">FAQ</a></li>
             </ul>
-        </li>
-    </ul>
-</footer>
+        </div>
+        
+        <div class="col-sm-1">
+        
+        </div>
+            
+    </footer>
+
+</div>
 
 </body>
 </html>
