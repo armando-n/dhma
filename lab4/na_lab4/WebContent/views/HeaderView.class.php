@@ -60,18 +60,26 @@ class HeaderView {
         
     </div>
 </nav>
-
+<?php
+                if (isset($_SESSION['flash'])): ?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-        <?php
-                if (isset($_SESSION['flash'])): ?>
-        <div class="alert alert-<?=$_SESSION['alertType']?> fade in">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <?= $_SESSION['flash'] ?>
-        </div><?php
+
+            <div class="alert alert-<?=$_SESSION['alertType']?> fade in">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <?= $_SESSION['flash'] ?>
+            </div>
+        </div>
+    </div>
+</div><?php
                 endif;
                 ?>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 id="pagetitle"><?=$title?></h1>
         </div>
     </div>
 </div>

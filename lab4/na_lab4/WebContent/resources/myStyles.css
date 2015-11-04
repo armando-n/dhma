@@ -1,3 +1,13 @@
+h1#pagetitle {
+	text-align: center;
+}
+
 footer h3 {
 	font-size: 1.15em;
+}
+
+td .glyphicon {
+	display: block;
+	margin: 0 auto;
+	text-align: center;
 }
