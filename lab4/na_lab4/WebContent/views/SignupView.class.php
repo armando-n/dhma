@@ -145,15 +145,21 @@ class SignupView {
                         </div>
                     </div>
                     <div class="form-group<?=$genderStatus?>">
-                        <label class="control-label col-xs-12 col-md-3">Gender</label>
-                        <div class="radio col-xs-12 col-md-9" aria-describedby="genderHelp">
-                            <label>
-                                <input type="radio" id="male" name="gender" value="male"<?=$genderMaleVal?> tabindex="10" />Male
-                            </label>
-                            <label>
-                                <input type="radio" id="female" name="gender" value="female"<?=$genderFemaleVal?> tabindex="11" />Female
-                            </label>
-                            <span id="genderHelp" class="help-block"><?=$genderErr?></span>
+                        <label class="control-label col-md-3">Gender</label>
+                        <div class="radio col-md-9" aria-describedby="genderHelp">
+                            <div class="row">
+                                <div class="col-xs-4 col-xs-offset-3">
+                                    <label>
+                                        <input type="radio" id="male" name="gender" value="male"<?=$genderMaleVal?> tabindex="10" />Male
+                                    </label>
+                                </div>
+                                <div class="col-xs-4">
+                                    <label>
+                                        <input type="radio" id="female" name="gender" value="female"<?=$genderFemaleVal?> tabindex="11" />Female
+                                    </label>
+                                    <span id="genderHelp" class="help-block"><?=$genderErr?></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group<?=$dobStatus?>">
@@ -372,8 +378,8 @@ class SignupView {
                 <fieldset class="col-xs-12 col-xs-offset-0 col-sm-6 col-sm-offset-3 col-lg-2 col-lg-offset-0">
                     <legend>Site Preferences</legend>
                     <div class="form-group<?=$themeStatus?>">
-                        <label for="theme" class="control-label col-xs-12 col-md-3">Theme</label>
-                        <div class="col-xs-12 col-md-9">
+                        <label for="theme" class="control-label col-sm-4 col-md-3">Theme</label>
+                        <div class="col-sm-8 col-md-9">
                             <select id="theme" name="theme" class="form-control" aria-describedby="themHelp" tabindex="14">
                                 <option<?=$themeDarkVal?>>dark</option>
                                 <option<?=$themeLightVal?>>light</option>
@@ -382,8 +388,8 @@ class SignupView {
                         </div>
                     </div>
                     <div class="form-group<?=$colorStatus?>">
-                        <label for="accentColor" class="control-label col-xs-12 col-md-3">Theme Accent Color</label>
-                        <div class="col-xs-12 col-md-9">
+                        <label for="accentColor" class="control-label col-sm-4 col-md-3">Theme Accent Color</label>
+                        <div class="col-sm-8 col-md-3">
                             <input type="color" id="accentColor" name="accentColor" class="btn btn-default btn-sm" value="<?=$colorVal?>" aria-describedby="colorHelp" tabindex="15" />
                             <span id="colorHelp" class="help-block"><?=$colorErr?></span>
                         </div>
@@ -407,7 +413,7 @@ class SignupView {
                 </fieldset>
             </div>
             <div class="row">
-                <div class="col-xs-12 col-xs-0 col-md-8 col-md-offset-2 col-lg-10 col-lg-offset-1">
+                <div class="col-xs-12 col-xs-0 col-md-10 col-md-offset-1">
                     <hr />
                     <div class="btn-group btn-group-justified" role="group">
                         <div class="btn-group" role="group">
