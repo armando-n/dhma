@@ -12,7 +12,7 @@ class LoginView {
         $uNameValue = ($userSet) ? $_SESSION['user'] : '';  
         ?>
 <section class="row">
-    <div class="col-sm-6 col-sm-offset-3">
+    <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
         <h2 class="hidden">Log In Form</h2>
         
         <!-- Pattern attribute and specific error reporting absent to avoid hints that weaken security -->
@@ -26,15 +26,20 @@ class LoginView {
                 <input type="password" id="password" name="password" class="form-control" size="15" required="required" maxlength="30" tabindex="2" />
             </div>
             <div class="form-group">
-                <label for="submitLogin" class="btn btn-primary btn-sm">
-                    <span class="glyphicon glyphicon-ok"></span>
-                    &nbsp;Submit
-                </label>
-                <input type="submit" id="submitLogin" class="hidden" value="Submit" tabindex="3" />
-                <a href="home" class="btn btn-default btn-sm">
-                    <span class="glyphicon glyphicon-remove"></span>
-                    &nbsp;Cancel
-                </a>
+                <div class="btn-group btn-group-justified" role="group">
+                    <div class="btn-group" role="group">
+                        <button type="submit" class="btn btn-primary" tabindex="3">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            &nbsp;Submit
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <a href="home" class="btn btn-default">
+                            <span class="glyphicon glyphicon-remove"></span>
+                            &nbsp;Cancel
+                        </a>
+                    </div>
+                </div>
             </div>
         </form>
     </div>

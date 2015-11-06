@@ -13,7 +13,7 @@ class FooterView {
     </div>
     <footer class="row">
         <!-- <h2 class="hidden">Site Map</h2> -->
-        <div class="col-sm-3 col-sm-offset-2">
+        <div class="col-xs-4 col-xs-offset-0 col-sm-3 col-sm-offset-2">
             <h3>Main Site</h3>
             <ul class="list-unstyled">
                 <li><a href="home">Home</a></li>
@@ -24,12 +24,11 @@ class FooterView {
             </ul>
         </div>
         
-        <div class="col-sm-3">
+        <div class="col-xs-4 col-sm-3">
             <h3>Members</h3>
-            <ul class="list-unstyled">
-<?php
+            <ul class="list-unstyled"><?php
             if (isset($_SESSION) && isset($_SESSION['profile'])): ?>
-        		<li><a href="measurements_show_all">Past Measurements</a></li>
+        		<li><a href="measurements_show_all">Measurements</a></li>
         		<li><a href="profile_show">Profile</a></li>
                 <li><a href="login_logout">Logout</a></li><?php
             else: ?>
@@ -38,7 +37,7 @@ class FooterView {
             </ul>
         </div>
         
-        <div class="col-sm-3">
+        <div class="col-xs-4 col-sm-3">
             <h3>Help</h3>
             <ul class="list-unstyled">
                 <li><a href="faq">FAQ</a></li>
