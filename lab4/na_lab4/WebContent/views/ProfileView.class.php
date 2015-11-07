@@ -169,33 +169,88 @@ class ProfileView {
         $remindVal = ($profile->isSendRemindersSet()) ? ' checked="checked"' : '';
         $stayLoggedVal = ($profile->isStayLoggedInSet()) ? ' checked="checked"' : '';
         ?>
-<section id="profile-info">
-    <h2><?= $profile->getUserName() ?>'s Profile</h2>
-    
-    <img src="images/profile/<?=$profile->getUserName()?>.png" alt="<?=$profile->getUserName()?>'s profile picture" /><br />
-    <form action="profile_edit_post" enctype="multipart/form-data" method="post">
-    <label for="choosePicture" class="btn btn-info btn-sm">
-        <span class="glyphicon glyphicon-user"></span>
-        &nbsp;Change Profile Picture
-    </label>
-    <input type="file" id="choosePicture" class="hidden" name="pic" accept="image/*" tabindex="13" />
-    <ul>
-        <li>First Name: <input type="text" name="firstName" value="<?=$profile->getFirstName()?>" size="15" maxlength="30" tabindex="5" pattern="^[a-zA-Z_-]+$" title="Remove invalid characters" />
-                <span class="error"><?=$profile->getError("firstName")?></span></li>
-        <li>Last Name: <input type="text" name="lastName" value="<?=$profile->getLastName()?>" size="15" maxlength="30" tabindex="6" pattern="(^$)|(^([^\-!#\$%\^\x26\(\)\*,\./:;\?@\[\\\]_\{\|\}¨ˇ“”€\+<=>§°\d\s¤®™©]| )+$)" title="Remove invalid characters" />
-                <span class="error"><?=$profile->getError("lastName")?></span></li>
-        <li>E-mail: <input type="email" name="email" value="<?=$profile->getEmail()?>" size="15" autofocus="autofocus" required="required" maxlength="30" tabindex="1" />
-                <span class="error"><?=$profile->getError("email")?></span></li>
-        <li>Phone #: <input type="tel" name="phone" value="<?=$profile->getPhoneNumber()?>" size="15" maxlength="15"  tabindex="7" placeholder="xxx-xxx-xxxx" pattern="^(1\s*[-\/\.]?)?(\((\d{3})\)|(\d{3}))\s*[-\/\.]?\s*(\d{3})\s*[-\/\.]?\s*(\d{4})\s*(([xX]|[eE][xX][tT])\.?\s*(\d+))*$" title="xxx-xxx-xxx or x-xxx-xxx-xxxx"/>
-                <span class="error"><?=$profile->getError("phone")?></span></li>
-        <li>Gender: <input type="radio" id="male" name="gender" value="male"<?=$genderMaleVal?> tabindex="9" /> <label for="male">Male</label>
-                <input type="radio" id="female" name="gender" value="female"<?=$genderFemaleVal?> tabindex="10" /> <label for="female">Female</label>
-                <span class="error"><?=$profile->getError("gender")?></span></li>
-        <li>Facebook: <input type="url" name="facebook" value="<?=$profile->getFacebook()?>" size="30" tabindex="8" pattern="((http|https):\/\/)?(www\.)?facebook\.com\/.+" title="Must be a valid Facebook URL" />
-                <span class="error"><?=$profile->getError("facebook")?></span></li>
-        <li>Date of Birth: <input type="date" name="dob" value="<?=$profile->getDOB()?>" tabindex="11" title="mm/dd/yyyy or mm-dd-yyyy" />
-                <span class="error"><?=$profile->getError("dob")?></span></li>
-        <li>Country: <input type="text" name="country" list="country" value="<?=$profile->getCountry()?>" maxlength="30" tabindex="12" pattern="^[a-zA-Z& \{\}\(\)]{2,}$" title="Allowed characters: letters, spaces, &amp;, {}, ()" />
+<section id="profile-info" class="row">
+<div class="col-sm-12">
+<form action="profile_edit_post" enctype="multipart/form-data" method="post" class="form-horizontal">
+<div class="row">
+    <div class="col-lg-3">
+        <!-- <h2><?php //$profile->getUserName() ?>'s Profile</h2> -->
+        <div class="form-group">
+            <div class="col-sm-12">
+                <img src="images/profile/<?=$profile->getUserName()?>.png" class="img-responsive" alt="<?=$profile->getUserName()?>'s profile picture" /><br />
+                <label for="choosePicture" class="btn btn-info">
+                    <span class="glyphicon glyphicon-user"></span>
+                    &nbsp;Change Profile Picture
+                </label>
+                <input type="file" id="choosePicture" class="hidden" name="pic" accept="image/*" tabindex="13" />
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="form-group">
+            <label for="firstName" class="control-label col-md-3">First Name:</label>
+            <div class="col-md-9">
+                <input type="text" id="firstName" name="firstName" value="<?=$profile->getFirstName()?>" class="form-control" aria-describedby="fNameHelp" size="15" maxlength="30" tabindex="5" pattern="^[a-zA-Z_-]+$" title="Remove invalid characters" />
+                <span id="fNameHelp" class="help-block"><?=$profile->getError("firstName")?></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="lastName" class="control-label col-md-3">Last Name:</label>
+            <div class="col-md-9">
+                <input type="text" id="lastName" name="lastName" value="<?=$profile->getLastName()?>" class="form-control" aria-describedby="lNameHelp" size="15" maxlength="30" tabindex="6" pattern="(^$)|(^([^\-!#\$%\^\x26\(\)\*,\./:;\?@\[\\\]_\{\|\}¨ˇ“”€\+<=>§°\d\s¤®™©]| )+$)" title="Remove invalid characters" />
+                <span id="lNameHelp" class="help-block"><?=$profile->getError("lastName")?></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="email" class="control-label col-md-3">E-mail:</label>
+            <div class="col-md-9">
+                <input type="email" id="email" name="email" value="<?=$profile->getEmail()?>" class="form-control" aria-describedby="emailHelp" size="15" autofocus="autofocus" required="required" maxlength="30" tabindex="1" />
+                <span id="emailHelp" class="help-block"><?=$profile->getError("email")?></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="phone" class="control-label col-md-3">Phone #:</label>
+            <div class="col-md-9">
+                <input type="tel" id="phone" name="phone" value="<?=$profile->getPhoneNumber()?>" class="form-control" aria-describedby="phoneHelp" size="15" maxlength="15"  tabindex="7" placeholder="xxx-xxx-xxxx" pattern="^(1\s*[-\/\.]?)?(\((\d{3})\)|(\d{3}))\s*[-\/\.]?\s*(\d{3})\s*[-\/\.]?\s*(\d{4})\s*(([xX]|[eE][xX][tT])\.?\s*(\d+))*$" title="xxx-xxx-xxx or x-xxx-xxx-xxxx"/>
+                <span id="phoneHelp" class="help-block"><?=$profile->getError("phone")?></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-3">Gender:</label>
+            <div class="radio col-md-9" aria-describedby="genderHelp">
+                <div class="row">
+                    <div class="col-xs-4 col-xs-offset-3">
+                        <label>
+                            <input type="radio" id="male" name="gender" value="male"<?=$genderMaleVal?> tabindex="9" />Male
+                        </label>
+                    </div>
+                    <div class="col-xs-4">
+                        <label>
+                            <input type="radio" id="female" name="gender" value="female"<?=$genderFemaleVal?> tabindex="10" />Female
+                        </label>
+                        <span id="genderHelp" class="help-block"><?=$profile->getError("gender")?></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="facebook" class="control-label col-md-3">Facebook:</label>
+            <div class="col-md-9">
+                <input type="url" id="facebook" name="facebook" value="<?=$profile->getFacebook()?>" class="form-control" aria-describedby="faceHelp" size="30" tabindex="8" pattern="((http|https):\/\/)?(www\.)?facebook\.com\/.+" title="Must be a valid Facebook URL" />
+                <span id="faceHelp" class="help-block"><?=$profile->getError("facebook")?></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="dob" class="control-label col-md-3">Date of Birth:</label>
+            <div class="col-md-9">
+                <input type="date" id="dob" name="dob" value="<?=$profile->getDOB()?>" class="form-control" aria-describedby="dobHelp" tabindex="11" title="mm/dd/yyyy or mm-dd-yyyy" />
+                <span id="dobHelp" class="help-block"><?=$profile->getError("dob")?></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="countryInput" class="control-label col-md-3">Country:</label>
+            <div class="col-md-9">
+                <input type="text" id="countryInput" name="country" list="country" value="<?=$profile->getCountry()?>" class="form-control" maxlength="30" tabindex="12" pattern="^[a-zA-Z& \{\}\(\)]{2,}$" title="Allowed characters: letters, spaces, &amp;, {}, ()" />
                 <datalist id="country">
                     <option>Afghanistan</option>
                     <option>Albania</option>
@@ -393,32 +448,79 @@ class ProfileView {
                     <option>Yemen</option>
                     <option>Zambia</option>
                     <option>Zimbabwe</option>
-                </datalist></li>
-        <li>Theme: <select name="theme" tabindex="14">
+                </datalist>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="form-group">
+            <label for="theme" class="control-label col-md-3">Theme:</label>
+            <div class="col-md-9">
+                <select id="theme" name="theme" class="form-control" aria-describedby="themeHelp" tabindex="14">
                     <option<?=$themeDarkVal?>>dark</option>
                     <option<?=$themeLightVal?>>light</option>
                 </select>
-                <span class="error"><?=$profile->getError("theme")?></span></li>
-        <li>Theme Accent Color: <input type="color" class="btn btn-default btn-sm" name="accentColor" value="<?=$profile->getAccentColor()?>" tabindex="15" />
-                <span class="error"><?=$profile->getError("accentColor")?></span></li>
-        <li><label for="isProfilePublic">Profile Public:</label> <input type="checkbox" id="isProfilePublic" name="isProfilePublic"<?=$pubProfileVal?> tabindex="16" /></li>
-        <li><label for="isPicturePublic">Picture Public:</label> <input type="checkbox" id="isPicturePublic" name="isPicturePublic"<?=$pubPicVal?> tabindex="17" /></li>
-        <li><label for="sendReminders">E-mail Reminders:</label> <input type="checkbox" id="sendReminders" name="sendReminders"<?=$remindVal?> tabindex="18" /></li>
-        <li><label for="stayLoggedIn">Stay Logged In:</label> <input type="checkbox" id="stayLoggedIn" name="stayLoggedIn"<?=$stayLoggedVal?> tabindex="19" /></li>
-    </ul>
-    <div>
-        <input type="hidden" name="userName" value="<?=$profile->getUserName()?>" />
-        <label for="submitSave" class="btn btn-primary">
-            <span class="glyphicon glyphicon-ok"></span>
-            &nbsp;Save Changes
-        </label>
-        <input type="submit" id="submitSave" class="hidden" value="Save Changes" size="15" tabindex="20" />
-        <a href="profile_show" class="btn btn-default btn-sm" tabindex="21">
-            <span class="glyphicon glyphicon-remove"></span>
-            &nbsp;Cancel
-        </a>
+                <span id="themeHelp" class="help-block"><?=$profile->getError("theme")?></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="accentColor" class="control-label col-md-3">Theme Accent Color:</label>
+            <div class="col-md-9">
+                <input type="color" id="accentColor" name="accentColor" value="<?=$profile->getAccentColor()?>" class="form-control" aria-describedby="aColorHelp" tabindex="15" /> <!-- btn btn-default btn-sm" -->
+                <span id="aColorHelp" class="help-block"><?=$profile->getError("accentColor")?></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-12 col-xs-offset-2">
+                <label class="checkbox">
+                    <input type="checkbox" id="isProfilePublic" name="isProfilePublic"<?=$pubProfileVal?> tabindex="16" />
+                    Profile Public
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" id="isPicturePublic" name="isPicturePublic"<?=$pubPicVal?> tabindex="17" />
+                    Picture Public
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" id="sendReminders" name="sendReminders"<?=$remindVal?> tabindex="18" />
+                    E-mail Reminders
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" id="stayLoggedIn" name="stayLoggedIn"<?=$stayLoggedVal?> tabindex="19" />
+                    Stay Logged In
+                </label>
+            </div>
+        </div>
     </div>
-    </form>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-lg-offset-3">
+        <hr />
+        
+        <div class="form-group">
+            <div class="col-xs-12">
+                <input type="hidden" name="userName" value="<?=$profile->getUserName()?>" />
+                
+                <div class="btn-group btn-group-justified" role="group">
+                    <div class="btn-group" role="group">
+                        <button type="submit" class="btn btn-primary" tabindex="20">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            &nbsp;Save Changes
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <a href="profile_show" class="btn btn-default" tabindex="21">
+                            <span class="glyphicon glyphicon-remove"></span>
+                            &nbsp;Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+</form>
+</div>
 </section>
         <?php
         FooterView::show();
