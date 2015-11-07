@@ -1,6 +1,6 @@
-drop database if exists dhma;
-create database dhma;
-use dhma;
+drop database if exists na_lab4db;
+create database na_lab4db;
+use na_lab4db;
 
 drop table if exists Users;
 create table Users(

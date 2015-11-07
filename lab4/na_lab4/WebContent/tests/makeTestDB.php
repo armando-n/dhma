@@ -1,8 +1,8 @@
 <?php
 // creates a database named $dbName for testing and returns connection
 function makeTestDB($dbName) {
-    if (strcasecmp($dbName, 'dhma') == 0)
-        throw new Exception("Error: cannot overwite dhma database");
+    if (strcasecmp($dbName, 'na_lab4db') == 0)
+        throw new Exception("Error: cannot overwite na_lab4db database");
     
     try {
         if (session_status() == PHP_SESSION_NONE)

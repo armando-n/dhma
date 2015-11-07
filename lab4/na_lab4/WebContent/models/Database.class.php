@@ -12,7 +12,7 @@ class Database {
         $configFile = $_SESSION['configFile'];
         
         if (is_null($dbName))
-            $dbName = 'dhma';
+            $dbName = 'na_lab4db';
         if (is_null($configFile))
             $configFile = 'myConfig.ini';
         Database::$dbName = $dbName;

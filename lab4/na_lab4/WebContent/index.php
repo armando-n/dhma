@@ -5,7 +5,7 @@ include_once("includer.php");
 if (!isset($_SESSION))
     session_start();
 
-$_SESSION['dbName'] = 'dhma';
+$_SESSION['dbName'] = 'na_lab4db';
 $_SESSION['configFile'] = 'myConfig.ini';
 
 // dummy data, so profile page can be viewed correctly (no session support yet)
