@@ -158,6 +158,7 @@ class ProfileView {
         else
             throw new Exception('Error: profile not found. Unable to edit profile.');
         
+        $_SESSION['styles'][] = 'ProfileStyles.css';
         HeaderView::show($profile->getUserName() . '\'s Profile');
         
         $genderMaleVal = ($profile->getGender() === 'male') ? ' checked="checked"' : '';
@@ -173,12 +174,12 @@ class ProfileView {
 <div class="col-sm-12">
 <form action="profile_edit_post" enctype="multipart/form-data" method="post" class="form-horizontal">
 <div class="row">
-    <div class="col-lg-3">
+    <div class="col-sm-12 col-md-3">
         <!-- <h2><?php //$profile->getUserName() ?>'s Profile</h2> -->
         <div class="form-group">
-            <div class="col-sm-12">
-                <img src="images/profile/<?=$profile->getUserName()?>.png" class="img-responsive" alt="<?=$profile->getUserName()?>'s profile picture" /><br />
-                <label for="choosePicture" class="btn btn-info">
+            <div class="col-sm-4 col-sm-offset-4 col-md-12 col-md-offset-0">
+                <img src="images/profile/<?=$profile->getUserName()?>.png" class="profilePic img-responsive" alt="<?=$profile->getUserName()?>'s profile picture" /><br />
+                <label for="choosePicture" class="btn btn-info btn-block">
                     <span class="glyphicon glyphicon-user"></span>
                     &nbsp;Change Profile Picture
                 </label>
@@ -186,45 +187,46 @@ class ProfileView {
             </div>
         </div>
     </div>
-    <div class="col-lg-5">
+    <fieldset class="col-sm-6 col-md-5">
+        <legend>Profile</legend>
         <div class="form-group">
-            <label for="firstName" class="control-label col-md-3">First Name:</label>
-            <div class="col-md-9">
+            <label for="firstName" class="control-label col-md-4 col-lg-3">First Name:</label>
+            <div class="col-md-8 col-lg-9">
                 <input type="text" id="firstName" name="firstName" value="<?=$profile->getFirstName()?>" class="form-control" aria-describedby="fNameHelp" size="15" maxlength="30" tabindex="5" pattern="^[a-zA-Z_-]+$" title="Remove invalid characters" />
                 <span id="fNameHelp" class="help-block"><?=$profile->getError("firstName")?></span>
             </div>
         </div>
         <div class="form-group">
-            <label for="lastName" class="control-label col-md-3">Last Name:</label>
-            <div class="col-md-9">
+            <label for="lastName" class="control-label col-md-4 col-lg-3">Last Name:</label>
+            <div class="col-md-8 col-lg-9">
                 <input type="text" id="lastName" name="lastName" value="<?=$profile->getLastName()?>" class="form-control" aria-describedby="lNameHelp" size="15" maxlength="30" tabindex="6" pattern="(^$)|(^([^\-!#\$%\^\x26\(\)\*,\./:;\?@\[\\\]_\{\|\}¨ˇ“”€\+<=>§°\d\s¤®™©]| )+$)" title="Remove invalid characters" />
                 <span id="lNameHelp" class="help-block"><?=$profile->getError("lastName")?></span>
             </div>
         </div>
         <div class="form-group">
-            <label for="email" class="control-label col-md-3">E-mail:</label>
-            <div class="col-md-9">
+            <label for="email" class="control-label col-md-4 col-lg-3">E-mail:</label>
+            <div class="col-md-8 col-lg-9">
                 <input type="email" id="email" name="email" value="<?=$profile->getEmail()?>" class="form-control" aria-describedby="emailHelp" size="15" autofocus="autofocus" required="required" maxlength="30" tabindex="1" />
                 <span id="emailHelp" class="help-block"><?=$profile->getError("email")?></span>
             </div>
         </div>
         <div class="form-group">
-            <label for="phone" class="control-label col-md-3">Phone #:</label>
-            <div class="col-md-9">
+            <label for="phone" class="control-label col-md-4 col-lg-3">Phone #:</label>
+            <div class="col-md-8 col-lg-9">
                 <input type="tel" id="phone" name="phone" value="<?=$profile->getPhoneNumber()?>" class="form-control" aria-describedby="phoneHelp" size="15" maxlength="15"  tabindex="7" placeholder="xxx-xxx-xxxx" pattern="^(1\s*[-\/\.]?)?(\((\d{3})\)|(\d{3}))\s*[-\/\.]?\s*(\d{3})\s*[-\/\.]?\s*(\d{4})\s*(([xX]|[eE][xX][tT])\.?\s*(\d+))*$" title="xxx-xxx-xxx or x-xxx-xxx-xxxx"/>
                 <span id="phoneHelp" class="help-block"><?=$profile->getError("phone")?></span>
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-md-3">Gender:</label>
-            <div class="radio col-md-9" aria-describedby="genderHelp">
+            <label class="control-label col-md-4 col-lg-3">Gender:</label>
+            <div class="radio col-md-8 col-lg-9" aria-describedby="genderHelp">
                 <div class="row">
-                    <div class="col-xs-4 col-xs-offset-3">
+                    <div class="col-xs-4 col-xs-offset-2">
                         <label>
                             <input type="radio" id="male" name="gender" value="male"<?=$genderMaleVal?> tabindex="9" />Male
                         </label>
                     </div>
-                    <div class="col-xs-4">
+                    <div class="col-xs-4 col-xs-offset-1">
                         <label>
                             <input type="radio" id="female" name="gender" value="female"<?=$genderFemaleVal?> tabindex="10" />Female
                         </label>
@@ -234,22 +236,22 @@ class ProfileView {
             </div>
         </div>
         <div class="form-group">
-            <label for="facebook" class="control-label col-md-3">Facebook:</label>
-            <div class="col-md-9">
+            <label for="facebook" class="control-label col-md-4 col-lg-3">Facebook:</label>
+            <div class="col-md-8 col-lg-9">
                 <input type="url" id="facebook" name="facebook" value="<?=$profile->getFacebook()?>" class="form-control" aria-describedby="faceHelp" size="30" tabindex="8" pattern="((http|https):\/\/)?(www\.)?facebook\.com\/.+" title="Must be a valid Facebook URL" />
                 <span id="faceHelp" class="help-block"><?=$profile->getError("facebook")?></span>
             </div>
         </div>
         <div class="form-group">
-            <label for="dob" class="control-label col-md-3">Date of Birth:</label>
-            <div class="col-md-9">
+            <label for="dob" class="control-label col-md-4 col-lg-3">Date of Birth:</label>
+            <div class="col-md-8 col-lg-9">
                 <input type="date" id="dob" name="dob" value="<?=$profile->getDOB()?>" class="form-control" aria-describedby="dobHelp" tabindex="11" title="mm/dd/yyyy or mm-dd-yyyy" />
                 <span id="dobHelp" class="help-block"><?=$profile->getError("dob")?></span>
             </div>
         </div>
         <div class="form-group">
-            <label for="countryInput" class="control-label col-md-3">Country:</label>
-            <div class="col-md-9">
+            <label for="countryInput" class="control-label col-md-4 col-lg-3">Country:</label>
+            <div class="col-md-8 col-lg-9">
                 <input type="text" id="countryInput" name="country" list="country" value="<?=$profile->getCountry()?>" class="form-control" maxlength="30" tabindex="12" pattern="^[a-zA-Z& \{\}\(\)]{2,}$" title="Allowed characters: letters, spaces, &amp;, {}, ()" />
                 <datalist id="country">
                     <option>Afghanistan</option>
@@ -451,11 +453,12 @@ class ProfileView {
                 </datalist>
             </div>
         </div>
-    </div>
-    <div class="col-lg-4">
+    </fieldset>
+    <fieldset class="col-sm-6 col-md-4">
+        <legend>Preferences</legend>
         <div class="form-group">
-            <label for="theme" class="control-label col-md-3">Theme:</label>
-            <div class="col-md-9">
+            <label for="theme" class="control-label col-md-4 col-lg-3">Theme:</label>
+            <div class="col-md-8 col-lg-9">
                 <select id="theme" name="theme" class="form-control" aria-describedby="themeHelp" tabindex="14">
                     <option<?=$themeDarkVal?>>dark</option>
                     <option<?=$themeLightVal?>>light</option>
@@ -464,14 +467,14 @@ class ProfileView {
             </div>
         </div>
         <div class="form-group">
-            <label for="accentColor" class="control-label col-md-3">Theme Accent Color:</label>
-            <div class="col-md-9">
-                <input type="color" id="accentColor" name="accentColor" value="<?=$profile->getAccentColor()?>" class="form-control" aria-describedby="aColorHelp" tabindex="15" /> <!-- btn btn-default btn-sm" -->
+            <label for="accentColor" class="control-label col-md-4 col-lg-3">Theme Accent Color:</label>
+            <div class="col-md-8 col-lg-9">
+                <input type="color" id="accentColor" name="accentColor" value="<?=$profile->getAccentColor()?>" class="form-control" aria-describedby="aColorHelp" tabindex="15" />
                 <span id="aColorHelp" class="help-block"><?=$profile->getError("accentColor")?></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-12 col-xs-offset-2">
+            <div class="col-xs-10 col-xs-offset-2">
                 <label class="checkbox">
                     <input type="checkbox" id="isProfilePublic" name="isProfilePublic"<?=$pubProfileVal?> tabindex="16" />
                     Profile Public
@@ -490,10 +493,10 @@ class ProfileView {
                 </label>
             </div>
         </div>
-    </div>
+    </fieldset>
 </div>
 <div class="row">
-    <div class="col-lg-6 col-lg-offset-3">
+    <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
         <hr />
         
         <div class="form-group">

@@ -390,7 +390,7 @@ class SignupView {
                     <div class="form-group<?=$colorStatus?>">
                         <label for="accentColor" class="control-label col-sm-4 col-md-3">Theme Accent Color</label>
                         <div class="col-sm-8 col-md-3">
-                            <input type="color" id="accentColor" name="accentColor" class="btn btn-default btn-sm" value="<?=$colorVal?>" aria-describedby="colorHelp" tabindex="15" />
+                            <input type="color" id="accentColor" name="accentColor" class="form-control" value="<?=$colorVal?>" aria-describedby="colorHelp" tabindex="15" />
                             <span id="colorHelp" class="help-block"><?=$colorErr?></span>
                         </div>
                     </div>
