@@ -2,7 +2,12 @@
 class MeasurementsView{
     
     public static function show() {
+        if (!isset($_SESSION['styles']))
+            $_SESSION['styles'] = array();
+        if (!isset($_SESSION['scripts']))
+            $_SESSION['scripts'] = array();
         $_SESSION['styles'][] = 'MeasurementsStyles.css';
+        $_SESSION['scripts'][] = 'MeasurementsScripts.js';
         HeaderView::show("Your Past Measurements");
         MeasurementsView::showBody();
         FooterView::show();
@@ -15,6 +20,41 @@ class MeasurementsView{
         endif;
         $measurements = $_SESSION['measurements'];
         ?>
+<section class="row">
+    <div class="col-xs-6">
+        <div class="dropdown">
+            <button id="buttonAdd" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Add Measurement
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="buttonAdd">
+            	<li><a href="measurements_show_glucose">Glucose</a></li>
+            	<li><a href="measurements_show_bloodPressure">Blood Pressure</a></li>
+            	<li><a href="measurements_show_calories">Calories</a></li>
+            	<li><a href="measurements_show_exercise">Exercise</a></li>
+            	<li><a href="measurements_show_sleep">Sleep</a></li>
+            	<li><a href="measurements_show_weight">Weight</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-xs-6">
+        <div class="dropdown">
+            <button id="buttonJump" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Jump to Measurement
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="buttonJump">
+                <li><a href="#glucose">Glucose</a></li>
+                <li><a href="#bloodPressure">Blood Pressure</a></li>
+                <li><a href="#calories">Calories</a></li>
+                <li><a href="#exercise">Exercise</a></li>
+                <li><a href="#sleep">Sleep</a></li>
+                <li><a href="#weight">Weight</a></li>
+            </ul>
+        </div>
+    </div>
+</section>
+        
 <section class="row">
     <div class="col-sm-12">
         <h2 class="buttonGroupLabel">Add a measurement</h2>
@@ -44,6 +84,13 @@ class MeasurementsView{
 </nav>
 
 <hr />
+
+<section class="row">
+    <div class="col-sm-12"><?php
+        BloodPressureMeasurementsView::showBody();
+    ?>
+    </div>
+</section>
 
 <section class="row">
     <div class="col-sm-12">
@@ -229,8 +276,11 @@ class MeasurementsView{
 </section>
         
 <?php
-        if (isset($_SESSION))
+        if (isset($_SESSION)) {
             unset($_SESSION['measurements']);
+            unset($_SESSION['styles']);
+            unset($_SESSION['scripts']);
+        }
     }
     
     public static function add() {

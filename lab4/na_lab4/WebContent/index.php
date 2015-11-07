@@ -7,6 +7,8 @@ if (!isset($_SESSION))
 
 $_SESSION['dbName'] = 'na_lab4db';
 $_SESSION['configFile'] = 'myConfig.ini';
+if (!isset($_SESSION['scripts']))
+    $_SESSION['scripts'] = array();
 
 // dummy data, so profile page can be viewed correctly (no session support yet)
 $validUserInput = array(

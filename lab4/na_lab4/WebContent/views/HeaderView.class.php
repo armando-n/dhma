@@ -20,7 +20,13 @@ class HeaderView {
             unset($_SESSION['styles']);
         endif; ?>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script><?php
+        if (isset($_SESSION['scripts'])):
+            foreach ($_SESSION['scripts'] as $script): ?>
+    <script src="js/<?=$script?>"></script>
+            <?php
+            endforeach;
+        endif; ?>
     <title>DHMA | <?= $title ?></title>
 </head>
 <body>

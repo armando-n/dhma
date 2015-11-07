@@ -1,3 +1,11 @@
 .buttonGroupLabel {
 	font-size: 1.25em;
 }
+
+.rowHover {
+	background-color: #428bca !important;
+}
+
+.rowSelected {
+	background-color: #5bc0de !important;
+}
