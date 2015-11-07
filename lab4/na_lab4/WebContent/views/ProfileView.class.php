@@ -6,35 +6,147 @@ class ProfileView {
             ?><p>Error: profile has errors or is invalid and cannot be shown</p><?php
             return;
         }
+        $_SESSION['styles'][] = 'ProfileStyles.css';
         HeaderView::show($profile->getUserName() . '\'s Profile');
         ?>
-<section id="profile-info">
-    <h2><?= $profile->getUserName() ?>'s Profile</h2>
-    <img src="images/profile/<?= $profile->getUserName() ?>.png" alt="<?= $profile->getUserName() ?>'s profile picture" />
-    <ul>
-        <li>First Name: <?= $profile->getFirstName() ?></li>
-        <li>Last Name: <?= $profile->getLastName() ?></li>
-        <li>E-mail: <?= $profile->getEmail() ?></li>
-        <li>Phone #: <?= $profile->getPhoneNumber() ?></li>
-        <li>Gender: <?= $profile->getGender() ?></li>
-        <li>Facebook: <?= $profile->getFacebook() ?></li>
-        <li>Date of Birth: <?= $profile->getDOB() ?></li>
-        <li>Country: <?= $profile->getCountry() ?></li>
-        <li>Theme: <?= $profile->getTheme() ?></li>
-        <li>Theme Accent Color: <?= $profile->getAccentColor() ?></li>
-        <li>Profile Public: <?= $profile->isProfilePublic() ? "yes" : "no" ?></li>
-        <li>Picture Public: <?= $profile->isPicturePublic() ? "yes" : "no" ?></li>
-        <li>E-mail Reminders: <?= $profile->isSendRemindersSet() ? "yes" : "no" ?></li>
-        <li>Stay Logged In: <?= $profile->isStayLoggedInSet() ? "yes" : "no" ?></li>
-    </ul><?php
-    if (isset($_SESSION) && isset($_SESSION['profile']) && $_SESSION['profile']->getUserName() == $profile->getUserName()): ?>
-    <a href="profile_edit_show" class="btn btn-info btn-sm">
-        <span class="glyphicon glyphicon-pencil"></span>
-        &nbsp;Edit Profile
-    </a><?php
-    endif; ?>
-</section>
-<?php
+<section id="profile-info" class="row">
+    <div class="col-sm-12 col-md-3 col-lg-4">
+        <!-- <h2><?php //$profile->getUserName() ?>'s Profile</h2> -->
+        <img src="images/profile/<?= $profile->getUserName() ?>.png" class="img-responsive" alt="<?= $profile->getUserName() ?>'s profile picture" />
+    </div>
+    <div class="col-sm-6 col-md-5 col-lg-4">
+    
+        <ul class="list-group">
+            <li class="list-group-item row">
+                <div class="attrLabel col-sm-4">
+                    First Name:
+                </div>
+                <div class="attrValue col-sm-8">
+                    <?= $profile->getFirstName() ?>
+                </div>
+            </li>
+            <li class="list-group-item row">
+                <div class="attrLabel col-sm-4">
+                    Last Name:
+                </div>
+                <div class="attrValue col-sm-8">
+                    <?= $profile->getLastName() ?>
+                </div>
+            </li>
+            <li class="list-group-item row">
+                <div class="attrLabel col-sm-4">
+                    E-mail:
+                </div>
+                <div class="attrValue col-sm-8">
+                    <?= $profile->getEmail() ?>
+                </div>
+            </li>
+            <li class="list-group-item row">
+                <div class="attrLabel col-sm-4">
+                    Phone #:
+                </div>
+                <div class="attrValue col-sm-8">
+                    <?= $profile->getPhoneNumber() ?>
+                </div>
+            </li>
+            <li class="list-group-item row">
+                <div class="attrLabel col-sm-4">
+                    Gender:
+                </div>
+                <div class="attrValue col-sm-8">
+                    <?= $profile->getGender() ?>
+                </div>
+            </li>
+            <li class="list-group-item row">
+                <div class="attrLabel col-sm-4">
+                    Facebook:
+                </div>
+                <div class="attrValue col-sm-8">
+                    <?= $profile->getFacebook() ?>
+                </div>
+            </li>
+            <li class="list-group-item row">
+                <div class="attrLabel col-sm-4">
+                    Date of Birth:
+                </div>
+                <div class="attrValue col-sm-8">
+                    <?= $profile->getDOB() ?>
+                </div>
+            </li>
+            <li class="list-group-item row">
+                <div class="attrLabel col-sm-4">
+                    Country:
+                </div>
+                <div class="attrValue col-sm-8">
+                    <?= $profile->getCountry() ?>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-4">
+        <ul class="list-group">
+            <li class="list-group-item row">
+                <div class="attrLabel col-sm-6 col-lg-5">
+                    Theme:
+                </div>
+                <div class="attrValue col-sm-6 col-lg-7">
+                    <?= $profile->getTheme() ?>
+                </div>
+            </li>
+            <li class="list-group-item row">
+                <div class="attrLabel col-sm-6 col-lg-5">
+                    Theme Accent Color:
+                </div>
+                <div class="attrValue col-sm-6 col-lg-7">
+                    <?= $profile->getAccentColor() ?>
+                </div>
+            </li>
+            <li class="list-group-item row">
+                <div class="attrLabel col-sm-6 col-lg-5">
+                    Profile Public:
+                </div>
+                <div class="attrValue col-sm-6 col-lg-7">
+                    <?= $profile->isProfilePublic() ? "yes" : "no" ?>
+                </div>
+            </li>
+            <li class="list-group-item row">
+                <div class="attrLabel col-sm-6 col-lg-5">
+                    Picture Public:
+                </div>
+                <div class="attrValue col-sm-6 col-lg-7">
+                    <?= $profile->isPicturePublic() ? "yes" : "no" ?>
+                </div>
+            </li>
+            <li class="list-group-item row">
+                <div class="attrLabel col-sm-6 col-lg-5">
+                    E-mail Reminders:
+                </div>
+                <div class="attrValue col-sm-6 col-lg-7">
+                    <?= $profile->isSendRemindersSet() ? "yes" : "no" ?>
+                </div>
+            </li>
+            <li class="list-group-item row">
+                <div class="attrLabel col-sm-6 col-lg-5">
+                    Stay Logged In:
+                </div>
+                <div class="attrValue col-sm-6 col-lg-7">
+                    <?= $profile->isStayLoggedInSet() ? "yes" : "no" ?>
+                </div>
+            </li>
+        </ul>
+    </div>
+</section><?php
+        if (isset($_SESSION) && isset($_SESSION['profile']) && $_SESSION['profile']->getUserName() == $profile->getUserName()): ?>
+<section class="row">
+    <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
+        <a href="profile_edit_show" class="btn btn-info btn-block">
+            <span class="glyphicon glyphicon-pencil"></span>
+            &nbsp;Edit Profile
+        </a>
+    </div>
+</section><?php
+        endif;
+        
         FooterView::show();
     }
     
