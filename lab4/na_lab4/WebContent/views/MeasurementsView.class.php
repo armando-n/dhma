@@ -29,7 +29,6 @@ class MeasurementsView{
             </div>
         </div>
         <div class="row">
-            <!--  I LEFT OF HERE LAST NIGHT!!!!!!!!! -->
             <div class="jump-to col-xs-4 col-sm-2">
                 <button type="button" name="glucose" class="btn btn-default btn-block">Glucose</button>
             </div>
@@ -67,39 +66,3 @@ class MeasurementsView{
     }
     
 }
-?>
-
-<?php //     public static function add() {
-//         HeaderView::show("Add Measurements");
-        
-//         if (!isset($_SESSION) || !isset($_SESSION['profile'])):
-            ?><!-- <p>Error: unable to add measurements. Profile data is missing.</p> --><?php
-//             return;
-//         endif;
-        
-//         $measurements = $_SESSION['measurements'];
-        ?>
-        <!-- 
-<section>
-    <form action="measurements_add_bloodPressure" method="post">
-        <fieldset>
-            <legend>Blood Pressure</legend> -->
-            <!-- Pattern attribute and specific error reporting absent to avoid hints that weaken security -->
-<!--             Systolic Pressure <input type="text" name="systolicPressure" size="10" autofocus="autofocus" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" /><br />
-            Diastolic Pressure <input type="text" name="diastolicPressure" size="10" required="required" maxlength="4" tabindex="2" pattern="^[0-9]+$" /><br />
-            Date <input type="date" name="date" required="required" tabindex="3" title="mm/dd/yyyy or mm-dd-yyyy" /><br />
-            Time <input type="time" name="time" required="required" tabindex="4" title="H:M" /><br />
-            Notes <input type="text" name="notes" size="30" maxlength="4" tabindex="5" /><br />
-        </fieldset>
-        <div>
-            <input type="submit" tabindex="6" />
-            <input type="hidden" name="userName" value="<?php//$_SESSION['profile']->getUserName()?>" tabindex="7" />
-        </div>
-    </form>
-</section>
--->
-        <?php
-    //    FooterView::show();
-    //}
-//}
-?>

@@ -212,43 +212,5 @@ class BloodPressureMeasurementsView {
         unset($_SESSION['measurements']['bloodPressure']);
     }
     
-    public static function editBody() {
-        if (!isset($_SESSION) || !isset($_SESSION['measurement']) || !isset($_SESSION['profile'])):
-            ?><p>Error: unable to show measurements. Data is missing.</p><?php
-            return;
-        endif;
-        
-        $measurement = $_SESSION['measurement'];
-        ?>
-        
-<section class="row">
-    <div class="col-sm-12">
-        <h2><a id="something">Edit Blood Pressure Measurement</a></h2>
-     	<form action="measurements_edit_post_bloodPressure" method="post">
-        	<fieldset>
-        		<legend>Edit Measurement</legend>
-            	Systolic Pressure <input type="text" name="systolicPressure" value="<?=$measurement->getSystolicPressure()?>" size="10" autofocus="autofocus" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" /><br />
-                Diastolic Pressure <input type="text" name="diastolicPressure" value="<?=$measurement->getDiastolicPressure()?>" size="10" required="required" maxlength="4" tabindex="2" pattern="^[0-9]+$" /><br />
-                Date <input type="date" name="date" value="<?=$measurement->getDate()?>" required="required" tabindex="3" title="mm/dd/yyyy or mm-dd-yyyy" /><br />
-                Time <input type="time" name="time" value="<?=$measurement->getTime()?>" required="required" tabindex="4" title="H:M" /><br />
-                Notes <input type="text" name="notes" value="<?=$measurement->getNotes()?>" size="30" maxlength="50" tabindex="5" /><br />
-                <label for="submitSave" class="btn btn-primary">
-                    <span class="glyphicon glyphicon-ok"></span>
-                    &nbsp;Save Changes
-                </label>
-            	<input type="submit" id="submitSave" class="hidden" value="Save Changes" tabindex="6" />
-                <a href="measurements_show_all" class="btn btn-default btn-sm">
-                    <span class="glyphicon glyphicon-remove"></span>
-                    &nbsp;Cancel
-                </a>
-                <input type="hidden" name="userName" value="<?=$_SESSION['profile']->getUserName()?>" tabindex="7" />
-        	</fieldset>
-        </form>
-    </div>
-</section>
-        
-        <?php
-    }
-    
 }
 ?>

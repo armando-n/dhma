@@ -2,26 +2,33 @@
 class HeaderView {
     
     public static function show($title = null) {
-        
+        $host_base = $_SERVER['HTTP_HOST'].'/'.$_SESSION['base'];
+        if (isset($_SESSION['profile']) && $_SESSION['profile']->getTheme() == 'dark') {
+            $bootstrap_css = '/css/bootstrap.dark.min.css';
+            $logo = '/images/logo_dark.png';
+        } else {
+            $bootstrap_css = '/css/bootstrap.min.css';
+            $logo = '/images/logo.png';
+        }
 ?><!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="author" content="Armando Navarro" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="http://<?=$_SERVER['HTTP_HOST'].'/'.$_SESSION['base'].'/css/bootstrap.min.css'?>" type="text/css" />
-    <link rel="stylesheet" href="http://<?=$_SERVER['HTTP_HOST'].'/'.$_SESSION['base'].'/css/myStyles.css'?>" type="text/css" /><?php
+    <link rel="stylesheet" href="http://<?= $host_base . $bootstrap_css ?>" type="text/css" />
+    <link rel="stylesheet" href="http://<?= $host_base . '/css/myStyles.css'?>" type="text/css" /><?php
         if (isset($_SESSION['styles'])):
             foreach ($_SESSION['styles'] as $style): ?>
-    <link rel="stylesheet" href="http://<?=$_SERVER['HTTP_HOST'].'/'.$_SESSION['base'].'/css/'.$style?>" type="text/css" /><?php
+    <link rel="stylesheet" href="http://<?= $host_base . '/css/' . $style ?>" type="text/css" /><?php
             endforeach;
             unset($_SESSION['styles']);
         endif; ?>
-    <script src="http://<?=$_SERVER['HTTP_HOST'].'/'.$_SESSION['base'].'/js/jquery-1.11.3.js'?>"></script>
-    <script src="http://<?=$_SERVER['HTTP_HOST'].'/'.$_SESSION['base'].'/js/bootstrap.min.js'?>"></script><?php
+    <script src="http://<?= $host_base . '/js/jquery-1.11.3.js' ?>"></script>
+    <script src="http://<?= $host_base . '/js/bootstrap.min.js' ?>"></script><?php
         if (isset($_SESSION['scripts'])):
             foreach ($_SESSION['scripts'] as $script): ?>
-    <script src="js/<?=$script?>"></script>
+    <script src="http://<?= $host_base . '/js/' . $script ?>"></script>
             <?php
             endforeach;
             unset($_SESSION['scripts']);
@@ -43,7 +50,7 @@ class HeaderView {
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <img src="images/logo.png" class="img-responsive" alt="DHMA Logo" width="99" height="58" />
+            <img src="http://<?= $host_base . $logo ?>" class="img-responsive" alt="DHMA Logo" width="99" height="58" />
         </div>
         
         <div class="collapse navbar-collapse" id="mainNav">
