@@ -53,6 +53,12 @@ class MeasurementsView{
 
 <section class="row">
     <div class="col-sm-12">
+        <?php GlucoseMeasurementsView::showBody(); ?>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-sm-12">
         <?php BloodPressureMeasurementsView::showBody(); ?>
     </div>
 </section>
@@ -66,6 +72,18 @@ class MeasurementsView{
 <section class="row">
     <div class="col-sm-12">
         <?php ExerciseMeasurementsView::showBody(); ?>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-sm-12">
+        <?php SleepMeasurementsView::showBody(); ?>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-sm-12">
+        <?php WeightMeasurementsView::showBody(); ?>
     </div>
 </section>
         

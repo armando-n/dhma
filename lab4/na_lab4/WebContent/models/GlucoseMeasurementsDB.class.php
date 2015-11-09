@@ -70,7 +70,7 @@ class GlucoseMeasurementsDB {
                             and dateAndTime = :dateAndTime");
                         $stmt->execute(array(
                             ":value" => $value,
-                            "userName" => $newParams['userName'],
+                            ":userName" => $newParams['userName'],
                             ":dateAndTime" => $dateAndTime
                         ));
                     }
@@ -116,6 +116,9 @@ class GlucoseMeasurementsDB {
     
     public static function getMeasurement($userName, $dateAndTime) {
         $measurement = null;
+        if ( ($dashPos = strrpos($dateAndTime, '-')) > 8)
+            $dateAndTime[$dashPos] = ':';
+        $dateTime = new DateTime($dateAndTime);
         try {
             $db = Database::getDB();
             $stmt = $db->prepare(
@@ -123,7 +126,7 @@ class GlucoseMeasurementsDB {
                 from Users join GlucoseMeasurements using (userID)
                 where userName = :userName and dateAndTime = :dateAndTime"
             );
-            $stmt->execute(array(":userName" => $userName, ":dateAndTime" => $dateAndTime));
+            $stmt->execute(array(":userName" => $userName, ":dateAndTime" => $dateTime->format('Y-m-d H:i')));
     
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($row !== false)
@@ -184,7 +187,7 @@ class GlucoseMeasurementsDB {
                     where userName = :userName)
                 and dateAndTime = :dateAndTime"
             );
-            $stmt->execute(array("userName" => $userName, ":dateAndTime" => $dateAndTime));
+            $stmt->execute(array(":userName" => $userName, ":dateAndTime" => $dateAndTime));
     
         } catch (PDOException $e) {
             echo $e->getMessage();

@@ -157,7 +157,7 @@ class WeightMeasurement extends GenericModelObject {
             return;
         }
         
-        $options = array("options" => array("regexp" => "/^((\d+)|(\d*\.\d))$/"));
+        $options = array("options" => array("regexp" => "/^((\d+)|(\d*\.\d+))$/"));
         if (!filter_var($this->weight, FILTER_VALIDATE_REGEXP, $options)) {
             $this->setError("weight", "WEIGHT_HAS_INVALID_CHARS");
             return;
