@@ -190,7 +190,7 @@ class BloodPressureMeasurementsDB {
                     where userName = :userName)
                 and dateAndTime = :dateAndTime"
             );
-            $stmt->execute(array("userName" => $userName, ":dateAndTime" => $dateAndTime));
+            $stmt->execute(array(":userName" => $userName, ":dateAndTime" => $dateAndTime));
         
         } catch (PDOException $e) {
             echo $e->getMessage();

@@ -104,7 +104,7 @@ class MeasurementsController {
         }
         
         if ($measurement->getErrorCount() > 0) {
-            self::setVars('danger', 'Add failed. Correct any errors and try again.', 'show', $_SESSION['arguments'], 'show');
+            self::setVars('danger', 'Add failed. Correct any errors and try again.', 'show', 'all', 'show');
             return;
         }
         
@@ -120,9 +120,9 @@ class MeasurementsController {
         }
             
         if ($measurementID < 0)
-            self::setVars('danger', 'Add failed. Internal error. Try again.', 'show', $_SESSION['arguments'], 'show');
+            self::setVars('danger', 'Add failed. Internal error. Try again.', 'show', 'all', 'show');
         else
-            self::setVars('success', 'Measurement added', 'show', $_SESSION['arguments'], 'show');
+            self::setVars('success', 'Measurement added', 'show', 'all', 'show');
     }
     
     private static function edit() {
@@ -230,9 +230,9 @@ class MeasurementsController {
         }
         
         if ($newMeasurement->getErrorCount() > 0)
-            self::setVars('danger', 'Edit failed. Correct any errors and try again.', null, 'show_' . $args[1] . '_' . $oldMeasurement->getDateTime()->format('Y-m-d H-i'), 'edit');
+            self::setVars('danger', 'Edit failed. Correct any errors and try again.', 'show', 'all', 'show');
         else
-            self::setVars('success', 'Measurement edited', null, 'all', 'show');
+            self::setVars('success', 'Measurement edited', 'show', 'all', 'show');
         
         unset($_SESSION['measurement']);
     }
@@ -288,7 +288,7 @@ class MeasurementsController {
             'sleep' => $sleepMeasurements,
             'weight' => $weightMeasurements
         );
-        self::redirect('measurements_show_all', 'info', 'Measurement deleted');
+        self::setVars('info', 'Measurement deleted', 'show', 'all', 'show');
     }
     
     private static function setVars($alertType = 'info', $flash = null, $action = null, $arguments = null, $method = null) {

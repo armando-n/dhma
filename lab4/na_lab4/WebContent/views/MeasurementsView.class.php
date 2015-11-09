@@ -56,6 +56,12 @@ class MeasurementsView{
         <?php BloodPressureMeasurementsView::showBody(); ?>
     </div>
 </section>
+
+<section class="row">
+    <div class="col-sm-12">
+        <?php CalorieMeasurementsView::showBody(); ?>
+    </div>
+</section>
         
 <?php
         if (isset($_SESSION)) {
