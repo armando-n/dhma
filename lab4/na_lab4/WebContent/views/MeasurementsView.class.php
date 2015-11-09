@@ -62,6 +62,12 @@ class MeasurementsView{
         <?php CalorieMeasurementsView::showBody(); ?>
     </div>
 </section>
+
+<section class="row">
+    <div class="col-sm-12">
+        <?php ExerciseMeasurementsView::showBody(); ?>
+    </div>
+</section>
         
 <?php
         if (isset($_SESSION)) {
