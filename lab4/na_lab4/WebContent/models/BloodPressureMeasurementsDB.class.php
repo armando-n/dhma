@@ -118,6 +118,9 @@ class BloodPressureMeasurementsDB {
     
     public static function getMeasurement($userName, $dateAndTime) {
         $measurement = null;
+        if ( ($dashPos = strrpos($dateAndTime, '-')) > 8)
+            $dateAndTime[$dashPos] = ':';
+        $dateTime = new DateTime($dateAndTime);
         try {
             $db = Database::getDB();
             $stmt = $db->prepare(
@@ -126,7 +129,7 @@ class BloodPressureMeasurementsDB {
                 from Users join BloodPressureMeasurements using (userID)
                 where userName = :userName and dateAndTime = :dateAndTime"
             );
-            $stmt->execute(array(":userName" => $userName, ":dateAndTime" => $dateAndTime));
+            $stmt->execute(array(":userName" => $userName, ":dateAndTime" => $dateTime->format('Y-m-d H:i')));
             
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($row !== false)
@@ -175,6 +178,25 @@ class BloodPressureMeasurementsDB {
         }
     
         return $measurements;
+    }
+    
+    public static function deleteMeasurement($userName, $dateAndTime) {
+        try {
+            $db = Database::getDB();
+            $stmt = $db->prepare(
+                "delete from BloodPressureMeasurements
+                where userID in
+                    (select userID from Users
+                    where userName = :userName)
+                and dateAndTime = :dateAndTime"
+            );
+            $stmt->execute(array("userName" => $userName, ":dateAndTime" => $dateAndTime));
+        
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        } catch (RuntimeException $e) {
+            echo $e->getMessage();
+        }
     }
 }
 ?>

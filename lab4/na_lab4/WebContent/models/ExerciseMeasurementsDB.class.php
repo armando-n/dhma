@@ -174,5 +174,24 @@ class ExerciseMeasurementsDB {
     
         return $measurementsArray;
     }
+    
+    public static function deleteMeasurement($userName, $dateAndTime) {
+        try {
+            $db = Database::getDB();
+            $stmt = $db->prepare(
+                "delete from ExerciseMeasurements
+                where userID in
+                    (select userID from Users
+                    where userName = :userName)
+                and dateAndTime = :dateAndTime"
+            );
+            $stmt->execute(array("userName" => $userName, ":dateAndTime" => $dateAndTime));
+    
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        } catch (RuntimeException $e) {
+            echo $e->getMessage();
+        }
+    }
 }
 ?>
