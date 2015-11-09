@@ -1,18 +1,27 @@
 <?php 
 class ProfileView {
     
+    private static $imgDir = 'images/profile/';
+    
     public static function showProfile($profile) {
+        //self::$imgDir = dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'dhma_images' . DIRECTORY_SEPARATOR . 'profile' . DIRECTORY_SEPARATOR;
+        
         if (is_null($profile) || !($profile instanceof UserProfile) || $profile->getErrorCount() > 0) {
             ?><p>Error: profile has errors or is invalid and cannot be shown</p><?php
             return;
         }
+        
+        $host_base = $_SERVER['HTTP_HOST'].'/'.$_SESSION['base'];
         $_SESSION['styles'][] = 'ProfileStyles.css';
         HeaderView::show($profile->getUserName() . '\'s Profile');
         ?>
 <section id="profile-info" class="row">
-    <div class="col-sm-12 col-md-3 col-lg-4">
-        <!-- <h2><?php //$profile->getUserName() ?>'s Profile</h2> -->
-        <img src="images/profile/<?= $profile->getUserName() ?>.png" class="img-responsive" alt="<?= $profile->getUserName() ?>'s profile picture" />
+    <div class="col-sm-12 col-md-3 col-lg-4"><?php
+        if (!empty($profile->getPicture())): ?>
+        <img src="<?= 'http://' . $host_base . '/' . self::$imgDir . $profile->getPicture() ?>" class="img-responsive img-rounded" alt="<?= $profile->getUserName() ?>'s profile picture" /><?php
+        else: ?>
+        No profile image: <?php echo $profile->getPicture();
+        endif; ?>
     </div>
     <div class="col-sm-6 col-md-5 col-lg-4">
     
@@ -177,13 +186,19 @@ class ProfileView {
     <div class="col-sm-12 col-md-3">
         <!-- <h2><?php //$profile->getUserName() ?>'s Profile</h2> -->
         <div class="form-group">
-            <div class="col-sm-4 col-sm-offset-4 col-md-12 col-md-offset-0">
-                <img src="images/profile/<?=$profile->getUserName()?>.png" class="profilePic img-responsive" alt="<?=$profile->getUserName()?>'s profile picture" /><br />
+            <div class="col-sm-4 col-sm-offset-4 col-md-12 col-md-offset-0"><?php
+                if (!empty($profile->getPicture())): ?>
+                <img src="<?= 'http://' . $host_base . '/' . self::$imgDir . $profile->getPicture() ?>" class="profilePic img-responsive img-rounded" alt="<?=$profile->getUserName()?>'s profile picture" /><br /><?php
+                else: ?>
+                No profile image<?php
+                endif; ?>
+
                 <label for="choosePicture" class="btn btn-info btn-block">
                     <span class="glyphicon glyphicon-user"></span>
                     &nbsp;Change Profile Picture
                 </label>
-                <input type="file" id="choosePicture" class="hidden" name="pic" accept="image/*" tabindex="13" />
+                <input type="file" id="choosePicture" class="hidden" name="picture" accept="image/*" tabindex="13" />
+                <input type="hidden" id="oldPicture" name="oldPicture" value="<?=$profile->getPicture()?>" />
             </div>
         </div>
     </div>
