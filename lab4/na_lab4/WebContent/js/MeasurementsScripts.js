@@ -134,11 +134,10 @@ function fillEditForm() {
 	
 	// fill in edit form fields
 	selected_row.children().each(function(index, element) {
-		var id_pieces = $(element).attr('id').split('_');
-		var col_name = id_pieces[0];
+		var col_name = $(element).attr('id').split('_')[0];
 		$('#' + col_name + '_' + meas_type + '_edit').val($(element).text());
 	});
-	$('#oldDateTime').val(date + ' ' + time);
+	$('#oldDateTime_' + meas_type).val(date + ' ' + time);
 	
 	return meas_type;
 }

@@ -95,37 +95,38 @@ class BloodPressureMeasurementsView {
         	<fieldset>
         		<legend>Add Blood Pressure Measurement</legend>
                 <div class="form-group">
-                    <label for="sPressureAdd" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Systolic Pressure</label>
+                    <label for="systolicPressure_bloodPressure_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Systolic Pressure</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="sPressureAdd" name="systolicPressure" class="form-control" size="10" autofocus="autofocus" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
+                        <input type="text" id="systolicPressure_bloodPressure_add" name="systolicPressure" class="form-control" size="10" autofocus="autofocus" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="dPressureAdd" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Diastolic Pressure</label>
+                    <label for="diastolicPressure_bloodPressure_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Diastolic Pressure</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="dPressureAdd" name="diastolicPressure" class="form-control" size="10" required="required" maxlength="4" tabindex="2" pattern="^[0-9]+$" /><br />
+                        <input type="text" id="diastolicPressure_bloodPressure_add" name="diastolicPressure" class="form-control" size="10" required="required" maxlength="4" tabindex="2" pattern="^[0-9]+$" /><br />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="pressDateAdd" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Date</label>
+                    <label for="date_bloodPressure_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Date</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="date" id="pressDateAdd" name="date" required="required" class="form-control" tabindex="3" title="mm/dd/yyyy or mm-dd-yyyy" /><br />
+                        <input type="date" id="date_bloodPressure_add" name="date" required="required" class="form-control" tabindex="3" title="mm/dd/yyyy or mm-dd-yyyy" /><br />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="pressTimeAdd" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Time</label>
+                    <label for="time_bloodPressure_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Time</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="pressTimeAdd" name="time" required="required" class="form-control" tabindex="4" title="H:M" /><br />
+                        <input type="text" id="time_bloodPressure_add" name="time" required="required" class="form-control" tabindex="4" title="H:M" /><br />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="pressNotesAdd" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Notes</label>
+                    <label for="notes_bloodPressure_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Notes</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="pressNotesAdd" name="notes" class="form-control" size="30" maxlength="50" tabindex="5" /><br />
+                        <input type="text" id="notes_bloodPressure_add" name="notes" class="form-control" size="30" maxlength="50" tabindex="5" /><br />
                     </div>
                 </div>
                 <div class="form-group">
                     <input type="hidden" name="userName" value="<?=$_SESSION['profile']->getUserName()?>" />
+                    
                     <div class="btn-group btn-group-justified" role="group">
                         <div class="btn-group" role="group">
                             <button type="submit" id="submitAdd" class="btn btn-primary" tabindex="6">
@@ -184,7 +185,8 @@ class BloodPressureMeasurementsView {
                 </div>
                 <div class="form-group">
                     <input type="hidden" name="userName" value="<?=$_SESSION['profile']->getUserName()?>" />
-                    <input type="hidden" id="oldDateTime" name="oldDateTime" value="" />
+                    <input type="hidden" id="oldDateTime_bloodPressure" name="oldDateTime" value="" class="oldDateTime" />
+                    
                     <div class="btn-group btn-group-justified" role="group">
                         <div class="btn-group" role="group">
                             <button type="submit" id="submitEdit" class="btn btn-primary" tabindex="6">
