@@ -52,6 +52,8 @@ else if ($numPieces >= 3 && $urlPieces[1] == 'tests') {
 }
 else
     $control = "none";
+if ( ($hashPos = strrpos($control, '#')) !== false)
+    $control = substr($control, 0, $hashPos);
 
 $_SESSION['base'] = $urlPieces[0];    
 $controlParts = preg_split("/_/", $control, null, PREG_SPLIT_NO_EMPTY);

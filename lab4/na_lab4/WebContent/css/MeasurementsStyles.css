@@ -1,11 +1,47 @@
 .buttonGroupLabel {
-	font-size: 1.25em;
+	font-size: 1.20em;
 }
 
 .rowHover {
-	background-color: #428bca !important;
+	background-color: #A8A8A8 !important;
 }
 
 .rowSelected {
-	background-color: #5bc0de !important;
+	background-color: #21409A !important;
+	color: #D8D8D8;
+	outline-style: groove;
+	outline-width: 2px;
+	outline-color: #213474;
+}
+
+.meas-label {
+	text-align: right;
+}
+
+.measurementRow {
+	cursor: default;
+}
+
+.jump-to {
+	padding-right: 0;
+	padding-left: 0;
+}
+
+.jump-to button {
+	border-radius: 0;
+}
+
+caption {
+	font-size: 1.5em;
+}
+
+legend {
+	font-size: 1.5em;
+	color: #777;
+}
+
+@media screen and (min-width: 750px) and (max-width: 992px) {
+	.form-horizontal .meas-label {
+	   text-align: left;
+	}
 }

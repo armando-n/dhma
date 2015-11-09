@@ -9,23 +9,22 @@ class HeaderView {
     <meta charset="utf-8" />
     <meta name="author" content="Armando Navarro" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css" />
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" type="text/css" /> -->
-    <link rel="stylesheet" href="http://<?=$_SERVER['HTTP_HOST'].'/'.$_SESSION['base'].'/resources/myStyles.css'?>" type="text/css" />
-<?php
+    <link rel="stylesheet" href="http://<?=$_SERVER['HTTP_HOST'].'/'.$_SESSION['base'].'/css/bootstrap.min.css'?>" type="text/css" />
+    <link rel="stylesheet" href="http://<?=$_SERVER['HTTP_HOST'].'/'.$_SESSION['base'].'/css/myStyles.css'?>" type="text/css" /><?php
         if (isset($_SESSION['styles'])):
             foreach ($_SESSION['styles'] as $style): ?>
-    <link rel="stylesheet" href="http://<?=$_SERVER['HTTP_HOST'].'/'.$_SESSION['base'].'/resources/'.$style?>" type="text/css" /><?php
+    <link rel="stylesheet" href="http://<?=$_SERVER['HTTP_HOST'].'/'.$_SESSION['base'].'/css/'.$style?>" type="text/css" /><?php
             endforeach;
             unset($_SESSION['styles']);
         endif; ?>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script><?php
+    <script src="http://<?=$_SERVER['HTTP_HOST'].'/'.$_SESSION['base'].'/js/jquery-1.11.3.js'?>"></script>
+    <script src="http://<?=$_SERVER['HTTP_HOST'].'/'.$_SESSION['base'].'/js/bootstrap.min.js'?>"></script><?php
         if (isset($_SESSION['scripts'])):
             foreach ($_SESSION['scripts'] as $script): ?>
     <script src="js/<?=$script?>"></script>
             <?php
             endforeach;
+            unset($_SESSION['scripts']);
         endif; ?>
     <title>DHMA | <?= $title ?></title>
 </head>

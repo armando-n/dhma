@@ -23,6 +23,7 @@ class MeasurementsController {
             case 'add': self::add(); break;
             case 'edit': self::edit(); break;
             case 'post': self::post(); break;
+            case 'delete': self::delete(); break;
             default:
                 self::error('Error: unrecognized command');
         }
@@ -38,7 +39,7 @@ class MeasurementsController {
         switch ($_SESSION['arguments']) {
             case 'bloodPressure':
                 $_SESSION['measurements']['bloodPressure'] = BloodPressureMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                BloodPressureMeasurementsView::show();
+                MeasurementsView::show();
                 break;
             case 'calories':
                 $_SESSION['measurements']['calories'] = CalorieMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
@@ -176,8 +177,8 @@ class MeasurementsController {
     }
     
     private static function post($args) {
-        if (!isset($_SESSION['measurement'])) {
-            self::error('Error: measurement not found');
+        if (!isset($_POST['oldDateTime'])) {
+            self::error('Error: measurement type not found');
             return;
         }
         if (!isset($_POST) || empty($_POST)) {
@@ -185,9 +186,12 @@ class MeasurementsController {
             return;
         }
         
-        $oldMeasurement = $_SESSION['measurement'];
         switch ($args[1]) {
             case 'bloodPressure':
+                $oldMeasurement = BloodPressureMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $_POST['oldDateTime']);
+                if (is_null($oldMeasurement)) {
+                    echo "Failed to fetch old measurement. Profile: " . $_SESSION['profile']->getUserName() . "; oldDateTime: " . $_POST['oldDateTime'];
+                }
                 $newMeasurement = new BloodPressureMeasurement($_POST);
                 $newMeasurement = BloodPressureMeasurementsDB::editMeasurement($oldMeasurement, $newMeasurement);
                 break;
@@ -219,6 +223,60 @@ class MeasurementsController {
             self::setVars('success', 'Measurement edited', null, $args[1], 'show');
         
         unset($_SESSION['measurement']);
+    }
+    
+    private static function delete() {
+        if (!isset($_SESSION['arguments'])) {
+            self::error('Error: arguments expected');
+            return;
+        }
+    
+        if (strpos($_SESSION['arguments'], '_') === false) {
+            self::error('Error: multiple arguments expected');
+            return;
+        }
+    
+        $args = explode('_', $_SESSION['arguments']);
+    
+        $dateAndTime = str_replace('%20', ' ', $args[1]);
+        $dateAndTime = str_replace('H-i', 'H:i', $dateAndTime);
+
+        switch ($args[0]) {
+            case 'bloodPressure':
+                BloodPressureMeasurementsDB::deleteMeasurement($_SESSION['profile']->getUserName(), $dateAndTime);
+                break;
+            case 'calories':
+                CalorieMeasurementsDB::deleteMeasurement($_SESSION['profile']->getUserName(), $dateAndTime);
+                break;
+            case 'exercise':
+                ExerciseMeasurementsDB::deleteMeasurement($_SESSION['profile']->getUserName(), $dateAndTime);
+                break;
+            case 'glucose':
+                GlucoseMeasurementsDB::deleteMeasurement($_SESSION['profile']->getUserName(), $dateAndTime);
+                break;
+            case 'sleep':
+                SleepMeasurementsDB::deleteMeasurement($_SESSION['profile']->getUserName(), $dateAndTime);
+                break;
+            case 'weight':
+                WeightMeasurementsDB::deleteMeasurement($_SESSION['profile']->getUserName(), $dateAndTime);
+                break;
+        }
+        
+        $bpMeasurements = BloodPressureMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+        $calorieMeasurements = CalorieMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+        $exerciseMeasurements = ExerciseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+        $glucoseMeasurements = GlucoseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+        $sleepMeasurements = SleepMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+        $weightMeasurements = WeightMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+        $_SESSION['measurements'] = array(
+            'bloodPressure' => $bpMeasurements,
+            'calories' => $calorieMeasurements,
+            'exercise' => $exerciseMeasurements,
+            'glucose' => $glucoseMeasurements,
+            'sleep' => $sleepMeasurements,
+            'weight' => $weightMeasurements
+        );
+        self::redirect('measurements_show_all', 'info', 'Measurement deleted');
     }
     
     private static function setVars($alertType = 'info', $flash = null, $action = null, $arguments = null, $method = null) {
