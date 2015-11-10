@@ -10,7 +10,7 @@ class HomeView {
     public static function showBody() {
         ?>
 <div class="jumbotron">
-    <h1>Diabetic Health Management System</h1>
+    <h1>DHMA</h1>
     <p>
         Track measurements important to diabetics: blood glucose levels,
         exercise, sleep, blood pressure, calories consumed, and weight.
@@ -18,32 +18,6 @@ class HomeView {
 </div>
 <div class="row">
     <div class="col-md-9">
-        <!-- 
-        <div class="row">
-        
-            <div class="col-md-12">
-                <h2><a href="tests.html">Tests</a></h2>
-                <h2>Views Showing All Objects</h2>
-                <ul>
-                	<li><a href="measurements_show_bloodPressure">Blood Pressure Measurements</a></li>
-                	<li><a href="measurements_show_calories">Calorie Measurements</a></li>
-                	<li><a href="measurements_show_exercise">Exercise Measurements</a></li>
-                	<li><a href="measurements_show_glucose">Glucose Measurements</a></li>
-                	<li><a href="measurements_show_sleep">Sleep Measurements</a></li>
-                	<li><a href="measurements_show_weight">Weight Measurements</a></li>
-                	<li><a href="members">Members</a></li>
-                </ul>
-            </div>
-            
-        </div>
-        
-        <div class="row">
-            <div class="col-md-12">
-                <h2>About DHMA</h2>
-            </div>
-        </div>
-        
-        -->
         
         <div class="row">
         
@@ -91,6 +65,21 @@ class HomeView {
     </div>
 
 </div><!-- end of row -->
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h2><a href="tests.html">Tests</a></h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>About DHMA</h2>
+    </div>
+</div>
+        
+       
 
 <?php
     }

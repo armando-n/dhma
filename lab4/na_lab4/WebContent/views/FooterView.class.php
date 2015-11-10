@@ -49,6 +49,12 @@ class FooterView {
         </div>
             
     </footer>
+    
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            Professor/grader: Use username &quot;armando-n&quot; and password &quot;pass123&quot;
+        </div>
+    </div>
 
 </div>
 
