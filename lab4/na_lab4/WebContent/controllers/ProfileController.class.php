@@ -77,7 +77,7 @@ class ProfileController {
         // argument 'post' posting profile edits
         else if ($_SESSION['arguments'] === 'post') {
             // process uploaded image
-            if (isset($_FILES['picture']) && !empty($_FILES['picture']))
+            if (isset($_FILES['picture']) && !empty($_FILES['picture']['name']))
                 self::processImage();
             else
                 $_POST['picture'] = $_POST['oldPicture'];

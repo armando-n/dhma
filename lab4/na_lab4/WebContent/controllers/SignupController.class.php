@@ -1,7 +1,8 @@
 <?php
 class SignupController {
     
-    private static $imgDir = 'images/profile/'; 
+    private static $imgDir = 'images/profile/';
+    private static $defaultPicture = 'profile_default.png';
     
     public static function run() {
         
@@ -24,40 +25,13 @@ class SignupController {
         else
             SignupController::redirect('home', 'danger', 'Error: Unrecognized action requested');
     }
-    function beginsWith($str, $sub) {
-        return (strncmp($str, $sub, strlen($sub)) == 0);
-    }
-    
-    private static function processImage() {
-        $filename = $_FILES['picture']['name'];
-        $filetype = $_FILES['picture']['type'];
-        $tmp_name = $_FILES['picture']['tmp_name'];
-        $extension = strtolower(pathinfo($filename)['extension']);
-        
-        // make sure file is an image
-        if (strncmp($filetype, 'image', strlen('image')) !== 0) {
-            self::alertMessage('danger', 'Signup failed: ' . htmlspecialchars($filename) . 'is not an image file. It has type: ' . $filetype . '; ');
-            SignupView::show();
-            return;
-        }
-        
-        // move the uploaded file to permanent location
-        if (is_uploaded_file($tmp_name))
-            move_uploaded_file($tmp_name, self::$imgDir . $_POST['userName'] . '.' . $extension);
-        else {
-            self::alertMessage('danger', 'Signup failed: ' . htmlspecialchars($tmp_name) . 'was not found or is not an uploaded file.');
-            SignupView::show();
-            return;
-        }
-
-        // add image file name to post data
-        $_POST['picture'] = $_POST['userName'] . '.' . $extension;
-    }
     
     private static function post() {
         // handle image file upload
-        if (isset($_FILES['picture']))
+        if (isset($_FILES['picture']) && !empty($_FILES['picture']['name']))
             self::processImage();
+        else
+            $_POST['picture'] = self::$defaultPicture;
         
         // create user and profile objects with submitted data
         $user = new User($_POST);
@@ -109,6 +83,32 @@ class SignupController {
             $_SESSION['profile'] = $profile;
             self::redirect('profile_show', 'success', 'Welcome to DHMS! You can review your profile below.');
         }
+    }
+    
+    private static function processImage() {
+        $filename = $_FILES['picture']['name'];
+        $filetype = $_FILES['picture']['type'];
+        $tmp_name = $_FILES['picture']['tmp_name'];
+        $extension = strtolower(pathinfo($filename)['extension']);
+    
+        // make sure file is an image
+        if (strncmp($filetype, 'image', strlen('image')) !== 0) {
+            self::alertMessage('danger', 'Signup failed: ' . htmlspecialchars($filename) . 'is not an image file. It has type: ' . $filetype . '; ');
+            SignupView::show();
+            return;
+        }
+    
+        // move the uploaded file to permanent location
+        if (is_uploaded_file($tmp_name))
+            move_uploaded_file($tmp_name, self::$imgDir . $_POST['userName'] . '.' . $extension);
+            else {
+                self::alertMessage('danger', 'Signup failed: ' . htmlspecialchars($tmp_name) . 'was not found or is not an uploaded file.');
+                SignupView::show();
+                return;
+            }
+    
+            // add image file name to post data
+            $_POST['picture'] = $_POST['userName'] . '.' . $extension;
     }
     
     private static function alertMessage($alertType, $alertMessage) {
