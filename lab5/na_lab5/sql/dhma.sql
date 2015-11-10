@@ -1,5 +1,5 @@
 drop database if exists na_lab5db;
-create database na_lab4db;
+create database na_lab5db;
 use na_lab5db;
 
 drop table if exists Users;
@@ -7,6 +7,7 @@ create table Users(
     userID          integer primary key auto_increment,
     userName        varchar(50) unique not null,
     password        varchar(255) not null,
+    isAdministrator   boolean not null default false,
     dateCreated     timestamp default CURRENT_TIMESTAMP
 );
 

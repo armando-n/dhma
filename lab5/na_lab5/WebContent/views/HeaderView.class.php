@@ -17,6 +17,7 @@ class HeaderView {
     <meta name="author" content="Armando Navarro" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="http://<?= $host_base . $bootstrap_css ?>" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="http://<?=$host_base?>/lib/datatables.css" />
     <link rel="stylesheet" href="http://<?= $host_base . '/css/myStyles.css'?>" type="text/css" /><?php
         if (isset($_SESSION['styles'])):
             foreach ($_SESSION['styles'] as $style): ?>
@@ -25,7 +26,8 @@ class HeaderView {
             unset($_SESSION['styles']);
         endif; ?>
     <script src="http://<?= $host_base . '/js/jquery-1.11.3.js' ?>"></script>
-    <script src="http://<?= $host_base . '/js/bootstrap.min.js' ?>"></script><?php
+    <script src="http://<?= $host_base . '/js/bootstrap.min.js' ?>"></script>
+    <script type="text/javascript" src="http://<?=$host_base?>/lib/datatables.js"></script><?php
         if (isset($_SESSION['scripts'])):
             foreach ($_SESSION['scripts'] as $script): ?>
     <script src="http://<?= $host_base . '/js/' . $script ?>"></script>
@@ -57,8 +59,12 @@ class HeaderView {
             <ul class="nav navbar-nav">
                 <li><a href="home">Home</a></li><?php
                 if (isset($_SESSION['profile'])): ?>
-                <li><a href="measurements_show_all">Measurements</a></li>
+                <li><a href="measurements_show_all">Measurements</a></li><?php
+                    if (isset($_SESSION['admin']) && $_SESSION['admin'] === true): ?>
+                <li><a href="admin_show">Admin</a></li><?php
+                    else: ?>
                 <li><a href="profile_show">Profile</a></li><?php
+                    endif;
                 endif; ?>
             </ul>
             <ul class="nav navbar-nav navbar-right"><?php
