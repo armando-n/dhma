@@ -160,6 +160,8 @@ class ProfileView {
     }
     
     public static function showEditForm() {
+        $host_base = $_SERVER['HTTP_HOST'].'/'.$_SESSION['base'];
+        
         if (isset($_SESSION['profileEdit']))
             $profile = $_SESSION['profileEdit'];
         else if (isset($_SESSION['profile']))
