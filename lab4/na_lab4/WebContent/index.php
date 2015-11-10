@@ -10,34 +10,6 @@ $_SESSION['configFile'] = 'myConfig.ini';
 if (!isset($_SESSION['scripts']))
     $_SESSION['scripts'] = array();
 
-// dummy data, so profile page can be viewed correctly (no session support yet)
-$validUserInput = array(
-        "userName" => "armando-n",
-        "password1" => "password123",
-        "password2" => "password123"
-);
-$validUserProfileInput = array(
-        "firstName" => "Armando",
-        "lastName" => "Navarro",
-        "email" => "fdf786@my.utsa.edu",
-        "gender" => "male",
-        "phone" => "281-555-2180",
-        "facebook" => "http://facebook.com/someguy210",
-        "dob" => "1983-11-02",
-        "country" => "United States of America",
-        "theme" => "dark",
-        "accentColor" => "#00008b",
-        "picture" => "someimage",
-        "isProfilePublic" => "on",
-        "isPicturePublic" => "on",
-        "sendReminders" => "on",
-        "stayLoggedIn" => "on"
-);
-
-// dummy user info; necessary because sessions are not yet implemented
-$user = new User($validUserInput);
-$uData = new UserProfile($validUserProfileInput);
-
 // parse the request URL
 $url = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 $urlPieces = preg_split("/\//", $url, null, PREG_SPLIT_NO_EMPTY);
@@ -79,8 +51,8 @@ else
 // run the requested controller
 switch ($control) {
     case "login" : LoginController::run(); break;
-    case "logout" : LoginController::run(true); break; 
-    case "profile" : ProfileController::run($user, $uData, false); break;
+    case "logout" : LoginController::run(); break; 
+    case "profile" : ProfileController::run(); break;
     case "signup" : SignupController::run(); break;
     case "measurements" : MeasurementsController::run(); break;
     case "members_show" :

@@ -107,39 +107,46 @@ insert into Users (userName, password) values ("robbins", "pass456");
 insert into Users (userName, password) values ("john-s", "pass123");
 insert into Users (userName, password) values ("bob", "pass456");
 insert into Users (userName, password) values ("sarahk", "pass789");
+insert into Users (userName, password) values ("whatup", "whatup");
 
 -- Users/UserProfiles data
 insert into UserProfiles (firstName, lastName, email, phone, gender,
     dob, country, picture, facebook, theme, accentColor, isProfilePublic,
     isPicturePublic, sendReminders, stayLoggedIn, userID)
     values ("Armando", "Navarro", "fdf786@my.utsa.edu", "210-555-2170", "male",
-        "1983-11-02", "United States of America", "armando-n.png", null, "dark",
+        "1983-11-02", "United States of America", "armando-n.png", null, "light",
         "#0088BB", true, true, false, false, 1);
 insert into UserProfiles (firstName, lastName, email, phone, gender,
     dob, country, picture, facebook, theme, accentColor, isProfilePublic,
     isPicturePublic, sendReminders, stayLoggedIn, userID)
     values ("Robin", "Scherbatsky", "robbins@email.com", "210-555-1593", "female",
-        "1980-02-22", "United States of America", "robbins.png",
+        "1980-02-22", "United States of America", "robbins.jpg",
         "http://www.facebook.com/robbins", "light", "#0088BB", true, true,
         true, true, 2);
 insert into UserProfiles (firstName, lastName, email, phone, gender,
     dob, country, picture, facebook, theme, accentColor, isProfilePublic,
     isPicturePublic, sendReminders, stayLoggedIn, userID)
     values ("John", "Smith", "johns@email.com", "314-555-1260", "male",
-        null, "United States of America", "johns.png", null, "dark",
+        null, "United States of America", "john-s.jpg", null, "dark",
         "#BB0000", false, false, true, true, 3);
 insert into UserProfiles (firstName, lastName, email, phone, gender,
     dob, country, picture, facebook, theme, accentColor, isProfilePublic,
     isPicturePublic, sendReminders, stayLoggedIn, userID)
     values ("Bob", "Roberts", "bobrob@email.com", "450-555-1253", "male",
-        "1973-01-12", "United States of America", "bob.png", null, "light",
+        "1973-01-12", "United States of America", "bob.jpg", null, "light",
         "#44DD88", true, false, false, true, 4);
 insert into UserProfiles (firstName, lastName, email, phone, gender,
     dob, country, picture, facebook, theme, accentColor, isProfilePublic,
     isPicturePublic, sendReminders, stayLoggedIn, userID)
     values ("Sarah", "Kinberg", "sarahk@email.com", "512-555-4826", "female",
-        "1987-08-24", "United States of America", "sarahk.png", null, "dark",
+        "1987-08-24", "United States of America", "sarahk.jpg", null, "light",
         "#0088BB", true, true, false, false, 5);
+insert into UserProfiles (firstName, lastName, email, phone, gender,
+    dob, country, picture, facebook, theme, accentColor, isProfilePublic,
+    isPicturePublic, sendReminders, stayLoggedIn, userID)
+    values ("Jason", "McMann", "jason@email.com", "341-555-3856", "male",
+        "1983-10-12", "United States of America", "whatup.jpg", null, "dark",
+        "#0088BB", true, true, false, false, 6);
         
 -- blood pressure measurements data
 insert into BloodPressureMeasurements (systolicPressure, diastolicPressure,
