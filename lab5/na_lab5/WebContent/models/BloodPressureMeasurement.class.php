@@ -1,5 +1,5 @@
 <?php
-class BloodPressureMeasurement extends GenericModelObject {
+class BloodPressureMeasurement extends GenericModelObject implements JsonSerializable {
     
     private $formInput;
     private $userName;
@@ -203,6 +203,21 @@ class BloodPressureMeasurement extends GenericModelObject {
         }
         
         $this->diastolicPressure = (int)$this->diastolicPressure;
+    }
+    
+    public function jsonSerialize() {
+        $object = new stdClass();
+        $object->systolicPressure = $this->systolicPressure;
+        $object->diastolicPressure = $this->diastolicPressure;
+        $object->dateAndTime = $this->datetime->format('l_Y-m-d_h:i a');
+        $object->dayOfWeek = $this->datetime->format('l');
+        $object->yearMonthDate = $this->datetime->format('Y-m-d');
+        $object->year = $this->datetime->format('Y');
+        $object->month = $this->datetime->format('m');
+        $object->date = $this->datetime->format('d');
+        $object->notes = $this->notes;
+        $object->userName = $this->userName;
+        return $object;
     }
 
 }

@@ -24,10 +24,42 @@ class MeasurementsController {
             case 'edit': self::edit(); break;
             case 'post': self::post(); break;
             case 'delete': self::delete(); break;
+            case 'get': self::get(); break;
             default:
                 self::error('Error: unrecognized command');
         }
         
+    }
+    
+    private static function get() {
+        if (!isset($_SESSION['arguments'])) {
+            self::error('Error: arguments expected');
+            return;
+        }
+        
+        switch ($_SESSION['arguments']) {
+            case 'bloodPressure':
+                $bpMeasurements = BloodPressureMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+                echo json_encode($bpMeasurements, JSON_PRETTY_PRINT);
+                break;
+            case 'all':
+                $bpMeasurements = BloodPressureMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+                $calorieMeasurements = CalorieMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+                $exerciseMeasurements = ExerciseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+                $glucoseMeasurements = GlucoseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+                $sleepMeasurements = SleepMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+                $weightMeasurements = WeightMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+                $allMeasurements = array(
+                    'bloodPressure' => $bpMeasurements,
+                    'calories' => $calorieMeasurements,
+                    'exercise' => $exerciseMeasurements,
+                    'glucose' => $glucoseMeasurements,
+                    'sleep' => $sleepMeasurements,
+                    'weight' => $weightMeasurements
+                );
+                echo json_encode($allMeasurements, JSON_PRETTY_PRINT);
+                break;
+        }
     }
     
     private static function show() {

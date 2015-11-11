@@ -7,6 +7,7 @@ class MeasurementsView{
         if (!isset($_SESSION['scripts']))
             $_SESSION['scripts'] = array();
         $_SESSION['styles'][] = 'MeasurementsStyles.css';
+        $_SESSION['libraries'][] = 'highcharts.js';
         $_SESSION['scripts'][] = 'MeasurementsScripts.js';
         HeaderView::show("Your Past Measurements");
         MeasurementsView::showBody();

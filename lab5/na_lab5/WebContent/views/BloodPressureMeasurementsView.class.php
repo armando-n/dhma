@@ -210,6 +210,12 @@ class BloodPressureMeasurementsView {
     
 </section>
 
+<section id="bloodPressure_charts_row" class="row">
+    <div id="charts_bloodPressure" class="col-sm-12">
+        
+    </div>
+</section>
+
         <?php
         unset($_SESSION['measurements']['bloodPressure']);
     }

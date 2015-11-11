@@ -28,10 +28,15 @@ class HeaderView {
     <script src="http://<?= $host_base . '/js/bootstrap.min.js' ?>"></script><?php
         if (isset($_SESSION['scripts'])):
             foreach ($_SESSION['scripts'] as $script): ?>
-    <script src="http://<?= $host_base . '/js/' . $script ?>"></script>
-            <?php
+    <script src="http://<?= $host_base . '/js/' . $script ?>"></script><?php
             endforeach;
             unset($_SESSION['scripts']);
+        endif; 
+        if (isset($_SESSION['libraries'])):
+            foreach ($_SESSION['libraries'] as $library): ?>
+    <script src="http://<?= $host_base . '/lib/' . $library ?>"></script><?php
+            endforeach;
+            unset($_SESSION['libraries']);
         endif; ?>
     <title>DHMA | <?= $title ?></title>
 </head>
