@@ -30,7 +30,7 @@ $(document).ready(function() {
 	
 	// grab measurement data from server and create charts
 	$.ajax({
-		'url': 'measurements_get_bloodPressure',
+		'url': 'measurements_get_all',
 		'dataType': 'json',
 		'success': createCharts,
 		'error': failedRetreivingChartData
@@ -43,60 +43,51 @@ function failedRetreivingChartData() {
 }
 
 function createCharts(response) {
-	var categories = [];
 	var allMeasurements = { };
+	var systolicData = [];
+	var diastolicData = [];
 	var meas;
-	var i = 0;
-	var dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
-	var numDays = 7;
-	var systolicData = new Array(numDays);
-	var diastolicData = new Array(numDays);
-	while (i < numDays) {
-		systolicData[i] = null;
-		diastolicData[i] = null;
-		i++;
-	}
 	
-	// calculate date stuff for chart
-	var today = new Date();
-	var month = today.getMonth()+1;
-	
-	allMeasurements.bloodPressure = response;
+	var glucoseMeasurements = response.glucose;
 
 	// add each measurement to data arrays for inputting into highcharts
-	for (var j = 0; j < allMeasurements.bloodPressure.length; j++) {
-		meas = allMeasurements.bloodPressure[j];
-		systolicData.push( [
-            Date.UTC(meas.year, meas.month-1, meas.date, meas.hour, meas.minute),
-            meas.systolicPressure
-        ] );
-		diastolicData.push( [
-            Date.UTC(meas.year, meas.month-1, meas.date, meas.hour, meas.minute),
-            meas.diastolicPressure
-        ] );
+	for (var i = 0; i < bpMeasurements.length; i++) {
+		meas = bpMeasurements[i];
+		systolicData.push(  [ Date.parse(meas.dateAndTime), meas.systolicPressure ] );
+		diastolicData.push( [ Date.parse(meas.dateAndTime), meas.diastolicPressure ] );
 	}
 	
 	// create blood pressure measurement charts
 	$('#charts_bloodPressure').highcharts({
 		chart: { type: 'line' },
 		title: { text: 'Past Week' },
-		xAxis: {
-			type: 'datetime',
-			min: Date.UTC(2015, 10, 5),
-			max: Date.UTC(2015, 10, 11, 23, 59, 59)
-		},
+		xAxis: { type: 'datetime' },
 		yAxis: { title: { text: 'mm HG' } },
 		series: [
-		    {
-		    	name: 'Systolic Pressure',
-		    	data: systolicData
-		    },
-		    {
-		    	name: 'Diastolic Pressure',
-		    	data: diastolicData
-		    }
+            { name: 'Systolic Pressure', data: systolicData },
+		    { name: 'Diastolic Pressure', data: diastolicData }
         ]
 	});
+	
+	// assign handlers for chart date range buttons 
+	$('#yearly_chart_btn').click(viewYearChart);
+	$('#monthly_chart_btn').click(viewMonthChart);
+	$('#weekly_chart_btn').click(viewWeekChart);
+}
+
+function viewYearChart() {
+	var myChart = Highcharts.charts[0];
+	myChart.xAxis[0].setExtremes(Date.UTC(2014, 10, 12), Date.UTC(2015, 10, 11, 23, 59, 59));
+}
+
+function viewWeekChart() {
+	var myChart = Highcharts.charts[0];
+	myChart.xAxis[0].setExtremes(Date.UTC(2015, 10, 5), Date.UTC(2015, 10, 11, 23, 59, 59));
+}
+
+function viewMonthChart() {
+	var myChart = Highcharts.charts[0];
+	myChart.xAxis[0].setExtremes(Date.UTC(2015, 9, 12), Date.UTC(2015, 10, 11));
 }
 
 // an add measurement button was clicked

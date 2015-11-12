@@ -50,3 +50,16 @@ legend {
 	   text-align: left;
 	}
 }
+
+/*@media screen and (min-width: 650px) {
+	#charts_bloodPressure {
+    width: 625px;
+    height: 400px;
+}
+
+
+@media screen and (max-width: 649px) {
+    #charts_bloodPressure {
+    width: 400px;
+    height: 325px;
+}*/

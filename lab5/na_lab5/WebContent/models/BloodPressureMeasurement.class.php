@@ -209,15 +209,9 @@ class BloodPressureMeasurement extends GenericModelObject implements JsonSeriali
         $object = new stdClass();
         $object->systolicPressure = $this->systolicPressure;
         $object->diastolicPressure = $this->diastolicPressure;
-        $object->dateAndTime = $this->datetime->format('Y-m-d H:i'); //('l Y-m-d h:i a');
-        $object->epoch = $this->datetime->format('U');
-        $object->dayOfWeek = $this->datetime->format('l');
-        $object->yearMonthDate = $this->datetime->format('Y-m-d');
-        $object->year = $this->datetime->format('Y');
-        $object->month = $this->datetime->format('m');
-        $object->date = $this->datetime->format('d');
-        $object->hour = $this->datetime->format('H');
-        $object->minute = $this->datetime->format('i');
+        $isoDateTime = $this->datetime->format('Y-m-d H:i');
+        $isoDateTime[10] = 'T';
+        $object->dateAndTime = $isoDateTime;
         $object->notes = $this->notes;
         $object->userName = $this->userName;
         return $object;

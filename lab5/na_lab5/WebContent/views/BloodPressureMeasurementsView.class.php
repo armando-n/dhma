@@ -216,6 +216,20 @@ class BloodPressureMeasurementsView {
     </div>
 </section>
 
+<section class="row">
+    <div class="col-xs-12">
+        <button type="button" id="yearly_chart_btn" class="btn btn-default">
+            Yearly
+        </button>
+        <button type="button" id="monthly_chart_btn" class="btn btn-default">
+            Monthly
+        </button>
+        <button type="button" id="weekly_chart_btn" class="btn btn-default">
+            Weekly
+        </button>
+    </div>
+</section>
+
         <?php
         unset($_SESSION['measurements']['bloodPressure']);
     }

@@ -31,11 +31,13 @@ class MeasurementsController {
         
     }
     
-    private static function get() {
+    private static function get() {        
         if (!isset($_SESSION['arguments'])) {
             self::error('Error: arguments expected');
             return;
         }
+        
+        $allMeasurements = new stdClass();
         
         switch ($_SESSION['arguments']) {
             case 'bloodPressure':
@@ -49,14 +51,20 @@ class MeasurementsController {
                 $glucoseMeasurements = GlucoseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
                 $sleepMeasurements = SleepMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
                 $weightMeasurements = WeightMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                $allMeasurements = array(
-                    'bloodPressure' => $bpMeasurements,
-                    'calories' => $calorieMeasurements,
-                    'exercise' => $exerciseMeasurements,
-                    'glucose' => $glucoseMeasurements,
-                    'sleep' => $sleepMeasurements,
-                    'weight' => $weightMeasurements
-                );
+                $allMeasurements->bloodPressure = $bpMeasurements;
+                $allMeasurements->calories = $calorieMeasurements;
+                $allMeasurements->exercise = $exerciseMeasurements;
+                $allMeasurements->glucose = $glucoseMeasurements;
+                $allMeasurements->sleep = $sleepMeasurements;
+                $allMeasurements->weight = $weightMeasurements;
+//                 $allMeasurements = array(
+//                     'bloodPressure' => $bpMeasurements,
+//                     'calories' => $calorieMeasurements,
+//                     'exercise' => $exerciseMeasurements,
+//                     'glucose' => $glucoseMeasurements,
+//                     'sleep' => $sleepMeasurements,
+//                     'weight' => $weightMeasurements
+//                 );
                 echo json_encode($allMeasurements, JSON_PRETTY_PRINT);
                 break;
         }
