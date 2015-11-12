@@ -1,18 +1,6 @@
 (function() {
 	
 $(document).ready(function() {
-	var allMeasurements = { };
-	var systolicData = [null, null, null, null, null, null, null];
-	var diastolicData = [null, null, null, null, null, null, null];
-	
-	// calculate date stuff for chart
-	var dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
-	var today = new Date();
-	var dayOfWeekNum = today.getDay();
-	var dayOfWeek = dayNames[dayOfWeekNum];
-	var date = today.getDate();
-	var month = today.getMonth()+1;
-	
 	// hide certain content on load
 	$('.add_measurement_section').hide();
 	$('.edit_measurement_section').hide();
@@ -40,84 +28,76 @@ $(document).ready(function() {
 		$(element).click(rowClicked);
 	});
 	
-	// grab measurement data from server
+	// grab measurement data from server and create charts
 	$.ajax({
 		'url': 'measurements_get_bloodPressure',
 		'dataType': 'json',
-		'success': function(response) {
-//			var str = "object returned:\n";
-//			for (var i = 0; i < response.length; i++) {
-//				str += "\tsystolicPressure: " + response[i].systolicPressure + "\n";
-//				str += "\tdiastolicPressure: " + response[i].diastolicPressure + "\n";
-//				str += "\tdateAndTime: " + response[i].dateAndTime + "\n";
-//				str += "\tnotes: " + response[i].notes + "\n";
-//				str += "\tuserName: " + response[i].userName + "\n";
-//			}
-//			alert(str);
-			allMeasurements.bloodPressure = response;
-			
-			// for each date on the x-axis of our chart, find existing measurements
-			for (var i = 0; i < 7; i++) {
-//				data[i] =
-				// for the current x-axis date, search for existing measurements on that date
-				for (var j = 0; j < allMeasurements.bloodPressure.length; j++) {
-					var measurement = allMeasurements.bloodPressure[j];
-					
-					if (month == measurement.month && date-(6-i) == measurement.date) {
-						systolicData[i] = measurement.systolicPressure;
-						diastolicData[i] = measurement.diastolicPressure;
-//						var str = 'Measurement found for ' + dayNames[(dayOfWeekNum+(1+i))%7] + ':\n';
-//						str += '\tsystolicPressure: ' + systolicData[i] + '\n';
-//						str += '\tdiastolicPressure: ' + diastolicData[i] + '\n';
-//						alert(str);
-					} else {
-//						var str = 'measurement was not a match:\n';
-//						str += '\tsystolicPressure: ' + measurement.systolicPressure + '\n';
-//						str += '\tdiastolicPressure: ' + measurement.diastolicPressure + '\n';
-					}
-				}
-			}
-			
-			// create blood pressure measurement charts
-			$('#charts_bloodPressure').highcharts({
-				chart: { type: 'bar' },
-				title: { text: 'Past Week' },
-				xAxis: { categories: [
-		                dayNames[(dayOfWeekNum+1)%7] + ' ' + month + '/' + (date-6),
-		                dayNames[(dayOfWeekNum+2)%7] + ' ' + month + '/' + (date-5),
-		                dayNames[(dayOfWeekNum+3)%7] + ' ' + month + '/' + (date-4),
-		                dayNames[(dayOfWeekNum+4)%7] + ' ' + month + '/' + (date-3),
-		                dayNames[(dayOfWeekNum+5)%7] + ' ' + month + '/' + (date-2),
-		                dayNames[(dayOfWeekNum+6)%7] + ' ' + month + '/' + (date-1),
-		                dayNames[(dayOfWeekNum+7)%7] + ' ' + month + '/' + date
-		            ] },
-				yAxis: { title: { text: 'mm HG' } },
-				series: [
-				    {
-				    	name: 'Systolic Pressure',
-				    	data: systolicData
-				    },
-				    {
-				    	name: 'Diastolic Pressure',
-				    	data: diastolicData
-				    }
-		        ]
-			});
-		},
-		'error': function() {
-			alert('Error retreiving blood pressure measurements json');
-		}
+		'success': createCharts,
+		'error': failedRetreivingChartData
 	});
 	
-	
-	
-	
-	
-	
-	
-	
-	
 });
+
+function failedRetreivingChartData() {
+	alert('Error retreiving blood pressure measurements json');
+}
+
+function createCharts(response) {
+	var categories = [];
+	var allMeasurements = { };
+	var meas;
+	var i = 0;
+	var dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
+	var numDays = 7;
+	var systolicData = new Array(numDays);
+	var diastolicData = new Array(numDays);
+	while (i < numDays) {
+		systolicData[i] = null;
+		diastolicData[i] = null;
+		i++;
+	}
+	
+	// calculate date stuff for chart
+	var today = new Date();
+	var month = today.getMonth()+1;
+	
+	allMeasurements.bloodPressure = response;
+
+	// add each measurement to data arrays for inputting into highcharts
+	for (var j = 0; j < allMeasurements.bloodPressure.length; j++) {
+		meas = allMeasurements.bloodPressure[j];
+		systolicData.push( [
+            Date.UTC(meas.year, meas.month-1, meas.date, meas.hour, meas.minute),
+            meas.systolicPressure
+        ] );
+		diastolicData.push( [
+            Date.UTC(meas.year, meas.month-1, meas.date, meas.hour, meas.minute),
+            meas.diastolicPressure
+        ] );
+	}
+	
+	// create blood pressure measurement charts
+	$('#charts_bloodPressure').highcharts({
+		chart: { type: 'line' },
+		title: { text: 'Past Week' },
+		xAxis: {
+			type: 'datetime',
+			min: Date.UTC(2015, 10, 5),
+			max: Date.UTC(2015, 10, 11, 23, 59, 59)
+		},
+		yAxis: { title: { text: 'mm HG' } },
+		series: [
+		    {
+		    	name: 'Systolic Pressure',
+		    	data: systolicData
+		    },
+		    {
+		    	name: 'Diastolic Pressure',
+		    	data: diastolicData
+		    }
+        ]
+	});
+}
 
 // an add measurement button was clicked
 function addMeasurement(event) {
