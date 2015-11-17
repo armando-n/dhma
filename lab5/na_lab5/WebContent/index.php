@@ -50,6 +50,7 @@ else
 
 // run the requested controller
 switch ($control) {
+    case 'test' : TestView::show(); break;
     case "login" : LoginController::run(); break;
     case "logout" : LoginController::run(); break; 
     case "profile" : ProfileController::run(); break;

@@ -44,23 +44,83 @@ function failedRetreivingChartData() {
 
 function createCharts(response) {
 	var allMeasurements = { };
+	var glucoseData = [];
 	var systolicData = [];
 	var diastolicData = [];
+	var calorieData = [];
+	var exDurationData = [];
+	var exTypeData = [];
+	var sleepData = [];
+	var weightData = [];
 	var meas;
 	
 	var glucoseMeasurements = response.glucose;
+	var bpMeasurements = response.bloodPressure;
+	var calorieMeasurements = response.calories;
+	var exerciseMeasurements = response.exercise;
+	var sleepMeasurements = response.sleep;
+	var weightMeasurements = response.weight;
 
 	// add each measurement to data arrays for inputting into highcharts
+	for (var i = 0; i < glucoseMeasurements.length; i++) {
+		meas = glucoseMeasurements[i];
+		glucoseData.push( [ Date.parse(meas.dateAndTime), meas.glucose ] );
+	}
 	for (var i = 0; i < bpMeasurements.length; i++) {
 		meas = bpMeasurements[i];
 		systolicData.push(  [ Date.parse(meas.dateAndTime), meas.systolicPressure ] );
 		diastolicData.push( [ Date.parse(meas.dateAndTime), meas.diastolicPressure ] );
 	}
+	for (var i = 0; i < calorieMeasurements.length; i++) {
+		meas = calorieMeasurements[i];
+		calorieData.push(  [ Date.parse(meas.dateAndTime), meas.calories ] );
+	}
+	for (var i = 0; i < exerciseMeasurements.length; i++) {
+		meas = exerciseMeasurements[i];
+		exDurationData.push( [ Date.parse(meas.dateAndTime), meas.duration ] );
+		exTypeData.push( [ Date.parse(meas.dateAndTime), meas.type ] );
+	}
+	for (var i = 0; i < sleepMeasurements.length; i++) {
+		meas = sleepMeasurements[i];
+		sleepData.push(  [ Date.parse(meas.dateAndTime), meas.duration ] );
+	}
+	for (var i = 0; i < weightMeasurements.length; i++) {
+		meas = weightMeasurements[i];
+		weightData.push(  [ Date.parse(meas.dateAndTime), meas.weight ] );
+	}
 	
-	// create blood pressure measurement charts
-	$('#charts_bloodPressure').highcharts({
+	// calculate 1 week ago
+	var today = new Date();
+	var sixDaysAgo = Date.now() - (1000 * 60 * 60 * 24 * 6);
+	var thirtyDaysAgo = Date.now() - (1000 * 60 * 60 * 24 * 30);
+	var endOfToday = new Date(today.getYear(), today.getMonth(), today.getDate(), 23, 59, 59);
+	
+	// calculate 1 month ago
+	
+//	var sixDaysAgo = new Date(Date.now());
+//	sixDaysAgo = new Date(sixDaysAgo.getDate() - 6);
+//	sixDaysAgo = sixDaysAgo.valueOf();
+//	var endOfToday = new Date(Date.now());
+//	endOfToday.setHours(24);
+//	endOfToday = new Date(endOfToday.getHours() - 1);
+//	endOfToday = endOfToday.valueOf();
+	
+	// create primary blood pressure measurement charts
+	$('#chart_bloodPressure_primary').highcharts({
 		chart: { type: 'line' },
 		title: { text: 'Past Week' },
+		xAxis: { type: 'datetime', min: sixDaysAgo, max: endOfToday.valueOf() },
+		yAxis: { title: { text: 'mm HG' } },
+		series: [
+            { name: 'Systolic Pressure', data: systolicData },
+		    { name: 'Diastolic Pressure', data: diastolicData }
+        ]
+	});
+	
+	// create secondary blood pressure measurement charts
+	$('#chart_bloodPressure_secondary').highcharts({
+		chart: { type: 'line' },
+		title: { text: 'Past Month' },
 		xAxis: { type: 'datetime' },
 		yAxis: { title: { text: 'mm HG' } },
 		series: [

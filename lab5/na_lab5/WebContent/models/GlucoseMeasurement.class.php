@@ -1,5 +1,5 @@
 <?php
-class GlucoseMeasurement extends GenericModelObject {
+class GlucoseMeasurement extends GenericModelObject implements JsonSerializable {
     
     private $formInput;
     private $userName;
@@ -164,6 +164,18 @@ class GlucoseMeasurement extends GenericModelObject {
         }
         
         $this->glucose = (int)$this->glucose;
+    }
+    
+    public function jsonSerialize() {
+        $isoDateTime = $this->datetime->format('Y-m-d H:i');
+        $isoDateTime[10] = 'T';
+        $object = new stdClass();
+        
+        $object->glucose = $this->glucose;
+        $object->dateAndTime = $isoDateTime;
+        $object->notes = $this->notes;
+        $object->userName = $this->userName;
+        return $object;
     }
 
 }

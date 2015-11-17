@@ -1,5 +1,5 @@
 <?php
-class ExerciseMeasurement extends GenericModelObject {
+class ExerciseMeasurement extends GenericModelObject implements JsonSerializable {
     
     private $formInput;
     private $userName;
@@ -202,6 +202,19 @@ class ExerciseMeasurement extends GenericModelObject {
             return;
         }
 
+    }
+    
+    public function jsonSerialize() {
+        $isoDateTime = $this->datetime->format('Y-m-d H:i');
+        $isoDateTime[10] = 'T'; // replace space with T to put into ISO date/time format
+        $object = new stdClass();
+        
+        $object->duration = $this->duration;
+        $object->type = $this->type;
+        $object->dateAndTime = $isoDateTime;
+        $object->notes = $this->notes;
+        $object->userName = $this->userName;
+        return $object;
     }
 
 }

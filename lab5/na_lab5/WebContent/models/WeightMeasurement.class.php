@@ -1,5 +1,5 @@
 <?php
-class WeightMeasurement extends GenericModelObject {
+class WeightMeasurement extends GenericModelObject implements JsonSerializable {
     
     private $formInput;
     private $userName;
@@ -164,6 +164,18 @@ class WeightMeasurement extends GenericModelObject {
         }
         
         $this->weight = floatval($this->weight);
+    }
+    
+    public function jsonSerialize() {
+        $isoDateTime = $this->datetime->format('Y-m-d H:i');
+        $isoDateTime[10] = 'T';
+        $object = new stdClass();
+    
+        $object->weight = $this->weight;
+        $object->dateAndTime = $isoDateTime;
+        $object->notes = $this->notes;
+        $object->userName = $this->userName;
+        return $object;
     }
 
 }

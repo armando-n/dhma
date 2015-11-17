@@ -211,7 +211,10 @@ class BloodPressureMeasurementsView {
 </section>
 
 <section id="bloodPressure_charts_row" class="row">
-    <div id="charts_bloodPressure" class="col-sm-12">
+    <div id="chart_bloodPressure_primary" class="col-sm-6">
+        
+    </div>
+    <div id="chart_bloodPressure_secondary" class="col-sm-6">
         
     </div>
 </section>

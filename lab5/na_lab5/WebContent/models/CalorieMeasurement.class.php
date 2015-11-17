@@ -1,5 +1,5 @@
 <?php
-class CalorieMeasurement extends GenericModelObject {
+class CalorieMeasurement extends GenericModelObject implements JsonSerializable {
     
     private $formInput;
     private $userName;
@@ -164,6 +164,18 @@ class CalorieMeasurement extends GenericModelObject {
         }
         
         $this->calories = (int)$this->calories;
+    }
+    
+    public function jsonSerialize() {
+        $isoDateTime = $this->datetime->format('Y-m-d H:i');
+        $isoDateTime[10] = 'T';
+        $object = new stdClass();
+    
+        $object->calories = $this->calories;
+        $object->dateAndTime = $isoDateTime;
+        $object->notes = $this->notes;
+        $object->userName = $this->userName;
+        return $object;
     }
 
 }
