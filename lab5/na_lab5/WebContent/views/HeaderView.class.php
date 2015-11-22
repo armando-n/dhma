@@ -17,7 +17,6 @@ class HeaderView {
     <meta name="author" content="Armando Navarro" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="http://<?= $host_base . $bootstrap_css ?>" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="http://<?=$host_base?>/lib/datatables.css" />
     <link rel="stylesheet" href="http://<?= $host_base . '/css/myStyles.css'?>" type="text/css" /><?php
         if (isset($_SESSION['styles'])):
             foreach ($_SESSION['styles'] as $style): ?>
@@ -26,8 +25,7 @@ class HeaderView {
             unset($_SESSION['styles']);
         endif; ?>
     <script src="http://<?= $host_base . '/js/jquery-1.11.3.js' ?>"></script>
-    <script src="http://<?= $host_base . '/js/bootstrap.min.js' ?>"></script>
-    <script type="text/javascript" src="http://<?=$host_base?>/lib/datatables.js"></script><?php
+    <script src="http://<?= $host_base . '/js/bootstrap.min.js' ?>"></script><?php
         if (isset($_SESSION['scripts'])):
             foreach ($_SESSION['scripts'] as $script): ?>
     <script src="http://<?= $host_base . '/js/' . $script ?>"></script><?php

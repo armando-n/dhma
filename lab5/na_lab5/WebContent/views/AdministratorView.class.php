@@ -8,9 +8,13 @@ class AdministratorView {
         if (!isset($_SESSION['styles']))
             $_SESSION['styles'] = array();
         $_SESSION['styles'][] = 'AdministratorStyles.css';
+        $_SESSION['styles'][] = '../lib/datatables.css';
         if (!isset($_SESSION['scripts']))
             $_SESSION['scripts'] = array();
         $_SESSION['scripts'][] = 'AdministratorScripts.js';
+        if (!isset($_SESSION['libraries']))
+            $_SESSION['libraries'] = array();
+        $_SESSION['libraries'][] = 'datatables/datatables.js';
         HeaderView::show("Administator Page");
         $return = AdministratorView::showBody($uProfiles);
         FooterView::show();

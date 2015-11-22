@@ -6,9 +6,14 @@ class MeasurementsView{
             $_SESSION['styles'] = array();
         if (!isset($_SESSION['scripts']))
             $_SESSION['scripts'] = array();
+        if (!isset($_SESSION['libraries']))
+            $_SESSION['libraries'] = array();
         $_SESSION['styles'][] = 'MeasurementsStyles.css';
-        $_SESSION['libraries'][] = 'highcharts.js';
+        $_SESSION['libraries'][] = 'highcharts/highcharts.js';
         $_SESSION['scripts'][] = 'MeasurementsScripts.js';
+        
+        if (isset($_SESSION['profile']) && $_SESSION['profile']->getTheme() === 'dark')
+            $_SESSION['libraries'][] = 'highcharts/dark-unica.js';
         HeaderView::show("Your Past Measurements");
         MeasurementsView::showBody();
         FooterView::show();
