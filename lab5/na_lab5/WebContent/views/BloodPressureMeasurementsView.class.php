@@ -20,18 +20,18 @@ class BloodPressureMeasurementsView {
         endif;
         $measurements = $_SESSION['measurements'];
         ?>
-        
-<section id="bloodPressure" class="row">
+<div class="panel panel-primary">
+    <div class="panel-heading"><h2>Blood Pressure</h2></div>
+
+<section class="row">
     <div id="view_bloodPressure_section" class="col-sm-12">
         <div class="row">
-            <div class="col-sm-12">
-                <h2></h2><?php
+            <div class="col-sm-12"><?php
                 if (!isset($measurements["bloodPressure"]) || empty($measurements["bloodPressure"])):
                         ?><p>No blood pressure measurements to show yet</p><?php
                 else:
                     $i = 0; ?>
                 <table class="table table-striped table-hover table-condensed table-responsive">
-                    <caption>Blood Pressure</caption>
                     <thead>
                         <tr>
                             <th>Systolic</th>
@@ -210,28 +210,64 @@ class BloodPressureMeasurementsView {
     
 </section>
 
+<!-- Charts Section -->
 <section id="bloodPressure_charts_row" class="row">
-    <div id="chart_bloodPressure_primary" class="col-sm-6">
-        
+    <div class="col-sm-12 col-md-6">
+        <div class="row">
+            <div id="bloodPressure_chart_primary" class="col-sm-12">
+                <!-- Primary Chart -->
+            </div>
+        </div>
+        <div class="row">
+        	<div class="col-sm-12 btn-group btn-group-justified" role="group">
+                <div class="btn-group" role="group">
+                    <button type="button" id="bloodPressure_yearly_chart_btn_primary" name="Blood Pressure" class="btn btn-default btn-yearly">
+                        Yearly
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="bloodPressure_monthly_chart_btn_primary" name="Blood Pressure" class="btn btn-default btn-monthly">
+                        Monthly
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="bloodPressure_weekly_chart_btn_primary" name="Blood Pressure" class="btn btn-default btn-weekly active">
+                        Weekly
+                    </button>
+                </div>
+            </div>
+        </div>    
     </div>
-    <div id="chart_bloodPressure_secondary" class="col-sm-6">
-        
+    
+    <div class="col-sm-12 col-md-6 chart-secondary">
+        <div class="row">
+            <div id="bloodPressure_chart_secondary" class="col-sm-12">
+                <!-- Secondary Chart -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 btn-group btn-group-justified" role="group">
+                <div class="btn-group" role="group">
+                    <button type="button" id="bloodPressure_yearly_chart_btn_secondary" name="Blood Pressure" class="btn btn-default btn-yearly">
+                        Yearly
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="bloodPressure_monthly_chart_btn_secondary" name="Blood Pressure" class="btn btn-default btn-monthly active">
+                        Monthly
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="bloodPressure_weekly_chart_btn_secondary" name="Blood Pressure" class="btn btn-default btn-weekly">
+                        Weekly
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
-<section class="row">
-    <div class="col-xs-12">
-        <button type="button" id="yearly_chart_btn" class="btn btn-default">
-            Yearly
-        </button>
-        <button type="button" id="monthly_chart_btn" class="btn btn-default">
-            Monthly
-        </button>
-        <button type="button" id="weekly_chart_btn" class="btn btn-default">
-            Weekly
-        </button>
-    </div>
-</section>
+</div>
 
         <?php
         unset($_SESSION['measurements']['bloodPressure']);

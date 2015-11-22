@@ -49,40 +49,41 @@ class MeasurementsView{
                 <button type="button" name="weight" class="btn btn-default btn-block">Weight</button>
             </div>
         </div>
+        <hr />
     </div>
 </div>
 
-<section class="row">
+<section id="glucose" class="row">
     <div class="col-sm-12">
         <?php GlucoseMeasurementsView::showBody(); ?>
     </div>
 </section>
 
-<section class="row">
+<section id="bloodPressure" class="row">
     <div class="col-sm-12">
         <?php BloodPressureMeasurementsView::showBody(); ?>
     </div>
 </section>
 
-<section class="row">
+<section id="calories" class="row">
     <div class="col-sm-12">
         <?php CalorieMeasurementsView::showBody(); ?>
     </div>
 </section>
 
-<section class="row">
+<section id="exercise" class="row">
     <div class="col-sm-12">
         <?php ExerciseMeasurementsView::showBody(); ?>
     </div>
 </section>
 
-<section class="row">
+<section id="sleep" class="row">
     <div class="col-sm-12">
         <?php SleepMeasurementsView::showBody(); ?>
     </div>
 </section>
 
-<section class="row">
+<section id="weight" class="row">
     <div class="col-sm-12">
         <?php WeightMeasurementsView::showBody(); ?>
     </div>

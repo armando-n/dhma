@@ -20,18 +20,18 @@ class WeightMeasurementsView {
         endif;
         $measurements = $_SESSION['measurements'];
         ?>
+<div class="panel panel-primary">
+    <div class="panel-heading"><h2>Weight</h2></div>
         
-<section id="weight" class="row">
+<section class="row">
     <div id="view_weight_section" class="col-sm-12">
         <div class="row">
-            <div class="col-sm-12">
-                <h2></h2><?php
+            <div class="col-sm-12"><?php
                 if (!isset($measurements["weight"]) || empty($measurements["weight"])):
                         ?><p>No weight measurements to show yet</p><?php
                 else:
                     $i = 0; ?>
                 <table class="table table-striped table-hover table-condensed table-responsive">
-                    <caption>Weight</caption>
                     <thead>
                         <tr>
                             <th>Weight (kg)</th>
@@ -195,6 +195,65 @@ class WeightMeasurementsView {
     </div>
     
 </section>
+
+<!-- Charts Section -->
+<section id="weight_charts_row" class="row">
+    <div class="col-sm-12 col-md-6">
+        <div class="row">
+            <div id="weight_chart_primary" class="col-sm-12">
+                <!-- Primary Chart -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 btn-group btn-group-justified" role="group">
+                <div class="btn-group" role="group">
+                    <button type="button" id="weight_yearly_chart_btn_primary" name="Weight" class="btn btn-default btn-yearly">
+                        Yearly
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="weight_monthly_chart_btn_primary" name="Weight" class="btn btn-default btn-monthly">
+                        Monthly
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="weight_weekly_chart_btn_primary" name="Weight" class="btn btn-default btn-weekly active">
+                        Weekly
+                    </button>
+                </div>
+            </div>
+        </div>    
+    </div>
+    
+    <div class="col-sm-12 col-md-6 chart-secondary">
+        <div class="row">
+            <div id="weight_chart_secondary" class="col-sm-12">
+                <!-- Secondary Chart -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 btn-group btn-group-justified" role="group">
+                <div class="btn-group" role="group">
+                    <button type="button" id="weight_yearly_chart_btn_secondary" name="Weight" class="btn btn-default btn-yearly">
+                        Yearly
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="weight_monthly_chart_btn_secondary" name="Weight" class="btn btn-default btn-monthly active">
+                        Monthly
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="weight_weekly_chart_btn_secondary" name="Weight" class="btn btn-default btn-weekly">
+                        Weekly
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
 
         <?php
         unset($_SESSION['measurements']['weight']);

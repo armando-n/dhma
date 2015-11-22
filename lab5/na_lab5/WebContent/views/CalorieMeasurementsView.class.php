@@ -20,18 +20,18 @@ class CalorieMeasurementsView {
         endif;
         $measurements = $_SESSION['measurements'];
         ?>
+<div class="panel panel-primary">
+    <div class="panel-heading"><h2>Calories</h2></div>
         
-<section id="calories" class="row">
+<section class="row">
     <div id="view_calories_section" class="col-sm-12">
         <div class="row">
-            <div class="col-sm-12">
-                <h2></h2><?php
+            <div class="col-sm-12"><?php
                 if (!isset($measurements["calories"]) || empty($measurements["calories"])):
                         ?><p>No calorie measurements to show yet</p><?php
                 else:
                     $i = 0; ?>
                 <table class="table table-striped table-hover table-condensed table-responsive">
-                    <caption>Calories Consumed</caption>
                     <thead>
                         <tr>
                             <th>Calories</th>
@@ -196,6 +196,64 @@ class CalorieMeasurementsView {
     
 </section>
 
+<!-- Charts Section -->
+<section id="calories_charts_row" class="row">
+    <div class="col-sm-12 col-md-6">
+        <div class="row">
+            <div id="calories_chart_primary" class="col-sm-12">
+                <!-- Primary Chart -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 btn-group btn-group-justified" role="group">
+                <div class="btn-group" role="group">
+                    <button type="button" id="calories_yearly_chart_btn_primary" name="Calories" class="btn btn-default btn-yearly">
+                        Yearly
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="calories_monthly_chart_btn_primary" name="Calories" class="btn btn-default btn-monthly">
+                        Monthly
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="calories_weekly_chart_btn_primary" name="Calories" class="btn btn-default btn-weekly active">
+                        Weekly
+                    </button>
+                </div>
+            </div>
+        </div>    
+    </div>
+    
+    <div class="col-sm-12 col-md-6 chart-secondary">
+        <div class="row">
+            <div id="calories_chart_secondary" class="col-sm-12">
+                <!-- Secondary Chart -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 btn-group btn-group-justified" role="group">
+                <div class="btn-group" role="group">
+                    <button type="button" id="calories_yearly_chart_btn_secondary" name="Calories" class="btn btn-default btn-yearly">
+                        Yearly
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="calories_monthly_chart_btn_secondary" name="Calories" class="btn btn-default btn-monthly active">
+                        Monthly
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="calories_weekly_chart_btn_secondary" name="Calories" class="btn btn-default btn-weekly">
+                        Weekly
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
         <?php
         unset($_SESSION['measurements']['calories']);
     }

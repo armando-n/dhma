@@ -45,11 +45,32 @@ legend {
 	color: #777;
 }
 
-@media screen and (min-width: 750px) and (max-width: 992px) {
+.panel > .panel-heading > h2 {
+	font-size: 1.5em;
+}
+
+/* extra small devices */
+@media screen and (max-width: 749px) {    
+    .chart-secondary {
+       display: none;
+    }
+}
+
+/* small devices */
+@media screen and (min-width: 750px) and (max-width: 991px) {
 	.form-horizontal .meas-label {
 	   text-align: left;
 	}
+	
+	.chart-secondary {
+       display: none;
+    }
 }
+
+/* medium devices */
+/*@media screen and (min-width: 992px) and (max-width: 1199px) {
+    
+}*/
 
 /*@media screen and (min-width: 650px) {
 	#charts_bloodPressure {
