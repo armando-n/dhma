@@ -152,6 +152,21 @@ class UsersDB {
     
         return $users;
     }
+    
+    public static function deleteUser($userName) {
+        try {
+            $db = Database::getDB();
+            $stmt = $db->prepare( "delete from Users where userName = :userName" );
+            $stmt->execute(array(":userName" => $userName));
+    
+        } catch (PDOException $e) {
+            return false;
+        } catch (RuntimeException $e) {
+            return false;
+        }
+        
+        return true;
+    }
 
 }
 ?>

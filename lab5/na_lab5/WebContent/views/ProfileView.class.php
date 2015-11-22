@@ -145,10 +145,12 @@ class ProfileView {
         </ul>
     </div>
 </section><?php
-        if (isset($_SESSION) && isset($_SESSION['profile']) && $_SESSION['profile']->getUserName() == $profile->getUserName()): ?>
+        $user = UsersDB::getUserBy('userName', $_SESSION['profile']->getUserName());
+        if (isset($_SESSION) && isset($_SESSION['profile'])
+                && ($_SESSION['profile']->getUserName() == $profile->getUserName() || $user->isAdministrator())): ?>
 <section class="row">
     <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
-        <a href="profile_edit_show" class="btn btn-info btn-block">
+        <a href="profile_edit_show_<?=$profile->getUserName()?>" class="btn btn-info btn-block">
             <span class="glyphicon glyphicon-pencil"></span>
             &nbsp;Edit Profile
         </a>
@@ -162,7 +164,9 @@ class ProfileView {
     public static function showEditForm() {
         $host_base = $_SERVER['HTTP_HOST'].'/'.$_SESSION['base'];
         
-        if (isset($_SESSION['profileEdit']))
+        if (isset($_SESSION['profileOld']))
+            $profile = $_SESSION['profileOld'];
+        else if (isset($_SESSION['profileEdit']))
             $profile = $_SESSION['profileEdit'];
         else if (isset($_SESSION['profile']))
             $profile = $_SESSION['profile'];
@@ -528,7 +532,7 @@ class ProfileView {
                         </button>
                     </div>
                     <div class="btn-group" role="group">
-                        <a href="profile_show" class="btn btn-default" tabindex="21">
+                        <a href="profile_show_<?=$profile->getUserName()?>" class="btn btn-default" tabindex="21">
                             <span class="glyphicon glyphicon-remove"></span>
                             &nbsp;Cancel
                         </a>

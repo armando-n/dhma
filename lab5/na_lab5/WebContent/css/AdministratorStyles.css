@@ -2,36 +2,14 @@ h1 {
 	font-size: 1.95em;
 }
 
-/*
-.myscrollable {
-	height: 200px;
-	overflow: auto;
-}
-
-
-@media screen and (min-height: 600px) {
-    .myscrollable {
-       height: 300px;
-    }
-}
-*/
 @media screen and (min-height: 365px) and (max-height: 599px) {
-    /*.myscrollabe {
-       height: 200px;
-    }*/
-    
     h1 {
         display: none;
     }
 }
 
 @media screen and (max-height: 364px) {
-    /*.myscrollable {
-       height: 85px;
-    }*/
-    
     h1 {
         display: none;
     }
 }
-*/

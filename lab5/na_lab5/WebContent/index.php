@@ -57,6 +57,7 @@ switch ($control) {
     case "signup" : SignupController::run(); break;
     case "measurements" : MeasurementsController::run(); break;
     case "members_show" :
+    case "users" :
     case "members" : UsersController::run(); break;
     case "home":
     default:

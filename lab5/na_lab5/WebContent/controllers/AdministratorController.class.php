@@ -15,7 +15,8 @@ class AdministratorController {
             self::redirect('home', 'danger', 'Error: action not found.');
         
         else if ($_SESSION['action'] === 'show') {
-            $profiles = UserProfilesDB::getAllUserProfiles();
+//             $profiles = UserProfilesDB::getAllUserProfiles();
+            $profiles = json_encode(UserProfilesDB::getAllUserProfiles(), JSON_PRETTY_PRINT);
             AdministratorView::show($profiles);
         }
     

@@ -54,6 +54,8 @@ class UserProfilesDB {
             $numParams = count($oldProfile);
             
             foreach ($newParams as $key => $value) {
+                if ($key === 'userName')
+                    continue;
                 
                 if (!array_key_exists($key, $oldParams))
                     throw new PDOException('Key ' . htmlspecialchars($key) . ' is invalid');

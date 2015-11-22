@@ -1,5 +1,5 @@
 <?php
-class UserProfile extends GenericModelObject {
+class UserProfile extends GenericModelObject implements JsonSerializable {
     
     const DEFAULT_THEME = 'dark';
     const DEFAULT_COLOR = '#00008B';
@@ -365,6 +365,28 @@ class UserProfile extends GenericModelObject {
     private function validateStayLoggedIn() {
         $value = $this->extractForm($this->formInput, "stayLoggedIn");
         $this->stayLoggedIn = ($value) ? true : false;
+    }
+    
+    public function jsonSerialize() {
+        $object = new stdClass();
+        $object->userName = $this->userName;
+        $object->firstName = $this->firstName;
+        $object->lastName = $this->lastName;
+        $object->email = $this->email;
+        $object->phone = $this->phone;
+        $object->gender = $this->gender;
+        $object->dob = $this->dob;
+        $object->country = $this->country;
+        $object->picture = $this->picture;
+        $object->facebook = $this->facebook;
+        $object->theme = $this->theme;
+        $object->accentColor = $this->accentColor;
+        $object->isProfilePublic = $this->isProfilePublic;
+        $object->isPicturePublic = $this->isPicturePublic;
+        $object->sendReminders = $this->sendReminders;
+        $object->stayLoggedIn = $this->stayLoggedIn;
+        
+        return $object;
     }
 }
 ?>

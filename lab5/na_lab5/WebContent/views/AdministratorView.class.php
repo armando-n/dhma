@@ -31,45 +31,10 @@ class AdministratorView {
         ?>
 <section class="row">
     <div class="col-sm-12">
-    
-        <div class="myscrollable">
-        
-            <table id="membertable" class="table table-striped table-condensed">
-                <thead>
-                    <tr>
-                        <th>Picture</th>
-                        <th>Name</th>
-                        <th>Gender</th>
-                        <th>Facebook</th>
-                    </tr>
-                </thead>
-                
-                <tbody><?php
-        foreach ($uProfiles as $profile): ?>
-                    <tr>
-                        <td>
-                            <?php if ($isLoggedIn): ?><a href="profile_show_<?=$profile->getUserName()?>"><?php endif; ?>
-                                <img src="<?= 'http://' . $host_base . '/' . self::$imgDir . $profile->getPicture()?>" class="img-circle" alt="<?=$profile->getUserName()?>'s profile picture" width="45" height="45" />
-                            <?php if ($isLoggedIn): ?></a><?php endif; ?>
-                        </td>
-                        <td>
-                            <?php if ($isLoggedIn): ?><a href="profile_show_<?=$profile->getUserName()?>"><?php endif; ?>
-                                <?= $profile->getFirstName() ?> <?=$profile->getLastName() ?>
-                            <?php if ($isLoggedIn): ?></a><?php endif; ?>
-                        </td>
-                        <td><?=$profile->getGender()?></td>
-                        <td><?php
-            if (!empty($profile->getFacebook())): ?>
-                            <a href="<?= $profile->getFacebook()?>"><img src="<?= 'http://' . $host_base . '/images/icon_facebook.png' ?>" class="img-responsive" alt="<?=$profile->getUserName()?>'s Facebook page" /></a>
-                        </td><?php
-            endif; ?>
-                    </tr><?php
-        endforeach; ?>
-                </tbody>
-                
-            </table>
             
-        </div>
+        <table id="membertable" class="table table-striped table-condensed">
+        </table>
+
     </div>
 </section>
 

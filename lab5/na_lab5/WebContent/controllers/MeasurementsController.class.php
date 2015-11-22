@@ -45,26 +45,12 @@ class MeasurementsController {
                 echo json_encode($bpMeasurements, JSON_PRETTY_PRINT);
                 break;
             case 'all':
-                $bpMeasurements = BloodPressureMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                $calorieMeasurements = CalorieMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                $exerciseMeasurements = ExerciseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                $glucoseMeasurements = GlucoseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                $sleepMeasurements = SleepMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                $weightMeasurements = WeightMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                $allMeasurements->bloodPressure = $bpMeasurements;
-                $allMeasurements->calories = $calorieMeasurements;
-                $allMeasurements->exercise = $exerciseMeasurements;
-                $allMeasurements->glucose = $glucoseMeasurements;
-                $allMeasurements->sleep = $sleepMeasurements;
-                $allMeasurements->weight = $weightMeasurements;
-//                 $allMeasurements = array(
-//                     'bloodPressure' => $bpMeasurements,
-//                     'calories' => $calorieMeasurements,
-//                     'exercise' => $exerciseMeasurements,
-//                     'glucose' => $glucoseMeasurements,
-//                     'sleep' => $sleepMeasurements,
-//                     'weight' => $weightMeasurements
-//                 );
+                $allMeasurements->bloodPressure = BloodPressureMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+                $allMeasurements->calories = CalorieMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+                $allMeasurements->exercise = ExerciseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+                $allMeasurements->glucose = GlucoseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+                $allMeasurements->sleep = SleepMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+                $allMeasurements->weight = WeightMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
                 echo json_encode($allMeasurements, JSON_PRETTY_PRINT);
                 break;
         }

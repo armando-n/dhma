@@ -70,9 +70,13 @@ class ProfileController {
         else if (!isset($_SESSION['arguments']))
             ProfileController::redirect('home', 'danger', 'Unrecognized command');
         
-        // argument 'view': requesting edit form
-        else if ($_SESSION['arguments'] === 'show')
+        // argument 'show': requesting edit form
+        else if (explode('_', $_SESSION['arguments'])[0] === 'show') {
+            $args = explode('_', $_SESSION['arguments']);
+            if (array_key_exists(1, $args))
+                $_SESSION['profileOld'] = UserProfilesDB::getUserProfileBy('userName', $args[1]);
             ProfileView::showEditForm();
+        }
         
         // argument 'post' posting profile edits
         else if ($_SESSION['arguments'] === 'post') {
@@ -97,11 +101,13 @@ class ProfileController {
             
             // edit succeeded
             else {
-                UserProfilesDB::editUserProfile($_SESSION['profile'], $profile);
-                $_SESSION['profile'] = UserProfilesDB::getUserProfileBy('userName', $profile->getUserName());
+                $oldProfile = isset($_SESSION['profileOld']) ? $_SESSION['profileOld'] : $_SESSION['profile'];
+                UserProfilesDB::editUserProfile($oldProfile, $profile);
+                unset($_SESSION['profileOld']);
+                $_SESSION['profile'] = UserProfilesDB::getUserProfileBy('userName', $_SESSION['profile']->getUserName());
                 $_SESSION['alertType'] = 'success';
                 $_SESSION['flash'] = 'Profile edited';
-                ProfileView::showProfile($_SESSION['profile']);
+                ProfileView::showProfile($profile);
             }
         }
     }

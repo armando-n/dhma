@@ -28,7 +28,7 @@ class User extends GenericModelObject {
         $paramArray = array(
                 "userName" => $this->userName,
                 "password" => $this->password,
-                "isAdministator" => $this->isAdministrator
+                "isAdministrator" => $this->isAdministrator
         );
         return $paramArray;
     }
@@ -108,7 +108,7 @@ class User extends GenericModelObject {
     
     private function validateIsAdministrator() {
         $this->isAdministrator = $this->extractForm($this->formInput, "isAdministrator");
-        $this->isAdministrator = !empty($this->isAdministrator);
+        $this->isAdministrator = empty($this->isAdministrator) ? false : true;
     }
     
 }
