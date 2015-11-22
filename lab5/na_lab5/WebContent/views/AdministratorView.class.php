@@ -8,7 +8,7 @@ class AdministratorView {
         if (!isset($_SESSION['styles']))
             $_SESSION['styles'] = array();
         $_SESSION['styles'][] = 'AdministratorStyles.css';
-        $_SESSION['styles'][] = '../lib/datatables.css';
+        $_SESSION['styles'][] = '../lib/datatables/datatables.css';
         if (!isset($_SESSION['scripts']))
             $_SESSION['scripts'] = array();
         $_SESSION['scripts'][] = 'AdministratorScripts.js';
