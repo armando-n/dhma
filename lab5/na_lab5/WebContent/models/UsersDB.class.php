@@ -11,11 +11,12 @@ class UsersDB {
         try {
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "insert into Users (userName, password)
-                    values (:userName, :password)");
+                "insert into Users (userName, password, isAdministrator)
+                    values (:userName, :password, :isAdministrator)");
             $stmt->execute(array(
                 ":userName" => $user->getUserName(),
-                ":password" => $user->getPassword()
+                ":password" => $user->getPassword(),
+                ":isAdministrator" => $user->isAdministrator()
             ));
             $returnUserID = $db->lastInsertId("userID");
             

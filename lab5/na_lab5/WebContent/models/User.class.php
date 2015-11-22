@@ -4,6 +4,7 @@ class User extends GenericModelObject {
     private $formInput;
     private $userName;
     private $password;
+    private $isAdministrator;
     
     public function __construct($formInput = null) {
         $this->formInput = $formInput;
@@ -19,10 +20,15 @@ class User extends GenericModelObject {
         return $this->password;
     }
     
+    public function isAdministrator() {
+        return $this->isAdministrator;
+    }
+    
     public function getParameters() {
         $paramArray = array(
                 "userName" => $this->userName,
-                "password" => $this->password
+                "password" => $this->password,
+                "isAdministator" => $this->isAdministrator
         );
         return $paramArray;
     }
@@ -30,7 +36,8 @@ class User extends GenericModelObject {
     public function __toString() {
         $str =
             "User name: [" . $this->userName . "]\n" .
-            "Password: [" . $this->password . "]";
+            "Password: [" . $this->password . "]\n" .
+            "Is administrator?: [" . $this->isAdministrator . "]";
         return $str;
     }
     
@@ -41,10 +48,12 @@ class User extends GenericModelObject {
         if (is_null($this->formInput)) {
             $this->userName = "";
             $this->password = "";
+            $this->isAdministrator = "";
         }
         else {
             $this->validateUserName();
             $this->validatePassword();
+            $this->validateIsAdministrator();
         }
     }
     
@@ -95,6 +104,11 @@ class User extends GenericModelObject {
 //             $this->setError("password", "PASSWORD_TOO_LONG");
 //             return;
 //         }
+    }
+    
+    private function validateIsAdministrator() {
+        $this->isAdministrator = $this->extractForm($this->formInput, "isAdministrator");
+        $this->isAdministrator = !empty($this->isAdministrator);
     }
     
 }

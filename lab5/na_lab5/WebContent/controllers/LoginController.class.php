@@ -42,6 +42,9 @@ class LoginController {
             foreach ($_POST as $key => $value)
                 unset($_POST[$key]);
             
+            if ($user->isAdministrator())
+                $_SESSION['admin'] = true; 
+                
             $_SESSION['profile'] = $profile;
             self::redirect('home', 'success', 'Welcome back, ' . $profile->getFirstName() . '!');
         }
