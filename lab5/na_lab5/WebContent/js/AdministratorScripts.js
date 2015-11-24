@@ -31,6 +31,7 @@ $(document).ready(function() {
 		],
 		scrollY: '35vh',
 		scrollCollapse: true,
+		paging: false,
 		select: true,
 		dom: 'Bft',
 		buttons: {
@@ -94,7 +95,7 @@ function deleteMember(e, dt, button, config) {
 		$.ajax( {
 			'url': url,
 			'success': function() {
-				$('#membertable').DataTable().ajax.reload();
+				$('#membertable').DataTable().ajax.reload(null, false);
 			},
 			'error': function() {}
 		} );
