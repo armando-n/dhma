@@ -10,7 +10,7 @@ FIRST_NAME_HAS_INVALID_CHARS Your first name contains invalid characters
 LAST_NAME_TOO_LONG Your last name cannot contain more than 30 characters
 LAST_NAME_HAS_INVALID_CHARS Your last name contains invalid characters
 USER_NAME_EMPTY Your user name cannot be empty or only contain white space
-USER_NAME_HAS_INVALID_CHARS Your user name can only contain letters, numbers, dashes and underscores
+USER_NAME_HAS_INVALID_CHARS Your user name can only contain letters, numbers, and dashes
 USER_NAME_TOO_LONG Your user name cannot contain more than 20 characters
 PHONE_TOO_LONG Your phone number cannot contain more than 15 characters
 PHONE_INVALID Your phone number is invalid
@@ -47,3 +47,4 @@ USER_NAME_EXISTS User name already exists. Please try another.
 ADD_USER_PROFILE_FAILED Failed to add profile to the database
 ADD_MEASUREMENT_FAILED Failed to add measurement to database
 EDIT_MEASUREMENT_FAILED Failed to edit measurement in database
+FACEBOOK_TOO_LONG Facebook cannot be more than 50 characters long.

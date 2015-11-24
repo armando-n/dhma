@@ -47,3 +47,4 @@ USER_NAME_EXISTS nombre de usuario ya existe. Por favor, pruebe con otra.
 ADD_USER_PROFILE_FAILED Error al añadir el perfil a la base de datos
 ADD_MEASUREMENT_FAILED Error al añadir la medición de la base de datos
 EDIT_MEASUREMENT_FAILED Error al editar medición de la base de datos
+FACEBOOK_TOO_LONG Facebook no puede ser más de 50 caracteres de largo.

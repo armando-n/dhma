@@ -3,7 +3,7 @@
 $numOfInserts = 6;
 
 $str = '';
-for ($i = 1; $i <= 7; $i++)
+for ($i = 1; $i <= 10; $i++)
     $str = $str . generateMeasurements($i);
 
 $outfile = fopen("measurement_inserts.sql", "w");
