@@ -181,16 +181,17 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
     private function validateUserName() {
         $this->userName = $this->extractForm($this->formInput, "userName");
         if (empty($this->userName)) {
+            $this->userName = null;
             $this->setError("userName", "USER_NAME_EMPTY");
             return;
         }
     
-        if (strlen($this->userName) > 15) {
+        if (strlen($this->userName) > 20) {
             $this->setError("userName", "USER_NAME_TOO_LONG");
             return;
         }
     
-        $options = array("options" => array("regexp" => "/^[a-zA-Z0-9_-]+$/"));
+        $options = array("options" => array("regexp" => "/^[a-zA-Z0-9-]+$/"));
         if (!filter_var($this->userName, FILTER_VALIDATE_REGEXP, $options)) {
             $this->setError("userName", "USER_NAME_HAS_INVALID_CHARS");
             return;
@@ -200,6 +201,7 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
     private function validateFirstName() {
         $this->firstName = $this->extractForm($this->formInput, "firstName");
         if (empty($this->firstName)) {
+            $this->firstName = null;
             return;
         }
         
@@ -208,7 +210,7 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
             return;
         }
         
-        $options = array("options" => array("regexp" => "/^[a-zA-Z ']+$/"));
+        $options = array("options" => array("regexp" => "/^[a-zA-Z '-]+$/"));
         if (!filter_var($this->firstName, FILTER_VALIDATE_REGEXP, $options)) {
             $this->setError("firstName", "FIRST_NAME_HAS_INVALID_CHARS");
             return;
@@ -218,6 +220,7 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
     private function validateLastName() {
         $this->lastName = $this->extractForm($this->formInput, "lastName");
         if (empty($this->lastName)) {
+            $this->lastName = null;
             return;
         }
         
@@ -226,7 +229,7 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
             return;
         }
         
-        $options = array("options" => array("regexp" => "/^[a-zA-Z ']+$/"));
+        $options = array("options" => array("regexp" => "/^[a-zA-Z '-]+$/"));
         if (!filter_var($this->lastName, FILTER_VALIDATE_REGEXP, $options)) {
             $this->setError("lastName", "LAST_NAME_HAS_INVALID_CHARS");
             return;
@@ -236,6 +239,7 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
     private function validateEmail() {
         $this->email = $this->extractForm($this->formInput, "email");
         if (empty($this->email)) {
+            $this->email = null;
             return;
         }
         
@@ -244,7 +248,7 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
             return;
         }
         
-        $options = array("options" => array("regexp" => "/^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$/"));
+        $options = array("options" => array("regexp" => "/^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]+)$/"));
         if (!filter_var($this->email, FILTER_VALIDATE_REGEXP, $options)) {
             $this->setError("email", "EMAIL_INVALID");
             return;
@@ -254,6 +258,7 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
     private function validatePhone() {
         $this->phone = $this->extractForm($this->formInput, "phone");
         if (empty($this->phone)) {
+            $this->phone = null;
             return;
         }
         
@@ -272,6 +277,7 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
     private function validateGender() {
         $this->gender = $this->extractForm($this->formInput, "gender");
         if (empty($this->gender)) {
+            $this->gender = null;
             return;
         }
         
@@ -285,10 +291,11 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
     private function validateDOB() {
         $this->dob = $this->extractForm($this->formInput, "dob");
         if (empty($this->dob)) {
+            $this->dob = null;
             return;
         }
         
-        $options = array("options" => array("regexp" => "/^((\d{4}[\/-]\d\d[\/-]\d\d)|(\d\d[\/-]\d\d[\/-]\d{4}))$/"));
+        $options = array("options" => array("regexp" => "/^((\d{4}-\d\d-\d\d)|(\d\d\/\d\d\/\d{4}))$/"));
         if (!filter_var($this->dob, FILTER_VALIDATE_REGEXP, $options)) {
             $this->setError("dob", "DOB_INVALID");
             return;
@@ -298,6 +305,7 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
     private function validateCountry() {
         $this->country = $this->extractForm($this->formInput, "country");
         if (empty($this->country)) {
+            $this->country = null;
             return;
         }
     }
@@ -309,6 +317,12 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
     private function validateFacebook() {
         $this->facebook = $this->extractForm($this->formInput, "facebook");
         if (empty($this->facebook)) {
+            $this->facebook = null;
+            return;
+        }
+        
+        if (strlen($this->facebook) > 50) {
+            $this->setError("facebook", "FACEBOOK_TOO_LONG");
             return;
         }
         

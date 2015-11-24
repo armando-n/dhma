@@ -12,3 +12,11 @@ td .glyphicon {
 	margin: 0 auto;
 	text-align: center;
 }
+
+.text-danger {
+	color: #d9534f;
+}
+
+.text-success {
+	color: #5cb85c;
+}

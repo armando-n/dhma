@@ -30,7 +30,7 @@ class LoginController {
         $profile = UserProfilesDB::getUserProfileBy('userName', $_POST['userName']);
         
         // user name not found or wrong password
-        if (is_null($user) || is_null($profile) || $user->getPassword() !== $_POST['password']) {
+        if (is_null($user) || is_null($profile) || !$user->verifyPassword($_POST['password'])) {
             self::alertMessage('danger', 'Login failed. User name or password incorrect.');
             $_SESSION['user'] = $_POST['userName'];
             LoginView::show();
@@ -53,12 +53,19 @@ class LoginController {
     private static function logout() {
         // end session (but keep base)
         $base = $_SESSION['base'];
+        $dbName = $_SESSION['dbName'];
+        $configFile = $_SESSION['configFile'];
         session_destroy();
         session_regenerate_id(true);
         
         // start new session
         session_start();
         $_SESSION['base'] = $base;
+        $_SESSION['dbName'] = $dbName;
+        $_SESSION['configFile'] = $configFile;
+        $_SESSION['styles'] = array();
+        $_SESSION['scripts'] = array();
+        $_SESSION['libraries'] = array();
         self::redirect('home', 'success', 'You have been successfully logged out');
     }
     

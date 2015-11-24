@@ -2,13 +2,14 @@
 if (ob_get_contents() === false)
     ob_start();
 include_once("includer.php");
-if (!isset($_SESSION))
+if (!isset($_SESSION)) {
     session_start();
-
-$_SESSION['dbName'] = 'na_lab5db';
-$_SESSION['configFile'] = 'myConfig.ini';
-if (!isset($_SESSION['scripts']))
+    $_SESSION['styles'] = array();
     $_SESSION['scripts'] = array();
+    $_SESSION['libraries'] = array();
+    $_SESSION['dbName'] = 'na_lab5db';
+    $_SESSION['configFile'] = 'myConfig.ini';
+}
 
 // parse the request URL
 $url = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);

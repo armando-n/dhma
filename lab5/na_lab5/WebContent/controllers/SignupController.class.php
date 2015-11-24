@@ -71,8 +71,8 @@ class SignupController {
             // add profile to database failed. delete user and re-show sign up view with error message
             UserProfilesDB::addUserProfile($profile, $userID);
             if ($profile->getErrorCount() > 0) {
-                // TODO once implemented, call UsersDB::deleteUser($user->getUserName())
                 self::alertMessage('danger', 'Error: Failed to add profile. Try again later.');
+                UsersDB::deleteUser($profile->getUserName());
                 SignupView::show();
                 return;
             }

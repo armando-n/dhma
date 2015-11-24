@@ -10,6 +10,7 @@ class UsersController {
         }
         
         switch (strtolower($_SESSION['action'])) {
+            case 'get': self::getUser(); break;
             case 'getall': self::getAllUsers(); break;
             case 'delete': self::deleteUser(); break;
             default:
@@ -25,6 +26,21 @@ class UsersController {
     public static function getAllUsers() {
         $profiles = UserProfilesDB::getAllUserProfiles();
         echo json_encode($profiles, JSON_PRETTY_PRINT);
+    }
+    
+    public static function getUser() {
+        if (!isset($_SESSION['arguments'])) {
+            echo '{"error":"Missing user name argument"}';
+            return;
+        }
+        
+        $user = UsersDB::getUserBy('userName', $_SESSION['arguments']);
+        if (is_null($user)) {
+            echo '{"error":"Either user doesn\'t exist or an error occured"}';
+            return;
+        }
+        
+        echo json_encode($user);
     }
     
     public function deleteUser() {

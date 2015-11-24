@@ -7,6 +7,8 @@ class SignupView {
             return;
         }
         
+        $_SESSION['scripts'][] = 'SignupScripts.js';
+        
         HeaderView::show("Member Sign Up");
         SignupView::showBody();
         FooterView::show();
@@ -70,7 +72,7 @@ class SignupView {
 <section class="row">
     <div class="col-sm-12">
         <h2 class="hidden">Sign Up Form</h2>
-        <form action="signup_post" enctype="multipart/form-data" method="post" role="form" class="form-horizontal"> 
+        <form action="signup_post" id="signupForm" enctype="multipart/form-data" method="post" role="form" class="form-horizontal"> 
         
             <div class="row">
                 <fieldset class="col-xs-12 col-sm-6 col-lg-5">
@@ -85,21 +87,21 @@ class SignupView {
                     <div class="form-group<?=$uNameStatus?>">
                         <label for="userName" class="control-label col-md-3">User Name</label>
                         <div class="col-md-9">
-                            <input type="text" id="userName" name="userName" value="<?=$uNameVal?>" class="form-control" aria-describedby="uNameHelp" size="15" required="required" maxlength="20" tabindex="2" pattern="^[a-zA-Z0-9_-]+$" title="User name can only contain letters, numbers, dashes (-), and underscores (_)" />
+                            <input type="text" id="userName" name="userName" value="<?=$uNameVal?>" class="form-control" aria-describedby="uNameHelp" size="20" required="required" maxlength="20" tabindex="2" pattern="^[a-zA-Z0-9_-]+$" title="User name can only contain letters, numbers, dashes (-), and underscores (_)" />
                             <span id="uNameHelp" class="help-block"><?=$uNameErr?></span>
                         </div>
                     </div>
                     <div class="form-group<?=$passStatus?>">
                         <label for="password" class="control-label col-md-3">Password</label>
                         <div class="col-md-9">
-                            <input type="password" id="password" name="password1" class="form-control" aria-describedby="passHelp" size="15" required="required" maxlength="20" tabindex="3" pattern=".{6,}" title="Password must be 6-20 characters long" />
-                            <span id="passHelp" class="help-block"><?=$passErr?></span>
+                            <input type="password" id="password" name="password1" class="form-control" size="15" required="required" maxlength="20" tabindex="3" pattern=".{6,}" title="Password must be 6-20 characters long" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="retypePassword" class="control-label col-md-3">Retype Password</label>
                         <div class="col-md-9">
-                            <input type="password" id="retypePassword" name="password2" class="form-control" size="15" required="required" maxlength="20" tabindex="4" pattern=".{6,}" title="Password must be 6-20 characters long" />
+                            <input type="password" id="retypePassword" name="password2" class="form-control" aria-describedby="passHelp" size="15" required="required" maxlength="20" tabindex="4" pattern=".{6,}" title="Password must be 6-20 characters long" />
+                            <span id="passHelp" class="help-block"><?=$passErr?></span>
                         </div>
                     </div>
                 </fieldset>
@@ -165,7 +167,7 @@ class SignupView {
                     <div class="form-group<?=$dobStatus?>">
                         <label for="dob" class="control-label col-md-3">Date of Birth</label>
                         <div class="col-md-9">
-                            <input type="date" id="dob" name="dob" value="<?=$dobVal?>" class="form-control" aria-describedby="dobHelp" tabindex="12" title="mm/dd/yyyy or mm-dd-yyyy" />
+                            <input type="date" id="dob" name="dob" value="<?=$dobVal?>" class="form-control" aria-describedby="dobHelp" tabindex="12" title="yyyy-mm-dd or mm/dd/yyyy" />
                             <span id="dobHelp" class="help-block"><?=$dobErr?></span>
                         </div>
                     </div>

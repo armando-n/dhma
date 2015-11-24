@@ -1,9 +1,9 @@
 <?php
-class User extends GenericModelObject {
+class User extends GenericModelObject implements JsonSerializable {
     
     private $formInput;
     private $userName;
-    private $password;
+    private $password; // this is actually the hash of the password
     private $isAdministrator;
     
     public function __construct($formInput = null) {
@@ -22,6 +22,10 @@ class User extends GenericModelObject {
     
     public function isAdministrator() {
         return $this->isAdministrator;
+    }
+    
+    public function verifyPassword($pass) {
+        return password_verify($pass, $this->password);
     }
     
     public function getParameters() {
@@ -64,12 +68,12 @@ class User extends GenericModelObject {
             return;
         }
         
-        if (strlen($this->userName) > 15) {
+        if (strlen($this->userName) > 20) {
             $this->setError("userName", "USER_NAME_TOO_LONG");
             return;
         }
         
-        $options = array("options" => array("regexp" => "/^[a-zA-Z0-9_-]+$/"));
+        $options = array("options" => array("regexp" => "/^[a-zA-Z0-9-]+$/"));
         if (!filter_var($this->userName, FILTER_VALIDATE_REGEXP, $options)) {
             $this->setError("userName", "USER_NAME_HAS_INVALID_CHARS");
             return;
@@ -80,35 +84,47 @@ class User extends GenericModelObject {
         $pass = $this->extractForm($this->formInput, "password");
         $pass1 = $this->extractForm($this->formInput, "password1");
         $pass2 = $this->extractForm($this->formInput, "password2");
-        if (!empty($pass1))
-            $this->password = $pass1;
+        if (!empty($pass1) || !empty($pass2))
+            self::validatePassword_Signup($pass1, $pass2);
         else
             $this->password = $pass;
+    }
     
-//         if ($pass1 !== $pass2) {
-//             $this->setError("password", "PASSWORDS_DO_NOT_MATCH");
-//             return;
-//         }
-    
-//         if (empty($this->password)) {
-//             $this->setError("password", "PASSWORD_EMPTY");
-//             return;
-//         }
-    
-//         if (strlen($this->password) < 6) {
-//             $this->setError("password", "PASSWORD_TOO_SHORT");
-//             return;
-//         }
-    
-//         if (strlen($this->password) > 20) {
-//             $this->setError("password", "PASSWORD_TOO_LONG");
-//             return;
-//         }
+    private function validatePassword_Signup($pass1, $pass2) {
+        if ($pass1 !== $pass2) {
+            $this->setError('password', 'PASSWORDS_DO_NOT_MATCH');
+            return;
+        }
+        
+        if (strlen($pass1) == 0) {
+            $this->setError('password', 'PASSWORD_EMPTY');
+            return;
+        }
+        
+        if (strlen($pass1) < 6) {
+            $this->setError('password', 'PASSWORD_TOO_SHORT');
+            return;
+        }
+        
+        if (strlen($pass1) > 20) {
+            $this->setError("password", "PASSWORD_TOO_LONG");
+            return;
+        }
+        
+        $this->password = password_hash($pass1, PASSWORD_DEFAULT);
     }
     
     private function validateIsAdministrator() {
         $this->isAdministrator = $this->extractForm($this->formInput, "isAdministrator");
         $this->isAdministrator = empty($this->isAdministrator) ? false : true;
+    }
+    
+    public function jsonSerialize() {
+        $object = new stdClass();
+        $object->userName = $this->userName;
+        $object->isAdministrator = $this->isAdministrator;
+        
+        return $object;
     }
     
 }
