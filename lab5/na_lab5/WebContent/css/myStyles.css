@@ -1,6 +1,11 @@
 h1#pagetitle {
+	font-size: 1.8em;
 	text-align: center;
 	margin-bottom: 1.6em;
+}
+
+legend {
+	font-size: 1.3em;
 }
 
 footer h3 {

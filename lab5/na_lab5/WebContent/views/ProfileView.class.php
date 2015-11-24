@@ -16,12 +16,8 @@ class ProfileView {
         HeaderView::show($profile->getUserName() . '\'s Profile');
         ?>
 <section id="profile-info" class="row">
-    <div class="col-sm-12 col-md-3 col-lg-4"><?php
-        if (!empty($profile->getPicture())): ?>
-        <img src="<?= 'http://' . $host_base . '/' . self::$imgDir . $profile->getPicture() ?>" class="img-responsive img-rounded" alt="<?= $profile->getUserName() ?>'s profile picture" /><?php
-        else: ?>
-        No profile image: <?php echo $profile->getPicture();
-        endif; ?>
+    <div class="col-sm-12 col-md-3 col-lg-4">
+        <img id="profile-pic" src="<?= 'http://' . $host_base . '/' . self::$imgDir . $profile->getPicture() ?>" class="img-responsive img-rounded" alt="<?= $profile->getUserName() ?>'s profile picture" />
     </div>
     <div class="col-sm-6 col-md-5 col-lg-4">
     
@@ -173,6 +169,7 @@ class ProfileView {
         else
             throw new Exception('Error: profile not found. Unable to edit profile.');
         
+        $_SESSION['scripts'][] = 'ProfileScripts.js';
         $_SESSION['styles'][] = 'ProfileStyles.css';
         HeaderView::show($profile->getUserName() . '\'s Profile');
         
@@ -190,20 +187,17 @@ class ProfileView {
 <form action="profile_edit_post" enctype="multipart/form-data" method="post" class="form-horizontal">
 <div class="row">
     <div class="col-sm-12 col-md-3">
-        <!-- <h2><?php //$profile->getUserName() ?>'s Profile</h2> -->
         <div class="form-group">
-            <div class="col-sm-4 col-sm-offset-4 col-md-12 col-md-offset-0"><?php
-                if (!empty($profile->getPicture())): ?>
-                <img src="<?= 'http://' . $host_base . '/' . self::$imgDir . $profile->getPicture() ?>" class="profilePic img-responsive img-rounded" alt="<?=$profile->getUserName()?>'s profile picture" /><br /><?php
-                else: ?>
-                No profile image<?php
-                endif; ?>
+            <div class="col-sm-12">
+                <div id="picture-wrapper">
+                    <img src="<?= 'http://' . $host_base . '/' . self::$imgDir . $profile->getPicture() ?>" class="profilePic img-responsive img-rounded" alt="<?=$profile->getUserName()?>'s profile picture" /><br />
+                </div>
 
-                <label for="choosePicture" class="btn btn-info btn-block">
+                <label for="picture" id="picture-btn" class="btn btn-info btn-block">
                     <span class="glyphicon glyphicon-user"></span>
                     &nbsp;Change Profile Picture
                 </label>
-                <input type="file" id="choosePicture" class="hidden" name="picture" accept="image/*" tabindex="13" />
+                <input type="file" id="picture" class="hidden" name="picture" accept="image/*" tabindex="13" />
                 <input type="hidden" id="oldPicture" name="oldPicture" value="<?=$profile->getPicture()?>" />
             </div>
         </div>

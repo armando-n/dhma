@@ -22,6 +22,9 @@ class SignupController {
         else if ($_SESSION['action'] === 'post')
             self::post();
         
+        else if ($_SESSION['action'] === 'loadimage')
+            self::loadImage();
+        
         else
             SignupController::redirect('home', 'danger', 'Error: Unrecognized action requested');
     }
@@ -85,6 +88,35 @@ class SignupController {
         }
     }
     
+//     private static function loadImage() {
+//         if (!isset($_FILES['picture']) || empty($_FILES['picture']['name'])) {
+//             echo '{"error":"Image not found"}';
+//             return;
+//         }
+        
+//         $filename = $_FILES['picture']['name'];
+//         $filetype = $_FILES['picture']['type'];
+//         $tmp_name = $_FILES['picture']['tmp_name'];
+//         $extension = strtolower(pathinfo($filename)['extension']);
+        
+//         // make sure file is an image
+//         if (strncmp($filetype, 'image', strlen('image')) !== 0) {
+//             echo '{"error":"' .htmlspecialchars($filename). ' is not an image file. It has type: ' .$filetype. '"}';
+//             return;
+//         }
+        
+//         // move the uploaded file to permanent location
+//         $permlocation = self::$imgDir . 'temp/' . $_POST['userName'] . '.' . $extension;
+//         if (is_uploaded_file($tmp_name))
+//             move_uploaded_file($tmp_name, $permlocation);
+//         else {
+//             echo '{"error":"' .htmlspecialchars($tmp_name). ' was not found or is not an uploaded file"}';
+//             return;
+//         }
+        
+//         echo '{"imgsrc":"' .$permlocation. '"}';
+//     }
+    
     private static function processImage() {
         $filename = $_FILES['picture']['name'];
         $filetype = $_FILES['picture']['type'];
@@ -93,7 +125,7 @@ class SignupController {
     
         // make sure file is an image
         if (strncmp($filetype, 'image', strlen('image')) !== 0) {
-            self::alertMessage('danger', 'Signup failed: ' . htmlspecialchars($filename) . 'is not an image file. It has type: ' . $filetype . '; ');
+            self::alertMessage('danger', 'Signup failed: ' . htmlspecialchars($filename) . ' is not an image file. It has type: ' . $filetype . '; ');
             SignupView::show();
             return;
         }
@@ -101,14 +133,14 @@ class SignupController {
         // move the uploaded file to permanent location
         if (is_uploaded_file($tmp_name))
             move_uploaded_file($tmp_name, self::$imgDir . $_POST['userName'] . '.' . $extension);
-            else {
-                self::alertMessage('danger', 'Signup failed: ' . htmlspecialchars($tmp_name) . 'was not found or is not an uploaded file.');
-                SignupView::show();
-                return;
-            }
-    
-            // add image file name to post data
-            $_POST['picture'] = $_POST['userName'] . '.' . $extension;
+        else {
+            self::alertMessage('danger', 'Signup failed: ' . htmlspecialchars($tmp_name) . ' was not found or is not an uploaded file.');
+            SignupView::show();
+            return;
+        }
+
+        // add image file name to post data
+        $_POST['picture'] = $_POST['userName'] . '.' . $extension;
     }
     
     private static function alertMessage($alertType, $alertMessage) {

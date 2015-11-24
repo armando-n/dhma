@@ -7,6 +7,7 @@ class SignupView {
             return;
         }
         
+        $_SESSION['styles'][] = 'SignupStyles.css';
         $_SESSION['scripts'][] = 'SignupScripts.js';
         
         HeaderView::show("Member Sign Up");
@@ -108,14 +109,15 @@ class SignupView {
                 
                 <fieldset class="col-xs-12 col-sm-6 col-lg-5">
                     <legend>Profile Information</legend>
+                    <div id="picture-wrapper"></div>
                     <div class="form-group">
                         <label class="control-label col-md-3">Picture</label>
                         <div class="col-md-9">
-                            <label for="choosePicture" class="btn btn-default btn-sm btn-block">
+                            <label for="picture" class="btn btn-default btn-sm btn-block">
                                 <span class="glyphicon glyphicon-user"></span>
                                 &nbsp;Upload Profile Picture
                             </label>
-                            <input type="file" id="choosePicture" class="hidden" name="picture" accept="image/*" tabindex="5" />
+                            <input type="file" id="picture" class="hidden" name="picture" accept="image/*" tabindex="5" />
                         </div>
                     </div>
                     <div class="form-group<?=$fNameStatus?>">
@@ -390,8 +392,8 @@ class SignupView {
                         </div>
                     </div>
                     <div class="form-group<?=$colorStatus?>">
-                        <label for="accentColor" class="control-label col-sm-4 col-md-3">Theme Accent Color</label>
-                        <div class="col-sm-8 col-md-3">
+                        <label for="accentColor" class="control-label col-sm-4 col-md-3 col-lg-3">Theme Accent Color</label>
+                        <div class="col-sm-8 col-md-3 col-lg-9">
                             <input type="color" id="accentColor" name="accentColor" class="form-control" value="<?=$colorVal?>" aria-describedby="colorHelp" tabindex="15" />
                             <span id="colorHelp" class="help-block"><?=$colorErr?></span>
                         </div>
