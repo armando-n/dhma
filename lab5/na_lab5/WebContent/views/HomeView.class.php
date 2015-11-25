@@ -40,14 +40,22 @@ class HomeView {
         <div class="row">
             <div class="col-md-offset 2 col-md-8">
                 <h3>Screenshots</h3>
-                    Coming soon... When this web site is more complete, screen shots will be
-                    placed here.
-                <!-- These images don't exist yet, but they will.
-                <img src="/images/charts.png" alt="Charts tracking measurements" width="400" height="300" /><br />
-                <img src="/images/tables.png" alt="Tables showing past measurements" width="400" height="300" /><br />
-                <img src="/images/input.png" alt="Inputting measurement data" width="400" height = "300" />
-                 -->
-            <!-- </section> -->
+                    
+                <div class="">
+                    <div class="col-sm-6">
+                        <a href="images/screenshots/ss_measurements_dark.png">
+                            <img src="images/screenshots/ss_measurements_dark.png" alt="Screenshot of measurements (dark)" class="img-responsive img-thumbnail" />
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="">
+                    <div class="col-sm-6">
+                        <a href="images/screenshots/ss_profile_light.png">
+                            <img src="images/screenshots/ss_profile_light.png" alt="Screenshot of profile (light)" class="img-responsive img-thumbnail" />
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -57,10 +65,10 @@ class HomeView {
         <aside id="faq">
             <h2>Frequently Asked Questions</h2>
             <ul class="list-unstyled list-group">
-                <li class="list-group-item"><a href="faq.html#registration">Why do I need to register?</a></li>
-                <li class="list-group-item"><a href="faq.html#privacy">Who can see my information?</a></li>
+                <li class="list-group-item"><a href="faq#purpose">What is the purpose of this site??</a></li>
+                <li class="list-group-item"><a href="faq#privacy">Who can see my information?</a></li>
             </ul>
-            <a href="faq.html">More Questions ...</a>
+            <a href="faq">More Questions ...</a>
         </aside>
     </div>
 

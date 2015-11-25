@@ -37,7 +37,7 @@ $(document).ready(function() {
 	});
 	
 	// grab measurement data from server and create tables
-	var table_bloodPressure = $('#bloodPressure_table').DataTable(tableOptions());
+//	var table_bloodPressure = $('#bloodPressure_table').DataTable(tableOptions());
 	
 });
 
