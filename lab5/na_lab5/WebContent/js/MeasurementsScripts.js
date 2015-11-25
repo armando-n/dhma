@@ -36,7 +36,51 @@ $(document).ready(function() {
 		'error': failedRetreivingChartData
 	});
 	
+	// grab measurement data from server and create tables
+	var table_bloodPressure = $('#bloodPressure_table').DataTable(tableOptions());
+	
 });
+
+function tableOptions() {
+	return {
+		ajax: {
+			url: '/na_lab5/measurements_get_bloodPressure',
+			dataSrc: ''
+		},
+		columns: [
+	        {
+	        	data: 'systolicPressure',
+	        	title: 'Systolic Pressure'
+	        },
+		    {
+		    	data: 'diastolicPressure',
+		    	title: 'Diastolic Pressure'
+		    },
+		    {
+		    	data: 'date',
+		    	title: 'Date'
+	    	},
+		    {
+	    		data: 'time',
+	    		title: 'Time'
+			},
+	    	{
+	    		data: 'notes',
+	    		title: 'Notes'
+			}
+		],
+		scrollY: '35vh',
+		scrollCollapse: true,
+		paging: false,
+		select: true,
+		dom: 'Bft',
+		buttons: {
+			name: 'primary',
+			buttons: ['columnsToggle']
+		}
+	
+	};
+}
 
 function failedRetreivingChartData() {
 	alert('Error retreiving blood pressure measurements json');
@@ -124,9 +168,39 @@ function createCharts_helper(measType, properType, units, data, name) {
 				max: todaysEnd()
 			},
 			yAxis: { title: { text: units } },
-			series: series
+			series: series,
+			tooltip: {
+				formatter: function() {
+					var date = new Date(this.x);
+					var dateStr = date.toDateString();
+					var timeStr = dateTo12HourLocalTimeString(date);
+					
+					var resultStr = '<span style="font-size: smaller;">' +dateStr+ '</span>';
+					resultStr += '<br /><span style="font-size: smaller;">' +timeStr+ '</span>';
+					resultStr += '<br /><span style="color: ' +this.series.color+ '">\u25CF</span> ' +this.series.name+ ': <strong>' +this.y+ '</strong>';
+
+			        return resultStr;
+				}
+			}
 		});
 	}
+}
+
+// takes a Date object and returns a time string in a 12-hour format, e.g.: 2:06 pm (CST) 
+function dateTo12HourLocalTimeString(date) {
+	var pieces = date.toTimeString().split(' ');
+	
+	var timeZone = '(';
+	$.each(pieces.slice(2), function(index, string) { timeZone += (index == 0) ? string[1] : string[0]; } );
+	timeZone += ')';
+	var time = pieces[0];
+	var timePieces = time.split(':');
+	var hour = timePieces[0];
+	var minute = timePieces[1];
+	var amOrPm = (hour >= 12) ? 'pm' : 'am';
+	hour = hour % 12;
+	
+	return hour+ ':' +minute+ ' ' +amOrPm+ ' ' +timeZone
 }
 
 function todaysEnd() {
