@@ -208,11 +208,14 @@ class BloodPressureMeasurement extends GenericModelObject implements JsonSeriali
     public function jsonSerialize() {
         $isoDateTime = $this->datetime->format('Y-m-d H:i');
         $isoDateTime[10] = 'T';
+        $datetime_pieces = explode('T', $isoDateTime);
         $object = new stdClass();
         
         $object->systolicPressure = $this->systolicPressure;
         $object->diastolicPressure = $this->diastolicPressure;
         $object->dateAndTime = $isoDateTime;
+        $object->date = $datetime_pieces[0];
+        $object->time = $datetime_pieces[1];
         $object->notes = $this->notes;
         $object->userName = $this->userName;
         return $object;

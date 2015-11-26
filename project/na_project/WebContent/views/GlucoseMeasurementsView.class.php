@@ -29,28 +29,9 @@ class GlucoseMeasurementsView {
             <div class="col-sm-12"><?php
                 if (!isset($measurements["glucose"]) || empty($measurements["glucose"])):
                         ?><p>No glucose measurements to show yet</p><?php
-                else:
-                    $i = 0; ?>
-                <table class="table table-striped table-hover table-condensed table-responsive">
-                    <thead>
-                        <tr>
-                            <th>Glucose Levels</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody><?php
-                    foreach ($measurements["glucose"] as $glucose): ?>
-                        <tr id="glucose_<?=$glucose->getDateTime()->format('Y-m-d_H-i')?>" class="measurementRow">
-                            <td id="glucose_glucose_<?=$glucose->getDateTime()->format('Y-m-d_H-i')?>"><?=$glucose->getMeasurement()?></td>
-                            <td id="date_glucose_<?=$glucose->getDateTime()->format('Y-m-d_H-i')?>"><?=$glucose->getDate()?></td>
-                            <td id="time_glucose_<?=$glucose->getDateTime()->format('Y-m-d_H-i')?>"><?=$glucose->getTime()?></td>
-                            <td id="notes_glucose_<?=$glucose->getDateTime()->format('Y-m-d_H-i')?>"><?=$glucose->getNotes()?></td>
-                        </tr><?php
-                        $i++;
-                    endforeach; ?>
-                    </tbody>
+                else: ?>
+                <table id="glucose_table" class="table table-striped table-hover table-condensed table-responsive">
+                    <!-- DataTable is inserted here -->
                 </table><?php
                 endif; ?>
             </div>

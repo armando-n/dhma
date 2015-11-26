@@ -29,30 +29,9 @@ class BloodPressureMeasurementsView {
             <div class="col-sm-12"><?php
                 if (!isset($measurements["bloodPressure"]) || empty($measurements["bloodPressure"])):
                         ?><p>No blood pressure measurements to show yet</p><?php
-                else:
-                    $i = 0; ?>
-                <table class="table table-striped table-hover table-condensed table-responsive">
-                    <thead>
-                        <tr>
-                            <th>Systolic</th>
-                            <th>Diastolic</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody><?php
-                    foreach ($measurements["bloodPressure"] as $bloodPressure): ?>
-                        <tr id="bloodPressure_<?=$bloodPressure->getDateTime()->format('Y-m-d_H-i')?>" class="measurementRow">
-                            <td id="systolicPressure_bloodPressure_<?=$bloodPressure->getDateTime()->format('Y-m-d_H-i')?>"><?=$bloodPressure->getSystolicPressure()?></td>
-                            <td id="diastolicPressure_bloodPressure_<?=$bloodPressure->getDateTime()->format('Y-m-d_H-i')?>"><?=$bloodPressure->getDiastolicPressure()?></td>
-                            <td id="date_bloodPressure_<?=$bloodPressure->getDateTime()->format('Y-m-d_H-i')?>"><?=$bloodPressure->getDate()?></td>
-                            <td id="time_bloodPressure_<?=$bloodPressure->getDateTime()->format('Y-m-d_H-i')?>"><?=$bloodPressure->getTime()?></td>
-                            <td id="notes_bloodPressure_<?=$bloodPressure->getDateTime()->format('Y-m-d_H-i')?>"><?=$bloodPressure->getNotes()?></td>
-                        </tr><?php
-                        $i++;
-                    endforeach; ?>
-                    </tbody>
+                else: ?>
+                <table id="bloodPressure_table" class="table table-striped table-hover table-condensed table-responsive">
+                    <!-- DataTable is inserted here -->
                 </table><?php
                 endif; ?>
             </div>

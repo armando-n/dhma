@@ -40,6 +40,10 @@ class MeasurementsController {
         $allMeasurements = new stdClass();
         
         switch ($_SESSION['arguments']) {
+            case 'glucose':
+                $glucoseMeasurements = GlucoseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+                echo json_encode($glucoseMeasurements, JSON_PRETTY_PRINT);
+                break;
             case 'bloodPressure':
                 $bpMeasurements = BloodPressureMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
                 echo json_encode($bpMeasurements, JSON_PRETTY_PRINT);

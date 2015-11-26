@@ -37,48 +37,31 @@ $(document).ready(function() {
 	});
 	
 	// grab measurement data from server and create tables
-//	var table_bloodPressure = $('#bloodPressure_table').DataTable(tableOptions());
+	var table_bloodPressure = $('#bloodPressure_table').DataTable(tableOptions('bloodPressure', [ ['systolicPressure', 'Systolic Pressure'], ['diastolicPressure', 'Diastolic Pressure'] ]));
+	var table_glucose = $('#glucose_table').DataTable(tableOptions('glucose', [ ['glucose', 'Glucose (mg/dL)'] ]));
 	
 });
 
-function tableOptions() {
+function tableOptions(measType, dataAndTitle) {
+	var columns = [
+        { data: 'date', title: 'Date' },
+        { data: 'time', title: 'Time' },
+	    { data: 'notes', title: 'Notes' }
+    ];
+
+	for (var i = dataAndTitle.length-1; i >= 0; i--)
+		columns.unshift({ data: dataAndTitle[i][0], title: dataAndTitle[i][1] });
+	
 	return {
-		ajax: {
-			url: '/na_project/measurements_get_bloodPressure',
-			dataSrc: ''
-		},
-		columns: [
-	        {
-	        	data: 'systolicPressure',
-	        	title: 'Systolic Pressure'
-	        },
-		    {
-		    	data: 'diastolicPressure',
-		    	title: 'Diastolic Pressure'
-		    },
-		    {
-		    	data: 'date',
-		    	title: 'Date'
-	    	},
-		    {
-	    		data: 'time',
-	    		title: 'Time'
-			},
-	    	{
-	    		data: 'notes',
-	    		title: 'Notes'
-			}
-		],
+		ajax: { url: '/na_lab5/measurements_get_'+measType, dataSrc: '' },
+		columns: columns,
+		order: [[2, 'desc']],
 		scrollY: '35vh',
 		scrollCollapse: true,
 		paging: false,
 		select: true,
-		dom: 'Bft',
-		buttons: {
-			name: 'primary',
-			buttons: ['columnsToggle']
-		}
-	
+		dom: 'ft'
+		//buttons: { name: 'primary', buttons: ['columnsToggle'] }
 	};
 }
 

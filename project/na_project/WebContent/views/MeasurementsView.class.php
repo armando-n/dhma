@@ -2,14 +2,10 @@
 class MeasurementsView{
     
     public static function show() {
-        if (!isset($_SESSION['styles']))
-            $_SESSION['styles'] = array();
-        if (!isset($_SESSION['scripts']))
-            $_SESSION['scripts'] = array();
-        if (!isset($_SESSION['libraries']))
-            $_SESSION['libraries'] = array();
         $_SESSION['styles'][] = 'MeasurementsStyles.css';
+        $_SESSION['styles'][] = '../lib/datatables/datatables.css';
         $_SESSION['libraries'][] = 'highcharts/highcharts.js';
+        $_SESSION['libraries'][] = 'datatables/datatables.js';
         $_SESSION['scripts'][] = 'MeasurementsScripts.js';
         
         if (isset($_SESSION['profile']) && $_SESSION['profile']->getTheme() === 'dark')
