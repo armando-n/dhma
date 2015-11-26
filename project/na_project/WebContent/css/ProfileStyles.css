@@ -1,0 +1,72 @@
+.attrLabel {
+	font-weight: bold;
+	text-align: right;
+}
+
+.attrValue {
+	text-align: left;
+}
+
+.profilePic {
+	margin: 0 auto;
+}
+
+#picture-wrapper {
+	margin-bottom: 10px;
+}
+
+#profileImg {
+	margin: 0 auto;
+}
+
+#profile-pic {
+	margin: 0 auto;
+}
+
+/* extra small devices */
+@media screen and (max-width: 749px) {    
+    #profileImg {
+        max-width: 80%;
+        max-height: 200px;
+    }
+    
+    .attrLabel {
+       text-align: left;
+    }
+    
+    .attrValue {
+       text-align: right;
+    }
+}
+
+/* small devices */
+@media screen and (min-width: 750px) and (max-width: 991px) {
+    #profileImg {
+        max-width: 65%;
+        max-height: 240px;
+    }
+    
+    .attrLabel {
+       text-align: left;
+    }
+    
+    .attrValue {
+       text-align: right;
+    }
+}
+
+/* medium devices */
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+    #profileImg {
+        max-width: 240px;
+        max-height: 200px;
+    }
+}
+
+/* large devices */
+@media screen and (min-width: 1200px) {
+    #profileImg {
+        max-width: 285px;
+        max-height: 250px;
+    }
+}

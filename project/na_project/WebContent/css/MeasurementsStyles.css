@@ -1,0 +1,86 @@
+#charts_bloodPressure {
+	width: 700px;
+	height: 400px;
+}
+
+.buttonGroupLabel {
+	font-size: 1.20em;
+}
+
+.rowHover {
+	background-color: #A8A8A8 !important;
+}
+
+.rowSelected {
+	background-color: #21409A !important;
+	color: #D8D8D8;
+	outline-style: groove;
+	outline-width: 2px;
+	outline-color: #213474;
+}
+
+.meas-label {
+	text-align: right;
+}
+
+.measurementRow {
+	cursor: default;
+}
+
+.jump-to {
+	padding-right: 0;
+	padding-left: 0;
+}
+
+.jump-to button {
+	border-radius: 0;
+}
+
+caption {
+	font-size: 1.5em;
+}
+
+legend {
+	font-size: 1.5em;
+	color: #777;
+}
+
+.panel > .panel-heading > h2 {
+	font-size: 1.5em;
+}
+
+/* extra small devices */
+@media screen and (max-width: 749px) {    
+    .chart-secondary {
+       display: none;
+    }
+}
+
+/* small devices */
+@media screen and (min-width: 750px) and (max-width: 991px) {
+	.form-horizontal .meas-label {
+	   text-align: left;
+	}
+	
+	.chart-secondary {
+       display: none;
+    }
+}
+
+/* medium devices */
+/*@media screen and (min-width: 992px) and (max-width: 1199px) {
+    
+}*/
+
+/*@media screen and (min-width: 650px) {
+	#charts_bloodPressure {
+    width: 625px;
+    height: 400px;
+}
+
+
+@media screen and (max-width: 649px) {
+    #charts_bloodPressure {
+    width: 400px;
+    height: 325px;
+}*/

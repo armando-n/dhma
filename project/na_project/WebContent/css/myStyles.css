@@ -1,0 +1,27 @@
+h1#pagetitle {
+	font-size: 1.8em;
+	text-align: center;
+	margin-bottom: 1.6em;
+}
+
+legend {
+	font-size: 1.3em;
+}
+
+footer h3 {
+	font-size: 1.15em;
+}
+
+td .glyphicon {
+	display: block;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.text-danger {
+	color: #d9534f;
+}
+
+.text-success {
+	color: #5cb85c;
+}
