@@ -29,28 +29,9 @@ class CalorieMeasurementsView {
             <div class="col-sm-12"><?php
                 if (!isset($measurements["calories"]) || empty($measurements["calories"])):
                         ?><p>No calorie measurements to show yet</p><?php
-                else:
-                    $i = 0; ?>
-                <table class="table table-striped table-hover table-condensed table-responsive">
-                    <thead>
-                        <tr>
-                            <th>Calories</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody><?php
-                    foreach ($measurements["calories"] as $calories): ?>
-                        <tr id="calories_<?=$calories->getDateTime()->format('Y-m-d_H-i')?>" class="measurementRow">
-                            <td id="calories_calories_<?=$calories->getDateTime()->format('Y-m-d_H-i')?>"><?=$calories->getMeasurement()?></td>
-                            <td id="date_calories_<?=$calories->getDateTime()->format('Y-m-d_H-i')?>"><?=$calories->getDate()?></td>
-                            <td id="time_calories_<?=$calories->getDateTime()->format('Y-m-d_H-i')?>"><?=$calories->getTime()?></td>
-                            <td id="notes_calories_<?=$calories->getDateTime()->format('Y-m-d_H-i')?>"><?=$calories->getNotes()?></td>
-                        </tr><?php
-                        $i++;
-                    endforeach; ?>
-                    </tbody>
+                else: ?>
+                <table id="calories_table" class="table table-striped table-hover table-condensed table-responsive">
+                    <!-- DataTable is inserted here -->
                 </table><?php
                 endif; ?>
             </div>

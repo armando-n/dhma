@@ -39,7 +39,10 @@ $(document).ready(function() {
 	// grab measurement data from server and create tables
 	var table_bloodPressure = $('#bloodPressure_table').DataTable(tableOptions('bloodPressure', [ ['systolicPressure', 'Systolic Pressure'], ['diastolicPressure', 'Diastolic Pressure'] ]));
 	var table_glucose = $('#glucose_table').DataTable(tableOptions('glucose', [ ['glucose', 'Glucose (mg/dL)'] ]));
-	
+	var table_calories = $('#calories_table').DataTable(tableOptions('calories', [ ['calories', 'Calories'] ]));
+	var table_execrise = $('#exercise_table').DataTable(tableOptions('exercise', [ ['duration', 'Exercise (min)'] ]));
+	var table_sleep = $('#sleep_table').DataTable(tableOptions('sleep', [ ['duration', 'Sleep (min)', ] ]));
+	var table_weight = $('#weight_table').DataTable(tableOptions('weight', [ ['weight', 'Weight (kg)'] ]));
 });
 
 function tableOptions(measType, dataAndTitle) {
@@ -53,7 +56,7 @@ function tableOptions(measType, dataAndTitle) {
 		columns.unshift({ data: dataAndTitle[i][0], title: dataAndTitle[i][1] });
 	
 	return {
-		ajax: { url: '/na_lab5/measurements_get_'+measType, dataSrc: '' },
+		ajax: { url: '/na_project/measurements_get_'+measType, dataSrc: '' },
 		columns: columns,
 		order: [[2, 'desc']],
 		scrollY: '35vh',

@@ -29,28 +29,9 @@ class SleepMeasurementsView {
             <div class="col-sm-12"><?php
                 if (!isset($measurements["sleep"]) || empty($measurements["sleep"])):
                         ?><p>No sleep measurements to show yet</p><?php
-                else:
-                    $i = 0; ?>
-                <table class="table table-striped table-hover table-condensed table-responsive">
-                    <thead>
-                        <tr>
-                            <th>Duration (mins)</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody><?php
-                    foreach ($measurements["sleep"] as $sleep): ?>
-                        <tr id="sleep_<?=$sleep->getDateTime()->format('Y-m-d_H-i')?>" class="measurementRow">
-                            <td id="duration_sleep_<?=$sleep->getDateTime()->format('Y-m-d_H-i')?>"><?=$sleep->getMeasurement()?></td>
-                            <td id="date_sleep_<?=$sleep->getDateTime()->format('Y-m-d_H-i')?>"><?=$sleep->getDate()?></td>
-                            <td id="time_sleep_<?=$sleep->getDateTime()->format('Y-m-d_H-i')?>"><?=$sleep->getTime()?></td>
-                            <td id="notes_sleep_<?=$sleep->getDateTime()->format('Y-m-d_H-i')?>"><?=$sleep->getNotes()?></td>
-                        </tr><?php
-                        $i++;
-                    endforeach; ?>
-                    </tbody>
+                else: ?>
+                <table id="sleep_table" class="table table-striped table-hover table-condensed table-responsive">
+                    <!-- DataTable is inserted here -->
                 </table><?php
                 endif; ?>
             </div>

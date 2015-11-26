@@ -29,30 +29,9 @@ class ExerciseMeasurementsView {
             <div class="col-sm-12"><?php
                 if (!isset($measurements["exercise"]) || empty($measurements["exercise"])):
                         ?><p>No exercise measurements to show yet</p><?php
-                else:
-                    $i = 0; ?>
-                <table class="table table-striped table-hover table-condensed table-responsive">
-                    <thead>
-                        <tr>
-                            <th>Duration (mins)</th>
-                            <th>Type</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody><?php
-                    foreach ($measurements["exercise"] as $exercise): ?>
-                        <tr id="exercise_<?=$exercise->getDateTime()->format('Y-m-d_H-i')?>" class="measurementRow">
-                            <td id="duration_exercise_<?=$exercise->getDateTime()->format('Y-m-d_H-i')?>"><?=$exercise->getDuration()?></td>
-                            <td id="type_exercise_<?=$exercise->getDateTime()->format('Y-m-d_H-i')?>"><?=$exercise->getType()?></td>
-                            <td id="date_exercise_<?=$exercise->getDateTime()->format('Y-m-d_H-i')?>"><?=$exercise->getDate()?></td>
-                            <td id="time_exercise_<?=$exercise->getDateTime()->format('Y-m-d_H-i')?>"><?=$exercise->getTime()?></td>
-                            <td id="notes_exercise_<?=$exercise->getDateTime()->format('Y-m-d_H-i')?>"><?=$exercise->getNotes()?></td>
-                        </tr><?php
-                        $i++;
-                    endforeach; ?>
-                    </tbody>
+                else: ?>
+                <table id="exercise_table" class="table table-striped table-hover table-condensed table-responsive">
+                    <!-- DataTable is inserted here -->
                 </table><?php
                 endif; ?>
             </div>

@@ -31,26 +31,8 @@ class WeightMeasurementsView {
                         ?><p>No weight measurements to show yet</p><?php
                 else:
                     $i = 0; ?>
-                <table class="table table-striped table-hover table-condensed table-responsive">
-                    <thead>
-                        <tr>
-                            <th>Weight (kg)</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody><?php
-                    foreach ($measurements["weight"] as $weight): ?>
-                        <tr id="weight_<?=$weight->getDateTime()->format('Y-m-d_H-i')?>" class="measurementRow">
-                            <td id="weight_weight_<?=$weight->getDateTime()->format('Y-m-d_H-i')?>"><?=$weight->getMeasurement()?></td>
-                            <td id="date_weight_<?=$weight->getDateTime()->format('Y-m-d_H-i')?>"><?=$weight->getDate()?></td>
-                            <td id="time_weight_<?=$weight->getDateTime()->format('Y-m-d_H-i')?>"><?=$weight->getTime()?></td>
-                            <td id="notes_weight_<?=$weight->getDateTime()->format('Y-m-d_H-i')?>"><?=$weight->getNotes()?></td>
-                        </tr><?php
-                        $i++;
-                    endforeach; ?>
-                    </tbody>
+                <table id="weight_table" class="table table-striped table-hover table-condensed table-responsive">
+                    <!-- DataTable is inserted here -->
                 </table><?php
                 endif; ?>
             </div>

@@ -207,11 +207,14 @@ class ExerciseMeasurement extends GenericModelObject implements JsonSerializable
     public function jsonSerialize() {
         $isoDateTime = $this->datetime->format('Y-m-d H:i');
         $isoDateTime[10] = 'T'; // replace space with T to put into ISO date/time format
+        $datetime_pieces = explode('T', $isoDateTime);
         $object = new stdClass();
         
         $object->duration = $this->duration;
         $object->type = $this->type;
         $object->dateAndTime = $isoDateTime;
+        $object->date = $datetime_pieces[0];
+        $object->time = $datetime_pieces[1];
         $object->notes = $this->notes;
         $object->userName = $this->userName;
         return $object;
