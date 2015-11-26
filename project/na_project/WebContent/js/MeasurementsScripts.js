@@ -136,8 +136,21 @@ function createCharts_helper(measType, properType, units, data, name) {
 		var idSuffix = (i == 0) ? 'primary'   : 'secondary';
 		var series = [];
 		var numOfSeriesData = data.length;
+		var minY = 100000;
+		var maxY = 0;
 		
 		for (var j = 0; j < numOfSeriesData; j++) {
+			for (var k = 0; k < data[j].length; k++) {
+				if (data[j][k][1] < minY)
+					minY = data[j][k][1];
+				if (data[j][k][1] > maxY)
+					maxY = data[j][k][1];
+			}
+			if (data[j][1] < minY)
+				minY = data[j][1];
+			if (data[j][1] > maxY)
+				maxY = data[j][1];
+			
 			series.push( {
 				name: name[j],
 				data: data[j]
@@ -153,7 +166,7 @@ function createCharts_helper(measType, properType, units, data, name) {
 				min: min,
 				max: todaysEnd()
 			},
-			yAxis: { title: { text: units } },
+			yAxis: { title: { text: units }, min: minY, max: maxY },
 			series: series,
 			tooltip: {
 				formatter: function() {
