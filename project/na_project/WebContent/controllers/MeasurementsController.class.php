@@ -33,46 +33,38 @@ class MeasurementsController {
     
     private static function get() {        
         if (!isset($_SESSION['arguments'])) {
-            self::error('Error: arguments expected');
+            self::error('Error: 2 arguments expected');
             return;
         }
         
-        $allMeasurements = new stdClass();
+        if (strpos($_SESSION['arguments'], '_') === false && $_SESSION['arguments'] !== 'all') {
+            self::error('Error: invalid argument(s)');
+            return;
+        }
         
-        switch ($_SESSION['arguments']) {
-            case 'glucose':
-                $glucoseMeasurements = GlucoseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                echo json_encode($glucoseMeasurements, JSON_PRETTY_PRINT);
-                break;
-            case 'bloodPressure':
-                $bpMeasurements = BloodPressureMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                echo json_encode($bpMeasurements, JSON_PRETTY_PRINT);
-                break;
-            case 'calories':
-                $calorieMeasurements = CalorieMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                echo json_encode($calorieMeasurements, JSON_PRETTY_PRINT);
-                break;
-            case 'exercise':
-                $exerciseMeasurements = ExerciseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                echo json_encode($exerciseMeasurements, JSON_PRETTY_PRINT);
-                break;
-            case 'sleep':
-                $sleepMeasurements = SleepMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                echo json_encode($sleepMeasurements, JSON_PRETTY_PRINT);
-                break;
-            case 'weight':
-                $weightMeasurements = WeightMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                echo json_encode($weightMeasurements, JSON_PRETTY_PRINT);
-                break;
-            case 'all':
-                $allMeasurements->bloodPressure = BloodPressureMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                $allMeasurements->calories = CalorieMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                $allMeasurements->exercise = ExerciseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                $allMeasurements->glucose = GlucoseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                $allMeasurements->sleep = SleepMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                $allMeasurements->weight = WeightMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                echo json_encode($allMeasurements, JSON_PRETTY_PRINT);
-                break;
+        else if (strpos($_SESSION['arguments'], '_') === false && $_SESSION['arguments'] === 'all') {
+            $allMeasurements = new stdClass();
+            
+            $allMeasurements->bloodPressure = BloodPressureMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+            $allMeasurements->calories = CalorieMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+            $allMeasurements->exercise = ExerciseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+            $allMeasurements->glucose = GlucoseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+            $allMeasurements->sleep = SleepMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+            $allMeasurements->weight = WeightMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+            echo json_encode($allMeasurements, JSON_PRETTY_PRINT);
+        } else {
+            list($firstArg, $secondArg) = explode('_', $_SESSION['arguments']);
+            $allowedFirst = array('bloodPressure', 'calorie', 'exercise', 'glucose', 'sleep', 'weight');
+            $allowedSecond = array('day', 'week', 'month', 'year');
+            if (!in_array($firstArg, $allowedFirst) || !in_array($secondArg, $allowedSecond)) {
+                echo '{"error":"One or both arguments invalid: first: ' .$firstArg. '; second: ' .$secondArg. '"}';
+                return; 
+            }
+            
+            $dbClassName = ucfirst($firstArg . 'MeasurementsDB');
+            $queryCommand = 'return ' .$dbClassName. '::getAverageMeasurements("' .$_SESSION["profile"]->getUserName(). '", "' .$secondArg. '");';
+            $measurements = eval($queryCommand);
+            echo json_encode($measurements, JSON_PRETTY_PRINT);
         }
     }
     

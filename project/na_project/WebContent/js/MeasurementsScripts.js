@@ -51,6 +51,7 @@ function tableOptions(measType, dataAndTitle) {
         { data: 'time', title: 'Time' },
 	    { data: 'notes', title: 'Notes' }
     ];
+	var orderIndex = (measType == 'bloodPressure') ? 2 : 1;
 
 	for (var i = dataAndTitle.length-1; i >= 0; i--)
 		columns.unshift({ data: dataAndTitle[i][0], title: dataAndTitle[i][1] });
@@ -58,7 +59,7 @@ function tableOptions(measType, dataAndTitle) {
 	return {
 		ajax: { url: '/na_project/measurements_get_'+measType, dataSrc: '' },
 		columns: columns,
-		order: [[2, 'desc']],
+		order: [[orderIndex, 'desc']],
 		scrollY: '35vh',
 		scrollCollapse: true,
 		paging: false,
@@ -150,7 +151,6 @@ function createCharts_helper(measType, properType, units, data, name) {
 				minY = data[j][1];
 			if (data[j][1] > maxY)
 				maxY = data[j][1];
-			
 			series.push( {
 				name: name[j],
 				data: data[j]

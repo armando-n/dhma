@@ -1,6 +1,6 @@
 <?php
 
-$numOfInserts = 6;
+$numOfInserts = 730; // 1 insert per day, so also num of days
 
 $str = '';
 for ($i = 1; $i <= 10; $i++)

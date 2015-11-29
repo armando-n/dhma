@@ -177,6 +177,45 @@ class GlucoseMeasurementsDB {
         return $measurementsArray;
     }
     
+    // returns an array of stdClass objects representing the average measurement over the specified time period, sorted by date
+    public static function getAverageMeasurements($userName, $timePeriod, $order = 'desc') {
+        $allowedOrders = array('asc', 'desc');
+        $allowedTimePeriods = array('day', 'week', 'month', 'year');
+        $measurements = array();
+    
+        try {
+            if (!in_array($order, $allowedOrders))
+                throw new Exception("$order is not an allowed order");
+                if (!in_array($timePeriod, $allowedTimePeriods))
+                    throw new PDOException("$timePeriod not allowed search criterion for measurement");
+    
+                $db = Database::getDB();
+                $stmt = $db->prepare(
+                    "select userName, $timePeriod(dateAndTime) $timePeriod, avg(glucose)
+                    from Users join GlucoseMeasurements using (userID)
+                    where userName = :userName
+                    group by $timePeriod
+                    order by dateAndTime $order"
+                );
+                $stmt->execute(array(":userName" => $userName));
+
+                foreach ($stmt as $row) {
+                    $msmt = new stdClass();
+                    $msmt->month = $row[$timePeriod];
+                    $msmt->glucose = $row['avg(glucose)'];
+                    $msmt->userName = $row['userName'];
+                    $measurements[] = $msmt;
+                }
+    
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        } catch (RuntimeException $e) {
+            echo $e->getMessage();
+        }
+    
+        return $measurements;
+    }
+    
     public static function deleteMeasurement($userName, $dateAndTime) {
         try {
             $db = Database::getDB();
