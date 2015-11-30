@@ -28,14 +28,6 @@ $(document).ready(function() {
 		$(element).click(rowClicked);
 	});
 	
-	// grab measurement data from server and create charts
-	$.ajax({
-		'url': 'measurements_get_all',
-		'dataType': 'json',
-		'success': createCharts,
-		'error': failedRetreivingChartData
-	});
-	
 	// grab measurement data from server and create tables
 	var table_bloodPressure = $('#bloodPressure_table').DataTable(tableOptions('bloodPressure', [ ['systolicPressure', 'Systolic Pressure'], ['diastolicPressure', 'Diastolic Pressure'] ]));
 	var table_glucose = $('#glucose_table').DataTable(tableOptions('glucose', [ ['glucose', 'Glucose (mg/dL)'] ]));
@@ -43,6 +35,19 @@ $(document).ready(function() {
 	var table_execrise = $('#exercise_table').DataTable(tableOptions('exercise', [ ['duration', 'Exercise (min)'] ]));
 	var table_sleep = $('#sleep_table').DataTable(tableOptions('sleep', [ ['duration', 'Sleep (min)', ] ]));
 	var table_weight = $('#weight_table').DataTable(tableOptions('weight', [ ['weight', 'Weight (kg)'] ]));
+	
+	// grab measurement data from server and create charts
+	createCharts('glucose', 'Glucose', 'mg/dL',  ['glucose']);
+	createCharts('bloodPressure', 'Blood Pressure', 'mm Hg', ['systolicPressure', 'diastolicPressure']);
+	createCharts('calorie', 'Calories', 'calories', ['calories']);
+	createCharts('exercise', 'Exercise', 'minutes', ['duration']);
+	createCharts('sleep', 'Sleep', 'minutes', ['duration']);
+	createCharts('weight', 'Weight', 'kg', ['weight']);
+	
+	// assign handlers for chart date range buttons 
+	$('.btn-yearly').click(viewYearChart);
+	$('.btn-monthly').click(viewMonthChart);
+	$('.btn-weekly').click(viewWeekChart);
 });
 
 function tableOptions(measType, dataAndTitle) {
@@ -70,62 +75,28 @@ function tableOptions(measType, dataAndTitle) {
 }
 
 function failedRetreivingChartData() {
-	alert('Error retreiving blood pressure measurements json');
+	alert('Error retreiving measurements');
 }
 
-function createCharts(response) {
-	var glucoseData = [];
-	var systolicData = [];
-	var diastolicData = [];
-	var calorieData = [];
-	var exDurationData = [];
-	var exTypeData = [];
-	var sleepData = [];
-	var weightData = [];
-	var meas;
-
-	for (var i = 0; i < response.glucose.length; i++) {
-		meas = response.glucose[i];
-		glucoseData.push( [ Date.parse(meas.dateAndTime), meas.glucose ] );
-	}
-	createCharts_helper('glucose', 'Glucose', 'mg/dL', [glucoseData], ['glucose']);
-	
-	for (var i = 0; i < response.bloodPressure.length; i++) {
-		meas = response.bloodPressure[i];
-		systolicData.push(  [ Date.parse(meas.dateAndTime), meas.systolicPressure ] );
-		diastolicData.push( [ Date.parse(meas.dateAndTime), meas.diastolicPressure ] );
-	}
-	createCharts_helper('bloodPressure', 'Blood Pressure', 'mm Hg', [systolicData, diastolicData], ['systolicPressure', 'diastolicPressure']);
-	
-	for (var i = 0; i < response.calories.length; i++) {
-		meas = response.calories[i];
-		calorieData.push( [ Date.parse(meas.dateAndTime), meas.calories ] );
-	}
-	createCharts_helper('calories', 'Calories', 'calories', [calorieData], ['calories']);
-	
-	for (var i = 0; i < response.exercise.length; i++) {
-		meas = response.exercise[i];
-		exDurationData.push( [ Date.parse(meas.dateAndTime), meas.duration ] );
-		exTypeData.push( [ Date.parse(meas.dateAndTime), meas.type ] );
-	}
-	createCharts_helper('exercise', 'Exercise', 'minutes', [exDurationData], ['duration']);
-	
-	for (var i = 0; i < response.sleep.length; i++) {
-		meas = response.sleep[i];
-		sleepData.push( [ Date.parse(meas.dateAndTime), meas.duration ] );
-	}
-	createCharts_helper('sleep', 'Sleep', 'minutes', [sleepData], ['duration']);
-	
-	for (var i = 0; i < response.weight.length; i++) {
-		meas = response.weight[i];
-		weightData.push( [ Date.parse(meas.dateAndTime), meas.weight ] );
-	}
-	createCharts_helper('weight', 'Weight', 'kg', [weightData], ['weight']);
-	
-	// assign handlers for chart date range buttons 
-	$('.btn-yearly').click(viewYearChart);
-	$('.btn-monthly').click(viewMonthChart);
-	$('.btn-weekly').click(viewWeekChart);
+function createCharts(measType, properType, units, measNames) {
+	$.ajax({
+		'url': 'measurements_get_' +measType+ '_individual',
+		'dataType': 'json',
+		'async': false,
+		'success': function(response) {
+			var data = [];
+			
+			for (var i = 0; i < measNames.length; i++) {
+				var currentData = [];
+				for (var j = 0; j < response.length; j++) {
+					currentData.push( [ Date.parse(response[j].dateAndTime), response[j][measNames[i]] ] );				
+				}
+				data.push(currentData);
+			}	
+			createCharts_helper(measType, properType, units, data, measNames);
+		},
+		'error': failedRetreivingChartData
+	});
 }
 
 function createCharts_helper(measType, properType, units, data, name) {
@@ -160,7 +131,7 @@ function createCharts_helper(measType, properType, units, data, name) {
 		$('#' + measType + '_chart_' + idSuffix).highcharts({
 			chart: { type: 'line' },
 			title: { text: properType },
-			subtitle: { text: subtitle},
+			subtitle: { text: subtitle },
 			xAxis: {
 				type: 'datetime',
 				min: min,

@@ -190,7 +190,7 @@ class BloodPressureMeasurementsDB {
             if (!in_array($order, $allowedOrders))
                 throw new PDOException("$order is not an allowed order");
             if (!in_array($type, $allowedTypes))
-                throw new PDOException("$type not allowed search criterion for blood pressure measurement");
+                throw new PDOException("$type not allowed search criterion for measurement");
 
             $db = Database::getDB();
             $stmt = $db->prepare(
@@ -226,7 +226,7 @@ class BloodPressureMeasurementsDB {
     
         try {
             if (!in_array($order, $allowedOrders))
-                throw new Exception("$order is not an allowed order");
+                throw new PDOException("$order is not an allowed order");
             
             switch ($timePeriod) {
                 case 'day':

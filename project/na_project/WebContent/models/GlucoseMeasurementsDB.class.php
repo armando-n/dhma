@@ -177,30 +177,77 @@ class GlucoseMeasurementsDB {
         return $measurementsArray;
     }
     
-    // returns an array of stdClass objects representing the average measurement over the specified time period, sorted by date
-    public static function getAverageMeasurements($userName, $timePeriod, $order = 'desc') {
+    public static function getMeasurementsBounded($type, $value, $minDate = 'date_sub(now(), interval 30 day)', $maxDate = 'now()', $order = 'desc') {
         $allowedOrders = array('asc', 'desc');
-        $allowedTimePeriods = array('day', 'week', 'month', 'year');
+        $allowedTypes = array('userName', 'userID');
         $measurements = array();
     
         try {
             if (!in_array($order, $allowedOrders))
-                throw new Exception("$order is not an allowed order");
-            if (!in_array($timePeriod, $allowedTimePeriods))
-                throw new PDOException("$timePeriod not allowed search criterion for measurement");
+                throw new PDOException("$order is not an allowed order");
+            if (!in_array($type, $allowedTypes))
+                throw new PDOException("$type not allowed search criterion for measurement");
+
+            $db = Database::getDB();
+            $stmt = $db->prepare(
+                "select userName, glucoseID, glucose, dateAndTime, notes, userID
+                from Users join GlucoseMeasurements using (userID)
+                where ($type = :$type)
+                    and date(dateAndTime) > $minDate
+                    and date(dateAndTime) < $maxDate
+                order by dateAndTime $order"
+            );
+            $stmt->execute(array(":$type" => $value));
+
+            foreach ($stmt as $row) {
+                $msmt = new GlucoseMeasurement($row);
+                if (is_object($msmt) && $msmt->getErrorCount() == 0)
+                    $measurements[] = $msmt;
+            }
+    
+        } catch (PDOException $e) {
+            return array('error' => ('PDOException: ' .$e->getMessage()) );
+        } catch (RuntimeException $e) {
+            return array('error' => ('RuntimeException: ' .$e->getMessage()) );
+        }
+    
+        return $measurements;
+    }
+    
+    // returns an array of stdClass objects representing the average measurement over the specified time period, sorted by date
+    public static function getAverageMeasurements($userName, $timePeriod, $order = 'desc') {
+        $allowedOrders = array('asc', 'desc');
+        $measurements = array();
+    
+        try {
+            if (!in_array($order, $allowedOrders))
+                throw new PDOException("$order is not an allowed order");
             
             switch ($timePeriod) {
-                case 'day': $interval = '30 day'; break;
-                case 'week': $interval = '1 year'; break;
-                case 'month': $interval = '1 year'; break;
-                case 'year': $interval = '5 year'; break;
+                case 'day':
+                    $interval = '30 day';
+                    $periodCol = "date(dateAndTime)";
+                    break;
+                case 'week':
+                    $interval = '1 year';
+                    $periodCol = "concat(year(dateAndTime),'-', week(dateAndTime))";
+                    break;
+                case 'month':
+                    $interval = '1 year';
+                    $periodCol = "concat(year(dateAndTime),'-', month(dateAndTime))";
+                    break;
+                case 'year':
+                    $interval = '5 year';
+                    $periodCol = "year(dateAndTime)";
+                    break;
+                default:
+                    throw new PDOException("$timePeriod not allowed search criterion for measurement");
             }
 
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, date(dateAndTime), day(dateAndTime) day, week(dateAndTime) week,
-                    month(dateAndTime) month, year(dateAndTime) year,
-                    date(dateAndTime) date, time(dateAndTime) time, avg(glucose)
+                "select userName, $periodCol $timePeriod,
+                    format(avg(glucose), 2) glucose
                 from Users join GlucoseMeasurements using (userID)
                 where userName = :userName
                     and dateAndTime > date_sub(now(), interval $interval)
@@ -211,21 +258,16 @@ class GlucoseMeasurementsDB {
 
             foreach ($stmt as $row) {
                 $msmt = new stdClass();
-                $msmt->day = $row['day'];
-                $msmt->week = $row['week'];
-                $msmt->month = $row['month'];
-                $msmt->year = $row['year'];
-                $msmt->date = $row['date'];
-                $msmt->time = $row['time'];
-                $msmt->glucose = $row['avg(glucose)'];
+                $msmt->$timePeriod = $row[$timePeriod];
+                $msmt->glucose = $row['glucose'];
                 $msmt->userName = $row['userName'];
                 $measurements[] = $msmt;
             }
     
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            return array('error' => ('PDOException: ' .$e->getMessage()) );
         } catch (RuntimeException $e) {
-            echo $e->getMessage();
+            return array('error' => ('RuntimeException: ' .$e->getMessage()) );
         }
     
         return $measurements;
