@@ -175,7 +175,7 @@ class SleepMeasurementsDB {
         return $measurementsArray;
     }
     
-    public static function getMeasurementsBounded($type, $value, $minDate = 'date_sub(now(), interval 30 day)', $maxDate = 'now()', $order = 'desc') {
+    public static function getMeasurementsBounded($type, $value, $minDate = 'date_sub(now(), interval 30 day)', $maxDate = 'now()', $order = 'asc') {
         $allowedOrders = array('asc', 'desc');
         $allowedTypes = array('userName', 'userID');
         $measurements = array();
@@ -212,8 +212,9 @@ class SleepMeasurementsDB {
         return $measurements;
     }
     
-    // returns an array of stdClass objects representing the average measurement over the specified time period, sorted by date
-    public static function getAverageMeasurements($userName, $timePeriod, $order = 'desc') {
+    /* returns an array of stdClass objects representing the average measurement over the specified time period, sorted by date.
+     * if $dailyAvgWanted is true, the objects returned instead represent the average daily measurement over the time period. */
+    public static function getAverageMeasurements($userName, $timePeriod, $dailyAvgWanted = false, $order = 'asc') {
         $allowedOrders = array('asc', 'desc');
         $measurements = array();
     
@@ -228,11 +229,11 @@ class SleepMeasurementsDB {
                     break;
                 case 'week':
                     $interval = '1 year';
-                    $periodCol = "concat(year(dateAndTime),'-', week(dateAndTime))";
+                    $periodCol = "concat(year(dateAndTime),'-', lpad(week(dateAndTime), 2, '0'))";
                     break;
                 case 'month':
                     $interval = '1 year';
-                    $periodCol = "concat(year(dateAndTime),'-', month(dateAndTime))";
+                    $periodCol = "concat(year(dateAndTime),'-', lpad(month(dateAndTime), 2, '0'))";
                     break;
                 case 'year':
                     $interval = '5 year';
@@ -243,15 +244,35 @@ class SleepMeasurementsDB {
             }
 
             $db = Database::getDB();
-            $stmt = $db->prepare(
-                "select userName, $periodCol $timePeriod,
-                    format(avg(duration), 2) duration
-                from Users join SleepMeasurements using (userID)
-                where userName = :userName
-                    and dateAndTime > date_sub(now(), interval $interval)
-                group by $timePeriod
-                order by dateAndTime $order"
-            );
+            
+            if ($dailyAvgWanted) {
+                if ($timePeriod !== 'week' && $timePeriod !== 'month' && $timePeriod !== 'year')
+                    throw new PDOException('SleepMeasurementsDB: invalid time period for daily average request');
+                
+                $sql =
+                    "select userName, $timePeriod, replace(format(avg(duration), 2), ',', '') duration
+                    from
+                        (select userName, date(dateAndTime) day, $periodCol $timePeriod, replace(format(sum(duration), 2), ',', '') duration
+                        from Users join SleepMeasurements using (userID)
+                        where userName = :userName
+                            and dateAndTime > date_sub(now(), interval $interval)
+                        group by day
+                        order by dateAndTime $order) as custom
+                    group by $timePeriod;";
+            }
+            
+            else {
+                $sql =
+                    "select userName, $periodCol $timePeriod,
+                        replace(format(sum(duration), 2), ',', '') duration
+                    from Users join SleepMeasurements using (userID)
+                    where userName = :userName
+                        and dateAndTime > date_sub(now(), interval $interval)
+                    group by $timePeriod
+                    order by dateAndTime $order";
+            }
+            
+            $stmt = $db->prepare($sql);
             $stmt->execute(array(":userName" => $userName));
 
             foreach ($stmt as $row) {

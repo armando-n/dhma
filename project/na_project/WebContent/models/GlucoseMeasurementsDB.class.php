@@ -177,7 +177,7 @@ class GlucoseMeasurementsDB {
         return $measurementsArray;
     }
     
-    public static function getMeasurementsBounded($type, $value, $minDate = 'date_sub(now(), interval 30 day)', $maxDate = 'now()', $order = 'desc') {
+    public static function getMeasurementsBounded($type, $value, $minDate = 'date_sub(now(), interval 30 day)', $maxDate = 'now()', $order = 'asc') {
         $allowedOrders = array('asc', 'desc');
         $allowedTypes = array('userName', 'userID');
         $measurements = array();
@@ -215,11 +215,14 @@ class GlucoseMeasurementsDB {
     }
     
     // returns an array of stdClass objects representing the average measurement over the specified time period, sorted by date
-    public static function getAverageMeasurements($userName, $timePeriod, $order = 'desc') {
+    public static function getAverageMeasurements($userName, $timePeriod, $dailyAvgWanted = false, $order = 'asc') {
         $allowedOrders = array('asc', 'desc');
         $measurements = array();
     
         try {
+            if ($dailyAvgWanted)
+                throw new PDOException("Daily average call is not applicable to glucose measurements");
+            
             if (!in_array($order, $allowedOrders))
                 throw new PDOException("$order is not an allowed order");
             
@@ -247,7 +250,7 @@ class GlucoseMeasurementsDB {
             $db = Database::getDB();
             $stmt = $db->prepare(
                 "select userName, $periodCol $timePeriod,
-                    format(avg(glucose), 2) glucose
+                    replace(format(avg(glucose), 2), ',', '') glucose
                 from Users join GlucoseMeasurements using (userID)
                 where userName = :userName
                     and dateAndTime > date_sub(now(), interval $interval)
@@ -265,9 +268,9 @@ class GlucoseMeasurementsDB {
             }
     
         } catch (PDOException $e) {
-            return array('error' => ('PDOException: ' .$e->getMessage()) );
+            return array('error' => $e->getMessage());
         } catch (RuntimeException $e) {
-            return array('error' => ('RuntimeException: ' .$e->getMessage()) );
+            return array('error' => $e->getMessage());
         }
     
         return $measurements;

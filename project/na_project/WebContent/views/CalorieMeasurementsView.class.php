@@ -181,7 +181,7 @@ class CalorieMeasurementsView {
 <section id="calories_charts_row" class="row">
     <div class="col-sm-12 col-md-6">
         <div class="row">
-            <div id="calories_chart_primary" class="col-sm-12">
+            <div id="calorie_chart_primary" class="col-sm-12">
                 <!-- Primary Chart -->
             </div>
         </div>
@@ -208,7 +208,7 @@ class CalorieMeasurementsView {
     
     <div class="col-sm-12 col-md-6 chart-secondary">
         <div class="row">
-            <div id="calories_chart_secondary" class="col-sm-12">
+            <div id="calorie_chart_secondary" class="col-sm-12">
                 <!-- Secondary Chart -->
             </div>
         </div>

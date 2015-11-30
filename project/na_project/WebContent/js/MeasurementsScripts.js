@@ -37,12 +37,12 @@ $(document).ready(function() {
 	var table_weight = $('#weight_table').DataTable(tableOptions('weight', [ ['weight', 'Weight (kg)'] ]));
 	
 	// grab measurement data from server and create charts
-	createCharts('glucose', 'Glucose', 'mg/dL',  ['glucose']);
-	createCharts('bloodPressure', 'Blood Pressure', 'mm Hg', ['systolicPressure', 'diastolicPressure']);
-	createCharts('calorie', 'Calories', 'calories', ['calories']);
-	createCharts('exercise', 'Exercise', 'minutes', ['duration']);
-	createCharts('sleep', 'Sleep', 'minutes', ['duration']);
-	createCharts('weight', 'Weight', 'kg', ['weight']);
+	createCharts('glucose', 'Glucose', 'mg/dL',  ['glucose'], 'month');
+	createCharts('bloodPressure', 'Blood Pressure', 'mm Hg', ['systolicPressure', 'diastolicPressure'], 'week');
+	createCharts('calorie', 'Calories', 'calories', ['calories'], 'day');
+	createCharts('exercise', 'Exercise', 'minutes', ['duration'], 'day');
+	createCharts('sleep', 'Sleep', 'minutes', ['duration'], 'individual');
+	createCharts('weight', 'Weight', 'kg', ['weight'], 'individual');
 	
 	// assign handlers for chart date range buttons 
 	$('.btn-yearly').click(viewYearChart);
@@ -78,28 +78,38 @@ function failedRetreivingChartData() {
 	alert('Error retreiving measurements');
 }
 
-function createCharts(measType, properType, units, measNames) {
+function createCharts(measType, properType, units, measNames, per) {
 	$.ajax({
-		'url': 'measurements_get_' +measType+ '_individual',
+		'url': 'measurements_get_' +measType+ '_' +per,
 		'dataType': 'json',
 		'async': false,
 		'success': function(response) {
 			var data = [];
+			var periodName;
+			
+			switch (per) {
+				case 'all':
+				case 'individual':
+					periodName = 'dateAndTime';
+					break;
+				default:
+					periodName = per;
+					break;
+			}
 			
 			for (var i = 0; i < measNames.length; i++) {
 				var currentData = [];
-				for (var j = 0; j < response.length; j++) {
-					currentData.push( [ Date.parse(response[j].dateAndTime), response[j][measNames[i]] ] );				
-				}
+				for (var j = 0; j < response.length; j++)
+					currentData.push( [ response[j][periodName], parseFloat(response[j][measNames[i]]) ] );
 				data.push(currentData);
 			}	
-			createCharts_helper(measType, properType, units, data, measNames);
+			createCharts_helper(measType, properType, units, data, measNames, per);
 		},
 		'error': failedRetreivingChartData
 	});
 }
 
-function createCharts_helper(measType, properType, units, data, name) {
+function createCharts_helper(measType, properType, units, data, name, per) {
 	
 	for (var i = 0; i < 2; i++) {
 		
@@ -110,6 +120,7 @@ function createCharts_helper(measType, properType, units, data, name) {
 		var numOfSeriesData = data.length;
 		var minY = 100000;
 		var maxY = 0;
+		var formatStr;
 		
 		for (var j = 0; j < numOfSeriesData; j++) {
 			for (var k = 0; k < data[j].length; k++) {
@@ -133,9 +144,36 @@ function createCharts_helper(measType, properType, units, data, name) {
 			title: { text: properType },
 			subtitle: { text: subtitle },
 			xAxis: {
-				type: 'datetime',
-				min: min,
-				max: todaysEnd()
+				type: 'category',
+//				min: min,
+//				max: todaysEnd(),
+				labels: {
+					formatter: function () {
+						var result = '';
+						var date;
+						var pieces;
+						
+						switch (per) {
+							case 'all':
+							case 'individual':
+							case 'day':
+								date = new Date(this.value);
+								return monthNumToShortName(date.getMonth(), true)+ ' ' +date.getDate();
+							case 'week':
+								pieces = this.value.split('-');
+								if (this.isFirst || pieces[1] == 1)
+									result += '(' +pieces[0]+ ') ';
+								return result+ 'Week ' +pieces[1];
+							case 'month':
+								pieces = this.value.split('-');
+								if (this.isFirst || pieces[1] == 1)
+									result += '(' +pieces[0]+ ') ';
+								return result + monthNumToShortName(parseInt(pieces[1]), false);
+							case 'year':
+								return this.value;
+						}
+					}
+				}
 			},
 			yAxis: { title: { text: units }, min: minY, max: maxY },
 			series: series,
@@ -153,6 +191,26 @@ function createCharts_helper(measType, properType, units, data, name) {
 				}
 			}
 		});
+	}
+}
+
+function monthNumToShortName(num, isZeroBased) {
+	if (isZeroBased)
+		num++;
+	switch (num) {
+		case 1: return 'Jan';
+		case 2: return 'Feb';
+		case 3: return 'Mar';
+		case 4: return 'Apr';
+		case 5: return 'May';
+		case 6: return 'Jun';
+		case 7: return 'Jul';
+		case 8: return 'Aug';
+		case 9: return 'Sep';
+		case 10: return 'Oct';
+		case 11: return 'Nov';
+		case 12: return 'Dec';
+		default: return 'error';
 	}
 }
 
@@ -251,7 +309,7 @@ function getChart(chartID) {
 	switch (measType) {
 		case 'glucose': index = 0; break;
 		case 'bloodPressure': index = 2; break;
-		case 'calories': index = 4; break;
+		case 'calories': case 'calorie': index = 4; break;
 		case 'exercise': index = 6; break;
 		case 'sleep': index = 8; break;
 		case 'weight': index = 10; break;

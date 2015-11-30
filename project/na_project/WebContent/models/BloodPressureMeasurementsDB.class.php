@@ -181,7 +181,7 @@ class BloodPressureMeasurementsDB {
         return $measurements;
     }
     
-    public static function getMeasurementsBounded($type, $value, $minDate = 'date_sub(now(), interval 30 day)', $maxDate = 'now()', $order = 'desc') {
+    public static function getMeasurementsBounded($type, $value, $minDate = 'date_sub(now(), interval 30 day)', $maxDate = 'now()', $order = 'asc') {
         $allowedOrders = array('asc', 'desc');
         $allowedTypes = array('userName', 'userID');
         $measurements = array();
@@ -220,11 +220,14 @@ class BloodPressureMeasurementsDB {
     }
     
     // returns an array of stdClass objects representing the average measurement over the specified time period, sorted by date
-    public static function getAverageMeasurements($userName, $timePeriod, $order = 'desc') {
+    public static function getAverageMeasurements($userName, $timePeriod, $dailyAvgWanted = false, $order = 'asc') {
         $allowedOrders = array('asc', 'desc');
         $measurements = array();
     
         try {
+            if ($dailyAvgWanted)
+                throw new PDOException("Daily average call is not applicable to blood pressure measurements");
+            
             if (!in_array($order, $allowedOrders))
                 throw new PDOException("$order is not an allowed order");
             
@@ -252,8 +255,8 @@ class BloodPressureMeasurementsDB {
             $db = Database::getDB();
             $stmt = $db->prepare(
                 "select userName, $periodCol $timePeriod,
-                    format(avg(systolicPressure), 2) systolicPressure,
-                    format(avg(diastolicPressure), 2) diastolicPressure
+                    replace(format(avg(systolicPressure), 2), ',', '') systolicPressure,
+                    replace(format(avg(diastolicPressure), 2), ',', '') diastolicPressure
                 from Users join BloodPressureMeasurements using (userID)
                 where userName = :userName
                     and dateAndTime > date_sub(now(), interval $interval)
@@ -272,9 +275,9 @@ class BloodPressureMeasurementsDB {
             }
     
         } catch (PDOException $e) {
-            return array('error' => ('PDOException: ' .$e->getMessage()) );
+            return array('error' => $e->getMessage());
         } catch (RuntimeException $e) {
-            return array('error' => ('RuntimeException: ' .$e->getMessage()) );
+            return array('error' => $e->getMessage());
         }
     
         return $measurements;

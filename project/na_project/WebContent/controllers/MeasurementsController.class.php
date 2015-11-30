@@ -31,6 +31,16 @@ class MeasurementsController {
         
     }
     
+    // example call: /measurements_get_all                         (all time)
+    // example call: /measurements_get_bloodPressure_all           (all time)
+    // example call: /measurements_get_bloodPressure_individual    (for last 30 days)
+    // example call: /measurements_get_bloodPressure_day           (for last 30 days)
+    // example call: /measurements_get_bloodPressure_week          (for last year)
+    // example call: /measurements_get_bloodPressure_month         (for last year)
+    // example call: /measurements_get_bloodPressure_year          (for last 5 years)
+    // example call: /measurements_get_exercise_dailyavg_week
+    // example call: /measurements_get_sleep_dailyavg_month
+    // example call: /measurements_get_calories_dailyavg_year
     private static function get() {        
         
         // partial input validation
@@ -59,12 +69,21 @@ class MeasurementsController {
         else {
             
             // validate arguments
-            list($firstArg, $secondArg) = explode('_', $_SESSION['arguments']);
+            $args = explode('_', $_SESSION['arguments']);
+            if (count($args) == 3)
+                list($firstArg, $secondArg, $thirdArg) = $args;
+            else
+                list($firstArg, $secondArg) = $args; 
             $allowedFirst = array('bloodPressure', 'calorie', 'exercise', 'glucose', 'sleep', 'weight');
-            $allowedSecond = array('all', 'individual', 'day', 'week', 'month', 'year');
+            $allowedSecond = array('dailyavg', 'all', 'individual', 'day', 'week', 'month', 'year');
+            $allowedThird = array('week', 'month', 'year');
             if (!in_array($firstArg, $allowedFirst) || !in_array($secondArg, $allowedSecond)) {
-                echo '{"error":"One or both arguments invalid: first: ' .$firstArg. '; second: ' .$secondArg. '"}';
+                echo '{"error":"One or both arguments invalid. firstarg: ' .$firstArg. '; secondarg: ' .$secondArg. '"}';
                 return; 
+            }
+            if (isset($thirdArg) && !in_array($thirdArg, $allowedThird)) {
+                echo '{"error":"One or more arguments invalid"}';
+                return;
             }
             
             /* class/function to call depends on measurement type and what the data requested.
@@ -74,6 +93,8 @@ class MeasurementsController {
                 $queryCommand = 'return ' .$dbClassName. '::getMeasurementsBy("userName", "' .$_SESSION['profile']->getUserName(). '");';
             else if ($secondArg === 'individual')
                 $queryCommand = 'return ' .$dbClassName. '::getMeasurementsBounded("userName", "' .$_SESSION['profile']->getUserName(). '");';
+            else if ($secondArg === 'dailyavg') // TODO finish this
+                $queryCommand = 'return ' .$dbClassName. '::getAverageMeasurements("' .$_SESSION["profile"]->getUserName(). '", "' .$thirdArg. '", true);';
             else
                 $queryCommand = 'return ' .$dbClassName. '::getAverageMeasurements("' .$_SESSION["profile"]->getUserName(). '", "' .$secondArg. '");';
             
