@@ -186,26 +186,41 @@ class GlucoseMeasurementsDB {
         try {
             if (!in_array($order, $allowedOrders))
                 throw new Exception("$order is not an allowed order");
-                if (!in_array($timePeriod, $allowedTimePeriods))
-                    throw new PDOException("$timePeriod not allowed search criterion for measurement");
-    
-                $db = Database::getDB();
-                $stmt = $db->prepare(
-                    "select userName, $timePeriod(dateAndTime) $timePeriod, avg(glucose)
-                    from Users join GlucoseMeasurements using (userID)
-                    where userName = :userName
-                    group by $timePeriod
-                    order by dateAndTime $order"
-                );
-                $stmt->execute(array(":userName" => $userName));
+            if (!in_array($timePeriod, $allowedTimePeriods))
+                throw new PDOException("$timePeriod not allowed search criterion for measurement");
+            
+            switch ($timePeriod) {
+                case 'day': $interval = '30 day'; break;
+                case 'week': $interval = '1 year'; break;
+                case 'month': $interval = '1 year'; break;
+                case 'year': $interval = '5 year'; break;
+            }
 
-                foreach ($stmt as $row) {
-                    $msmt = new stdClass();
-                    $msmt->month = $row[$timePeriod];
-                    $msmt->glucose = $row['avg(glucose)'];
-                    $msmt->userName = $row['userName'];
-                    $measurements[] = $msmt;
-                }
+            $db = Database::getDB();
+            $stmt = $db->prepare(
+                "select userName, date(dateAndTime), day(dateAndTime) day, week(dateAndTime) week,
+                    month(dateAndTime) month, year(dateAndTime) year,
+                    date(dateAndTime) date, time(dateAndTime) time, avg(glucose)
+                from Users join GlucoseMeasurements using (userID)
+                where userName = :userName
+                    and dateAndTime > date_sub(now(), interval $interval)
+                group by $timePeriod
+                order by dateAndTime $order"
+            );
+            $stmt->execute(array(":userName" => $userName));
+
+            foreach ($stmt as $row) {
+                $msmt = new stdClass();
+                $msmt->day = $row['day'];
+                $msmt->week = $row['week'];
+                $msmt->month = $row['month'];
+                $msmt->year = $row['year'];
+                $msmt->date = $row['date'];
+                $msmt->time = $row['time'];
+                $msmt->glucose = $row['avg(glucose)'];
+                $msmt->userName = $row['userName'];
+                $measurements[] = $msmt;
+            }
     
         } catch (PDOException $e) {
             echo $e->getMessage();

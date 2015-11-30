@@ -32,19 +32,20 @@ class MeasurementsController {
     }
     
     private static function get() {        
+        
+        // partial input validation
         if (!isset($_SESSION['arguments'])) {
             self::error('Error: 2 arguments expected');
             return;
         }
-        
         if (strpos($_SESSION['arguments'], '_') === false && $_SESSION['arguments'] !== 'all') {
             self::error('Error: invalid argument(s)');
             return;
         }
         
-        else if (strpos($_SESSION['arguments'], '_') === false && $_SESSION['arguments'] === 'all') {
+        // all measurements of all types requested
+        if (strpos($_SESSION['arguments'], '_') === false && $_SESSION['arguments'] === 'all') {
             $allMeasurements = new stdClass();
-            
             $allMeasurements->bloodPressure = BloodPressureMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
             $allMeasurements->calories = CalorieMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
             $allMeasurements->exercise = ExerciseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
@@ -52,19 +53,42 @@ class MeasurementsController {
             $allMeasurements->sleep = SleepMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
             $allMeasurements->weight = WeightMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
             echo json_encode($allMeasurements, JSON_PRETTY_PRINT);
-        } else {
+        }
+        
+        // measurements of a specific type requested, either as individual measurements or as daily/weekly/monthly/yearly averages
+        else {
+            
+            // validate arguments
             list($firstArg, $secondArg) = explode('_', $_SESSION['arguments']);
             $allowedFirst = array('bloodPressure', 'calorie', 'exercise', 'glucose', 'sleep', 'weight');
-            $allowedSecond = array('day', 'week', 'month', 'year');
+            $allowedSecond = array('all', 'individual', 'day', 'week', 'month', 'year');
             if (!in_array($firstArg, $allowedFirst) || !in_array($secondArg, $allowedSecond)) {
                 echo '{"error":"One or both arguments invalid: first: ' .$firstArg. '; second: ' .$secondArg. '"}';
                 return; 
             }
             
-            $dbClassName = ucfirst($firstArg . 'MeasurementsDB');
-            $queryCommand = 'return ' .$dbClassName. '::getAverageMeasurements("' .$_SESSION["profile"]->getUserName(). '", "' .$secondArg. '");';
+            /* class/function to call depends on measurement type and what the data requested.
+             * The data requested can be individual measurements, or daily/weekly/monthly/yearly averages. */
+            $dbClassName = ucfirst($firstArg) . 'MeasurementsDB';
+            if ($secondArg === 'all')
+                $queryCommand = 'return ' .$dbClassName. '::getMeasurementsBy("userName", "' .$_SESSION['profile']->getUserName(). '");';
+            else if ($secondArg === 'individual')
+                $queryCommand = 'return ' .$dbClassName. '::getMeasurementsBounded("userName", "' .$_SESSION['profile']->getUserName(). '");';
+            else
+                $queryCommand = 'return ' .$dbClassName. '::getAverageMeasurements("' .$_SESSION["profile"]->getUserName(). '", "' .$secondArg. '");';
+            
+            // get measurement data and check for error message
             $measurements = eval($queryCommand);
-            echo json_encode($measurements, JSON_PRETTY_PRINT);
+            if (array_key_exists('error', $measurements)) {
+                echo '{"error":"' .$measurements['error']. '"}';
+                return;
+            }
+            
+            // output measurement data in json
+            if (isset($_GET['debug']))
+                echo '<pre>' .json_encode($measurements, JSON_PRETTY_PRINT). '</pre>';
+            else
+                echo json_encode($measurements, JSON_PRETTY_PRINT);
         }
     }
     

@@ -152,7 +152,7 @@ class BloodPressureMeasurementsDB {
     
         try {
             if (!in_array($order, $allowedOrders))
-                throw new Exception("$order is not an allowed order");
+                throw new PDOException("$order is not an allowed order");
             if (!in_array($type, $allowedTypes))
                 throw new PDOException("$type not allowed search criterion for blood pressure measurement");
             
@@ -181,23 +181,82 @@ class BloodPressureMeasurementsDB {
         return $measurements;
     }
     
+    public static function getMeasurementsBounded($type, $value, $minDate = 'date_sub(now(), interval 30 day)', $maxDate = 'now()', $order = 'desc') {
+        $allowedOrders = array('asc', 'desc');
+        $allowedTypes = array('userName', 'userID');
+        $measurements = array();
+    
+        try {
+            if (!in_array($order, $allowedOrders))
+                throw new PDOException("$order is not an allowed order");
+            if (!in_array($type, $allowedTypes))
+                throw new PDOException("$type not allowed search criterion for blood pressure measurement");
+
+            $db = Database::getDB();
+            $stmt = $db->prepare(
+                "select userName, bpID, systolicPressure, diastolicPressure,
+                    dateAndTime, notes, userID
+                from Users join BloodPressureMeasurements using (userID)
+                where ($type = :$type)
+                    and date(dateAndTime) > $minDate
+                    and date(dateAndTime) < $maxDate
+                order by dateAndTime $order"
+            );
+            $stmt->execute(array(":$type" => $value));
+
+            foreach ($stmt as $row) {
+                $bp = new BloodPressureMeasurement($row);
+                if (is_object($bp) && $bp->getErrorCount() == 0)
+                    $measurements[] = $bp;
+            }
+    
+        } catch (PDOException $e) {
+            return array('error' => ('PDOException: ' .$e->getMessage()) );
+        } catch (RuntimeException $e) {
+            return array('error' => ('RuntimeException: ' .$e->getMessage()) );
+        }
+    
+        return $measurements;
+    }
+    
     // returns an array of stdClass objects representing the average measurement over the specified time period, sorted by date
     public static function getAverageMeasurements($userName, $timePeriod, $order = 'desc') {
         $allowedOrders = array('asc', 'desc');
-        $allowedTimePeriods = array('day', 'week', 'month', 'year');
         $measurements = array();
     
         try {
             if (!in_array($order, $allowedOrders))
                 throw new Exception("$order is not an allowed order");
-            if (!in_array($timePeriod, $allowedTimePeriods))
-                throw new PDOException("$timePeriod not allowed search criterion for blood pressure measurement");
+            
+            switch ($timePeriod) {
+                case 'day':
+                    $interval = '30 day';
+                    $periodCol = "date(dateAndTime)";
+                    break;
+                case 'week':
+                    $interval = '1 year';
+                    $periodCol = "concat(year(dateAndTime),'-', week(dateAndTime))";
+                    break;
+                case 'month':
+                    $interval = '1 year';
+                    $periodCol = "concat(year(dateAndTime),'-', month(dateAndTime))";
+                    break;
+                case 'year':
+                    $interval = '5 year';
+                    $periodCol = "year(dateAndTime)";
+                    break;
+                default:
+                    throw new PDOException("$timePeriod not allowed search criterion for measurement");
+            }
 
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, $timePeriod(dateAndTime) $timePeriod, avg(systolicPressure), avg(diastolicPressure)
+                "select userName, $periodCol $timePeriod,
+                    format(avg(systolicPressure), 2) systolicPressure,
+                    format(avg(diastolicPressure), 2) diastolicPressure
                 from Users join BloodPressureMeasurements using (userID)
                 where userName = :userName
+                    and dateAndTime > date_sub(now(), interval $interval)
                 group by $timePeriod
                 order by dateAndTime $order"
             );
@@ -205,17 +264,17 @@ class BloodPressureMeasurementsDB {
 
             foreach ($stmt as $row) {
                 $msmt = new stdClass();
-                $msmt->month = $row[$timePeriod];
-                $msmt->systolicPressure = $row['avg(systolicPressure)'];
-                $msmt->diastolicPressure = $row['avg(diastolicPressure)'];
+                $msmt->$timePeriod = $row[$timePeriod];
+                $msmt->systolicPressure = $row['systolicPressure'];
+                $msmt->diastolicPressure = $row['diastolicPressure'];
                 $msmt->userName = $row['userName'];
                 $measurements[] = $msmt;
             }
     
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            return array('error' => ('PDOException: ' .$e->getMessage()) );
         } catch (RuntimeException $e) {
-            echo $e->getMessage();
+            return array('error' => ('RuntimeException: ' .$e->getMessage()) );
         }
     
         return $measurements;
