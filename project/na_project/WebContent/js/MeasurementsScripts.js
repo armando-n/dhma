@@ -1,4 +1,17 @@
-
+var charts = {
+	glucose_primary: null,
+	glucose_secondary: null,
+	bloodPressure_primary: null,
+	bloodPressure_secondary: null,
+	calorie_primary: null,
+	calorie_secondary: null,
+	exercise_primary: null,
+	exercise_secondary: null,
+	sleep_primary: null,
+	sleep_secondary: null,
+	weight_primary: null,
+	weight_secondary: null
+}
 
 $(document).ready(function() {
 	// hide certain content on load
@@ -37,18 +50,32 @@ $(document).ready(function() {
 	var table_weight = $('#weight_table').DataTable(tableOptions('weight', [ ['weight', 'Weight (kg)'] ]));
 	
 	// grab measurement data from server and create charts
-	createCharts('glucose', 'Glucose', 'mg/dL',  ['glucose'], 'month');
-	createCharts('bloodPressure', 'Blood Pressure', 'mm Hg', ['systolicPressure', 'diastolicPressure'], 'week');
-	createCharts('calorie', 'Calories', 'calories', ['calories'], 'day');
-	createCharts('exercise', 'Exercise', 'minutes', ['duration'], 'day');
-	createCharts('sleep', 'Sleep', 'minutes', ['duration'], 'individual');
-	createCharts('weight', 'Weight', 'kg', ['weight'], 'individual');
+	createCharts('glucose', 'Glucose', 'mg/dL',  ['glucose']);
+	createCharts('bloodPressure', 'Blood Pressure', 'mm Hg', ['systolicPressure', 'diastolicPressure']);
+	createCharts('calorie', 'Calories', 'calories', ['calories']);
+	createCharts('exercise', 'Exercise', 'minutes', ['duration']);
+	createCharts('sleep', 'Sleep', 'minutes', ['duration']);
+	createCharts('weight', 'Weight', 'kg', ['weight']);
 	
 	// assign handlers for chart date range buttons 
-	$('.btn-yearly').click(viewYearChart);
-	$('.btn-monthly').click(viewMonthChart);
-	$('.btn-weekly').click(viewWeekChart);
+	$('.btn-individual').click(viewIndividualChart);
+	$('.btn-day').click(viewDayChart);
+	$('.btn-year').click(viewYearChart);
+	$('.btn-month').click(viewMonthChart);
+	$('.btn-week').click(viewWeekChart);
 });
+
+function viewIndividualChart() {
+	
+}
+
+function viewDayChart() {
+	
+}
+
+function destroyChart(measType, tableIdSuffix) {
+	$('#' + measType + '_chart_' + tableIdSuffix).highcharts().destroy();
+}
 
 function tableOptions(measType, dataAndTitle) {
 	var columns = [
@@ -78,77 +105,120 @@ function failedRetreivingChartData() {
 	alert('Error retreiving measurements');
 }
 
-function createCharts(measType, properType, units, measNames, per) {
-	$.ajax({
-		'url': 'measurements_get_' +measType+ '_' +per,
-		'dataType': 'json',
-		'async': false,
-		'success': function(response) {
-			var data = [];
-			var periodName;
-			
-			switch (per) {
-				case 'all':
-				case 'individual':
+// TODO remove propertType as a parameter
+function createCharts(measType, properType, units, measNames) {
+	var cumulativeMeasurements = ['calorie', 'exercise', 'sleep'];
+	for (var i = 0; i < 2; i++) {
+		var per = (i == 0) ? 'individual' : 'month';
+		
+		$.ajax({
+			'url': 'measurements_get_' +measType+ '_' +per,
+			'dataType': 'json',
+			'async': false,
+			'success': function(response) {
+				var data = [];
+				var periodName;
+				var idSuffix;
+				var title;
+				var subtitle;
+					
+				if (per === 'individual') {
 					periodName = 'dateAndTime';
-					break;
-				default:
-					periodName = per;
-					break;
-			}
-			
-			for (var i = 0; i < measNames.length; i++) {
-				var currentData = [];
-				for (var j = 0; j < response.length; j++)
-					currentData.push( [ response[j][periodName], parseFloat(response[j][measNames[i]]) ] );
-				data.push(currentData);
-			}	
-			createCharts_helper(measType, properType, units, data, measNames, per);
-		},
-		'error': failedRetreivingChartData
-	});
+					idSuffix = 'primary';
+					title = 'By Entries';
+					subtitle = 'Individual';
+				} else if (per === 'month') {
+					periodName = 'month';
+					idSuffix = 'secondary';
+					title = 'By Month';
+					subtitle = ($.inArray(measType, cumulativeMeasurements) === -1) ? 'Daily Averages' : 'Daily Totals';
+				} else {
+					alert('error');
+				}
+				
+				// create a chart series for each measurement part (e.g. systolic/diastolic pressures)
+				for (var j = 0; j < measNames.length; j++) {
+					var currentData = [];
+					for (var k = 0; k < response.length; k++) {
+//						if (periodName === 'month') {
+//							for(var key in response[k])
+//							    alert('key: ' + key + '\n' + 'value: ' + response[k][key]);
+//							alert(response[j].toString());
+//						}
+						currentData.push( [ response[k][periodName], parseFloat(response[k][measNames[j]]) ] );
+					}
+					data.push(currentData);
+				}
+				
+				// create chart
+				var chartOptions = createChartOptions(measType, title, units, data, measNames, per, subtitle, idSuffix);
+				charts[measType+ '_' +idSuffix] = new Highcharts.Chart(chartOptions);
+			},
+			'error': failedRetreivingChartData
+		});
+	}
 }
 
-function createCharts_helper(measType, properType, units, data, name, per) {
+function createChartOptions(measType, title, units, data, name, per, subtitle, idSuffix) {
+	var series = [];
+	var numOfSeriesData = data.length;
+//	var minY = 100000;
+//	var maxY = 0;
+//	var formatStr;
 	
-	for (var i = 0; i < 2; i++) {
-		
-		var min =      (i == 0) ? lastWeek()  : lastMonth();
-		var subtitle =    (i == 0) ? 'Past Week' : 'Past Month';
-		var idSuffix = (i == 0) ? 'primary'   : 'secondary';
-		var series = [];
-		var numOfSeriesData = data.length;
-		var minY = 100000;
-		var maxY = 0;
-		var formatStr;
-		
-		for (var j = 0; j < numOfSeriesData; j++) {
-			for (var k = 0; k < data[j].length; k++) {
-				if (data[j][k][1] < minY)
-					minY = data[j][k][1];
-				if (data[j][k][1] > maxY)
-					maxY = data[j][k][1];
-			}
-			if (data[j][1] < minY)
-				minY = data[j][1];
-			if (data[j][1] > maxY)
-				maxY = data[j][1];
-			series.push( {
-				name: name[j],
-				data: data[j]
-			} );
-		}
-		
-		$('#' + measType + '_chart_' + idSuffix).highcharts({
-			chart: { type: 'line' },
-			title: { text: properType },
+	for (var j = 0; j < numOfSeriesData; j++) {
+//		for (var k = 0; k < data[j].length; k++) {
+//			if (data[j][k][1] < minY)
+//				minY = data[j][k][1];
+//			if (data[j][k][1] > maxY)
+//				maxY = data[j][k][1];
+//		}
+//		if (data[j][1] < minY)
+//			minY = data[j][1];
+//		if (data[j][1] > maxY)
+//			maxY = data[j][1];
+		series.push( {
+			name: name[j],
+			data: data[j]
+		} );
+	}
+//	Date.prototype.getWeek = function() {
+//	    var onejan = new Date(this.getFullYear(),0,1);
+//	    return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
+//	} 
+//	var min;
+//	var max;
+//	var now = new Date();
+//	var thirtyDaysAgo = new Date(now.valueOf() - (1000 * 60 * 60 * 24 * 30));
+//	thirtyDaysAgo = thirtyDaysAgo.getFullYear()+ '-' +thirtyDaysAgo.getMonth()+ '-' +thirtyDaysAgo.getDate();
+//	var fiftyTwoWeeksAgo = new Date(now.valueOf() - (1000 * 60 * 60 * 24 * 7 * 52));
+//	fiftyTwoWeeksAgo = fiftyTwoWeeksAgo.getFullYear()+ '-' +fiftyTwoWeeksAgo.getWeek();
+//	var twelveMonthsAgo = new Date(now.valueOf() - (1000 * 60 * 60 * 24 * 356));
+//	twelveMonthsAgo = twelveMonthsAgo.getFullYear()+ '-' +twelveMonthsAgo.getMonth();
+//	var fiveYearsAgo = new Date(now.valueOf() - (1000 * 60 * 60 * 24 * 356 * 5));
+//	fiveYearsAgo = fiveYearsAgo.getFullYear();
+//	switch (per) {
+//		case 'individual': min = lastMonth(); max = todaysEnd();
+//		case 'day': min = thirtyDaysAgo; max = now.getFullYear()+ '-' +now.getMonth()+ '-' +now.getDate();
+//		case 'week': min = fiftyTwoWeeksAgo; max = now.getFullYear()+ '-' +now.getWeek();
+//		case 'month': min = twelveMonthsAgo; max = now.getFullYear()+ '-' +now.getMonth();
+//		case 'year': min = fiveYearsAgo; max = now.getFullYear();
+//	}
+	
+	var chartOptions =
+		{
+			chart: {
+				renderTo: measType+ '_chart_' +idSuffix,
+				type: 'line'
+			},
+			title: { text: title },
 			subtitle: { text: subtitle },
 			xAxis: {
 				type: 'category',
 //				min: min,
-//				max: todaysEnd(),
+//				max: max,
 				labels: {
-					formatter: function () {
+					formatter: function() {
 						var result = '';
 						var date;
 						var pieces;
@@ -175,23 +245,33 @@ function createCharts_helper(measType, properType, units, data, name, per) {
 					}
 				}
 			},
-			yAxis: { title: { text: units }, min: minY, max: maxY },
+			yAxis: {
+				title: { text: units }
+//				min: minY,
+//				max: maxY
+			},
 			series: series,
 			tooltip: {
-				formatter: function() {
-					var date = new Date(this.x);
-					var dateStr = date.toDateString();
-					var timeStr = dateTo12HourLocalTimeString(date);
-					
-					var resultStr = '<span style="font-size: smaller;">' +dateStr+ '</span>';
-					resultStr += '<br /><span style="font-size: smaller;">' +timeStr+ '</span>';
-					resultStr += '<br /><span style="color: ' +this.series.color+ '">\u25CF</span> ' +this.series.name+ ': <strong>' +this.y+ '</strong>';
-
-			        return resultStr;
-				}
+				formatter: chartTooltipFormatter
 			}
-		});
-	}
+		}
+	
+	return chartOptions;
+}
+
+function chartTooltipFormatter() {
+	var date = new Date(this.x);
+	var dateStr = date.toDateString();
+	var timeStr = dateTo12HourLocalTimeString(date);
+	
+	var resultStr = '<span style="font-size: smaller;">' +dateStr+ '</span>';
+	resultStr += '<br /><span style="font-size: smaller;">' +timeStr+ '</span>';
+	resultStr += '<br /><span style="color: ' +this.series.color+ '">\u25CF</span> ' +this.series.name+ ': <strong>' +this.y+ '</strong>';
+
+    return resultStr;
+}
+
+function chartXAxisLabelFormatter() {
 }
 
 function monthNumToShortName(num, isZeroBased) {
@@ -271,10 +351,54 @@ function viewYearChart() {
 	$(this).parent().parent().find('.active').removeClass('active');
 	$(this).addClass('active');
 	
+	var id_pieces = $(this).attr('id').split('_');
+	var measType = id_pieces[0];
+	var chartType = id_pieces[1];
+	var primOrSec = id_pieces[4];
+	
+	var measNames = ['glucose'];
+	var properType = 'Glucose';
+	var units = 'mg/dL';
+	
+	// grab new chart data from server
+	$.ajax({
+		'url': 'measurements_get_' +measType+ '_' +chartType,
+		'dataType': 'json',
+		'async': false,
+		'success': function(response) {
+			var data = [];
+			var periodName;
+			
+			switch (chartType) {
+				case 'all':
+				case 'individual':
+					periodName = 'dateAndTime';
+					break;
+				default:
+					periodName = chartType;
+					break;
+			}
+			
+			// create a chart series for each measurement part (e.g. systolic/diastolic pressures)
+			for (var i = 0; i < measNames.length; i++) {
+				var currentData = [];
+				for (var j = 0; j < response.length; j++)
+					currentData.push( [ response[j][periodName], parseFloat(response[j][measNames[i]]) ] );
+				data.push(currentData);
+			}
+			
+			// replace chart
+			var chartOptions = createChartOptions(measType, properType, units, data, measNames, chartType, 0, 'Past 5 Years', primOrSec);
+			charts[measType+ '_' +primOrSec].destroy();
+			charts[measType+ '_' +primOrSec] = new Highcharts.Chart(chartOptions);
+		},
+		'error': failedRetreivingChartData
+	});
+	
 	// update chart
-	var chart = getChart($(this).attr('id'));
-	chart.setTitle( { text: $(this).attr('name') }, { text: 'Past Year' } );
-	chart.xAxis[0].setExtremes(lastYear(), todaysEnd());
+//	var chart = getChart($(this).attr('id'));
+//	chart.setTitle( { text: $(this).attr('name') }, { text: 'Past Year' } );
+//	chart.xAxis[0].setExtremes(lastYear(), todaysEnd());
 }
 
 function viewWeekChart() {
@@ -301,10 +425,15 @@ function viewMonthChart() {
 
 // takes the id attribute of a chart, and returns the chart's javascript object
 function getChart(chartID) {
-	var index = -1;
 	var idPieces = chartID.split('_');
 	var measType = idPieces[0];
 	var primaryOrSecondary = idPieces[4];
+	
+	return getChart(measType, primaryOrSecondary);
+}
+
+function getChart(measType, primOrSec) {
+	var index = -1;
 	
 	switch (measType) {
 		case 'glucose': index = 0; break;
@@ -315,7 +444,7 @@ function getChart(chartID) {
 		case 'weight': index = 10; break;
 	}
 	
-	if (primaryOrSecondary == 'secondary')
+	if (primOrSec == 'secondary')
 		index++;
 	
 	return Highcharts.charts[index];
