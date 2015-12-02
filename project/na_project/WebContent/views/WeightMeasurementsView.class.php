@@ -188,21 +188,33 @@ class WeightMeasurementsView {
         </div>
         <div class="row">
             <div class="col-sm-12 btn-group btn-group-justified" role="group">
+            
                 <div class="btn-group" role="group">
-                    <button type="button" id="weight_yearly_chart_btn_primary" name="Weight" class="btn btn-default btn-yearly">
-                        Yearly
+                    <button type="button" id="weight_individual_chart_btn_primary" class="btn btn-default btn-individual-chart active">
+                        Individual
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="weight_monthly_chart_btn_primary" name="Weight" class="btn btn-default btn-monthly">
+                    <button type="button" id="weight_day_chart_btn_primary" class="btn btn-default btn-day-chart">
+                        Daily
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="weight_week_chart_btn_primary" class="btn btn-default btn-week-chart">
+                        Weekly
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="weight_month_chart_btn_primary" class="btn btn-default btn-month-chart">
                         Monthly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="weight_weekly_chart_btn_primary" name="Weight" class="btn btn-default btn-weekly active">
-                        Weekly
+                    <button type="button" id="weight_year_chart_btn_primary" class="btn btn-default btn-year-chart">
+                        Yearly
                     </button>
                 </div>
+                
             </div>
         </div>    
     </div>
@@ -215,21 +227,32 @@ class WeightMeasurementsView {
         </div>
         <div class="row">
             <div class="col-sm-12 btn-group btn-group-justified" role="group">
+            
                 <div class="btn-group" role="group">
-                    <button type="button" id="weight_yearly_chart_btn_secondary" name="Weight" class="btn btn-default btn-yearly">
-                        Yearly
+                    <button type="button" id="weight_individual_chart_btn_secondary" class="btn btn-default btn-individual-chart">
+                        Individual
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="weight_monthly_chart_btn_secondary" name="Weight" class="btn btn-default btn-monthly active">
+                    <button type="button" id="weight_day_chart_btn_secondary" class="btn btn-default btn-day-chart">
+                        Daily
+                    </button>
+                </div><div class="btn-group" role="group">
+                    <button type="button" id="weight_week_chart_btn_secondary" class="btn btn-default btn-week-chart">
+                        Weekly
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="weight_month_chart_btn_secondary" class="btn btn-default btn-month-chart active">
                         Monthly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="weight_weekly_chart_btn_secondary" name="Weight" class="btn btn-default btn-weekly">
-                        Weekly
+                    <button type="button" id="weight_year_chart_btn_secondary" class="btn btn-default btn-year-chart">
+                        Yearly
                     </button>
                 </div>
+                
             </div>
         </div>
     </div>

@@ -199,21 +199,33 @@ class ExerciseMeasurementsView {
         </div>
         <div class="row">
             <div class="col-sm-12 btn-group btn-group-justified" role="group">
+            
                 <div class="btn-group" role="group">
-                    <button type="button" id="exercise_yearly_chart_btn_primary" name="Exercise" class="btn btn-default btn-yearly">
-                        Yearly
+                    <button type="button" id="exercise_individual_chart_btn_primary" class="btn btn-default btn-individual-chart active">
+                        Individual
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="exercise_monthly_chart_btn_primary" name="Exercise" class="btn btn-default btn-monthly">
+                    <button type="button" id="exercise_day_chart_btn_primary" class="btn btn-default btn-day-chart">
+                        Daily
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="exercise_week_chart_btn_primary" class="btn btn-default btn-week-chart">
+                        Weekly
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="exercise_month_chart_btn_primary" class="btn btn-default btn-month-chart">
                         Monthly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="exercise_weekly_chart_btn_primary" name="Exercise" class="btn btn-default btn-weekly active">
-                        Weekly
+                    <button type="button" id="exercise_year_chart_btn_primary" class="btn btn-default btn-year-chart">
+                        Yearly
                     </button>
                 </div>
+                
             </div>
         </div>    
     </div>
@@ -226,21 +238,32 @@ class ExerciseMeasurementsView {
         </div>
         <div class="row">
             <div class="col-sm-12 btn-group btn-group-justified" role="group">
+            
                 <div class="btn-group" role="group">
-                    <button type="button" id="exercise_yearly_chart_btn_secondary" name="Exercise" class="btn btn-default btn-yearly">
-                        Yearly
+                    <button type="button" id="exercise_individual_chart_btn_secondary" class="btn btn-default btn-individual-chart">
+                        Individual
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="exercise_monthly_chart_btn_secondary" name="Exercise" class="btn btn-default btn-monthly active">
+                    <button type="button" id="exercise_day_chart_btn_secondary" class="btn btn-default btn-day-chart">
+                        Daily
+                    </button>
+                </div><div class="btn-group" role="group">
+                    <button type="button" id="exercise_week_chart_btn_secondary" class="btn btn-default btn-week-chart">
+                        Weekly
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="exercise_month_chart_btn_secondary" class="btn btn-default btn-month-chart active">
                         Monthly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="exercise_weekly_chart_btn_secondary" name="Exercise" class="btn btn-default btn-weekly">
-                        Weekly
+                    <button type="button" id="exercise_year_chart_btn_secondary" class="btn btn-default btn-year-chart">
+                        Yearly
                     </button>
                 </div>
+                
             </div>
         </div>
     </div>

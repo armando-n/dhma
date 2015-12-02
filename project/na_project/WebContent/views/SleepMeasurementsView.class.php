@@ -187,21 +187,33 @@ class SleepMeasurementsView {
         </div>
         <div class="row">
             <div class="col-sm-12 btn-group btn-group-justified" role="group">
+            
                 <div class="btn-group" role="group">
-                    <button type="button" id="sleep_yearly_chart_btn_primary" name="Sleep" class="btn btn-default btn-yearly">
-                        Yearly
+                    <button type="button" id="sleep_individual_chart_btn_primary" class="btn btn-default btn-individual-chart active">
+                        Individual
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="sleep_monthly_chart_btn_primary" name="Sleep" class="btn btn-default btn-monthly">
+                    <button type="button" id="sleep_day_chart_btn_primary" class="btn btn-default btn-day-chart">
+                        Daily
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="sleep_week_chart_btn_primary" class="btn btn-default btn-week-chart">
+                        Weekly
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="sleep_month_chart_btn_primary" class="btn btn-default btn-month-chart">
                         Monthly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="sleep_weekly_chart_btn_primary" name="Sleep" class="btn btn-default btn-weekly active">
-                        Weekly
+                    <button type="button" id="sleep_year_chart_btn_primary" class="btn btn-default btn-year-chart">
+                        Yearly
                     </button>
                 </div>
+                
             </div>
         </div>    
     </div>
@@ -214,21 +226,32 @@ class SleepMeasurementsView {
         </div>
         <div class="row">
             <div class="col-sm-12 btn-group btn-group-justified" role="group">
+            
                 <div class="btn-group" role="group">
-                    <button type="button" id="sleep_yearly_chart_btn_secondary" name="Sleep" class="btn btn-default btn-yearly">
-                        Yearly
+                    <button type="button" id="sleep_individual_chart_btn_secondary" class="btn btn-default btn-individual-chart">
+                        Individual
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="sleep_monthly_chart_btn_secondary" name="Sleep" class="btn btn-default btn-monthly active">
+                    <button type="button" id="sleep_day_chart_btn_secondary" class="btn btn-default btn-day-chart">
+                        Daily
+                    </button>
+                </div><div class="btn-group" role="group">
+                    <button type="button" id="sleep_week_chart_btn_secondary" class="btn btn-default btn-week-chart">
+                        Weekly
+                    </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" id="sleep_month_chart_btn_secondary" class="btn btn-default btn-month-chart active">
                         Monthly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="sleep_weekly_chart_btn_secondary" name="Sleep" class="btn btn-default btn-weekly">
-                        Weekly
+                    <button type="button" id="sleep_year_chart_btn_secondary" class="btn btn-default btn-year-chart">
+                        Yearly
                     </button>
                 </div>
+                
             </div>
         </div>
     </div>

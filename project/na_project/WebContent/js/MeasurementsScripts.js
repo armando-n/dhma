@@ -13,6 +13,26 @@ var charts = {
 	weight_secondary: null
 }
 
+var measurementParts = {
+	glucose: ['glucose'],
+	bloodPressure: ['systolicPressure', 'diastolicPressure'],
+	calorie: ['calories'],
+	exercise: ['duration'],
+	sleep: ['duration'],
+	weight: ['weight']
+}
+
+var units = {
+		glucose: 'mg/dL',
+		bloodPressure: 'mm Hg',
+		calorie: 'calories',
+		exercise: 'minutes',
+		sleep: 'minutes',
+		weight: 'kilograms'
+}
+
+var cumulativeMeasurements = ['calorie', 'exercise', 'sleep'];
+
 $(document).ready(function() {
 	// hide certain content on load
 	$('.add_measurement_section').hide();
@@ -50,19 +70,19 @@ $(document).ready(function() {
 	var table_weight = $('#weight_table').DataTable(tableOptions('weight', [ ['weight', 'Weight (kg)'] ]));
 	
 	// grab measurement data from server and create charts
-	createCharts('glucose', 'Glucose', 'mg/dL',  ['glucose']);
-	createCharts('bloodPressure', 'Blood Pressure', 'mm Hg', ['systolicPressure', 'diastolicPressure']);
-	createCharts('calorie', 'Calories', 'calories', ['calories']);
-	createCharts('exercise', 'Exercise', 'minutes', ['duration']);
-	createCharts('sleep', 'Sleep', 'minutes', ['duration']);
-	createCharts('weight', 'Weight', 'kg', ['weight']);
+	createCharts('glucose', units.glucose,  measurementParts.glucose);
+	createCharts('bloodPressure', units.bloodPressure, measurementParts.bloodPressure);
+	createCharts('calorie', units.calorie, measurementParts.calorie);
+	createCharts('exercise', units.exercise, measurementParts.exercise);
+	createCharts('sleep', units.sleep, measurementParts.sleep);
+	createCharts('weight', units.weight, measurementParts.weight);
 	
 	// assign handlers for chart date range buttons 
-	$('.btn-individual').click(viewIndividualChart);
-	$('.btn-day').click(viewDayChart);
-	$('.btn-year').click(viewYearChart);
-	$('.btn-month').click(viewMonthChart);
-	$('.btn-week').click(viewWeekChart);
+	$('.btn-individual-chart').click(viewNewChart);
+	$('.btn-day-chart').click(viewNewChart);
+	$('.btn-year-chart').click(viewNewChart);
+	$('.btn-month-chart').click(viewNewChart);
+	$('.btn-week-chart').click(viewNewChart);
 });
 
 function viewIndividualChart() {
@@ -105,9 +125,7 @@ function failedRetreivingChartData() {
 	alert('Error retreiving measurements');
 }
 
-// TODO remove propertType as a parameter
-function createCharts(measType, properType, units, measNames) {
-	var cumulativeMeasurements = ['calorie', 'exercise', 'sleep'];
+function createCharts(measType, units, measNames) {
 	for (var i = 0; i < 2; i++) {
 		var per = (i == 0) ? 'individual' : 'month';
 		
@@ -117,18 +135,18 @@ function createCharts(measType, properType, units, measNames) {
 			'async': false,
 			'success': function(response) {
 				var data = [];
-				var periodName;
+				var xValue;
 				var idSuffix;
 				var title;
 				var subtitle;
 					
 				if (per === 'individual') {
-					periodName = 'dateAndTime';
+					xValue = 'dateAndTime';
 					idSuffix = 'primary';
 					title = 'By Entries';
 					subtitle = 'Individual';
 				} else if (per === 'month') {
-					periodName = 'month';
+					xValue = 'month';
 					idSuffix = 'secondary';
 					title = 'By Month';
 					subtitle = ($.inArray(measType, cumulativeMeasurements) === -1) ? 'Daily Averages' : 'Daily Totals';
@@ -139,14 +157,8 @@ function createCharts(measType, properType, units, measNames) {
 				// create a chart series for each measurement part (e.g. systolic/diastolic pressures)
 				for (var j = 0; j < measNames.length; j++) {
 					var currentData = [];
-					for (var k = 0; k < response.length; k++) {
-//						if (periodName === 'month') {
-//							for(var key in response[k])
-//							    alert('key: ' + key + '\n' + 'value: ' + response[k][key]);
-//							alert(response[j].toString());
-//						}
-						currentData.push( [ response[k][periodName], parseFloat(response[k][measNames[j]]) ] );
-					}
+					for (var k = 0; k < response.length; k++)
+						currentData.push( [ response[k][xValue], parseFloat(response[k][measNames[j]]) ] );
 					data.push(currentData);
 				}
 				
@@ -259,6 +271,69 @@ function createChartOptions(measType, title, units, data, name, per, subtitle, i
 	return chartOptions;
 }
 
+function viewNewChart() {
+	// deactivate/activate associated buttons
+	$(this).parent().parent().find('.active').removeClass('active');
+	$(this).addClass('active');
+	
+	// collect information on the chart being changed
+	var id_pieces = $(this).attr('id').split('_');
+	var measType = id_pieces[0];
+	var chartType = id_pieces[1];
+	var primOrSec = id_pieces[4];
+	var subtitle = ($.inArray(measType, cumulativeMeasurements) === -1) ? 'Daily Averages' : 'Daily Totals';
+	var measNames = measurementParts[measType];
+	
+	// grab new chart data from server
+	$.ajax({
+		'url': 'measurements_get_' +measType+ '_' +chartType,
+		'dataType': 'json',
+		'async': false,
+		'success': function(response) {
+			var data = [];
+			var xValue;
+			var title;
+			
+			switch (chartType) {
+				case 'individual':
+					xValue = 'dateAndTime';
+					title = 'Past Month';
+					break;
+				case 'day':
+					xValue = chartType;
+					title = 'Past Month';
+					break;
+				case 'week':
+				case 'month':
+					title = 'Past Year';
+					xValue = chartType;
+					break;
+				case 'year':
+					title = 'Past 5 Years';
+					xValue = chartType;
+					break;
+				default:
+					title = '';
+					xValue = chartType
+			}
+			
+			// create a chart series for each measurement part (e.g. systolic/diastolic pressures)
+			for (var i = 0; i < measNames.length; i++) {
+				var currentData = [];
+				for (var j = 0; j < response.length; j++)
+					currentData.push( [ response[j][xValue], parseFloat(response[j][measNames[i]]) ] );
+				data.push(currentData);
+			}
+			
+			// replace chart
+			var chartOptions = createChartOptions(measType, title, units[measType], data, measNames, chartType, subtitle, primOrSec);
+			charts[measType+ '_' +primOrSec].destroy();
+			charts[measType+ '_' +primOrSec] = new Highcharts.Chart(chartOptions);
+		},
+		'error': failedRetreivingChartData
+	});
+}
+
 function chartTooltipFormatter() {
 	var date = new Date(this.x);
 	var dateStr = date.toDateString();
@@ -344,110 +419,6 @@ function lastYear() {
 	var threeFiftySixDaysAgoUTC = Date.UTC(threeFiftySixDaysAgoDate.getFullYear(), threeFiftySixDaysAgoDate.getMonth(), threeFiftySixDaysAgoDate.getDate());
 	
 	return threeFiftySixDaysAgoUTC;
-}
-
-function viewYearChart() {
-	// deactivate/activate associated buttons
-	$(this).parent().parent().find('.active').removeClass('active');
-	$(this).addClass('active');
-	
-	var id_pieces = $(this).attr('id').split('_');
-	var measType = id_pieces[0];
-	var chartType = id_pieces[1];
-	var primOrSec = id_pieces[4];
-	
-	var measNames = ['glucose'];
-	var properType = 'Glucose';
-	var units = 'mg/dL';
-	
-	// grab new chart data from server
-	$.ajax({
-		'url': 'measurements_get_' +measType+ '_' +chartType,
-		'dataType': 'json',
-		'async': false,
-		'success': function(response) {
-			var data = [];
-			var periodName;
-			
-			switch (chartType) {
-				case 'all':
-				case 'individual':
-					periodName = 'dateAndTime';
-					break;
-				default:
-					periodName = chartType;
-					break;
-			}
-			
-			// create a chart series for each measurement part (e.g. systolic/diastolic pressures)
-			for (var i = 0; i < measNames.length; i++) {
-				var currentData = [];
-				for (var j = 0; j < response.length; j++)
-					currentData.push( [ response[j][periodName], parseFloat(response[j][measNames[i]]) ] );
-				data.push(currentData);
-			}
-			
-			// replace chart
-			var chartOptions = createChartOptions(measType, properType, units, data, measNames, chartType, 0, 'Past 5 Years', primOrSec);
-			charts[measType+ '_' +primOrSec].destroy();
-			charts[measType+ '_' +primOrSec] = new Highcharts.Chart(chartOptions);
-		},
-		'error': failedRetreivingChartData
-	});
-	
-	// update chart
-//	var chart = getChart($(this).attr('id'));
-//	chart.setTitle( { text: $(this).attr('name') }, { text: 'Past Year' } );
-//	chart.xAxis[0].setExtremes(lastYear(), todaysEnd());
-}
-
-function viewWeekChart() {
-	// deactivate/activate associated buttons
-	$(this).parent().parent().find('.active').removeClass('active');
-	$(this).addClass('active');
-	
-	// update chart
-	var chart = getChart($(this).attr('id'));
-	chart.setTitle( { text: $(this).attr('name') }, { text: 'Past Week' } );
-	chart.xAxis[0].setExtremes(lastWeek(), todaysEnd());
-}
-
-function viewMonthChart() {
-	// deactivate/activate associated buttons
-	$(this).parent().parent().find('.active').removeClass('active');
-	$(this).addClass('active');
-	
-	// update chart
-	var chart = getChart($(this).attr('id'));
-	chart.setTitle( { text: $(this).attr('name') }, { text: 'Past Month' } );
-	chart.xAxis[0].setExtremes(lastMonth(), todaysEnd());
-}
-
-// takes the id attribute of a chart, and returns the chart's javascript object
-function getChart(chartID) {
-	var idPieces = chartID.split('_');
-	var measType = idPieces[0];
-	var primaryOrSecondary = idPieces[4];
-	
-	return getChart(measType, primaryOrSecondary);
-}
-
-function getChart(measType, primOrSec) {
-	var index = -1;
-	
-	switch (measType) {
-		case 'glucose': index = 0; break;
-		case 'bloodPressure': index = 2; break;
-		case 'calories': case 'calorie': index = 4; break;
-		case 'exercise': index = 6; break;
-		case 'sleep': index = 8; break;
-		case 'weight': index = 10; break;
-	}
-	
-	if (primOrSec == 'secondary')
-		index++;
-	
-	return Highcharts.charts[index];
 }
 
 // an add measurement button was clicked
