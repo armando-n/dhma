@@ -70,12 +70,12 @@ $(document).ready(function() {
 	var table_weight = $('#weight_table').DataTable(tableOptions('weight', [ ['weight', 'Weight (kg)'] ]));
 	
 	// grab measurement data from server and create charts
-	createCharts('glucose', units.glucose,  measurementParts.glucose);
-	createCharts('bloodPressure', units.bloodPressure, measurementParts.bloodPressure);
-	createCharts('calorie', units.calorie, measurementParts.calorie);
-	createCharts('exercise', units.exercise, measurementParts.exercise);
-	createCharts('sleep', units.sleep, measurementParts.sleep);
-	createCharts('weight', units.weight, measurementParts.weight);
+	createCharts('glucose');
+	createCharts('bloodPressure');
+	createCharts('calorie');
+	createCharts('exercise');
+	createCharts('sleep');
+	createCharts('weight');
 	
 	// assign handlers for chart date range buttons 
 	$('.btn-individual-chart').click(viewNewChart);
@@ -84,18 +84,6 @@ $(document).ready(function() {
 	$('.btn-month-chart').click(viewNewChart);
 	$('.btn-week-chart').click(viewNewChart);
 });
-
-function viewIndividualChart() {
-	
-}
-
-function viewDayChart() {
-	
-}
-
-function destroyChart(measType, tableIdSuffix) {
-	$('#' + measType + '_chart_' + tableIdSuffix).highcharts().destroy();
-}
 
 function tableOptions(measType, dataAndTitle) {
 	var columns = [
@@ -121,11 +109,12 @@ function tableOptions(measType, dataAndTitle) {
 	};
 }
 
-function failedRetreivingChartData() {
-	alert('Error retreiving measurements');
-}
-
-function createCharts(measType, units, measNames) {
+/* creates a primary and secondary chart for the specified measurement type.
+ * defaults to individual and monthly views respectively for primary and secondary charts, respectively */
+function createCharts(measType) {
+	var measNames = measurementParts[measType];
+	
+	// create two charts, a primary chart w/ individual view, and a secondary chart w/ monthly view
 	for (var i = 0; i < 2; i++) {
 		var per = (i == 0) ? 'individual' : 'month';
 		
@@ -135,21 +124,21 @@ function createCharts(measType, units, measNames) {
 			'async': false,
 			'success': function(response) {
 				var data = [];
-				var xValue;
+				var xValPropName; // the name of the property containing the x-value
 				var idSuffix;
 				var title;
 				var subtitle;
-					
+				
 				if (per === 'individual') {
-					xValue = 'dateAndTime';
+					xValPropName = 'dateAndTime';
 					idSuffix = 'primary';
-					title = 'By Entries';
-					subtitle = 'Individual';
+					title = 'Individual Entries';
+					subtitle = 'Over Past Month';
 				} else if (per === 'month') {
-					xValue = 'month';
+					xValPropName = 'month';
 					idSuffix = 'secondary';
-					title = 'By Month';
-					subtitle = ($.inArray(measType, cumulativeMeasurements) === -1) ? 'Daily Averages' : 'Daily Totals';
+					title = ($.inArray(measType, cumulativeMeasurements) === -1) ? 'Monthly Averages' : 'Monthly Totals';
+					subtitle = 'Over Past Year';
 				} else {
 					alert('error');
 				}
@@ -158,22 +147,23 @@ function createCharts(measType, units, measNames) {
 				for (var j = 0; j < measNames.length; j++) {
 					var currentData = [];
 					for (var k = 0; k < response.length; k++)
-						currentData.push( [ response[k][xValue], parseFloat(response[k][measNames[j]]) ] );
+						currentData.push( [ response[k][xValPropName], parseFloat(response[k][measNames[j]]) ] );
 					data.push(currentData);
 				}
 				
 				// create chart
-				var chartOptions = createChartOptions(measType, title, units, data, measNames, per, subtitle, idSuffix);
+				var chartOptions = createChartOptions(measType, title, data, measNames, per, subtitle, idSuffix);
 				charts[measType+ '_' +idSuffix] = new Highcharts.Chart(chartOptions);
 			},
-			'error': failedRetreivingChartData
+			'error': function() { alert('Error retreiving measurements'); }
 		});
 	}
 }
 
-function createChartOptions(measType, title, units, data, name, per, subtitle, idSuffix) {
+function createChartOptions(measType, title, data, name, per, subtitle, idSuffix) {
 	var series = [];
 	var numOfSeriesData = data.length;
+	var xValue;
 //	var minY = 100000;
 //	var maxY = 0;
 //	var formatStr;
@@ -217,6 +207,27 @@ function createChartOptions(measType, title, units, data, name, per, subtitle, i
 //		case 'year': min = fiveYearsAgo; max = now.getFullYear();
 //	}
 	
+	var dayValue = function(value) {
+		var pieces = value.split('-');
+		return monthNumToShortName(parseInt(pieces[1]), false) + ' ' + pieces[2];
+	}
+	
+	var weekValue = function(value, isFirst) {
+		var result = '';
+		var pieces = value.split('-');
+		if (isFirst || pieces[1] == 1)
+			result += '(' +pieces[0]+ ') ';
+		return result+ 'Week ' + (parseInt(pieces[1])+1);
+	}
+	
+	var monthValue = function (value, isFirst) {
+		var result = '';
+		var pieces = value.split('-');
+		if (isFirst || pieces[1] == 1)
+			result += '(' +pieces[0]+ ') ';
+		return result + monthNumToShortName(parseInt(pieces[1]), false);
+	}
+	
 	var chartOptions =
 		{
 			chart: {
@@ -231,40 +242,67 @@ function createChartOptions(measType, title, units, data, name, per, subtitle, i
 //				max: max,
 				labels: {
 					formatter: function() {
-						var result = '';
-						var date;
-						var pieces;
-						
 						switch (per) {
 							case 'all':
 							case 'individual':
-							case 'day':
-								date = new Date(this.value);
+								var date = new Date(this.value);
 								return monthNumToShortName(date.getMonth(), true)+ ' ' +date.getDate();
-							case 'week':
-								pieces = this.value.split('-');
-								if (this.isFirst || pieces[1] == 1)
-									result += '(' +pieces[0]+ ') ';
-								return result+ 'Week ' +pieces[1];
-							case 'month':
-								pieces = this.value.split('-');
-								if (this.isFirst || pieces[1] == 1)
-									result += '(' +pieces[0]+ ') ';
-								return result + monthNumToShortName(parseInt(pieces[1]), false);
-							case 'year':
+							case 'day': // example result: Aug 17
+								return dayValue(this.value);
+							case 'week': // example results: Week 41  or  (2015) Week 1
+								return weekValue(this.value, this.isFirst);
+							case 'month': // example result: Sep  or  (2014) Nov
+								return monthValue(this.value, this.isFirst);
+							case 'year': // example result: 2015
 								return this.value;
 						}
 					}
 				}
 			},
 			yAxis: {
-				title: { text: units }
+				title: { text: units[measType] }
 //				min: minY,
 //				max: maxY
 			},
 			series: series,
 			tooltip: {
-				formatter: chartTooltipFormatter
+				formatter: function() {
+					var resultStr;
+					var firstLine;
+					var secondLine = '';
+					var firstLineHeader = '<span style="font-size: smaller;">';
+					var firstLineBody;
+					var firstLineFooter = '</span>';
+					var secondLineHeader = '<br /><span style="font-size: smaller;">';
+					var secondLineBody;
+					var secondLineFooter = '</span>';
+					if (per === 'all' || per === 'individual') {
+						var date = new Date(this.key);
+						firstLineBody = date.toDateString();
+						secondLineBody = dateTo12HourLocalTimeString(date);
+					} else if (per === 'day')
+						firstLineBody = dayValue(this.key);
+					else if (per === 'week')
+						firstLineBody = weekValue(this.key, false);
+					else if (per === 'month')
+						firstLineBody = monthValue(this.key, false);
+					else if (per === 'year')
+						firstLineBody = this.key;
+					
+					firstLine = firstLineHeader + firstLineBody + firstLineFooter;
+					if (per === 'all' || per === 'individual')
+						secondLine += secondLineHeader + secondLineBody + secondLineFooter;
+					
+					resultStr = firstLine + secondLine;
+					resultStr +=
+						'<br /><span style="color: ' +this.series.color+ '">\u25CF</span> ' +
+						this.series.name+ ': <strong>' +this.y+ ' ' +units[measType]+ '</strong>';
+					
+					if (measType === 'exercise' || measType === 'sleep')
+						resultStr += ' (' +(this.y / 60).toFixed(2)+ ' hours)';
+
+				    return resultStr;
+				}
 			}
 		}
 	
@@ -281,7 +319,6 @@ function viewNewChart() {
 	var measType = id_pieces[0];
 	var chartType = id_pieces[1];
 	var primOrSec = id_pieces[4];
-	var subtitle = ($.inArray(measType, cumulativeMeasurements) === -1) ? 'Daily Averages' : 'Daily Totals';
 	var measNames = measurementParts[measType];
 	
 	// grab new chart data from server
@@ -293,27 +330,37 @@ function viewNewChart() {
 			var data = [];
 			var xValue;
 			var title;
+			var subtitle;
 			
 			switch (chartType) {
 				case 'individual':
 					xValue = 'dateAndTime';
-					title = 'Past Month';
+					title = 'Individual Entries';
+					subtitle = 'Over Past Month' ;
 					break;
 				case 'day':
 					xValue = chartType;
-					title = 'Past Month';
+					title = ($.inArray(measType, cumulativeMeasurements) === -1) ? 'Daily Averages' : 'Daily Totals';
+					subtitle = 'Over Past Month';
 					break;
 				case 'week':
-				case 'month':
-					title = 'Past Year';
 					xValue = chartType;
+					title = ($.inArray(measType, cumulativeMeasurements) === -1) ? 'Weekly Averages' : 'Weekly Totals';
+					subtitle = 'Over Past Year';
+					break;
+				case 'month':
+					xValue = chartType;
+					title = ($.inArray(measType, cumulativeMeasurements) === -1) ? 'Monthly Averages' : 'Monthly Totals';
+					subtitle = 'Over Past Year';
 					break;
 				case 'year':
-					title = 'Past 5 Years';
 					xValue = chartType;
+					title = ($.inArray(measType, cumulativeMeasurements) === -1) ? 'Yearly Averages' : 'Yearly Totals';
+					subtitle = 'Over Past 5 Years';
 					break;
 				default:
 					title = '';
+					subtitle = '';
 					xValue = chartType
 			}
 			
@@ -326,27 +373,12 @@ function viewNewChart() {
 			}
 			
 			// replace chart
-			var chartOptions = createChartOptions(measType, title, units[measType], data, measNames, chartType, subtitle, primOrSec);
+			var chartOptions = createChartOptions(measType, title, data, measNames, chartType, subtitle, primOrSec);
 			charts[measType+ '_' +primOrSec].destroy();
 			charts[measType+ '_' +primOrSec] = new Highcharts.Chart(chartOptions);
 		},
-		'error': failedRetreivingChartData
+		'error': function() { alert('Error retreiving measurements'); }
 	});
-}
-
-function chartTooltipFormatter() {
-	var date = new Date(this.x);
-	var dateStr = date.toDateString();
-	var timeStr = dateTo12HourLocalTimeString(date);
-	
-	var resultStr = '<span style="font-size: smaller;">' +dateStr+ '</span>';
-	resultStr += '<br /><span style="font-size: smaller;">' +timeStr+ '</span>';
-	resultStr += '<br /><span style="color: ' +this.series.color+ '">\u25CF</span> ' +this.series.name+ ': <strong>' +this.y+ '</strong>';
-
-    return resultStr;
-}
-
-function chartXAxisLabelFormatter() {
 }
 
 function monthNumToShortName(num, isZeroBased) {
