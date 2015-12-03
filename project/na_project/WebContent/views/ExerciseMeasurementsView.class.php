@@ -35,37 +35,6 @@ class ExerciseMeasurementsView {
                 </table><?php
                 endif; ?>
             </div>
-            
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-            
-                <div class="btn-group btn-group-justified" role="group">
-                
-                    <div class="btn-group" role="group">
-                        <button type="button" id="add_exercise_btn" class="addMeasurement btn btn-default">
-                            <span class="glyphicon glyphicon-plus"></span>
-                            &nbsp;Add
-                        </button>
-                    </div>
-                    
-                    <div class="btn-group" role="group">
-                        <button type="button" id="edit_exercise_btn" class="editMeasurement btn btn-default">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                            &nbsp;Edit
-                        </button>
-                    </div>
-                    
-                    <div class="btn-group" role="group">
-                        <button type="button" id="delete_exercise_btn" class="deleteMeasurement btn btn-danger">
-                            <span class="glyphicon glyphicon-remove"></span>
-                            &nbsp;Delete
-                        </button>
-                    </div>
-                    
-                </div>
-                
-            </div>
         </div>
     </div>
     <div id="add_exercise_section" class="add_measurement_section col-sm-4">
@@ -82,25 +51,25 @@ class ExerciseMeasurementsView {
                 <div class="form-group">
                     <label for="type_exercise_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Type</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="type_exercise_add" name="type" class="form-control" size="10" required="required" maxlength="255" tabindex="2" /><br />
+                        <input type="text" id="type_exercise_add" name="type" class="form-control" size="10" required="required" maxlength="255" tabindex="2" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="date_exercise_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Date</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="date" id="date_exercise_add" name="date" required="required" class="form-control" tabindex="3" title="mm/dd/yyyy or mm-dd-yyyy" /><br />
+                        <input type="date" id="date_exercise_add" name="date" required="required" class="form-control" tabindex="3" title="mm/dd/yyyy or mm-dd-yyyy" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="time_exercise_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Time</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="time_exercise_add" name="time" required="required" class="form-control" tabindex="4" title="H:M" /><br />
+                        <input type="text" id="time_exercise_add" name="time" required="required" class="form-control" tabindex="4" title="H:M" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="notes_exercise_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Notes</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="notes_exercise_add" name="notes" class="form-control" size="30" maxlength="50" tabindex="5" /><br />
+                        <input type="text" id="notes_exercise_add" name="notes" class="form-control" size="30" maxlength="50" tabindex="5" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -141,25 +110,25 @@ class ExerciseMeasurementsView {
                 <div class="form-group">
                     <label for="type_exercise_edit" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Type</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="type_exercise_edit" name="type" class="form-control" size="10" required="required" maxlength="255" tabindex="2" /><br />
+                        <input type="text" id="type_exercise_edit" name="type" class="form-control" size="10" required="required" maxlength="255" tabindex="2" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="date_exercise_edit" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Date</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="date" id="date_exercise_edit" name="date" required="required" class="form-control" tabindex="3" title="mm/dd/yyyy or mm-dd-yyyy" /><br />
+                        <input type="date" id="date_exercise_edit" name="date" required="required" class="form-control" tabindex="3" title="mm/dd/yyyy or mm-dd-yyyy" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="time_exercise_edit" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Time</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="time_exercise_edit" name="time" required="required" class="form-control" tabindex="4" title="H:M" /><br />
+                        <input type="text" id="time_exercise_edit" name="time" required="required" class="form-control" tabindex="4" title="H:M" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="notes_exercise_edit" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Notes</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="notes_exercise_edit" name="notes" class="form-control" size="30" maxlength="50" tabindex="5" /><br />
+                        <input type="text" id="notes_exercise_edit" name="notes" class="form-control" size="30" maxlength="50" tabindex="5" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -201,27 +170,27 @@ class ExerciseMeasurementsView {
             <div class="col-sm-12 btn-group btn-group-justified" role="group">
             
                 <div class="btn-group" role="group">
-                    <button type="button" id="exercise_individual_chart_btn_primary" class="btn btn-default btn-individual-chart active">
+                    <button type="button" id="exercise_individual_chart_btn_primary" class="btn btn-default btn-change-chart active">
                         Individual
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="exercise_day_chart_btn_primary" class="btn btn-default btn-day-chart">
+                    <button type="button" id="exercise_day_chart_btn_primary" class="btn btn-default btn-change-chart">
                         Daily
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="exercise_week_chart_btn_primary" class="btn btn-default btn-week-chart">
+                    <button type="button" id="exercise_week_chart_btn_primary" class="btn btn-default btn-change-chart">
                         Weekly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="exercise_month_chart_btn_primary" class="btn btn-default btn-month-chart">
+                    <button type="button" id="exercise_month_chart_btn_primary" class="btn btn-default btn-change-chart">
                         Monthly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="exercise_year_chart_btn_primary" class="btn btn-default btn-year-chart">
+                    <button type="button" id="exercise_year_chart_btn_primary" class="btn btn-default btn-change-chart">
                         Yearly
                     </button>
                 </div>
@@ -240,26 +209,26 @@ class ExerciseMeasurementsView {
             <div class="col-sm-12 btn-group btn-group-justified" role="group">
             
                 <div class="btn-group" role="group">
-                    <button type="button" id="exercise_individual_chart_btn_secondary" class="btn btn-default btn-individual-chart">
+                    <button type="button" id="exercise_individual_chart_btn_secondary" class="btn btn-default btn-change-chart">
                         Individual
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="exercise_day_chart_btn_secondary" class="btn btn-default btn-day-chart">
+                    <button type="button" id="exercise_day_chart_btn_secondary" class="btn btn-default btn-change-chart">
                         Daily
                     </button>
                 </div><div class="btn-group" role="group">
-                    <button type="button" id="exercise_week_chart_btn_secondary" class="btn btn-default btn-week-chart">
+                    <button type="button" id="exercise_week_chart_btn_secondary" class="btn btn-default btn-change-chart">
                         Weekly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="exercise_month_chart_btn_secondary" class="btn btn-default btn-month-chart active">
+                    <button type="button" id="exercise_month_chart_btn_secondary" class="btn btn-default btn-change-chart active">
                         Monthly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="exercise_year_chart_btn_secondary" class="btn btn-default btn-year-chart">
+                    <button type="button" id="exercise_year_chart_btn_secondary" class="btn btn-default btn-change-chart">
                         Yearly
                     </button>
                 </div>

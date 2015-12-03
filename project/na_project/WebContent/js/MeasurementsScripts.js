@@ -23,51 +23,54 @@ var measurementParts = {
 }
 
 var units = {
-		glucose: 'mg/dL',
-		bloodPressure: 'mm Hg',
-		calorie: 'calories',
-		exercise: 'minutes',
-		sleep: 'minutes',
-		weight: 'kilograms'
+	glucose: 'mg/dL',
+	bloodPressure: 'mm Hg',
+	calorie: 'calories',
+	exercise: 'minutes',
+	sleep: 'minutes',
+	weight: 'kilograms'
 }
 
 var cumulativeMeasurements = ['calorie', 'exercise', 'sleep'];
 
+var selectedRows = [];
+
 $(document).ready(function() {
-	// hide certain content on load
+	// hide some content on load
 	$('.add_measurement_section').hide();
 	$('.edit_measurement_section').hide();
-	$('.editMeasurement').parent().hide();
-	$('.deleteMeasurement').parent().hide();
 	
 	// add listeners for page navigation buttons (i.e. for jumping to a measurement)
 	$('#page-nav button').click(function(event) {
 		window.location.assign('#' + $(this).attr('name'));
 	});
-	$('body').click(deselectAllRows);
 	
-	// add listener for add/edit/delete measurement and cancel buttons
-	$('.addMeasurement').click(addMeasurement);
-	$('.editMeasurement').click(editMeasurement);
-	$('.deleteMeasurement').click(deleteMeasurement);
+	// add listener for cancel buttons
 	$('.cancelMeasurement').click(cancelMeasurement);
-	
-	// add hover and click listeners for measurement rows
-	$('tbody > tr.measurementRow').each(function(index, element) {
-		$(element).hover(
-			function() { $(element).addClass('rowHover');    },
-			function() { $(element).removeClass('rowHover'); }
-		);
-		$(element).click(rowClicked);
-	});
 	
 	// grab measurement data from server and create tables
 	var table_bloodPressure = $('#bloodPressure_table').DataTable(tableOptions('bloodPressure', [ ['systolicPressure', 'Systolic Pressure'], ['diastolicPressure', 'Diastolic Pressure'] ]));
 	var table_glucose = $('#glucose_table').DataTable(tableOptions('glucose', [ ['glucose', 'Glucose (mg/dL)'] ]));
-	var table_calories = $('#calories_table').DataTable(tableOptions('calorie', [ ['calories', 'Calories'] ]));
+	var table_calories = $('#calorie_table').DataTable(tableOptions('calorie', [ ['calories', 'Calories'] ]));
 	var table_execrise = $('#exercise_table').DataTable(tableOptions('exercise', [ ['duration', 'Exercise (min)'] ]));
 	var table_sleep = $('#sleep_table').DataTable(tableOptions('sleep', [ ['duration', 'Sleep (min)', ] ]));
 	var table_weight = $('#weight_table').DataTable(tableOptions('weight', [ ['weight', 'Weight (kg)'] ]));
+	
+	// create add/edit/delete measurement buttons
+	table_bloodPressure.button(0, null).container().addClass('btn-group-justified');
+	table_glucose.button(0, null).container().addClass('btn-group-justified');
+	table_calories.button(0, null).container().addClass('btn-group-justified');
+	table_execrise.button(0, null).container().addClass('btn-group-justified');
+	table_sleep.button(0, null).container().addClass('btn-group-justified');
+	table_weight.button(0, null).container().addClass('btn-group-justified');
+	
+	// add selection handlers for table rows
+	table_bloodPressure.on('select', row_clicked);
+	table_glucose.on('select', row_clicked);
+	table_calories.on('select', row_clicked);
+	table_execrise.on('select', row_clicked);
+	table_sleep.on('select', row_clicked);
+	table_weight.on('select', row_clicked);
 	
 	// grab measurement data from server and create charts
 	createCharts('glucose');
@@ -78,14 +81,38 @@ $(document).ready(function() {
 	createCharts('weight');
 	
 	// assign handlers for chart date range buttons 
-	$('.btn-individual-chart').click(viewNewChart);
-	$('.btn-day-chart').click(viewNewChart);
-	$('.btn-year-chart').click(viewNewChart);
-	$('.btn-month-chart').click(viewNewChart);
-	$('.btn-week-chart').click(viewNewChart);
+	$('.btn-change-chart').click(viewNewChart);
 });
 
+function row_clicked(e, dt, type, indexes) {
+	if (type !== 'row')
+		return;
+	
+	var measType = $(dt.table(0).node()).attr('id').split('_')[0];
+	
+	// store selected row data in global variable
+	selectedRows = [];
+	for (var i = 0; i < indexes.length; i++)
+		selectedRows.push(dt.row(indexes[i]).data());
+	
+	// show edit/delete buttons
+	dt.button($('#' +measType+ '_delete')).node().show();
+	if (indexes.length > 1)
+		dt.button($('#' +measType+ '_edit')).node().hide();
+	else
+		dt.button($('#' +measType+ '_edit')).node().show();
+	
+	// if edit form is visible, fill the edit form with data from the currently selected measurement
+	if (indexes.length == 1 && $('#edit_' + measType + '_section').is(':visible')) {
+		var row = selectedRows[0];
+		for (var key in row)
+			$('#' +key+ '_' +measType+ '_edit').val(row[key]);
+		$('#oldDateTime_' + measType).val(row.date + ' ' + row.time);
+	}
+}
+
 function tableOptions(measType, dataAndTitle) {
+	// create columns array and all common columns
 	var columns = [
         { data: 'date', title: 'Date' },
         { data: 'time', title: 'Time' },
@@ -93,6 +120,7 @@ function tableOptions(measType, dataAndTitle) {
     ];
 	var orderIndex = (measType == 'bloodPressure') ? 2 : 1;
 
+	// add remaining columns
 	for (var i = dataAndTitle.length-1; i >= 0; i--)
 		columns.unshift({ data: dataAndTitle[i][0], title: dataAndTitle[i][1] });
 	
@@ -104,8 +132,66 @@ function tableOptions(measType, dataAndTitle) {
 		scrollCollapse: true,
 		paging: false,
 		select: true,
-		dom: 'ft'
-		//buttons: { name: 'primary', buttons: ['columnsToggle'] }
+		dom: 'ftB',
+		buttons: {
+			name: 'add_edit_delete',
+			buttons: [
+				{
+					name: measType+ '_add',
+					text: 'Add',
+					init: function (dt, node, config) {
+						node.attr('id', measType+ '_add');
+						node.prepend('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;');
+					},
+					action: function (e, dt, node, config) {
+						showFormSection(measType, 'add', dt); // show add form
+						if ($(window).height() < 400)
+							window.location.assign('#add_' + measType + '_section');
+					}
+				},
+	            {
+					name: measType+ '_edit',
+	            	extend: 'selectedSingle',
+	            	text: 'Edit',
+	            	init: function (dt, node, config) {
+						node.hide().attr('id', measType+ '_edit');
+						node.prepend('<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;');
+					},
+	            	action: function (e, dt, node, config) {
+	            		// fill the edit form with data from the currently selected measurement
+	            		var row = selectedRows[0];
+	            		for (var key in row)
+	            			$('#' +key+ '_' +measType+ '_edit').val(row[key]);
+	            		$('#oldDateTime_' + measType).val(row.date + ' ' + row.time);
+	            		
+	            		// show the edit form
+	            		showFormSection(measType, 'edit', dt);
+	            		if ($(window).height() < 400)
+	            			window.location.assign('#edit_' + measType + '_section');
+	            	}
+	            },
+	            {
+	            	name: measType+ '_delete',
+	            	extend: 'selected',
+	            	text: 'Delete',
+	            	init: function (dt, node, config) {
+						node.hide().attr('id', measType+ '_delete').addClass('btn-danger');
+						node.prepend('<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;');
+					},
+	            	action: function (e, dt, node, config) {
+	            		if (window.confirm('Are you sure you want to delete the selected measurement(s)?')) {
+	            			// send delete request(s) to measurements controller
+	            			for (var i = 0; i < selectedRows.length; i++) {
+	            				window.location.assign(
+            						'measurements_delete_' + measType +
+            						'_' + selectedRows[i].date + ' ' + selectedRows[i].time
+        						);
+	            			}
+	            		}
+	            	}
+	            }
+            ]
+		}
 	};
 }
 
@@ -453,49 +539,8 @@ function lastYear() {
 	return threeFiftySixDaysAgoUTC;
 }
 
-// an add measurement button was clicked
-function addMeasurement(event) {
-	event.stopPropagation();
-	
-	// show the add measurement section for the associated measurement type and jump to it
-	var btnID_pieces = $(this).attr('id').split('_');
-	var form_type = btnID_pieces[0];
-	var meas_type = btnID_pieces[1];
-	showFormSection(meas_type, form_type);	
-	window.location.assign('#add_' + meas_type + '_section');
-}
-
-// an edit measurement button was clicked
-function editMeasurement(event) {
-	event.stopPropagation();
-	
-	// fill the edit form with data from the currently selected measurement, then show it and jump to it
-	var meas_type = fillEditForm();
-	showFormSection(meas_type, 'edit');
-	window.location.assign('#edit_' + meas_type + '_section');
-}
-
-// a delete measurement button was clicked
-function deleteMeasurement(event) {
-	if (window.confirm('Are you sure you want to delete the selected measurement?')) {
-		event.stopPropagation();
-		
-		// determine the measurement to delete
-		var id = $('tbody > tr.rowSelected').attr('id');
-		var measurementPieces = id.split('_');
-		var measurementType = measurementPieces[0];
-		var measurementDate = measurementPieces[1];
-		var measurementTime = measurementPieces[2];
-		
-		// send delete request to measurements controller
-		window.location.assign('measurements_delete_' + measurementType + '_' + measurementDate + ' ' + measurementTime);
-	}
-}
-
 // a cancel button for an add or edit form was clicked
-function cancelMeasurement(event) {
-	event.stopPropagation();
-	
+function cancelMeasurement() {
 	// determine which measurement and which form (add/edit) to hide
 	var btnID_pieces = $(this).attr('id').split('_');
 	var form_type = btnID_pieces[1];
@@ -503,17 +548,6 @@ function cancelMeasurement(event) {
 	
 	// hide form and jump to the associated measurements table
 	hideFormSection(meas_type, form_type);
-	window.location.assign('#view_' + meas_type + '_section');
-}
-
-// selects a row when clicked, and fills in the edit form if it is visible
-function rowClicked(event) {
-	event.stopPropagation();
-	var meas_type = $(this).attr('id').split('_')[0];
-	deselectAllRows();
-	selectRow(this);
-	if ($('#edit_' + meas_type + '_section').is(':visible'))
-		fillEditForm();
 }
 
 function hideFormSection(meas_type, form_type) {
@@ -524,10 +558,11 @@ function hideFormSection(meas_type, form_type) {
 	$('#view_' + meas_type + '_section').addClass('col-sm-12');
 	
 	// deactivate button
-	$('#' + form_type + '_' + meas_type + '_btn').removeClass('active');
+	$('#' + meas_type + '_' + form_type).removeClass('active');
 }
 
-function showFormSection(meas_type, form_type) {
+//show the specified measurement form section for the associated measurement type and jump to it
+function showFormSection(meas_type, form_type, dt) {
 	
 	// hide other section if it is visible, and deactivate its corresponding button
 	if (form_type == 'add' && $('#edit_' + meas_type + '_section').is(':visible'))
@@ -541,52 +576,7 @@ function showFormSection(meas_type, form_type) {
 	$('#view_' + meas_type + '_section').addClass('col-sm-8');
 	
 	// activate button
-	$('#' + form_type + '_' + meas_type + '_btn').addClass('active');
-}
-
-// collects data from currently selected row, and fills in its corresponding edit form
-// returns the type of measurement of the currently selected row
-function fillEditForm() {
-	
-	// collect data from selected row
-	var selected_row = $('tbody > tr.rowSelected');
-	var rowID_pieces = selected_row.attr('id').split('_');
-	var meas_type = rowID_pieces[0];
-	var date = rowID_pieces[1];
-	var time = rowID_pieces[2];
-	
-	// fill in edit form fields
-	selected_row.children().each(function(index, element) {
-		var col_name = $(element).attr('id').split('_')[0];
-		$('#' + col_name + '_' + meas_type + '_edit').val($(element).text());
-	});
-	$('#oldDateTime_' + meas_type).val(date + ' ' + time);
-	
-	return meas_type;
-}
-
-function selectRow(row) {
-	
-	// show edit/delete buttons
-	var section = $(row).attr('id').split('_')[0];
-	$('#edit_' + section + '_btn').parent().show();
-	$('#delete_' + section + '_btn').parent().show();
-	
-	// select row
-	$(row).addClass('rowSelected');
-}
-
-function deselectAllRows() {
-	$('tbody > tr.measurementRow').each(function(index, element) {
-		
-		// hide edit/delete buttons
-		var section = $(element).attr('id').split('_')[0];
-		$('#edit_' + section + '_btn').parent().hide();
-		$('#delete_' + section + '_btn').parent().hide();
-		
-		// deselect rows
-		$(element).removeClass('rowSelected');
-	});
+	$('#' +meas_type+ '_' +form_type).addClass('active');
 }
 
 
