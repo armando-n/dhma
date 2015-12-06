@@ -23,7 +23,7 @@ class MeasurementsController {
             case 'add': $result = self::add(); break;
             case 'edit': self::edit(); break;
             case 'post': self::post(); break;
-            case 'delete': self::delete(); break;
+            case 'delete': $result = self::delete(); break;
             case 'get': self::get(); break;
             default:
                 self::error('Error: unrecognized command');
@@ -244,11 +244,13 @@ class MeasurementsController {
     private static function edit() {
         if (!isset($_SESSION['arguments'])) {
             self::error('Error: arguments expected');
+            $_SESSION['error'] = 'arguments expected';
             return;
         }
         
         if (strpos($_SESSION['arguments'], '_') === false) {
             self::error('Error: multiple arguments expected');
+            $_SESSION['error'] = 'multiple arguments expected';
             return;
         }
         
@@ -356,12 +358,12 @@ class MeasurementsController {
     private static function delete() {
         if (!isset($_SESSION['arguments'])) {
             self::error('Error: arguments expected');
-            return;
+            return false;
         }
     
         if (strpos($_SESSION['arguments'], '_') === false) {
             self::error('Error: multiple arguments expected');
-            return;
+            return false;
         }
     
         $args = explode('_', $_SESSION['arguments']);
@@ -373,7 +375,7 @@ class MeasurementsController {
             case 'bloodPressure':
                 BloodPressureMeasurementsDB::deleteMeasurement($_SESSION['profile']->getUserName(), $dateAndTime);
                 break;
-            case 'calories':
+            case 'calories': case 'calorie':
                 CalorieMeasurementsDB::deleteMeasurement($_SESSION['profile']->getUserName(), $dateAndTime);
                 break;
             case 'exercise':
@@ -389,6 +391,9 @@ class MeasurementsController {
                 WeightMeasurementsDB::deleteMeasurement($_SESSION['profile']->getUserName(), $dateAndTime);
                 break;
         }
+        
+        if (isset($_POST['json']))
+            return true;
         
         $bpMeasurements = BloodPressureMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
         $calorieMeasurements = CalorieMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());

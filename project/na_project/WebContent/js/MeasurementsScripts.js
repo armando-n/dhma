@@ -85,6 +85,30 @@ $(document).ready(function() {
 	$('.btn-change-chart').click(viewNewChart);
 });
 
+function deleteMeasurement(e, dt, node, config) {
+	if (window.confirm('Are you sure you want to delete the selected measurement(s)?')) {
+		var measType = node.attr('id').split('_')[0];
+		
+		// send delete request to measurements controller
+		$.ajax( {
+			url: 'measurements_delete_' +measType+ '_' +
+				selectedRows[0].data().date + ' '+
+				selectedRows[0].data().time.replace(':', '-'),
+			data: { json: true },
+			dataType: 'json',
+			method: 'POST',
+			async: false,
+			success: function(response) {
+				if (response.result)
+					selectedRows[0].remove().draw();
+				else
+					alert('delete failed: ' +response.error);
+			},
+			error: function() { alert('error'); }
+		} );
+	}
+}
+
 function addMeasurement(event) {
 	var measType = $(this).attr('id').split('_')[1];
 	
@@ -140,7 +164,7 @@ function row_clicked(e, dt, type, indexes) {
 	// store selected row data in global variable
 	selectedRows = [];
 	for (var i = 0; i < indexes.length; i++)
-		selectedRows.push(dt.row(indexes[i]).data());
+		selectedRows.push(dt.row(indexes[i]));
 	
 	// show edit/delete buttons
 	dt.button($('#' +measType+ '_delete')).node().show();
@@ -151,7 +175,7 @@ function row_clicked(e, dt, type, indexes) {
 	
 	// if edit form is visible, fill the edit form with data from the currently selected measurement
 	if (indexes.length == 1 && $('#edit_' + measType + '_section').is(':visible')) {
-		var row = selectedRows[0];
+		var row = selectedRows[0].data();
 		for (var key in row)
 			$('#' +key+ '_' +measType+ '_edit').val(row[key]);
 		$('#oldDateTime_' + measType).val(row.date + ' ' + row.time);
@@ -178,7 +202,7 @@ function tableOptions(measType, dataAndTitle) {
 		scrollY: '35vh',
 		scrollCollapse: true,
 		paging: false,
-		select: true,
+		select: { style: 'single' },
 		dom: 'ftB',
 		buttons: {
 			name: 'add_edit_delete',
@@ -206,7 +230,7 @@ function tableOptions(measType, dataAndTitle) {
 					},
 	            	action: function (e, dt, node, config) {
 	            		// fill the edit form with data from the currently selected measurement
-	            		var row = selectedRows[0];
+	            		var row = selectedRows[0].data();
 	            		for (var key in row)
 	            			$('#' +key+ '_' +measType+ '_edit').val(row[key]);
 	            		$('#oldDateTime_' + measType).val(row.date + ' ' + row.time);
@@ -225,17 +249,7 @@ function tableOptions(measType, dataAndTitle) {
 						node.hide().attr('id', measType+ '_delete').addClass('btn-danger');
 						node.prepend('<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;');
 					},
-	            	action: function (e, dt, node, config) {
-	            		if (window.confirm('Are you sure you want to delete the selected measurement(s)?')) {
-	            			// send delete request(s) to measurements controller
-	            			for (var i = 0; i < selectedRows.length; i++) {
-	            				window.location.assign(
-            						'measurements_delete_' + measType +
-            						'_' + selectedRows[i].date + ' ' + selectedRows[i].time
-        						);
-	            			}
-	            		}
-	            	}
+	            	action: deleteMeasurement
 	            }
             ]
 		}
