@@ -45,7 +45,8 @@ $(document).ready(function() {
 		window.location.assign('#' + $(this).attr('name'));
 	});
 	
-	// add listener for cancel buttons
+	// add listener for submit and cancel buttons
+	$('.add_measurement_section').submit(addMeasurement);
 	$('.cancelMeasurement').click(cancelMeasurement);
 	
 	// grab measurement data from server and create tables
@@ -83,6 +84,52 @@ $(document).ready(function() {
 	// assign handlers for chart date range buttons 
 	$('.btn-change-chart').click(viewNewChart);
 });
+
+function addMeasurement(event) {
+	var measType = $(this).attr('id').split('_')[1];
+	
+	// collect data unique to each measurement
+	var measData = {};
+	for (var i = 0; i < measurementParts[measType].length; i++) {
+		var partName = measurementParts[measType][i];
+		measData[partName] = $('#' +partName+ '_' +measType+ '_add').val();
+	}
+	if (measType === 'exercise')
+		measData.type = $('#type_exercise_add').val();
+	
+	// collect data common to each measurement
+	measData.date = $('#date_' +measType+ '_add').val();
+	measData.time = $('#time_' +measType+ '_add').val();
+	measData.notes = $('#notes_' +measType+ '_add').val();
+	measData.userName = $('#userName_' +measType+ '_add').val();
+	measData.json = true;
+
+	// send add request to server
+	$.ajax({
+		url: 'measurements_add_' +measType,
+		data: measData,
+		dataType: 'json',
+		method: 'POST',
+		success: function(response) {
+			if (response.result) {
+				// add row and highlight it for a few seconds
+				var newRow = $('#' +measType+ '_table').DataTable().row.add(measData).draw();
+				$(newRow.node()).addClass('success');
+				setTimeout(function() { $(newRow.node()).removeClass('success'); }, 3000);
+				
+				// refresh charts
+				$('#' +measType+ '_charts_primary_column .active').click();
+				$('#' +measType+ '_charts_secondary_column .active').click();
+				
+			}
+			else
+				alert('add failed: ' +response.error);
+		},
+		error: function() { alert('error: check values and try again.'); }
+	});
+	
+	event.preventDefault();
+}
 
 function row_clicked(e, dt, type, indexes) {
 	if (type !== 'row')

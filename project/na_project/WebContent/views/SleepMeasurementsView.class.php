@@ -67,7 +67,7 @@ class SleepMeasurementsView {
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="hidden" name="userName" value="<?=$_SESSION['profile']->getUserName()?>" />
+                    <input type="hidden" id="userName_sleep_add" name="userName" value="<?=$_SESSION['profile']->getUserName()?>" />
                     
                     <div class="btn-group btn-group-justified" role="group">
                         <div class="btn-group" role="group">
@@ -148,7 +148,7 @@ class SleepMeasurementsView {
 
 <!-- Charts Section -->
 <section id="sleep_charts_row" class="row">
-    <div class="col-sm-12 col-md-6">
+    <div id="sleep_charts_primary_column" class="col-sm-12 col-md-6">
         <div class="row">
             <div id="sleep_chart_primary" class="col-sm-12">
                 <!-- Primary Chart -->
@@ -187,7 +187,7 @@ class SleepMeasurementsView {
         </div>    
     </div>
     
-    <div class="col-sm-12 col-md-6 chart-secondary">
+    <div id="sleep_charts_secondary_column" class="col-sm-12 col-md-6 chart-secondary">
         <div class="row">
             <div id="sleep_chart_secondary" class="col-sm-12">
                 <!-- Secondary Chart -->

@@ -20,7 +20,7 @@ class MeasurementsController {
         
         switch ($_SESSION['action']) {
             case 'show': self::show(); break;
-            case 'add': self::add(); break;
+            case 'add': $result = self::add(); break;
             case 'edit': self::edit(); break;
             case 'post': self::post(); break;
             case 'delete': self::delete(); break;
@@ -29,6 +29,12 @@ class MeasurementsController {
                 self::error('Error: unrecognized command');
         }
         
+        if (isset($_POST) && isset($_POST['json'])) {
+            if ($result)
+                echo '{"result":true}';
+            else
+                echo '{"result":false, "error":"' .$_SESSION['error']. '"}';
+        }
     }
     
     // example call: /measurements_get_all                         (all time)
@@ -167,45 +173,72 @@ class MeasurementsController {
     private static function add() {
         if (!isset($_SESSION['arguments'])) {
             self::error('Error: arguments expected');
-            return;
+            $_SESSION['error'] = 'arguments expected';
+            return false;
         }
         if (!isset($_POST) || empty($_POST)) {
             self::error('Error: post data missing');
-            return;
+            $_SESSION['error'] = 'post data missing';
+            return false;
         }
         
         $measurementID = -1;
         switch ($_SESSION['arguments']) {
             case 'bloodPressure': $measurement = new BloodPressureMeasurement($_POST); break;
-            case 'calories': $measurement = new CalorieMeasurement($_POST); break;
+            case 'calories': case 'calorie': $measurement = new CalorieMeasurement($_POST); break;
             case 'exercise': $measurement = new ExerciseMeasurement($_POST); break;
             case 'glucose': $measurement = new GlucoseMeasurement($_POST); break;
             case 'sleep': $measurement = new SleepMeasurement($_POST); break;
             case 'weight': $measurement = new WeightMeasurement($_POST); break;
             default:
-                MeasurementsView::add();
+                $_SESSION['error'] = 'unrecognized measurement type: ' .$_SESSION['arguments'];
+                return false;
         }
         
         if ($measurement->getErrorCount() > 0) {
             self::setVars('danger', 'Add failed. Correct any errors and try again.', 'show', 'all', 'show');
-            return;
+            $_SESSION['error'] = 'Add failed. Correct any errors and try again.';
+            return false;
         }
         
         switch ($_SESSION['arguments']) {
-            case 'bloodPressure': $measurementID = BloodPressureMeasurementsDB::addMeasurement($measurement); break;
-            case 'calories': $measurementID = CalorieMeasurementsDB::addMeasurement($measurement); break;
-            case 'exercise': $measurementID = ExerciseMeasurementsDB::addMeasurement($measurement); break;
-            case 'glucose': $measurementID = GlucoseMeasurementsDB::addMeasurement($measurement); break;
-            case 'sleep': $measurementID = SleepMeasurementsDB::addMeasurement($measurement); break;
-            case 'weight': $measurementID = WeightMeasurementsDB::addMeasurement($measurement); break;
+            case 'bloodPressure':
+                $measurementID = BloodPressureMeasurementsDB::addMeasurement($measurement);
+                break;
+            case 'calories': case 'calorie':
+                $measurementID = CalorieMeasurementsDB::addMeasurement($measurement);
+                break;
+            case 'exercise':
+                $measurementID = ExerciseMeasurementsDB::addMeasurement($measurement);
+                break;
+            case 'glucose':
+                $measurementID = GlucoseMeasurementsDB::addMeasurement($measurement);
+                break;
+            case 'sleep':
+                $measurementID = SleepMeasurementsDB::addMeasurement($measurement);
+                break;
+            case 'weight':
+                $measurementID = WeightMeasurementsDB::addMeasurement($measurement);
+                break;
             default:
-                MeasurementsView::add();
+                $_SESSION['error'] = 'unrecognized measurement type: ' .$_SESSION['arguments'];
+                return false;
         }
-            
-        if ($measurementID < 0)
-            self::setVars('danger', 'Add failed. Internal error. Try again.', 'show', 'all', 'show');
-        else
-            self::setVars('success', 'Measurement added', 'show', 'all', 'show');
+        
+        if ($measurementID < 0) {
+            if (isset($_POST['json'])) {
+                $_SESSION['error'] = 'Add failed. Internal error. Try again.';
+                return false;
+            } else
+                self::setVars('danger', 'Add failed. Internal error. Try again.', 'show', 'all', 'show');
+        }
+        else {
+            if (isset($_POST['json']))
+                return true;
+            else
+                self::setVars('success', 'Measurement added', 'show', 'all', 'show');
+        }
+        
     }
     
     private static function edit() {
