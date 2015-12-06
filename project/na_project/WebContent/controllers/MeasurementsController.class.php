@@ -9,7 +9,7 @@ class MeasurementsController {
         }
         
         if (!isset($_SESSION['profile'])) {
-            self::redirect('login_show', 'warning', 'You must log in before you can see your measurements. For professor/grader: Use &quot;armando-n&quot; for user name, and &quot;pass123&quot; for password.');
+            self::redirect('login_show', 'warning', 'You must log in before you can see your measurements. For professor/grader: Use &quot;jonathan&quot; for user name with &quot;pass123&quot; for password or &quot;admin&quot; for user name with &quot;admin&quot; for password.');
             return;
         }
         
