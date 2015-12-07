@@ -75,11 +75,11 @@ class HomeView {
 </div><!-- end of row -->
 
 
-<div class="row">
-    <div class="col-md-12">
-        <h2><a href="tests.html">Tests</a></h2>
-    </div>
-</div>
+<!-- <div class="row"> -->
+<!--     <div class="col-md-12"> -->
+<!--         <h2><a href="tests.html">Tests</a></h2> -->
+<!--     </div> -->
+<!-- </div> -->
 
 <div class="row">
     <div class="col-md-12">

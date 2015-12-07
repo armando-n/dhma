@@ -1,4 +1,5 @@
 <?php
+try {
 if (ob_get_contents() === false)
     ob_start();
 include_once("includer.php");
@@ -68,4 +69,8 @@ switch ($control) {
 }
 
 ob_end_flush();
+} catch (Exception $e) {
+    $_SESSION['flash'] = 'Unable to complete request: An unexpected error occured.';
+    HomeView::show();
+}
 ?>
