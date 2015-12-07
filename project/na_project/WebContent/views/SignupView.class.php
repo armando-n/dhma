@@ -7,8 +7,12 @@ class SignupView {
             return;
         }
         
+        $_SESSION['styles'][] = 'bootstrap-datetimepicker.min.css';
         $_SESSION['styles'][] = 'SignupStyles.css';
+        $_SESSION['scripts'][] = 'moment-with-locales.js';
+        $_SESSION['scripts'][] = 'bootstrap-datetimepicker.min.js';
         $_SESSION['scripts'][] = 'SignupScripts.js';
+        
         
         HeaderView::show("Member Sign Up");
         SignupView::showBody();
@@ -169,7 +173,12 @@ class SignupView {
                     <div class="form-group<?=$dobStatus?>">
                         <label for="dob" class="control-label col-md-3">Date of Birth</label>
                         <div class="col-md-9">
-                            <input type="date" id="dob" name="dob" value="<?=$dobVal?>" class="form-control" aria-describedby="dobHelp" tabindex="12" title="yyyy-mm-dd or mm/dd/yyyy" />
+                            <div class="input-group date date-picker">
+                                <input type="text" id="dob" name="dob" value="<?=$dobVal?>" class="form-control" aria-describedby="dobHelp" tabindex="12" title="yyyy-mm-dd or mm/dd/yyyy" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
                             <span id="dobHelp" class="help-block"><?=$dobErr?></span>
                         </div>
                     </div>

@@ -169,7 +169,10 @@ class ProfileView {
         else
             throw new Exception('Error: profile not found. Unable to edit profile.');
         
+        $_SESSION['scripts'][] = 'moment-with-locales.js';
+        $_SESSION['scripts'][] = 'bootstrap-datetimepicker.min.js';
         $_SESSION['scripts'][] = 'ProfileScripts.js';
+        $_SESSION['styles'][] = 'bootstrap-datetimepicker.min.css';
         $_SESSION['styles'][] = 'ProfileStyles.css';
         HeaderView::show($profile->getUserName() . '\'s Profile');
         
@@ -214,7 +217,7 @@ class ProfileView {
         <div class="form-group">
             <label for="lastName" class="control-label col-md-4 col-lg-3">Last Name:</label>
             <div class="col-md-8 col-lg-9">
-                <input type="text" id="lastName" name="lastName" value="<?=$profile->getLastName()?>" class="form-control" aria-describedby="lNameHelp" size="15" maxlength="30" tabindex="6" pattern="(^$)|(^([^\-!#\$%\^\x26\(\)\*,\./:;\?@\[\\\]_\{\|\}¨ˇ“”€\+<=>§°\d\s¤®™©]| )+$)" title="Remove invalid characters" />
+                <input type="text" id="lastName" name="lastName" value="<?=$profile->getLastName()?>" class="form-control" aria-describedby="lNameHelp" size="15" maxlength="30" tabindex="6" pattern="(^$)|(^([^\-!#\$%\^\x26\(\)\*,\./:;\?@\[\\\]_\{\|\}Â¨Ë‡â€œâ€�â‚¬\+<=>Â§Â°\d\sÂ¤Â®â„¢Â©]| )+$)" title="Remove invalid characters" />
                 <span id="lNameHelp" class="help-block"><?=$profile->getError("lastName")?></span>
             </div>
         </div>
@@ -260,7 +263,12 @@ class ProfileView {
         <div class="form-group">
             <label for="dob" class="control-label col-md-4 col-lg-3">Date of Birth:</label>
             <div class="col-md-8 col-lg-9">
-                <input type="date" id="dob" name="dob" value="<?=$profile->getDOB()?>" class="form-control" aria-describedby="dobHelp" tabindex="11" title="mm/dd/yyyy or mm-dd-yyyy" />
+                <div class="input-group date date-picker">
+                    <input type="text" id="dob" name="dob" value="<?=$profile->getDOB()?>" class="form-control" aria-describedby="dobHelp" tabindex="11" title="mm/dd/yyyy or mm-dd-yyyy" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
                 <span id="dobHelp" class="help-block"><?=$profile->getError("dob")?></span>
             </div>
         </div>

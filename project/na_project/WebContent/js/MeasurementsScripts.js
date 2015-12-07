@@ -49,6 +49,16 @@ $(document).ready(function() {
 	$('.add_measurement_section').submit(addMeasurement);
 	$('.cancelMeasurement').click(cancelMeasurement);
 	
+	// add date/time pickers for add/edit forms
+	$('.date-picker').datetimepicker( {
+		format: 'YYYY-MM-DD',
+		defaultDate: Date.now()
+	} );
+	$('.time-picker').datetimepicker( {
+		format: 'hh:mm a',
+		defaultDate: Date.now()
+	} );
+	
 	// grab measurement data from server and create tables
 	var table_bloodPressure = $('#bloodPressure_table').DataTable(tableOptions('bloodPressure', [ ['systolicPressure', 'Systolic Pressure'], ['diastolicPressure', 'Diastolic Pressure'] ]));
 	var table_glucose = $('#glucose_table').DataTable(tableOptions('glucose', [ ['glucose', 'Glucose (mg/dL)'] ]));

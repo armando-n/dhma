@@ -2,6 +2,9 @@
 
 $(document).ready(function() {
 	$('#picture').change(loadPicture);
+	
+	// add date picker for edit form
+	$('.date-picker').datetimepicker( { format: 'YYYY-MM-DD' } );
 });
 
 function loadPicture() {

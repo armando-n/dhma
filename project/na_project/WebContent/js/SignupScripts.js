@@ -12,6 +12,9 @@ $(document).ready( function() {
 	$('#facebook').blur(checkFacebook);
 	$('#dob').blur(checkDOB);
 	$('#signupForm').submit(validateForm);
+	
+	// add date picker for signup form
+	$('.date-picker').datetimepicker( { format: 'YYYY-MM-DD' } );
 });
 
 function loadPicture() {

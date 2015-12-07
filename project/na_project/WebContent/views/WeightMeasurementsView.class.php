@@ -52,13 +52,23 @@ class WeightMeasurementsView {
                 <div class="form-group">
                     <label for="date_weight_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Date</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="date" id="date_weight_add" name="date" required="required" class="form-control" tabindex="3" title="mm/dd/yyyy or mm-dd-yyyy" />
+                        <div class="input-group date date-picker">
+                            <input type="text" id="date_weight_add" name="date" required="required" class="form-control" tabindex="3" title="mm/dd/yyyy or mm-dd-yyyy" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="time_weight_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Time</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="time_weight_add" name="time" required="required" class="form-control" tabindex="4" title="H:M" />
+                        <div class="input-group date time-picker">
+                            <input type="text" id="time_weight_add" name="time" required="required" class="form-control" tabindex="4" title="H:M" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-time"></span>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -68,25 +78,27 @@ class WeightMeasurementsView {
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="hidden" id="userName_weight_add" name="userName" value="<?=$_SESSION['profile']->getUserName()?>" />
-                    
-                    <div class="btn-group btn-group-justified" role="group">
-                        <div class="btn-group" role="group">
-                            <button type="submit" id="submitAdd" class="btn btn-primary" tabindex="6">
-                                <span class="glyphicon glyphicon-plus"></span>
-                                &nbsp;Submit
-                            </button>
-                        </div>
+                    <div class="col-sm-12">
+                        <input type="hidden" id="userName_weight_add" name="userName" value="<?=$_SESSION['profile']->getUserName()?>" />
                         
-                        <div class="btn-group" role="group">
-                            <button type="button" id="cancel_add_weight" class="cancelMeasurement btn btn-default">
-                                <span class="glyphicon glyphicon-remove"></span>
-                                &nbsp;Cancel
-                            </button>
+                        <div class="btn-group btn-group-justified" role="group">
+                            <div class="btn-group" role="group">
+                                <button type="submit" id="submitAdd" class="btn btn-primary" tabindex="6">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                    &nbsp;Submit
+                                </button>
+                            </div>
+                            
+                            <div class="btn-group" role="group">
+                                <button type="button" id="cancel_add_weight" class="cancelMeasurement btn btn-default">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                    &nbsp;Cancel
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    
                 </div>
+                
         	</fieldset>
         </form>
     </div>
@@ -105,13 +117,23 @@ class WeightMeasurementsView {
                 <div class="form-group">
                     <label for="date_weight_edit" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Date</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="date" id="date_weight_edit" name="date" required="required" class="form-control" tabindex="3" title="mm/dd/yyyy or mm-dd-yyyy" />
+                        <div class="input-group date date-picker">
+                            <input type="text" id="date_weight_edit" name="date" required="required" class="form-control" tabindex="3" title="mm/dd/yyyy or mm-dd-yyyy" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="time_weight_edit" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Time</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="time_weight_edit" name="time" required="required" class="form-control" tabindex="4" title="H:M" />
+                        <div class="input-group date time-picker">
+                            <input type="text" id="time_weight_edit" name="time" required="required" class="form-control" tabindex="4" title="H:M" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-time"></span>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -121,26 +143,28 @@ class WeightMeasurementsView {
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="hidden" name="userName" value="<?=$_SESSION['profile']->getUserName()?>" />
-                    <input type="hidden" id="oldDateTime_weight" name="oldDateTime" value="" class="oldDateTime" />
-                    
-                    <div class="btn-group btn-group-justified" role="group">
-                        <div class="btn-group" role="group">
-                            <button type="submit" id="submitEdit" class="btn btn-primary" tabindex="6">
-                                <span class="glyphicon glyphicon-ok"></span>
-                                &nbsp;Save
-                            </button>
-                        </div>
+                    <div class="col-sm-12">
+                        <input type="hidden" name="userName" value="<?=$_SESSION['profile']->getUserName()?>" />
+                        <input type="hidden" id="oldDateTime_weight" name="oldDateTime" value="" class="oldDateTime" />
                         
-                        <div class="btn-group" role="group">
-                            <button type="button" id="cancel_edit_weight" class="cancelMeasurement btn btn-default">
-                                <span class="glyphicon glyphicon-remove"></span>
-                                &nbsp;Cancel
-                            </button>
+                        <div class="btn-group btn-group-justified" role="group">
+                            <div class="btn-group" role="group">
+                                <button type="submit" id="submitEdit" class="btn btn-primary" tabindex="6">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                    &nbsp;Save
+                                </button>
+                            </div>
+                            
+                            <div class="btn-group" role="group">
+                                <button type="button" id="cancel_edit_weight" class="cancelMeasurement btn btn-default">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                    &nbsp;Cancel
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    
                 </div>
+                
             </fieldset>
         </form>
     </div>

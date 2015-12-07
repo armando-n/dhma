@@ -2,10 +2,13 @@
 class MeasurementsView{
     
     public static function show() {
-        $_SESSION['styles'][] = 'MeasurementsStyles.css';
         $_SESSION['styles'][] = '../lib/datatables/datatables.css';
+        $_SESSION['styles'][] = 'bootstrap-datetimepicker.min.css';
+        $_SESSION['styles'][] = 'MeasurementsStyles.css';
         $_SESSION['libraries'][] = 'highcharts/highcharts.js';
         $_SESSION['libraries'][] = 'datatables/datatables.js';
+        $_SESSION['scripts'][] = 'moment-with-locales.js';
+        $_SESSION['scripts'][] = 'bootstrap-datetimepicker.min.js';
         $_SESSION['scripts'][] = 'MeasurementsScripts.js';
         
         if (isset($_SESSION['profile']) && $_SESSION['profile']->getTheme() === 'dark')
