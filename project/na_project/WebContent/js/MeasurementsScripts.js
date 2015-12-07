@@ -41,9 +41,9 @@ $(document).ready(function() {
 	$('.edit_measurement_section').hide();
 	
 	// add listeners for page navigation buttons (i.e. for jumping to a measurement)
-	$('#page-nav button').click(function(event) {
-		window.location.assign('#' + $(this).attr('name'));
-	});
+//	$('#page-nav button').click(function(event) {
+//		window.location.assign('#' + $(this).attr('name'));
+//	});
 	
 	// add listener for submit and cancel buttons
 	$('.add_measurement_section').submit(addMeasurement);
@@ -94,6 +94,20 @@ $(document).ready(function() {
 	
 	// assign handlers for chart date range buttons 
 	$('.btn-change-chart').click(viewNewChart);
+	
+	$('#measurements_tabs a').click(function (event) {
+		event.preventDefault();
+		console.log(this);
+		$(this).tab('show');
+		var measType = $(this).attr('id').split('_')[0];
+		
+		// charts need resizing to avoid overflow
+		charts[measType+ '_primary'].reflow();
+		charts[measType+ '_secondary'].reflow();
+		
+		// tables need resizing to avoid column alignment issues
+		$('#' +measType+ '_table').DataTable().draw();
+	});
 });
 
 function editMeasurement(event) {
@@ -364,6 +378,13 @@ function createCharts(measType) {
 		});
 	}
 }
+
+//function addTabListener() {
+//	$('#measurements_tabs a').click(function (event) {
+//		event.preventDefault();
+//		$(this).tab('show');
+//	});
+//}
 
 function createChartOptions(measType, title, data, name, per, subtitle, idSuffix) {
 	var series = [];

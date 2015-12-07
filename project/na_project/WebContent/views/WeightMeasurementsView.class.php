@@ -20,8 +20,8 @@ class WeightMeasurementsView {
         endif;
         $measurements = $_SESSION['measurements'];
         ?>
-<div class="panel panel-primary">
-    <div class="panel-heading"><h2>Weight</h2></div>
+<!-- <div class="panel panel-primary"> -->
+<!--     <div class="panel-heading"><h2>Weight</h2></div> -->
         
 <section class="row">
     <div id="view_weight_section" class="col-sm-12">
@@ -251,7 +251,7 @@ class WeightMeasurementsView {
     </div>
 </section>
 
-</div>
+<!-- </div> -->
 
         <?php
         unset($_SESSION['measurements']['weight']);

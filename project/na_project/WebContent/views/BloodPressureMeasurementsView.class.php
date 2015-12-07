@@ -20,8 +20,8 @@ class BloodPressureMeasurementsView {
         endif;
         $measurements = $_SESSION['measurements'];
         ?>
-<div class="panel panel-primary">
-    <div class="panel-heading"><h2>Blood Pressure</h2></div>
+<!-- <div class="panel panel-primary"> -->
+<!--     <div class="panel-heading"><h2>Blood Pressure</h2></div> -->
 
 <section class="row">
     <div id="view_bloodPressure_section" class="col-sm-12">
@@ -262,7 +262,7 @@ class BloodPressureMeasurementsView {
     </div>
 </section>
 
-</div>
+<!-- </div> -->
 
         <?php
         unset($_SESSION['measurements']['bloodPressure']);

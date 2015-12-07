@@ -26,72 +26,65 @@ class MeasurementsView{
         $measurements = $_SESSION['measurements'];
         ?>
 
-<div id="page-nav" class="row">
-    <div class="col-md-12">
-        <div class="row">
-            <div class="col-sm-12">
-                <p class="buttonGroupLabel">Click to jump to a measurement:</p>
+<div class="row">
+    <div class="col-xs-12">
+    
+        <div class="panel panel-primary">
+        
+            <div class="panel-heading">
+                <ul id="measurements_tabs" class="nav nav-tabs nav-justified" role="tablist">
+                	<li class="measurement-tab active" role="presentation"><a class="measurement-tab" href="#glucose" id="glucose_tab_btn" aria-controls="glucose" role="tab">Glucose</a></li>
+                	<li class="measurement-tab" role="presentation"><a class="measurement-tab" href="#bloodPressure" id="bloodPressure_tab_btn" aria-controls="bloodPressure" role="tab">Blood Pressure</a></li>
+                	<li class="measurement-tab" role="presentation"><a class="measurement-tab" href="#weight" id="weight_tab_btn" aria-controls="weight" role="tab">Weight</a></li>
+                	<li class="measurement-tab" role="presentation"><a class="measurement-tab" href="#calories" id="calorie_tab_btn" aria-controls="calories" role="tab">Calories</a></li>
+                	<li class="measurement-tab" role="presentation"><a class="measurement-tab" href="#exercise" id="exercise_tab_btn" aria-controls="exercise" role="tab">Exercise</a></li>
+                	<li class="measurement-tab" role="presentation"><a class="measurement-tab" href="#sleep" id="sleep_tab_btn" aria-controls="sleep" role="tab">Sleep</a></li>
+                </ul>
             </div>
+
+<div class="tab-content">
+
+    <section role="tabpanel" id="glucose" class="row tab-pane active">
+        <div class="col-sm-12">
+                <?php GlucoseMeasurementsView::showBody(); ?>
         </div>
-        <div class="row">
-            <div class="jump-to col-xs-4 col-sm-2">
-                <button type="button" name="glucose" class="btn btn-default btn-block">Glucose</button>
-            </div>
-            <div class="jump-to col-xs-4 col-sm-2">
-                <button type="button" name="bloodPressure" class="btn btn-default btn-block">Blood Pressure</button>
-            </div>
-            <div class="jump-to col-xs-4 col-sm-2">
-                <button type="button" name="calories" class="btn btn-default btn-block">Calories</button>
-            </div>
-            <div class="jump-to col-xs-4 col-sm-2">
-                <button type="button" name="exercise" class="btn btn-default btn-block">Exercise</button>
-            </div>
-            <div class="jump-to col-xs-4 col-sm-2">
-                <button type="button" name="sleep" class="btn btn-default btn-block">Sleep</button>
-            </div>
-            <div class="jump-to col-xs-4 col-sm-2">
-                <button type="button" name="weight" class="btn btn-default btn-block">Weight</button>
-            </div>
+    </section>
+    
+    <section role="tabpanel" id="bloodPressure" class="row tab-pane">
+        <div class="col-sm-12">
+            <?php BloodPressureMeasurementsView::showBody(); ?>
         </div>
-        <hr />
-    </div>
+    </section>
+    
+    <section role="tabpanel" id="calories" class="row tab-pane">
+        <div class="col-sm-12">
+            <?php CalorieMeasurementsView::showBody(); ?>
+        </div>
+    </section>
+    
+    <section role="tabpanel" id="exercise" class="row tab-pane">
+        <div class="col-sm-12">
+            <?php ExerciseMeasurementsView::showBody(); ?>
+        </div>
+    </section>
+    
+    <section role="tabpanel" id="sleep" class="row tab-pane">
+        <div class="col-sm-12">
+            <?php SleepMeasurementsView::showBody(); ?>
+        </div>
+    </section>
+    
+    <section role="tabpanel" id="weight" class="row tab-pane">
+        <div class="col-sm-12">
+            <?php WeightMeasurementsView::showBody(); ?>
+        </div>
+    </section>
+
 </div>
 
-<section id="glucose" class="row">
-    <div class="col-sm-12">
-        <?php GlucoseMeasurementsView::showBody(); ?>
-    </div>
-</section>
-
-<section id="bloodPressure" class="row">
-    <div class="col-sm-12">
-        <?php BloodPressureMeasurementsView::showBody(); ?>
-    </div>
-</section>
-
-<section id="calories" class="row">
-    <div class="col-sm-12">
-        <?php CalorieMeasurementsView::showBody(); ?>
-    </div>
-</section>
-
-<section id="exercise" class="row">
-    <div class="col-sm-12">
-        <?php ExerciseMeasurementsView::showBody(); ?>
-    </div>
-</section>
-
-<section id="sleep" class="row">
-    <div class="col-sm-12">
-        <?php SleepMeasurementsView::showBody(); ?>
-    </div>
-</section>
-
-<section id="weight" class="row">
-    <div class="col-sm-12">
-        <?php WeightMeasurementsView::showBody(); ?>
-    </div>
-</section>
+</div>
+</div>
+</div>
         
 <?php
         if (isset($_SESSION)) {

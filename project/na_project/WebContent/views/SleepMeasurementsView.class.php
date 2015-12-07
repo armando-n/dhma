@@ -20,8 +20,8 @@ class SleepMeasurementsView {
         endif;
         $measurements = $_SESSION['measurements'];
         ?>
-<div class="panel panel-primary">
-    <div class="panel-heading"><h2>Sleep</h2></div>
+<!-- <div class="panel panel-primary"> -->
+<!--     <div class="panel-heading"><h2>Sleep</h2></div> -->
         
 <section class="row">
     <div id="view_sleep_section" class="col-sm-12">
@@ -250,7 +250,7 @@ class SleepMeasurementsView {
     </div>
 </section>
 
-</div>
+<!-- </div> -->
 
         <?php
         unset($_SESSION['measurements']['sleep']);

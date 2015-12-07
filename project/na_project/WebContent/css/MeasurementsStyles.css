@@ -3,6 +3,20 @@
 	height: 400px;
 }
 
+a.measurement-tab {
+	/*background-color: #EEEEEE !important;*/
+	color: #eeeeee !important;
+}
+
+li.active > a.measurement-tab {
+	color: #000000 !important;
+}
+
+a:hover.measurement-tab, a:focus.measurement-tab {
+    /*background-color: #337ab7 !important;*/
+    color: #000000 !important;
+}
+
 .buttonGroupLabel {
 	font-size: 1.20em;
 }
