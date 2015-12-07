@@ -19,6 +19,10 @@
 	outline-color: #213474;
 }
 
+.black-text {
+	color: #000000 !important;
+}
+
 .meas-label {
 	text-align: right;
 }

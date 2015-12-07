@@ -47,6 +47,7 @@ $(document).ready(function() {
 	
 	// add listener for submit and cancel buttons
 	$('.add_measurement_section').submit(addMeasurement);
+	$('.edit_measurement_section').submit(editMeasurement);
 	$('.cancelMeasurement').click(cancelMeasurement);
 	
 	// add date/time pickers for add/edit forms
@@ -94,6 +95,53 @@ $(document).ready(function() {
 	// assign handlers for chart date range buttons 
 	$('.btn-change-chart').click(viewNewChart);
 });
+
+function editMeasurement(event) {
+	var measType = $(this).attr('id').split('_')[1];
+	
+	// collect data unique to each measurement
+	var measData = {};
+	for (var i = 0; i < measurementParts[measType].length; i++) {
+		var partName = measurementParts[measType][i];
+		measData[partName] = $('#' +partName+ '_' +measType+ '_edit').val();
+	}
+	if (measType === 'exercise')
+		measData.type = $('#type_exercise_edit').val();
+	
+	// collect data common to each measurement
+	measData.date = $('#date_' +measType+ '_edit').val();
+	measData.time = $('#time_' +measType+ '_edit').val();
+	measData.notes = $('#notes_' +measType+ '_edit').val();
+	measData.userName = $('#userName_' +measType+ '_add').val();
+	measData.oldDateTime = $('#oldDateTime_' +measType).val();
+	measData.json = true;
+
+	// send add request to server
+	$.ajax({
+		url: 'measurements_edit_post_' +measType,
+		data: measData,
+		dataType: 'json',
+		method: 'POST',
+		success: function(response) {
+			if (response.result) {
+				
+				// edit row and highlight it for a few seconds
+				selectedRows[0].data(measData);
+				$(selectedRows[0].node()).addClass('success black-text');
+				setTimeout(function() { $(selectedRows[0].node()).removeClass('success black-text'); }, 3000);
+				
+				// refresh charts
+				$('#' +measType+ '_charts_primary_column .active').click();
+				$('#' +measType+ '_charts_secondary_column .active').click();
+			}
+			else
+				alert('edit failed: check input for errors and try again.');
+		},
+		error: function() { alert('error: check values and try again.'); }
+	});
+	
+	event.preventDefault();
+}
 
 function deleteMeasurement(e, dt, node, config) {
 	if (window.confirm('Are you sure you want to delete the selected measurement(s)?')) {
@@ -157,7 +205,7 @@ function addMeasurement(event) {
 				
 			}
 			else
-				alert('add failed: ' +response.error);
+				alert('add failed: check input for errors and try again');
 		},
 		error: function() { alert('error: check values and try again.'); }
 	});

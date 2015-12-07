@@ -21,8 +21,8 @@ class MeasurementsController {
         switch ($_SESSION['action']) {
             case 'show': self::show(); break;
             case 'add': $result = self::add(); break;
-            case 'edit': self::edit(); break;
-            case 'post': self::post(); break;
+            case 'edit': $result = self::edit(); break;
+            case 'post': $result = self::post(); break;
             case 'delete': $result = self::delete(); break;
             case 'get': self::get(); break;
             default:
@@ -245,13 +245,13 @@ class MeasurementsController {
         if (!isset($_SESSION['arguments'])) {
             self::error('Error: arguments expected');
             $_SESSION['error'] = 'arguments expected';
-            return;
+            return false;
         }
         
         if (strpos($_SESSION['arguments'], '_') === false) {
             self::error('Error: multiple arguments expected');
             $_SESSION['error'] = 'multiple arguments expected';
-            return;
+            return false;
         }
         
         $args = explode('_', $_SESSION['arguments']);
@@ -266,7 +266,7 @@ class MeasurementsController {
                         $_SESSION['measurement'] = BloodPressureMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $dateAndTime);
                         BloodPressureMeasurementsView::edit();
                         break;
-                    case 'calories':
+                    case 'calories': case 'calorie':
                         $_SESSION['measurement'] = CalorieMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $dateAndTime);
                         CalorieMeasurementsView::edit();
                         break;
@@ -289,35 +289,39 @@ class MeasurementsController {
                 }
                 break;
             case 'post':
-                self::post($args);
-                break;
+                return self::post($args);
         }
     }
     
     private static function post($args) {
         if (!isset($_POST['oldDateTime']) || empty($_POST['oldDateTime'])) {
             self::error('Error: original measurement date and time not found');
-            return;
+            $_SESSION['error'] = 'original measurement date and time not found';
+            return false;
         }
         if (!isset($_POST) || empty($_POST)) {
             self::error('Error: post data missing');
-            return;
+            $_SESSION['error'] = 'post data missing';
+            return false;
         }
+        
+//         $oldDateAndTime = (new DateTime($_POST['oldDateTime'])).format();
         
         switch ($args[1]) {
             case 'bloodPressure': $oldMeasurement = BloodPressureMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $_POST['oldDateTime']); break;
-            case 'calories': $oldMeasurement = CalorieMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $_POST['oldDateTime']); break;
+            case 'calories': case 'calorie': $oldMeasurement = CalorieMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $_POST['oldDateTime']); break;
             case 'exercise': $oldMeasurement = ExerciseMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $_POST['oldDateTime']); break;
             case 'glucose': $oldMeasurement = GlucoseMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $_POST['oldDateTime']); break;
             case 'sleep': $oldMeasurement = SleepMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $_POST['oldDateTime']); break;
             case 'weight': $oldMeasurement = WeightMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $_POST['oldDateTime']); break;
             default:
-                echo "Unrecognized measurement type argument: $args[1]";
+                $_SESSION['error'] = "Unrecognized measurement type argument: $args[1]";
+                return false;
         }
         
         if (is_null($oldMeasurement)) {
-            echo "Failed to fetch old measurement. Profile: " . $_SESSION['profile']->getUserName() . "; oldDateTime: " . $_POST['oldDateTime'];
-            return;
+            $_SESSION['error'] = "Failed to fetch old measurement. Profile: " . $_SESSION['profile']->getUserName() . "; oldDateTime: " . $_POST['oldDateTime'];
+            return false;
         }
         
         switch ($args[1]) {
@@ -325,7 +329,7 @@ class MeasurementsController {
                 $newMeasurement = new BloodPressureMeasurement($_POST);
                 $newMeasurement = BloodPressureMeasurementsDB::editMeasurement($oldMeasurement, $newMeasurement);
                 break;
-            case 'calories':
+            case 'calories': case 'calorie':
                 $newMeasurement = new CalorieMeasurement($_POST);
                 $newMeasurement = CalorieMeasurementsDB::editMeasurement($oldMeasurement, $newMeasurement);
                 break;
@@ -347,10 +351,20 @@ class MeasurementsController {
                 break;
         }
         
-        if ($newMeasurement->getErrorCount() > 0)
+        if ($newMeasurement->getErrorCount() > 0) {
+            if (isset($_POST['json'])) {
+                $_SESSION['error'] = 'Edit failed. Correct any errors and try again.';
+                return false;
+            }
+            
             self::setVars('danger', 'Edit failed. Correct any errors and try again.', 'show', 'all', 'show');
-        else
+        }
+        else {
+            if (isset($_POST['json']))
+                return true;
+            
             self::setVars('success', 'Measurement edited', 'show', 'all', 'show');
+        }
         
         unset($_SESSION['measurement']);
     }
