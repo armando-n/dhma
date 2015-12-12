@@ -67,6 +67,10 @@ legend {
 	font-size: 1.5em;
 }
 
+.deletedRow {
+	background-color: #FF0000 !important;
+}
+
 /* extra small devices */
 @media screen and (max-width: 749px) {    
     .chart-secondary {

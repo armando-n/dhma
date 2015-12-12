@@ -40,11 +40,6 @@ $(document).ready(function() {
 	$('.add_measurement_section').hide();
 	$('.edit_measurement_section').hide();
 	
-	// add listeners for page navigation buttons (i.e. for jumping to a measurement)
-//	$('#page-nav button').click(function(event) {
-//		window.location.assign('#' + $(this).attr('name'));
-//	});
-	
 	// add listener for submit and cancel buttons
 	$('.add_measurement_section').submit(addMeasurement);
 	$('.edit_measurement_section').submit(editMeasurement);
@@ -68,7 +63,7 @@ $(document).ready(function() {
 	var table_sleep = $('#sleep_table').DataTable(tableOptions('sleep', [ ['duration', 'Sleep (min)', ] ]));
 	var table_weight = $('#weight_table').DataTable(tableOptions('weight', [ ['weight', 'Weight (kg)'] ]));
 	
-	// create add/edit/delete measurement buttons
+	// make add/edit/delete buttons justified
 	table_bloodPressure.button(0, null).container().addClass('btn-group-justified');
 	table_glucose.button(0, null).container().addClass('btn-group-justified');
 	table_calories.button(0, null).container().addClass('btn-group-justified');
@@ -95,18 +90,19 @@ $(document).ready(function() {
 	// assign handlers for chart date range buttons 
 	$('.btn-change-chart').click(viewNewChart);
 	
+	// add listeners for tab buttons (i.e. for switching to a measurement)
 	$('#measurements_tabs a').click(function (event) {
-		event.preventDefault();
-		console.log(this);
-		$(this).tab('show');
 		var measType = $(this).attr('id').split('_')[0];
+
+		// show tab
+		$(this).tab('show');
 		
-		// charts need resizing to avoid overflow
+		// redraw charts and table to avoid overflow and column alignment issues
 		charts[measType+ '_primary'].reflow();
 		charts[measType+ '_secondary'].reflow();
-		
-		// tables need resizing to avoid column alignment issues
 		$('#' +measType+ '_table').DataTable().draw();
+		
+		event.preventDefault();
 	});
 });
 
@@ -117,17 +113,17 @@ function editMeasurement(event) {
 	var measData = {};
 	for (var i = 0; i < measurementParts[measType].length; i++) {
 		var partName = measurementParts[measType][i];
-		measData[partName] = $('#' +partName+ '_' +measType+ '_edit').val();
+		measData[partName] = $('#' +partName+ '_' +measType+ '_edit').val().trim();
 	}
 	if (measType === 'exercise')
-		measData.type = $('#type_exercise_edit').val();
+		measData.type = $('#type_exercise_edit').val().trim();
 	
 	// collect data common to each measurement
-	measData.date = $('#date_' +measType+ '_edit').val();
-	measData.time = $('#time_' +measType+ '_edit').val();
-	measData.notes = $('#notes_' +measType+ '_edit').val();
-	measData.userName = $('#userName_' +measType+ '_add').val();
-	measData.oldDateTime = $('#oldDateTime_' +measType).val();
+	measData.date = $('#date_' +measType+ '_edit').val().trim();
+	measData.time = TwelveHourTimeStringTo24HourTimeString($('#time_' +measType+ '_edit').val().trim());
+	measData.notes = $('#notes_' +measType+ '_edit').val().trim();
+	measData.userName = $('#userName_' +measType+ '_add').val().trim();
+	measData.oldDateTime = $('#oldDateTime_' +measType).val().trim();
 	measData.json = true;
 
 	// send add request to server
@@ -143,6 +139,9 @@ function editMeasurement(event) {
 				selectedRows[0].data(measData);
 				$(selectedRows[0].node()).addClass('success black-text');
 				setTimeout(function() { $(selectedRows[0].node()).removeClass('success black-text'); }, 3000);
+				
+				// update old date time (it may have been changed)
+				$('#oldDateTime_' +measType).val(measData.date+ ' ' +measData.time);
 				
 				// refresh charts
 				$('#' +measType+ '_charts_primary_column .active').click();
@@ -171,8 +170,29 @@ function deleteMeasurement(e, dt, node, config) {
 			method: 'POST',
 			async: false,
 			success: function(response) {
-				if (response.result)
-					selectedRows[0].remove().draw();
+				if (response.result) {
+					var targetRows = selectedRows.slice();
+					selectedRows = [];
+					
+					// highlight rows for a few seconds and remove them
+					$.each(targetRows, function (index, row) {
+						row.deselect();
+						$(row.node()).addClass('deletedRow');
+					} );
+					setTimeout(function() {
+						$.each(targetRows, function (index, row) { row.remove(); } );
+						dt.draw();
+						if (selectedRows.length == 0) {
+							// hide edit and delete buttons
+							dt.button($('#' +measType+ '_edit')).node().hide();
+							dt.button($('#' +measType+ '_delete')).node().hide();
+						}
+					}, 100);
+					
+					// refresh charts
+					$('#' +measType+ '_charts_primary_column .active').click();
+					$('#' +measType+ '_charts_secondary_column .active').click();
+				}
 				else
 					alert('delete failed: ' +response.error);
 			},
@@ -188,16 +208,16 @@ function addMeasurement(event) {
 	var measData = {};
 	for (var i = 0; i < measurementParts[measType].length; i++) {
 		var partName = measurementParts[measType][i];
-		measData[partName] = $('#' +partName+ '_' +measType+ '_add').val();
+		measData[partName] = $('#' +partName+ '_' +measType+ '_add').val().trim();
 	}
 	if (measType === 'exercise')
-		measData.type = $('#type_exercise_add').val();
+		measData.type = $('#type_exercise_add').val().trim();
 	
 	// collect data common to each measurement
-	measData.date = $('#date_' +measType+ '_add').val();
-	measData.time = $('#time_' +measType+ '_add').val();
-	measData.notes = $('#notes_' +measType+ '_add').val();
-	measData.userName = $('#userName_' +measType+ '_add').val();
+	measData.date = $('#date_' +measType+ '_add').val().trim();
+	measData.time = TwelveHourTimeStringTo24HourTimeString($('#time_' +measType+ '_add').val().trim());
+	measData.notes = $('#notes_' +measType+ '_add').val().trim();
+	measData.userName = $('#userName_' +measType+ '_add').val().trim();
 	measData.json = true;
 
 	// send add request to server
@@ -208,6 +228,7 @@ function addMeasurement(event) {
 		method: 'POST',
 		success: function(response) {
 			if (response.result) {
+				
 				// add row and highlight it for a few seconds
 				var newRow = $('#' +measType+ '_table').DataTable().row.add(measData).draw();
 				$(newRow.node()).addClass('success');
@@ -216,7 +237,6 @@ function addMeasurement(event) {
 				// refresh charts
 				$('#' +measType+ '_charts_primary_column .active').click();
 				$('#' +measType+ '_charts_secondary_column .active').click();
-				
 			}
 			else
 				alert('add failed: check input for errors and try again');
@@ -233,7 +253,7 @@ function row_clicked(e, dt, type, indexes) {
 	
 	var measType = $(dt.table(0).node()).attr('id').split('_')[0];
 	
-	// store selected row data in global variable
+	// store selected row (DataTables API object) in global variable
 	selectedRows = [];
 	for (var i = 0; i < indexes.length; i++)
 		selectedRows.push(dt.row(indexes[i]));
@@ -246,12 +266,16 @@ function row_clicked(e, dt, type, indexes) {
 		dt.button($('#' +measType+ '_edit')).node().show();
 	
 	// if edit form is visible, fill the edit form with data from the currently selected measurement
-	if (indexes.length == 1 && $('#edit_' + measType + '_section').is(':visible')) {
+	if (indexes.length == 1 && $('#edit_' +measType+ '_section').is(':visible')) {
 		var row = selectedRows[0].data();
 		for (var key in row)
 			$('#' +key+ '_' +measType+ '_edit').val(row[key]);
 		$('#oldDateTime_' + measType).val(row.date + ' ' + row.time);
 	}
+	
+	// if add form is visible, hide it
+	if ($('#add_' +measType+ '_section').is(':visible'))
+		hideFormSection(measType, 'add');
 }
 
 function tableOptions(measType, dataAndTitle) {
@@ -288,6 +312,15 @@ function tableOptions(measType, dataAndTitle) {
 					},
 					action: function (e, dt, node, config) {
 						showFormSection(measType, 'add', dt); // show add form
+						if (selectedRows.length > 0) {
+							
+							// deselect rows
+							$.each(selectedRows, function(index, row) { row.deselect(); } );
+							
+							// hide edit and delete buttons
+							dt.button($('#' +measType+ '_edit')).node().hide();
+							dt.button($('#' +measType+ '_delete')).node().hide();
+						}
 						if ($(window).height() < 400)
 							window.location.assign('#add_' + measType + '_section');
 					}
@@ -640,8 +673,29 @@ function dateTo12HourLocalTimeString(date) {
 	var minute = timePieces[1];
 	var amOrPm = (hour >= 12) ? 'pm' : 'am';
 	hour = hour % 12;
+	hour = (hour == 0) ? 12 : hour;
 	
 	return hour+ ':' +minute+ ' ' +amOrPm+ ' ' +timeZone
+}
+
+// takes a string in 12-hour format and returns a string in 24-hour format
+function TwelveHourTimeStringTo24HourTimeString(timeString) {
+	var pieces = timeString.split(' ');
+	var numbers = pieces[0];
+	var amOrPm = pieces[1];
+	var numberPieces = pieces[0].split(':');
+	var hour = parseInt(numberPieces[0]);
+	var minute = parseInt(numberPieces[1]);
+	
+	if (amOrPm === 'pm' && hour != 12)
+		hour += 12;
+	
+	if (hour < 10)
+		hour = '0' + hour;
+	if (minute < 10)
+		minute = '0' + minute;
+	
+	return hour+ ':' +minute;
 }
 
 function todaysEnd() {
@@ -690,6 +744,7 @@ function cancelMeasurement() {
 	hideFormSection(meas_type, form_type);
 }
 
+// hides the form for the given measurement type (glucose/etc.) and form type (add/edit)
 function hideFormSection(meas_type, form_type) {
 	
 	// hide form
@@ -701,7 +756,7 @@ function hideFormSection(meas_type, form_type) {
 	$('#' + meas_type + '_' + form_type).removeClass('active');
 }
 
-//show the specified measurement form section for the associated measurement type and jump to it
+// show the specified measurement form section for the associated measurement type and jump to it
 function showFormSection(meas_type, form_type, dt) {
 	
 	// hide other section if it is visible, and deactivate its corresponding button
