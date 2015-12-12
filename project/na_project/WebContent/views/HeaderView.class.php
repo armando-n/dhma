@@ -16,25 +16,25 @@ class HeaderView {
     <meta charset="utf-8" />
     <meta name="author" content="Armando Navarro" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="http://<?= $host_base . $bootstrap_css ?>" type="text/css" />
-    <link rel="stylesheet" href="http://<?= $host_base . '/css/myStyles.css'?>" type="text/css" /><?php
+    <link rel="stylesheet" href="//<?= $host_base . $bootstrap_css ?>" type="text/css" />
+    <link rel="stylesheet" href="//<?= $host_base . '/css/myStyles.css'?>" type="text/css" /><?php
         if (isset($_SESSION['styles'])):
             foreach ($_SESSION['styles'] as $style): ?>
-    <link rel="stylesheet" href="http://<?= $host_base . '/css/' . $style ?>" type="text/css" /><?php
+    <link rel="stylesheet" href="//<?= $host_base . '/css/' . $style ?>" type="text/css" /><?php
             endforeach;
             unset($_SESSION['styles']);
         endif; ?>
-    <script src="http://<?= $host_base . '/js/jquery-1.11.3.js' ?>"></script>
-    <script src="http://<?= $host_base . '/js/bootstrap.min.js' ?>"></script><?php
+    <script src="//<?= $host_base . '/js/jquery-1.11.3.js' ?>"></script>
+    <script src="//<?= $host_base . '/js/bootstrap.min.js' ?>"></script><?php
         if (isset($_SESSION['scripts'])):
             foreach ($_SESSION['scripts'] as $script): ?>
-    <script src="http://<?= $host_base . '/js/' . $script ?>"></script><?php
+    <script src="//<?= $host_base . '/js/' . $script ?>"></script><?php
             endforeach;
             unset($_SESSION['scripts']);
         endif; 
         if (isset($_SESSION['libraries'])):
             foreach ($_SESSION['libraries'] as $library): ?>
-    <script src="http://<?= $host_base . '/lib/' . $library ?>"></script><?php
+    <script src="//<?= $host_base . '/lib/' . $library ?>"></script><?php
             endforeach;
             unset($_SESSION['libraries']);
         endif; ?>
@@ -55,7 +55,7 @@ class HeaderView {
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <img src="http://<?= $host_base . $logo ?>" class="img-responsive" alt="DHMA Logo" width="99" height="58" />
+            <img src="//<?= $host_base . $logo ?>" class="img-responsive" alt="DHMA Logo" width="99" height="58" />
         </div>
         
         <div class="collapse navbar-collapse" id="mainNav">
