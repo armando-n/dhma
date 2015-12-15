@@ -26,15 +26,10 @@ class WeightMeasurementsView {
 <section class="row">
     <div id="view_weight_section" class="col-sm-12">
         <div class="row">
-            <div class="col-sm-12"><?php
-                if (!isset($measurements["weight"]) || empty($measurements["weight"])):
-                        ?><p>No weight measurements to show yet</p><?php
-                else:
-                    $i = 0; ?>
+            <div class="col-sm-12">
                 <table id="weight_table" class="table table-striped table-hover table-condensed table-responsive">
                     <!-- DataTable is inserted here -->
-                </table><?php
-                endif; ?>
+                </table>
             </div>
         </div>
     </div>

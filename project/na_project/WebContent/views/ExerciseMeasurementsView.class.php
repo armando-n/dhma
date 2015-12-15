@@ -26,14 +26,10 @@ class ExerciseMeasurementsView {
 <section class="row">
     <div id="view_exercise_section" class="col-sm-12">
         <div class="row">
-            <div class="col-sm-12"><?php
-                if (!isset($measurements["exercise"]) || empty($measurements["exercise"])):
-                        ?><p>No exercise measurements to show yet</p><?php
-                else: ?>
+            <div class="col-sm-12">
                 <table id="exercise_table" class="table table-striped table-hover table-condensed table-responsive">
                     <!-- DataTable is inserted here -->
-                </table><?php
-                endif; ?>
+                </table>
             </div>
         </div>
     </div>

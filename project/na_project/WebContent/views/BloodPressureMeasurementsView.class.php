@@ -26,14 +26,10 @@ class BloodPressureMeasurementsView {
 <section class="row">
     <div id="view_bloodPressure_section" class="col-sm-12">
         <div class="row">
-            <div class="col-sm-12"><?php
-                if (!isset($measurements["bloodPressure"]) || empty($measurements["bloodPressure"])):
-                        ?><p>No blood pressure measurements to show yet</p><?php
-                else: ?>
+            <div class="col-sm-12">
                 <table id="bloodPressure_table" class="table table-striped table-hover table-condensed table-responsive">
                     <!-- DataTable is inserted here -->
-                </table><?php
-                endif; ?>
+                </table>
             </div>
         </div>
     </div>

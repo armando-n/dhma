@@ -26,14 +26,10 @@ class SleepMeasurementsView {
 <section class="row">
     <div id="view_sleep_section" class="col-sm-12">
         <div class="row">
-            <div class="col-sm-12"><?php
-                if (!isset($measurements["sleep"]) || empty($measurements["sleep"])):
-                        ?><p>No sleep measurements to show yet</p><?php
-                else: ?>
+            <div class="col-sm-12">
                 <table id="sleep_table" class="table table-striped table-hover table-condensed table-responsive">
                     <!-- DataTable is inserted here -->
-                </table><?php
-                endif; ?>
+                </table>
             </div>
         </div>
     </div>
