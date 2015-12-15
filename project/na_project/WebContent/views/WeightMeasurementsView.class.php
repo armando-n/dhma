@@ -80,14 +80,14 @@ class WeightMeasurementsView {
                             <div class="btn-group" role="group">
                                 <button type="submit" id="submitAdd" class="btn btn-primary" tabindex="6">
                                     <span class="glyphicon glyphicon-plus"></span>
-                                    &nbsp;Submit
+                                    &nbsp;Add
                                 </button>
                             </div>
                             
                             <div class="btn-group" role="group">
                                 <button type="button" id="cancel_add_weight" class="cancelMeasurement btn btn-default">
                                     <span class="glyphicon glyphicon-remove"></span>
-                                    &nbsp;Cancel
+                                    &nbsp;<span id="cancel_add_weight_text">Cancel</span>
                                 </button>
                             </div>
                         </div>
@@ -153,7 +153,7 @@ class WeightMeasurementsView {
                             <div class="btn-group" role="group">
                                 <button type="button" id="cancel_edit_weight" class="cancelMeasurement btn btn-default">
                                     <span class="glyphicon glyphicon-remove"></span>
-                                    &nbsp;Cancel
+                                    &nbsp;<span id="cancel_edit_weight_text">Cancel</span>
                                 </button>
                             </div>
                         </div>

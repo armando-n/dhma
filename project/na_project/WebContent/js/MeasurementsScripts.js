@@ -48,7 +48,8 @@ $(document).ready(function() {
 	// add date/time pickers for add/edit forms
 	$('.date-picker').datetimepicker( {
 		format: 'YYYY-MM-DD',
-		defaultDate: Date.now()
+		defaultDate: Date.now(),
+		showTodayButton: true
 	} );
 	$('.time-picker').datetimepicker( {
 		format: 'hh:mm a',
@@ -79,6 +80,19 @@ $(document).ready(function() {
 	table_sleep.on('select', row_clicked);
 	table_weight.on('select', row_clicked);
 	
+	// add deselection handlers for table rows to hide edit and delete buttons
+	var row_deselected = function(e, dt, type, indexes) {
+		var measType = $(this).attr('id').split('_')[0];
+		dt.button($('#' +measType+ '_edit')).node().hide();
+		dt.button($('#' +measType+ '_delete')).node().hide();
+	};
+	table_bloodPressure.on('deselect', row_deselected);
+	table_glucose.on('deselect', row_deselected);
+	table_calories.on('deselect', row_deselected);
+	table_execrise.on('deselect', row_deselected);
+	table_sleep.on('deselect', row_deselected);
+	table_weight.on('deselect', row_deselected);
+	
 	// grab measurement data from server and create charts
 	createCharts('glucose');
 	createCharts('bloodPressure');
@@ -104,6 +118,19 @@ $(document).ready(function() {
 		
 		event.preventDefault();
 	});
+	
+	// add change listeners for forms
+	var doneToCancel = function() {
+		var id_pieces = $(this).attr('id').split('_');
+		var measType = id_pieces[1];
+		var addOrEdit = id_pieces[2];
+		
+		if ($('#cancel_' +addOrEdit+ '_' +measType+ '_text').text() === 'Done')
+			$('#cancel_' +addOrEdit+ '_' +measType+ '_text').text('Cancel');
+	};
+	$('.add_measurement_section .form-control').change(doneToCancel);
+	$('.edit_measurement_section .form-control').change(doneToCancel);
+	
 });
 
 function editMeasurement(event) {
@@ -136,9 +163,10 @@ function editMeasurement(event) {
 			if (response.result) {
 				
 				// edit row and highlight it for a few seconds
-				selectedRows[0].data(measData);
-				$(selectedRows[0].node()).addClass('success black-text');
-				setTimeout(function() { $(selectedRows[0].node()).removeClass('success black-text'); }, 3000);
+				var targetRow = selectedRows[0]; 
+				targetRow.data(measData);
+				$(targetRow.node()).addClass('success black-text');
+				setTimeout(function() { $(targetRow.node()).removeClass('success black-text'); }, 3000);
 				
 				// update old date time (it may have been changed)
 				$('#oldDateTime_' +measType).val(measData.date+ ' ' +measData.time);
@@ -146,6 +174,12 @@ function editMeasurement(event) {
 				// refresh charts
 				$('#' +measType+ '_charts_primary_column .active').click();
 				$('#' +measType+ '_charts_secondary_column .active').click();
+				
+				// change Cancel button to Done button
+				$('#cancel_edit_' +measType+ '_text').text('Done');
+				
+				// put focus in first field of form
+				$('#' +measurementParts[measType][0]+ '_' +measType+ '_edit').focus();
 			}
 			else
 				alert('edit failed: check input for errors and try again.');
@@ -220,7 +254,7 @@ function addMeasurement(event) {
 	measData.userName = $('#userName_' +measType+ '_add').val().trim();
 	measData.json = true;
 
-	// send add request to server
+	// send add request to server and process response
 	$.ajax({
 		url: 'measurements_add_' +measType,
 		data: measData,
@@ -237,9 +271,15 @@ function addMeasurement(event) {
 				// refresh charts
 				$('#' +measType+ '_charts_primary_column .active').click();
 				$('#' +measType+ '_charts_secondary_column .active').click();
+				
+				// change Cancel button to Done button
+				$('#cancel_add_' +measType+ '_text').text('Done');
+				
+				// clear and put focus in first field of form
+				$('#' +measurementParts[measType][0]+ '_' +measType+ '_add').val('').focus();
 			}
 			else
-				alert('add failed: check input for errors and try again');
+				alert('add failed: check input for errors and try again: ' +response.error);
 		},
 		error: function() { alert('error: check values and try again.'); }
 	});
@@ -279,6 +319,7 @@ function row_clicked(e, dt, type, indexes) {
 }
 
 function tableOptions(measType, dataAndTitle) {
+	
 	// create columns array and all common columns
 	var columns = [
         { data: 'date', title: 'Date' },
@@ -294,7 +335,7 @@ function tableOptions(measType, dataAndTitle) {
 	return {
 		ajax: { url: '/na_project/measurements_get_' +measType+ '_all' , dataSrc: '' },
 		columns: columns,
-		order: [[orderIndex, 'desc']],
+		order: [[orderIndex, 'desc'], [orderIndex+1, 'desc']],
 		scrollY: '35vh',
 		scrollCollapse: true,
 		paging: false,
@@ -321,6 +362,20 @@ function tableOptions(measType, dataAndTitle) {
 							dt.button($('#' +measType+ '_edit')).node().hide();
 							dt.button($('#' +measType+ '_delete')).node().hide();
 						}
+						
+						// change Done button to Cancel button
+						if ($('#cancel_add_' +measType+ '_text').text() == 'Done')
+							$('#cancel_add_' +measType+ '_text').text('Cancel');
+						
+						// fill in date/time fields with current date and time
+						var now = new Date();
+						$('#date_' +measType+ '_add').val(now.getFullYear()+ '-' +(now.getMonth()+1)+ '-' +now.getDate());
+						$('#time_' +measType+ '_add').val(now.getHours()+ ':' +now.getMinutes());
+						
+						// clear and put focus in first field of form
+						$('#' +measurementParts[measType][0]+ '_' +measType+ '_add').val('').focus();
+						
+						// jump to form if on a very small screen
 						if ($(window).height() < 400)
 							window.location.assign('#add_' + measType + '_section');
 					}
@@ -340,10 +395,14 @@ function tableOptions(measType, dataAndTitle) {
 	            			$('#' +key+ '_' +measType+ '_edit').val(row[key]);
 	            		$('#oldDateTime_' + measType).val(row.date + ' ' + row.time);
 	            		
-	            		// show the edit form
+	            		// show the edit form and put focus on first field
 	            		showFormSection(measType, 'edit', dt);
+	            		$('#' +measurementParts[measType][0]+ '_' +measType+ '_edit').focus();
+	            		
+	            		// jump to form if on a very small screen
 	            		if ($(window).height() < 400)
 	            			window.location.assign('#edit_' + measType + '_section');
+	            		
 	            	}
 	            },
 	            {
