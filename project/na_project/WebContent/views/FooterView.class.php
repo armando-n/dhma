@@ -52,7 +52,7 @@ class FooterView {
     
     <div class="row">
         <div class="col-sm-12 text-center">
-            Reviewer: Use username &quot;jonathan&quot; with password &quot;pass123&quot;
+            Use username &quot;member&quot; with password &quot;pass123&quot;
             or username &quot;admin&quot; with password &quot;admin&quot;
         </div>
     </div>

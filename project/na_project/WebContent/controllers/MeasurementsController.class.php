@@ -9,7 +9,7 @@ class MeasurementsController {
         }
         
         if (!isset($_SESSION['profile'])) {
-            self::redirect('login_show', 'warning', 'You must log in before you can see your measurements. For professor/grader: Use &quot;jonathan&quot; for user name with &quot;pass123&quot; for password or &quot;admin&quot; for user name with &quot;admin&quot; for password.');
+            self::redirect('login_show', 'warning', 'You must log in before you can see your measurements. You can use &quot;member&quot; for user name with &quot;pass123&quot; for password or &quot;admin&quot; for user name with &quot;admin&quot; for password.');
             return;
         }
         
@@ -225,9 +225,9 @@ class MeasurementsController {
                 return false;
         }
         
-        if ($measurementID < 0) {
+        if ($measurementID < 0 || !is_numeric($measurementID)) {
             if (isset($_POST['json'])) {
-                $_SESSION['error'] = 'Add failed. Internal error. Try again.';
+                $_SESSION['error'] = 'Add failed. Internal error. Try again: ' .$measurementID;
                 return false;
             } else
                 self::setVars('danger', 'Add failed. Internal error. Try again.', 'show', 'all', 'show');

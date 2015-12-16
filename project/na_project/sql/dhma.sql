@@ -103,7 +103,7 @@ create table WeightMeasurements(
 
 -- User data (passwords are hashes for 'pass123', except admin password is 'admin')
 insert into Users (userName, password) values
-    ('armando-n', '$2y$10$Xvd13JJMs0aNuXI3DeCDQOmSOPmdBuYzxuc8pTrTiDz80GwL2VrWO'),
+    ('member', '$2y$10$Xvd13JJMs0aNuXI3DeCDQOmSOPmdBuYzxuc8pTrTiDz80GwL2VrWO'),
     ('robbins', '$2y$10$o0oZQSAgFCIjwdJ5yZ5s7uAtg3i5J7jOU.oUOFTLM0ENe7hKVc8pe'),
     ('john-s', '$2y$10$YsgDH7ayR07IUObGbuLWlO57CVIfACO5T0C4Y9gUyfGXakZZGRFtu'),
     ('bob', '$2y$10$OLf1V4sBXJXVwmay2JuwSe.lFx.Ch9tuAnVnIcJCzcH.nui05ZRd2'),
@@ -118,7 +118,7 @@ update Users set isAdministrator = true where userName = 'admin';
 -- UserProfile data
 insert into UserProfiles (firstName, lastName, email, phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,  isPicturePublic, sendReminders, stayLoggedIn, userID)
     values
-        ("Armando", "Navarro", "fdf786@my.utsa.edu", "210-555-2170", "male", "1983-11-02", "United States of America", "armando-n.png", null, "light", "#0088BB", true, true, false, false, 1),
+        ("Member", "Guy", "member@email.com", "210-555-2170", "male", "1992-08-07", "United States of America", "member.jpg", null, "light", "#0088BB", true, true, false, false, 1),
         ("Robin", "Scherbatsky", "robbins@email.com", "210-555-1593", "female", "1980-02-22", "United States of America", "robbins.jpg", "http://www.facebook.com/robbins", "light", "#0088BB", true, true, true, true, 2),
         ("John", "Smith", "johns@email.com", "314-555-1260", "male", null, "United States of America", "john-s.jpg", null, "dark", "#BB0000", false, false, true, true, 3),
         ("Bob", "Roberts", "bobrob@email.com", "450-555-1253", "male", "1973-01-12", "United States of America", "bob.jpg", null, "light", "#44DD88", true, false, false, true, 4),
