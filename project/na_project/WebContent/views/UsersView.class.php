@@ -41,7 +41,7 @@ class UsersView {
                 <tr>
                     <td>
                         <?php if ($isLoggedIn): ?><a href="profile_show_<?=$profile->getUserName()?>"><?php endif; ?>
-                            <img src="<?= 'http://' . $host_base . '/' . self::$imgDir . $profile->getPicture()?>" class="img-circle" alt="<?=$profile->getUserName()?>'s profile picture" width="45" height="45" />
+                            <img src="<?= '//' . $host_base . '/' . self::$imgDir . $profile->getPicture()?>" class="img-circle" alt="<?=$profile->getUserName()?>'s profile picture" width="45" height="45" />
                         <?php if ($isLoggedIn): ?></a><?php endif; ?>
                     </td>
                     <td>
@@ -52,7 +52,7 @@ class UsersView {
                     <td><?=$profile->getGender()?></td>
                     <td><?php
             if (!empty($profile->getFacebook())): ?>
-                        <a href="<?= $profile->getFacebook()?>"><img src="<?= 'http://' . $host_base . '/images/icon_facebook.png' ?>" class="img-responsive" alt="<?=$profile->getUserName()?>'s Facebook page" /></a>
+                        <a href="<?= $profile->getFacebook()?>"><img src="<?= '//' . $host_base . '/images/icon_facebook.png' ?>" class="img-responsive" alt="<?=$profile->getUserName()?>'s Facebook page" /></a>
                     </td><?php
             endif; ?>
                 </tr><?php

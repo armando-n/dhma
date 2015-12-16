@@ -17,7 +17,7 @@ class ProfileView {
         ?>
 <section id="profile-info" class="row">
     <div class="col-sm-12 col-md-3 col-lg-4">
-        <img id="profile-pic" src="<?= 'http://' . $host_base . '/' . self::$imgDir . $profile->getPicture() ?>" class="img-responsive img-rounded" alt="<?= $profile->getUserName() ?>'s profile picture" />
+        <img id="profile-pic" src="<?= '//' . $host_base . '/' . self::$imgDir . $profile->getPicture() ?>" class="img-responsive img-rounded" alt="<?= $profile->getUserName() ?>'s profile picture" />
     </div>
     <div class="col-sm-6 col-md-5 col-lg-4">
     
@@ -193,7 +193,7 @@ class ProfileView {
         <div class="form-group">
             <div class="col-sm-12">
                 <div id="picture-wrapper">
-                    <img src="<?= 'http://' . $host_base . '/' . self::$imgDir . $profile->getPicture() ?>" class="profilePic img-responsive img-rounded" alt="<?=$profile->getUserName()?>'s profile picture" /><br />
+                    <img src="<?= '//' . $host_base . '/' . self::$imgDir . $profile->getPicture() ?>" class="profilePic img-responsive img-rounded" alt="<?=$profile->getUserName()?>'s profile picture" /><br />
                 </div>
 
                 <label for="picture" id="picture-btn" class="btn btn-info btn-block">

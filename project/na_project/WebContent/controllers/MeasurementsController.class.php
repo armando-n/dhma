@@ -460,7 +460,7 @@ class MeasurementsController {
         if (!empty($control))
             $control = '/' . $control;
 
-        header('Location: http://' . $_SERVER['HTTP_HOST'] . '/' . $_SESSION['base'] . $control);
+        header('Location: https://' . $_SERVER['HTTP_HOST'] . '/' . $_SESSION['base'] . $control);
     }
 }
 ?>
