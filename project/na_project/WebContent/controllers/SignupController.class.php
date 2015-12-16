@@ -31,8 +31,10 @@ class SignupController {
     
     private static function post() {
         // handle image file upload
-        if (isset($_FILES['picture']) && !empty($_FILES['picture']['name']))
-            self::processImage();
+        if (isset($_FILES['picture']) && !empty($_FILES['picture']['name'])) {
+            if (!self::processImage())
+                return;
+        }
         else
             $_POST['picture'] = self::$defaultPicture;
         
@@ -127,7 +129,7 @@ class SignupController {
         if (strncmp($filetype, 'image', strlen('image')) !== 0) {
             self::alertMessage('danger', 'Signup failed: ' . htmlspecialchars($filename) . ' is not an image file. It has type: ' . $filetype . '; ');
             SignupView::show();
-            return;
+            return false;
         }
     
         // move the uploaded file to permanent location
@@ -136,11 +138,12 @@ class SignupController {
         else {
             self::alertMessage('danger', 'Signup failed: ' . htmlspecialchars($tmp_name) . ' was not found or is not an uploaded file.');
             SignupView::show();
-            return;
+            return false;
         }
 
         // add image file name to post data
         $_POST['picture'] = $_POST['userName'] . '.' . $extension;
+        return true;
     }
     
     private static function alertMessage($alertType, $alertMessage) {
