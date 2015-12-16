@@ -105,11 +105,22 @@ $(document).ready(function() {
 	$('.btn-change-chart').click(viewNewChart);
 	
 	// add listeners for tab buttons (i.e. for switching to a measurement)
-	$('#measurements_tabs a').click(function (event) {
+	$('#measurements_tabs a, #measurements_dropdown li a').click(function (event) {
 		var measType = $(this).attr('id').split('_')[0];
+		var upperMeasType = measType.replace(/([a-z])([A-Z])/g, function(match, p1, p2) { return [p1, p2].join(' '); } );
+		upperMeasType = upperMeasType.replace(/^[a-z]/, function (match) { return match.toUpperCase(); } );
 
-		// show tab
+		// show tab, change dropdown label, and deselect menu item
 		$(this).tab('show');
+		$('#measurements_dropdown_label').text(upperMeasType);
+		$('#measurements_dropdown li').removeClass('active');
+		
+		if (measType === 'calories')
+			measType = 'calorie';
+		
+		// update tabs appearance (in case dropdown triggered this event)
+		$('#measurements_tabs .active').removeClass('active');
+		$('#' +measType+ '_tab_btn').parent().addClass('active');
 		
 		// redraw charts and table to avoid overflow and column alignment issues
 		charts[measType+ '_primary'].reflow();

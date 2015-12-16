@@ -87,6 +87,16 @@ legend {
 	.chart-secondary {
        display: none;
     }
+    #measurements_dropdown {
+        display: none;
+    }
+}
+
+/* medium and large devices */
+@media screen and (min-width: 992px) {
+    #measurements_dropdown {
+        display: none;
+    }
 }
 
 /* medium devices */

@@ -30,13 +30,31 @@ class MeasurementsView{
     <div class="col-xs-12">
     
         <div class="panel panel-primary">
+            
+            <!-- for extra small screens -->
+            <div id="measurements_dropdown" class="dropdown">
+                <button type="button" class="dropdown-toggle btn btn-primary btn-block" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <span id="measurements_dropdown_label">Glucose</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="measurements_dropdown_label">
+                    <li><a href="#glucose" id="glucose_dropdown_btn">Glucose</a></li>
+                    <li><a href="#bloodPressure" id="bloodPressure_dropdown_btn">Blood Pressure</a></li>
+                    <li><a href="#weight" id="weight_dropdown_btn">Weight</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#calories" id="calories_dropdown_btn">Calories</a></li>
+                    <li><a href="#exercise" id="exercise_dropdown_btn">Exercise</a></li>
+                    <li><a href="#sleep" id="sleep_dropdown_btn">Sleep</a></li>
+                </ul>
+            </div>
         
-            <div class="panel-heading">
+            <!-- for small screens and larger -->
+            <div id="measurements_nav" class="panel-heading collapse navbar-collapse">
                 <ul id="measurements_tabs" class="nav nav-tabs nav-justified" role="tablist">
                 	<li class="measurement-tab active" role="presentation"><a class="measurement-tab" href="#glucose" id="glucose_tab_btn" aria-controls="glucose" role="tab">Glucose</a></li>
                 	<li class="measurement-tab" role="presentation"><a class="measurement-tab" href="#bloodPressure" id="bloodPressure_tab_btn" aria-controls="bloodPressure" role="tab">Blood Pressure</a></li>
                 	<li class="measurement-tab" role="presentation"><a class="measurement-tab" href="#weight" id="weight_tab_btn" aria-controls="weight" role="tab">Weight</a></li>
-                	<li class="measurement-tab" role="presentation"><a class="measurement-tab" href="#calories" id="calorie_tab_btn" aria-controls="calories" role="tab">Calories</a></li>
+                	<li class="measurement-tab" role="presentation"><a class="measurement-tab" href="#calories" id="calories_tab_btn" aria-controls="calories" role="tab">Calories</a></li>
                 	<li class="measurement-tab" role="presentation"><a class="measurement-tab" href="#exercise" id="exercise_tab_btn" aria-controls="exercise" role="tab">Exercise</a></li>
                 	<li class="measurement-tab" role="presentation"><a class="measurement-tab" href="#sleep" id="sleep_tab_btn" aria-controls="sleep" role="tab">Sleep</a></li>
                 </ul>

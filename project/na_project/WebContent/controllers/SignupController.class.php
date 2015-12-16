@@ -86,7 +86,7 @@ class SignupController {
             unset($_SESSION['userSignup']);
             unset($_SESSION['profileSignup']);
             $_SESSION['profile'] = $profile;
-            self::redirect('profile_show', 'success', 'Welcome to DHMS! You can review your profile below.');
+            self::redirect('profile_show', 'success', 'Welcome to DHMS! You can review your profile below. You can also go to the <a href="measurements_show_all">Measurements page</a> to start adding measurement information.');
         }
     }
     
