@@ -71,6 +71,14 @@ legend {
 	background-color: #FF0000 !important;
 }
 
+#measurements_dropdown .dropdown-menu {
+	float: left;
+	left: 20%;
+	margin: 2px auto 0;
+	width: 60%;
+	text-align: center;
+}
+
 /* extra small devices */
 @media screen and (max-width: 749px) {    
     .chart-secondary {
