@@ -213,7 +213,6 @@ function deleteMeasurement(e, dt, node, config) {
 			data: { json: true },
 			dataType: 'json',
 			method: 'POST',
-			async: false,
 			success: function(response) {
 				if (response.result) {
 					var targetRows = selectedRows.slice();
@@ -432,54 +431,40 @@ function tableOptions(measType, dataAndTitle) {
 }
 
 /* creates a primary and secondary chart for the specified measurement type.
- * defaults to individual and monthly views respectively for primary and secondary charts, respectively */
+ * defaults to individual and monthly views for primary and secondary charts, respectively */
 function createCharts(measType) {
 	var measNames = measurementParts[measType];
+	var avgOrTotal = ($.inArray(measType, cumulativeMeasurements) === -1) ? 'Averages' : 'Totals';
 	
 	// create two charts, a primary chart w/ individual view, and a secondary chart w/ monthly view
-	for (var i = 0; i < 2; i++) {
-		var per = (i == 0) ? 'individual' : 'month';
-		
-		$.ajax({
-			'url': 'measurements_get_' +measType+ '_' +per,
-			'dataType': 'json',
-			'async': false,
-			'success': function(response) {
-				var data = [];
-				var xValPropName; // the name of the property containing the x-value
-				var idSuffix;
-				var title;
-				var subtitle;
-				
-				if (per === 'individual') {
-					xValPropName = 'dateAndTime';
-					idSuffix = 'primary';
-					title = 'Individual Entries';
-					subtitle = 'Over Past Month';
-				} else if (per === 'month') {
-					xValPropName = 'month';
-					idSuffix = 'secondary';
-					title = ($.inArray(measType, cumulativeMeasurements) === -1) ? 'Monthly Averages' : 'Monthly Totals';
-					subtitle = 'Over Past Year';
-				} else {
-					alert('error');
-				}
-				
-				// create a chart series for each measurement part (e.g. systolic/diastolic pressures)
-				for (var j = 0; j < measNames.length; j++) {
-					var currentData = [];
-					for (var k = 0; k < response.length; k++)
-						currentData.push( [ response[k][xValPropName], parseFloat(response[k][measNames[j]]) ] );
-					data.push(currentData);
-				}
-				
-				// create chart
-				var chartOptions = createChartOptions(measType, title, data, measNames, per, subtitle, idSuffix);
-				charts[measType+ '_' +idSuffix] = new Highcharts.Chart(chartOptions);
-			},
-			'error': function() { alert('Error retreiving measurements'); }
-		});
-	}
+	createChart(measType, 'individual', 'dateAndTime', 'primary', 'Individual Entries', 'Over Past Month');
+	createChart(measType, 'month', 'month', 'secondary', 'Monthly ' +avgOrTotal, 'Over Past Year');
+}
+
+// create a chart with the specified properties
+function createChart(measType, chartType, xValPropertyName, idSuffix, title, subtitle) {
+	var measNames = measurementParts[measType];
+	
+	$.ajax({
+		'url': 'measurements_get_' +measType+ '_' +chartType,
+		'dataType': 'json',
+		'success': function(response) {
+			var data = [];
+			
+			// create a chart series for each measurement part (e.g. systolic/diastolic pressures)
+			for (var i = 0; i < measNames.length; i++) {
+				var currentData = [];
+				for (var j = 0; j < response.length; j++)
+					currentData.push( [ response[j][xValPropertyName], parseFloat(response[j][measNames[i]]) ] );
+				data.push(currentData);
+			}
+			
+			// create chart
+			var chartOptions = createChart_Options(measType, title, data, measNames, chartType, subtitle, idSuffix);
+			charts[measType+ '_' +idSuffix] = new Highcharts.Chart(chartOptions);
+		},
+		'error': function() { alert('Error retreiving measurements'); }
+	});
 }
 
 //function addTabListener() {
@@ -489,7 +474,7 @@ function createCharts(measType) {
 //	});
 //}
 
-function createChartOptions(measType, title, data, name, per, subtitle, idSuffix) {
+function createChart_Options(measType, title, data, name, per, subtitle, idSuffix) {
 	var series = [];
 	var numOfSeriesData = data.length;
 	var xValue;
@@ -550,11 +535,17 @@ function createChartOptions(measType, title, data, name, per, subtitle, idSuffix
 	}
 	
 	var monthValue = function (value, isFirst) {
+		var year;
+		var month;
 		var result = '';
 		var pieces = value.split('-');
-		if (isFirst || pieces[1] == 1)
-			result += '(' +pieces[0]+ ') ';
-		return result + monthNumToShortName(parseInt(pieces[1]), false);
+		
+		year = pieces[0];
+		month = pieces[1];
+		
+		if (isFirst || month == 1)
+			result += '(' +year+ ') ';
+		return result + monthNumToShortName(parseInt(month), false);
 	}
 	
 	var chartOptions =
@@ -605,6 +596,7 @@ function createChartOptions(measType, title, data, name, per, subtitle, idSuffix
 					var secondLineHeader = '<br /><span style="font-size: smaller;">';
 					var secondLineBody;
 					var secondLineFooter = '</span>';
+
 					if (per === 'all' || per === 'individual') {
 						var date = new Date(this.key);
 						firstLineBody = date.toDateString();
@@ -654,7 +646,6 @@ function viewNewChart() {
 	$.ajax({
 		'url': 'measurements_get_' +measType+ '_' +chartType,
 		'dataType': 'json',
-		'async': false,
 		'success': function(response) {
 			var data = [];
 			var xValue;
@@ -702,7 +693,7 @@ function viewNewChart() {
 			}
 			
 			// replace chart
-			var chartOptions = createChartOptions(measType, title, data, measNames, chartType, subtitle, primOrSec);
+			var chartOptions = createChart_Options(measType, title, data, measNames, chartType, subtitle, primOrSec);
 			charts[measType+ '_' +primOrSec].destroy();
 			charts[measType+ '_' +primOrSec] = new Highcharts.Chart(chartOptions);
 		},
