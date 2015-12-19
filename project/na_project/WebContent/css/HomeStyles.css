@@ -5,3 +5,7 @@ aside#faq {
 aside#faq h2 {
 	font-size: 1.10em;
 }
+
+section#screenshots p {
+	text-align: center;
+}
