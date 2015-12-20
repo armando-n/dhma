@@ -41,7 +41,7 @@ class ExerciseMeasurementsView {
                 <div class="form-group">
                     <label for="duration_exercise_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Duration</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="duration_exercise_add" name="duration" class="form-control" size="10" autofocus="autofocus" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
+                        <input type="text" id="duration_exercise_add" name="duration" class="form-control" size="10" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
                     </div>
                 </div>
                 <div class="form-group">

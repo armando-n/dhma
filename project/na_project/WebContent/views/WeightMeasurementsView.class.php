@@ -41,7 +41,7 @@ class WeightMeasurementsView {
                 <div class="form-group">
                     <label for="weight_weight_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Weight</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="weight_weight_add" name="weight" class="form-control" size="10" autofocus="autofocus" required="required" maxlength="10" tabindex="1" pattern="^((\d+)|(\d*\.\d+))$" />
+                        <input type="text" id="weight_weight_add" name="weight" class="form-control" size="10" required="required" maxlength="10" tabindex="1" pattern="^((\d+)|(\d*\.\d+))$" />
                     </div>
                 </div>
                 <div class="form-group">
