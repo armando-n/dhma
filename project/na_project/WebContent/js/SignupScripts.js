@@ -15,6 +15,8 @@ $(document).ready( function() {
 	
 	// add date picker for signup form
 	$('.date-picker').datetimepicker( { format: 'YYYY-MM-DD' } );
+	
+	$('[data-toggle="tooltip"]').tooltip();
 });
 
 function loadPicture() {
