@@ -28,14 +28,15 @@ class GlucoseMeasurementsDB {
             
             $stmt = $db->prepare(
                 "insert into GlucoseMeasurements (glucose,
-                    dateAndTime, notes, userID)
+                    dateAndTime, notes, units, userID)
                 values (:glucose, :dateAndTime,
-                    :notes, :userID)"
+                    :notes, :units, :userID)"
             );
             $stmt->execute(array(
                 ":glucose" => $measurement->getMeasurement(),
                 ":dateAndTime" => $measurement->getDateTime()->format("Y-m-d H:i"),
                 ":notes" => $measurement->getNotes(),
+                ":units" => $measurement->getUnits(),
                 ":userID" => $userID
             ));
             $measurementID = $db->lastInsertId("glucoseID");
@@ -94,9 +95,7 @@ class GlucoseMeasurementsDB {
         
         try {
             $db = Database::getDB();
-            $stmt = $db->prepare(
-                "select userName, glucoseID, glucose, dateAndTime, notes, userID
-                from Users join GlucoseMeasurements using (userID)");
+            $stmt = $db->prepare("select * from Users join GlucoseMeasurements using (userID)");
             $stmt->execute();
 
             foreach ($stmt as $row) {
@@ -122,7 +121,7 @@ class GlucoseMeasurementsDB {
         try {
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, glucoseID, glucose, dateAndTime, notes, userID
+                "select *
                 from Users join GlucoseMeasurements using (userID)
                 where userName = :userName and dateAndTime = :dateAndTime"
             );
@@ -155,7 +154,7 @@ class GlucoseMeasurementsDB {
             
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, glucoseID, glucose, dateAndTime, notes, userID
+                "select *
                 from Users join GlucoseMeasurements using (userID)
                 where ($type = :$type)
                 order by dateAndTime $order");
@@ -190,7 +189,7 @@ class GlucoseMeasurementsDB {
 
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, glucoseID, glucose, dateAndTime, notes, userID
+                "select *
                 from Users join GlucoseMeasurements using (userID)
                 where ($type = :$type)
                     and date(dateAndTime) > $minDate
@@ -249,7 +248,7 @@ class GlucoseMeasurementsDB {
 
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, $periodCol $timePeriod,
+                "select userName, $periodCol $timePeriod, units,
                     replace(format(avg(glucose), 2), ',', '') glucose
                 from Users join GlucoseMeasurements using (userID)
                 where userName = :userName

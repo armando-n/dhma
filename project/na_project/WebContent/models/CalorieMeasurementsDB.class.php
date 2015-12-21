@@ -27,13 +27,14 @@ class CalorieMeasurementsDB {
                 $userID = func_get_arg(1);
             
             $stmt = $db->prepare(
-                "insert into CalorieMeasurements (calories, dateAndTime, notes, userID)
-                values (:calories, :dateAndTime, :notes, :userID)"
+                "insert into CalorieMeasurements (calories, dateAndTime, notes, units, userID)
+                values (:calories, :dateAndTime, :notes, :units, :userID)"
             );
             $stmt->execute(array(
                 ":calories" => $measurement->getMeasurement(),
                 ":dateAndTime" => $measurement->getDateTime()->format("Y-m-d H:i"),
                 ":notes" => $measurement->getNotes(),
+                ":units" => $measurement->getUnits(),
                 ":userID" => $userID
             ));
             $measurementID = $db->lastInsertId("calorieID");
@@ -92,9 +93,7 @@ class CalorieMeasurementsDB {
         
         try {
             $db = Database::getDB();
-            $stmt = $db->prepare(
-                "select userName, calorieID, calories, dateAndTime, notes, userID
-                from Users join CalorieMeasurements using (userID)");
+            $stmt = $db->prepare("select * from Users join CalorieMeasurements using (userID)");
             $stmt->execute();
             $str = '';
             foreach ($stmt as $row) {
@@ -120,7 +119,7 @@ class CalorieMeasurementsDB {
         try {
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, calorieID, calories, dateAndTime, notes, userID
+                "select *
                 from Users join CalorieMeasurements using (userID)
                 where userName = :userName and dateAndTime = :dateAndTime"
             );
@@ -153,7 +152,7 @@ class CalorieMeasurementsDB {
             
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, calorieID, calories, dateAndTime, notes, userID
+                "select *
                 from Users join CalorieMeasurements using (userID)
                 where ($type = :$type)
                 order by dateAndTime $order");
@@ -188,7 +187,7 @@ class CalorieMeasurementsDB {
 
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, calorieID, calories, dateAndTime, notes, userID
+                "select *
                 from Users join CalorieMeasurements using (userID)
                 where ($type = :$type)
                     and date(dateAndTime) > $minDate
@@ -250,9 +249,10 @@ class CalorieMeasurementsDB {
                     throw new PDOException('CalorieMeasurementsDB: invalid time period for daily average request');
                 
                 $sql =
-                    "select userName, $timePeriod, replace(format(avg(calories), 2), ',', '') calories
+                    "select userName, $timePeriod, units, replace(format(avg(calories), 2), ',', '') calories
                     from
-                        (select userName, date(dateAndTime) day, $periodCol $timePeriod, replace(format(sum(calories), 2), ',', '') calories
+                        (select userName, date(dateAndTime) day, $periodCol $timePeriod, units,
+                            replace(format(sum(calories), 2), ',', '') calories
                         from Users join CalorieMeasurements using (userID)
                         where userName = :userName
                             and dateAndTime > date_sub(now(), interval $interval)
@@ -263,7 +263,7 @@ class CalorieMeasurementsDB {
             
             else {
                 $sql =
-                    "select userName, $periodCol $timePeriod,
+                    "select userName, $periodCol $timePeriod, units,
                         replace(format(sum(calories), 2), ',', '') calories
                     from Users join CalorieMeasurements using (userID)
                     where userName = :userName

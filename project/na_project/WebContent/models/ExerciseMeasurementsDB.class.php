@@ -28,15 +28,16 @@ class ExerciseMeasurementsDB {
             
             $stmt = $db->prepare(
                 "insert into ExerciseMeasurements (duration,
-                    type, dateAndTime, notes, userID)
+                    type, dateAndTime, notes, units, userID)
                 values (:duration, :type, :dateAndTime,
-                    :notes, :userID)"
+                    :notes, :units, :userID)"
             );
             $stmt->execute(array(
                 ":duration" => $measurement->getDuration(),
                 ":type" => $measurement->getType(),
                 ":dateAndTime" => $measurement->getDateTime()->format("Y-m-d H:i"),
                 ":notes" => $measurement->getNotes(),
+                ":units" => $measurement->getUnits(),
                 ":userID" => $userID
             ));
             $measurementID = $db->lastInsertId("exerciseID");
@@ -95,9 +96,7 @@ class ExerciseMeasurementsDB {
         
         try {
             $db = Database::getDB();
-            $stmt = $db->prepare(
-                "select userName, exerciseID, duration, type, dateAndTime, notes, userID
-                from Users join ExerciseMeasurements using (userID)");
+            $stmt = $db->prepare("select * from Users join ExerciseMeasurements using (userID)");
             $stmt->execute();
 
             foreach ($stmt as $row) {
@@ -123,8 +122,7 @@ class ExerciseMeasurementsDB {
         try {
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, exerciseID, duration, type,
-                    dateAndTime, notes, userID
+                "select *
                 from Users join ExerciseMeasurements using (userID)
                 where userName = :userName and dateAndTime = :dateAndTime"
             );
@@ -157,7 +155,7 @@ class ExerciseMeasurementsDB {
             
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, exerciseID, duration, type, dateAndTime, notes, userID
+                "select *
                 from Users join ExerciseMeasurements using (userID)
                 where ($type = :$type)
                 order by dateAndTime $order");
@@ -191,7 +189,7 @@ class ExerciseMeasurementsDB {
 
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, exerciseID, duration, type, dateAndTime, notes, userID
+                "select *
                 from Users join ExerciseMeasurements using (userID)
                 where ($type = :$type)
                     and date(dateAndTime) > $minDate
@@ -253,9 +251,10 @@ class ExerciseMeasurementsDB {
                     throw new PDOException('ExerciseMeasurementsDB: invalid time period for daily average request');
                 
                 $sql =
-                    "select userName, $timePeriod, replace(format(avg(duration), 2), ',', '') duration
+                    "select userName, $timePeriod, units, replace(format(avg(duration), 2), ',', '') duration
                     from
-                        (select userName, date(dateAndTime) day, $periodCol $timePeriod, replace(format(sum(duration), 2), ',', '') duration
+                        (select userName, date(dateAndTime) day, $periodCol $timePeriod, units,
+                            replace(format(sum(duration), 2), ',', '') duration
                         from Users join ExerciseMeasurements using (userID)
                         where userName = :userName
                             and dateAndTime > date_sub(now(), interval $interval)
@@ -266,7 +265,7 @@ class ExerciseMeasurementsDB {
             
             else {
                 $sql =
-                    "select userName, $periodCol $timePeriod,
+                    "select userName, $periodCol $timePeriod, units,
                         replace(format(sum(duration), 2), ',', '') duration
                     from Users join ExerciseMeasurements using (userID)
                     where userName = :userName

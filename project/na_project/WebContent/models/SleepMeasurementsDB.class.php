@@ -27,13 +27,14 @@ class SleepMeasurementsDB {
                 $userID = func_get_arg(1);
             
             $stmt = $db->prepare(
-                "insert into SleepMeasurements (duration, dateAndTime, notes, userID)
-                values (:duration, :dateAndTime, :notes, :userID)"
+                "insert into SleepMeasurements (duration, dateAndTime, notes, units, userID)
+                values (:duration, :dateAndTime, :notes, :units, :userID)"
             );
             $stmt->execute(array(
                 ":duration" => $measurement->getMeasurement(),
                 ":dateAndTime" => $measurement->getDateTime()->format("Y-m-d H:i"),
                 ":notes" => $measurement->getNotes(),
+                ":units" => $measurement->getUnits(),
                 ":userID" => $userID
             ));
             $measurementID = $db->lastInsertId("sleepID");
@@ -92,9 +93,7 @@ class SleepMeasurementsDB {
         
         try {
             $db = Database::getDB();
-            $stmt = $db->prepare(
-                "select userName, sleepID, duration, dateAndTime, notes, userID
-                from Users join SleepMeasurements using (userID)");
+            $stmt = $db->prepare("select * from Users join SleepMeasurements using (userID)");
             $stmt->execute();
             $str = '';
             foreach ($stmt as $row) {
@@ -120,7 +119,7 @@ class SleepMeasurementsDB {
         try {
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, sleepID, duration, dateAndTime, notes, userID
+                "select *
                 from Users join SleepMeasurements using (userID)
                 where userName = :userName and dateAndTime = :dateAndTime"
             );
@@ -153,7 +152,7 @@ class SleepMeasurementsDB {
             
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, sleepID, duration, dateAndTime, notes, userID
+                "select *
                 from Users join SleepMeasurements using (userID)
                 where ($type = :$type)
                 order by dateAndTime $order");
@@ -188,7 +187,7 @@ class SleepMeasurementsDB {
 
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, sleepID, duration, dateAndTime, notes, userID
+                "select *
                 from Users join SleepMeasurements using (userID)
                 where ($type = :$type)
                     and date(dateAndTime) > $minDate
@@ -250,9 +249,10 @@ class SleepMeasurementsDB {
                     throw new PDOException('SleepMeasurementsDB: invalid time period for daily average request');
                 
                 $sql =
-                    "select userName, $timePeriod, replace(format(avg(duration), 2), ',', '') duration
+                    "select userName, $timePeriod, units, replace(format(avg(duration), 2), ',', '') duration
                     from
-                        (select userName, date(dateAndTime) day, $periodCol $timePeriod, replace(format(sum(duration), 2), ',', '') duration
+                        (select userName, date(dateAndTime) day, $periodCol $timePeriod, units,
+                            replace(format(sum(duration), 2), ',', '') duration
                         from Users join SleepMeasurements using (userID)
                         where userName = :userName
                             and dateAndTime > date_sub(now(), interval $interval)
@@ -263,7 +263,7 @@ class SleepMeasurementsDB {
             
             else {
                 $sql =
-                    "select userName, $periodCol $timePeriod,
+                    "select userName, $periodCol $timePeriod, units,
                         replace(format(sum(duration), 2), ',', '') duration
                     from Users join SleepMeasurements using (userID)
                     where userName = :userName

@@ -27,13 +27,14 @@ class WeightMeasurementsDB {
                 $userID = func_get_arg(1);
             
             $stmt = $db->prepare(
-                "insert into WeightMeasurements (weight, dateAndTime, notes, userID)
-                values (:weight, :dateAndTime, :notes, :userID)"
+                "insert into WeightMeasurements (weight, dateAndTime, notes, units, userID)
+                values (:weight, :dateAndTime, :notes, :units, :userID)"
             );
             $stmt->execute(array(
                 ":weight" => $measurement->getMeasurement(),
                 ":dateAndTime" => $measurement->getDateTime()->format("Y-m-d H:i"),
                 ":notes" => $measurement->getNotes(),
+                ":units" => $measurement->getUnits(),
                 ":userID" => $userID
             ));
             $measurementID = $db->lastInsertId("weightID");
@@ -92,9 +93,7 @@ class WeightMeasurementsDB {
         
         try {
             $db = Database::getDB();
-            $stmt = $db->prepare(
-                "select userName, weightID, weight, dateAndTime, notes, userID
-                from Users join WeightMeasurements using (userID)");
+            $stmt = $db->prepare("select * from Users join WeightMeasurements using (userID)");
             $stmt->execute();
             $str = '';
             foreach ($stmt as $row) {
@@ -120,7 +119,7 @@ class WeightMeasurementsDB {
         try {
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, weightID, weight, dateAndTime, notes, userID
+                "select *
                 from Users join WeightMeasurements using (userID)
                 where userName = :userName and dateAndTime = :dateAndTime"
             );
@@ -153,7 +152,7 @@ class WeightMeasurementsDB {
             
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, weightID, weight, dateAndTime, notes, userID
+                "select *
                 from Users join WeightMeasurements using (userID)
                 where ($type = :$type)
                 order by dateAndTime $order");
@@ -188,7 +187,7 @@ class WeightMeasurementsDB {
 
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, weightID, weight, dateAndTime, notes, userID
+                "select *
                 from Users join WeightMeasurements using (userID)
                 where ($type = :$type)
                     and date(dateAndTime) > $minDate
@@ -247,7 +246,7 @@ class WeightMeasurementsDB {
 
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, $periodCol $timePeriod,
+                "select userName, $periodCol $timePeriod, units,
                     replace(format(avg(weight), 2), ',', '') weight
                 from Users join WeightMeasurements using (userID)
                 where userName = :userName

@@ -28,15 +28,16 @@ class BloodPressureMeasurementsDB {
             
             $stmt = $db->prepare(
                 "insert into BloodPressureMeasurements (systolicPressure,
-                    diastolicPressure, dateAndTime, notes, userID)
+                    diastolicPressure, dateAndTime, notes, units, userID)
                 values (:systolicPressure, :diastolicPressure, :dateAndTime,
-                    :notes, :userID)"
+                    :notes, :units, :userID)"
             );
             $stmt->execute(array(
                 ":systolicPressure" => $measurement->getSystolicPressure(),
                 ":diastolicPressure" => $measurement->getDiastolicPressure(),
                 ":dateAndTime" => $measurement->getDateTime()->format("Y-m-d H:i"),
                 ":notes" => $measurement->getNotes(),
+                ":units" => $measurement->getUnits(),
                 ":userID" => $userID
             ));
             $measurementID = $db->lastInsertId("bpID");
@@ -65,10 +66,10 @@ class BloodPressureMeasurementsDB {
         
                     if ($oldParams[$key] !== $newParams[$key]) {
                         $stmt = $db->prepare(
-                                "update BloodPressureMeasurements set $key = :value
-                                 where userID in
-                                    (select userID from Users where userName = :userName)
-                                 and dateAndTime = :dateAndTime");
+                            "update BloodPressureMeasurements set $key = :value
+                             where userID in
+                                (select userID from Users where userName = :userName)
+                             and dateAndTime = :dateAndTime");
                         $stmt->execute(array(
                             ":value" => $value,
                             ":userName" => $newParams['userName'],
@@ -95,10 +96,7 @@ class BloodPressureMeasurementsDB {
         
         try {
             $db = Database::getDB();
-            $stmt = $db->prepare(
-                "select userName, bpID, systolicPressure, diastolicPressure,
-                    dateAndTime, notes, userID
-                from Users join BloodPressureMeasurements using (userID)");
+            $stmt = $db->prepare("select * from Users join BloodPressureMeasurements using (userID)");
             $stmt->execute();
 
             foreach ($stmt as $row) {
@@ -124,8 +122,7 @@ class BloodPressureMeasurementsDB {
         try {
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, bpID, systolicPressure, diastolicPressure,
-                    dateAndTime, notes, userID
+                "select *
                 from Users join BloodPressureMeasurements using (userID)
                 where userName = :userName and dateAndTime = :dateAndTime"
             );
@@ -158,8 +155,7 @@ class BloodPressureMeasurementsDB {
             
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, bpID, systolicPressure, diastolicPressure,
-                    dateAndTime, notes, userID
+                "select *
                 from Users join BloodPressureMeasurements using (userID)
                 where ($type = :$type)
                 order by dateAndTime $order"
@@ -194,8 +190,7 @@ class BloodPressureMeasurementsDB {
 
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, bpID, systolicPressure, diastolicPressure,
-                    dateAndTime, notes, userID
+                "select *
                 from Users join BloodPressureMeasurements using (userID)
                 where ($type = :$type)
                     and date(dateAndTime) > $minDate
@@ -254,7 +249,7 @@ class BloodPressureMeasurementsDB {
 
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, $periodCol $timePeriod,
+                "select userName, $periodCol $timePeriod, units,
                     replace(format(avg(systolicPressure), 2), ',', '') systolicPressure,
                     replace(format(avg(diastolicPressure), 2), ',', '') diastolicPressure
                 from Users join BloodPressureMeasurements using (userID)
