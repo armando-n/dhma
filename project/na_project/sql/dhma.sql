@@ -7,7 +7,7 @@ create table Users(
     userID          integer primary key auto_increment,
     userName        varchar(50) unique not null,
     password        varchar(255) not null,
-    isAdministrator boolean not null default false,
+    isAdministrator boolean default false,
     dateCreated     timestamp default CURRENT_TIMESTAMP
 );
 
@@ -17,18 +17,18 @@ create table UserProfiles(
     firstName       varchar(50),
     lastName        varchar(50),
     email           varchar(50),
-    phone           varchar(15),
-    gender          varchar(6),
+    phone           varchar(20),
+    gender          enum('male', 'female', 'other'),
     dob             date,
     country         varchar(50),
-    picture         varchar(50) not null default 'profile_default.png',
+    picture         varchar(50) default 'profile_default.png',
     facebook        varchar(50),
-    theme           varchar(5),
-    accentColor     char(7),
-    isProfilePublic boolean,
-    isPicturePublic boolean,
-    sendReminders   boolean,
-    stayLoggedIn    boolean,
+    theme           varchar(20),
+    accentColor     char(7), -- example: '#0088BB'
+    isProfilePublic boolean default false,
+    isPicturePublic boolean default false,
+    sendReminders   boolean default false,
+    stayLoggedIn    boolean default false,
     userID          integer not null,
     foreign key (userID) references Users (userID) on delete cascade
 );
@@ -40,6 +40,7 @@ create table BloodPressureMeasurements(
     diastolicPressure   integer not null,
     dateAndTime         datetime not null,
     notes               varchar(255),
+    units               enum('mm Hg') default 'mm Hg',
     userID              integer not null,
     foreign key (userID) references Users (userID) on delete cascade,
     constraint uniq_meas unique (dateAndTime, userID)
@@ -51,6 +52,7 @@ create table CalorieMeasurements(
     calories            integer not null,
     dateAndTime         datetime not null,
     notes               varchar(255),
+    units               enum('calories') default 'calories',
     userID              integer not null,
     foreign key (userID) references Users (userID) on delete cascade,
     constraint uniq_meas unique (dateAndTime, userID)
@@ -59,10 +61,11 @@ create table CalorieMeasurements(
 drop table if exists ExerciseMeasurements;
 create table ExerciseMeasurements(
     exerciseID          integer primary key auto_increment,
-    duration            integer not null,
-    type                varchar(100) not null,
+    duration            double not null,
+    type                varchar(100) not null, -- e.g. 'running', 'swimming', 'weight-lifting'
     dateAndTime         datetime not null,
     notes               varchar(255),
+    units               enum('minutes', 'hours', 'hours:minutes') default 'minutes',
     userID              integer not null,
     foreign key (userID) references Users (userID) on delete cascade,
     constraint uniq_meas unique (dateAndTime, userID)
@@ -71,9 +74,10 @@ create table ExerciseMeasurements(
 drop table if exists GlucoseMeasurements;
 create table GlucoseMeasurements(
     glucoseID           integer primary key auto_increment,
-    glucose             integer not null,
+    glucose             double not null,
     dateAndTime         datetime not null,
     notes               varchar(255),
+    units               enum('mg/dL', 'mM') default 'mg/dL',
     userID              integer not null,
     foreign key (userID) references Users (userID) on delete cascade,
     constraint uniq_meas unique (dateAndTime, userID)
@@ -82,9 +86,10 @@ create table GlucoseMeasurements(
 drop table if exists SleepMeasurements;
 create table SleepMeasurements(
     sleepID             integer primary key auto_increment,
-    duration            integer not null,
+    duration            double not null,
     dateAndTime         datetime not null,
     notes               varchar(255),
+    units               enum('minutes', 'hours', 'hours:minutes') default 'minutes',
     userID              integer not null,
     foreign key (userID) references Users (userID) on delete cascade,
     constraint uniq_meas unique (dateAndTime, userID)
@@ -96,6 +101,7 @@ create table WeightMeasurements(
     weight              double not null,
     dateAndTime         datetime not null,
     notes               varchar(255),
+    units               enum('lbs', 'kg') default 'lbs',
     userID              integer not null,
     foreign key (userID) references Users (userID) on delete cascade,
     constraint uniq_meas unique (dateAndTime, userID)

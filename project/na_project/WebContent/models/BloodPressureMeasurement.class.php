@@ -1,12 +1,15 @@
 <?php
 class BloodPressureMeasurement extends GenericModelObject implements JsonSerializable {
     
+    const DEFAULT_UNITS = 'mm Hg';
+    
     private $formInput;
     private $userName;
     private $datetime;
     private $notes;
     private $systolicPressure;
     private $diastolicPressure;
+    private $units;
     
     public function __construct($formInput = null) {
         $this->formInput = $formInput;
@@ -34,6 +37,10 @@ class BloodPressureMeasurement extends GenericModelObject implements JsonSeriali
         return $this->notes;
     }
     
+    public function getUnits() {
+        return $this->units;
+    }
+    
     public function getSystolicPressure() {
         return $this->systolicPressure;
     }
@@ -57,11 +64,12 @@ class BloodPressureMeasurement extends GenericModelObject implements JsonSeriali
     
     public function getParameters() {
         $params = array(
-                "userName" => $this->userName,
-                "dateAndTime" => $this->datetime->format("Y-m-d H:i"),
-                "notes" => $this->notes,
-                "systolicPressure" => $this->systolicPressure,
-                "diastolicPressure" => $this->diastolicPressure
+            "userName" => $this->userName,
+            "dateAndTime" => $this->datetime->format("Y-m-d H:i"),
+            "notes" => $this->notes,
+            "systolicPressure" => $this->systolicPressure,
+            "diastolicPressure" => $this->diastolicPressure,
+            "units" => $this->units
         );
         
         return $params;
@@ -74,7 +82,8 @@ class BloodPressureMeasurement extends GenericModelObject implements JsonSeriali
             "Date and Time: [" . $dtVal . "]\n" .
             "Systolic Pressure: [" . $this->systolicPressure . "]\n" .
             "Diastolic Pressure: [" . $this->diastolicPressure . "]\n" .
-            "Notes: [" . $this->notes . "]";
+            "Notes: [" . $this->notes . "]\n" .
+            "Units: [" . $this->units . "]";
         
         return $str;
     }
@@ -89,12 +98,14 @@ class BloodPressureMeasurement extends GenericModelObject implements JsonSeriali
             $this->notes = '';
             $this->systolicPressure = '';
             $this->diastolicPressure = '';
+            $this->units = '';
         } else {
             $this->validateUserName();
             $this->validateDateAndTime();
             $this->validateNotes();
             $this->validateSystolicPressure();
             $this->validateDiastolicPressure();
+            $this->validateUnits();
         }
     }
     
@@ -205,6 +216,21 @@ class BloodPressureMeasurement extends GenericModelObject implements JsonSeriali
         $this->diastolicPressure = (int)$this->diastolicPressure;
     }
     
+    private function validateUnits() {
+        $this->units = $this->extractForm($this->formInput, "units");
+        
+        if (empty($this->units)) {
+            $this->units = self::DEFAULT_UNITS;
+            return;
+        }
+        
+        $allowed = array('mm Hg');
+        if (!in_array($this->units, $allowed)) {
+            $this->setError("units", "UNITS_INVALID");
+            return;
+        }
+    }
+    
     public function jsonSerialize() {
         $isoDateTime = $this->datetime->format('Y-m-d H:i');
         $isoDateTime[10] = 'T';
@@ -218,6 +244,7 @@ class BloodPressureMeasurement extends GenericModelObject implements JsonSeriali
         $object->time = $datetime_pieces[1];
         $object->notes = $this->notes;
         $object->userName = $this->userName;
+        $object->units = $this->units;
         return $object;
     }
 

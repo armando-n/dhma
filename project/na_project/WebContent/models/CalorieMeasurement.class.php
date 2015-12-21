@@ -1,11 +1,14 @@
 <?php
 class CalorieMeasurement extends GenericModelObject implements JsonSerializable {
     
+    const DEFAULT_UNITS = 'calories';
+    
     private $formInput;
     private $userName;
     private $datetime;
     private $notes;
     private $calories;
+    private $units;
     
     public function __construct($formInput = null) {
         $this->formInput = $formInput;
@@ -32,6 +35,10 @@ class CalorieMeasurement extends GenericModelObject implements JsonSerializable 
     public function getNotes() {
         return $this->notes;
     }
+
+    public function getUnits() {
+        return $this->units;
+    }
     
     public function getMeasurement() {
         return $this->calories;
@@ -39,10 +46,11 @@ class CalorieMeasurement extends GenericModelObject implements JsonSerializable 
     
     public function getParameters() {
         $params = array(
-                "userName" => $this->userName,
-                "dateAndTime" => $this->datetime->format("Y-m-d H:i"),
-                "notes" => $this->notes,
-                "calories" => $this->calories
+            "userName" => $this->userName,
+            "dateAndTime" => $this->datetime->format("Y-m-d H:i"),
+            "notes" => $this->notes,
+            "calories" => $this->calories,
+            "units" => $this->units
         );
     
         return $params;
@@ -54,7 +62,8 @@ class CalorieMeasurement extends GenericModelObject implements JsonSerializable 
             "User Name: [" . $this->userName . "]\n" .
             "Date and Time: [" . $dtVal . "]\n" .
             "Calories Consumed: [" . $this->calories . "]\n" .
-            "Notes: [" . $this->notes . "]";
+            "Notes: [" . $this->notes . "]\n" .
+            "Units: [" . $this->units . "]";
         
         return $str;
     }
@@ -68,11 +77,13 @@ class CalorieMeasurement extends GenericModelObject implements JsonSerializable 
             $this->datetime = new DateTime();
             $this->notes = '';
             $this->calories = '';
+            $this->units = '';
         } else {
             $this->validateUserName();
             $this->validateDateAndTime();
             $this->validateNotes();
             $this->validateMeasurement();
+            $this->validateUnits();
         }
     }
     
@@ -165,6 +176,21 @@ class CalorieMeasurement extends GenericModelObject implements JsonSerializable 
         
         $this->calories = (int)$this->calories;
     }
+
+    private function validateUnits() {
+        $this->units = $this->extractForm($this->formInput, "units");
+    
+        if (empty($this->units)) {
+            $this->units = self::DEFAULT_UNITS;
+            return;
+        }
+    
+        $allowed = array('calories');
+        if (!in_array($this->units, $allowed)) {
+            $this->setError("units", "UNITS_INVALID");
+            return;
+        }
+    }
     
     public function jsonSerialize() {
         $isoDateTime = $this->datetime->format('Y-m-d H:i');
@@ -178,6 +204,7 @@ class CalorieMeasurement extends GenericModelObject implements JsonSerializable 
         $object->time = $datetime_pieces[1];
         $object->notes = $this->notes;
         $object->userName = $this->userName;
+        $object->units = $this->units;
         return $object;
     }
 

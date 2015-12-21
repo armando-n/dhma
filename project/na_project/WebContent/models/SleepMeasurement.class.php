@@ -1,11 +1,14 @@
 <?php
 class SleepMeasurement extends GenericModelObject implements JsonSerializable {
     
+    const DEFAULT_UNITS = 'minutes';
+    
     private $formInput;
     private $userName;
     private $datetime;
     private $notes;
     private $duration;
+    private $units;
     
     public function __construct($formInput = null) {
         $this->formInput = $formInput;
@@ -32,6 +35,10 @@ class SleepMeasurement extends GenericModelObject implements JsonSerializable {
     public function getNotes() {
         return $this->notes;
     }
+
+    public function getUnits() {
+        return $this->units;
+    }
     
     public function getMeasurement() {
         return $this->duration;
@@ -42,7 +49,8 @@ class SleepMeasurement extends GenericModelObject implements JsonSerializable {
             "userName" => $this->userName,
             "dateAndTime" => $this->datetime->format("Y-m-d H:i"),
             "notes" => $this->notes,
-            "duration" => $this->duration
+            "duration" => $this->duration,
+            "units" => $this->units
         );
     
         return $params;
@@ -54,7 +62,8 @@ class SleepMeasurement extends GenericModelObject implements JsonSerializable {
             "User Name: [" . $this->userName . "]\n" .
             "Date and Time: [" . $dtVal . "]\n" .
             "Sleep Duration: [" . $this->duration . "]\n";
-            "Notes: [" . $this->notes . "]";
+            "Notes: [" . $this->notes . "]\n" .
+            "Units: [" . $this->units . "]";
         
         return $str;
     }
@@ -68,11 +77,13 @@ class SleepMeasurement extends GenericModelObject implements JsonSerializable {
             $this->datetime = new DateTime();
             $this->notes = '';
             $this->duration = '';
+            $this->units = '';
         } else {
             $this->validateUserName();
             $this->validateDateAndTime();
             $this->validateNotes();
             $this->validateMeasurement();
+            $this->validateUnits();
         }
     }
     
@@ -165,6 +176,21 @@ class SleepMeasurement extends GenericModelObject implements JsonSerializable {
         
         $this->duration = (int)$this->duration;
     }
+
+    private function validateUnits() {
+        $this->units = $this->extractForm($this->formInput, "units");
+    
+        if (empty($this->units)) {
+            $this->units = self::DEFAULT_UNITS;
+            return;
+        }
+    
+        $allowed = array('minutes', 'hours', 'hours:minutes');
+        if (!in_array($this->units, $allowed)) {
+            $this->setError("units", "UNITS_INVALID");
+            return;
+        }
+    }
     
     public function jsonSerialize() {
         $isoDateTime = $this->datetime->format('Y-m-d H:i');
@@ -178,6 +204,7 @@ class SleepMeasurement extends GenericModelObject implements JsonSerializable {
         $object->time = $datetime_pieces[1];
         $object->notes = $this->notes;
         $object->userName = $this->userName;
+        $object->units = $this->units;
         return $object;
     }
 
