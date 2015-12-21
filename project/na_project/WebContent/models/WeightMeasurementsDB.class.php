@@ -260,6 +260,7 @@ class WeightMeasurementsDB {
                 $msmt = new stdClass();
                 $msmt->$timePeriod = $row[$timePeriod];
                 $msmt->weight = $row['weight'];
+                $msmt->units = $row['units'];
                 $msmt->userName = $row['userName'];
                 $measurements[] = $msmt;
             }

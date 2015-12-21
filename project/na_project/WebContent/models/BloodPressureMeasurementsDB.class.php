@@ -265,6 +265,7 @@ class BloodPressureMeasurementsDB {
                 $msmt->$timePeriod = $row[$timePeriod];
                 $msmt->systolicPressure = $row['systolicPressure'];
                 $msmt->diastolicPressure = $row['diastolicPressure'];
+                $msmt->units = $row['units'];
                 $msmt->userName = $row['userName'];
                 $measurements[] = $msmt;
             }

@@ -262,6 +262,7 @@ class GlucoseMeasurementsDB {
                 $msmt = new stdClass();
                 $msmt->$timePeriod = $row[$timePeriod];
                 $msmt->glucose = $row['glucose'];
+                $msmt->units = $row['units'];
                 $msmt->userName = $row['userName'];
                 $measurements[] = $msmt;
             }

@@ -281,6 +281,7 @@ class ExerciseMeasurementsDB {
                 $msmt = new stdClass();
                 $msmt->$timePeriod = $row[$timePeriod];
                 $msmt->duration = $row['duration'];
+                $msmt->units = $row['units'];
                 $msmt->userName = $row['userName'];
                 $measurements[] = $msmt;
             }

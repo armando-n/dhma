@@ -279,6 +279,7 @@ class CalorieMeasurementsDB {
                 $msmt = new stdClass();
                 $msmt->$timePeriod = $row[$timePeriod];
                 $msmt->calories = $row['calories'];
+                $msmt->units = $row['units'];
                 $msmt->userName = $row['userName'];
                 $measurements[] = $msmt;
             }

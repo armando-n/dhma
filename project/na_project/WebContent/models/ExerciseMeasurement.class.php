@@ -223,7 +223,7 @@ class ExerciseMeasurement extends GenericModelObject implements JsonSerializable
             return;
         }
     
-        $allowed = array('minutes', 'hours', 'hours:minutes');
+        $allowed = array('minutes');
         if (!in_array($this->units, $allowed)) {
             $this->setError("units", "UNITS_INVALID");
             return;

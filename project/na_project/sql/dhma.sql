@@ -65,7 +65,7 @@ create table ExerciseMeasurements(
     type                varchar(100) not null, -- e.g. 'running', 'swimming', 'weight-lifting'
     dateAndTime         datetime not null,
     notes               varchar(255),
-    units               enum('minutes', 'hours', 'hours:minutes') default 'minutes',
+    units               enum('minutes') default 'minutes',
     userID              integer not null,
     foreign key (userID) references Users (userID) on delete cascade,
     constraint uniq_meas unique (dateAndTime, userID)
@@ -89,7 +89,7 @@ create table SleepMeasurements(
     duration            double not null,
     dateAndTime         datetime not null,
     notes               varchar(255),
-    units               enum('minutes', 'hours', 'hours:minutes') default 'minutes',
+    units               enum('minutes') default 'minutes',
     userID              integer not null,
     foreign key (userID) references Users (userID) on delete cascade,
     constraint uniq_meas unique (dateAndTime, userID)
