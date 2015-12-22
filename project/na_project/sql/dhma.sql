@@ -33,9 +33,10 @@ create table UserProfiles(
     foreign key (userID) references Users (userID) on delete cascade
 );
 
-drop table if exists UserMeasurementsOptionsPresets;
-create table UserMeasurementsOptionsPresets(
-    optionsID               integer primary key auto_increment,
+drop table if exists MeasurementsOptionsPresets;
+create table MeasurementsOptionsPresets(
+    presetID                integer primary key auto_increment,
+    presetName              varchar(20) not null,
     bloodPressureUnits      enum('mm Hg') default 'mm Hg',
     calorieUnits            varchar(20) default 'calories',
     exerciseUnits           varchar(20) default 'minutes',
@@ -60,7 +61,8 @@ create table UserMeasurementsOptionsPresets(
     chartLastYear           boolean default false,
     chartDailyAverages      boolean default false,
     userID                  integer not null,
-    foreign key (userID) references Users (userID) on delete cascade
+    foreign key (userID) references Users (userID) on delete cascade,
+    constraint uniq_measOptPresetName unique (presetName, userID)
 );
 
 drop table if exists BloodPressureMeasurements;

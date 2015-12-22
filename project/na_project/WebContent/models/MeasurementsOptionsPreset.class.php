@@ -26,6 +26,7 @@ class MeasurementsOptionsPreset extends GenericModelObject implements JsonSerial
     const DEFAULT_CHART_DAILY_AVERAGES = false;
     
     private $formInput;
+    private $presetName;
     private $userName;
     private $bloodPressureUnits;
     private $calorieUnits;
@@ -55,6 +56,10 @@ class MeasurementsOptionsPreset extends GenericModelObject implements JsonSerial
         $this->formInput = $formInput;
         Messages::reset();
         $this->initialize();
+    }
+    
+    public function getPresetName() {
+        return $this->presetName;
     }
     
     public function getUserName() {
@@ -156,6 +161,7 @@ class MeasurementsOptionsPreset extends GenericModelObject implements JsonSerial
     // Returns data fields as an associative array
     public function getParameters() {
         $paramArray = array(
+            "presetName" => $this->presetName,
             "userName" => $this->userName,
             "bloodPressureUnits" => $this->bloodPressureUnits,
             "calorieUnits" => $this->calorieUnits,
@@ -187,6 +193,7 @@ class MeasurementsOptionsPreset extends GenericModelObject implements JsonSerial
     
     public function __toString() {
         $str =
+            "Preset Name: [" . $this->presetName . "]\n" .
             "User Name: [" . $this->userName . "]\n" .
             "Blood Pressure Units: [" . $this->bloodPressureUnits . "]\n" .
             "Calorie Units: [" . $this->calorieUnits . "]\n" .
@@ -217,6 +224,7 @@ class MeasurementsOptionsPreset extends GenericModelObject implements JsonSerial
     
     public function jsonSerialize() {
         $object = new stdClass();
+        $object->presetName = $this->presetName;
         $object->userName = $this->userName;
         $object->bloodPressureUnits = $this->bloodPressureUnits;
         $object->calorieUnits = $this->calorieUnits;
@@ -257,6 +265,7 @@ class MeasurementsOptionsPreset extends GenericModelObject implements JsonSerial
             self::$DEFAULT_SECOND_CHART_START = (new DateTime())->sub(new DateInterval('P1Y'));
             self::$DEFAULT_FIRST_CHART_END = new DateTime();
             self::$DEFAULT_SECOND_CHART_END = new DateTime();
+            $this->validatePresetName();
             $this->validateUserName();
             $this->validateBloodPressureUnits();
             $this->validateCalorieUnits();
@@ -281,6 +290,15 @@ class MeasurementsOptionsPreset extends GenericModelObject implements JsonSerial
             $this->validateSecondChartEnd();
             $this->validateChartLastYear();
             $this->validateChartDailyAverages();
+        }
+    }
+    
+    private function validatePresetName() {
+        $this->presetName = $this->extractForm($this->formInput, "presetName");
+        if (empty($this->presetName)) {
+            $this->presetName = null;
+            $this->setError("presetName", "PRESET_NAME_EMPTY");
+            return;
         }
     }
     

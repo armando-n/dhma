@@ -53,3 +53,4 @@ TIME_FORMAT_INVALID Time format can only be 12 hour or 24 hour
 NUM_ROWS_INVALID The number of rows must be an integer of 5 digits or less
 CHART_TYPE_INVALID The specified chart type is invalid
 DATE_INVALID The specified date is invalid
+PRESET_NAME_EMPTY Preset name cannot be empty

@@ -1,6 +1,6 @@
 <?php
 $pathDir = dirname(__FILE__);
-$paths = array("views", "models", "controllers", "resources");
+$paths = array("views", "models", "controllers", "resources", "exceptions");
 foreach ($paths as $path) {
     set_include_path(get_include_path()
             . PATH_SEPARATOR
