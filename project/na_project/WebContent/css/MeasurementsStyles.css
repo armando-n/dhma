@@ -1,3 +1,8 @@
+#options_btn {
+	float: right;
+	margin-bottom: 2em;
+}
+
 #charts_bloodPressure {
 	width: 700px;
 	height: 400px;
@@ -98,12 +103,18 @@ legend {
     #measurements_dropdown {
         display: none;
     }
+    #options select, #options_numRows {
+	    width: 50%;
+	}
 }
 
 /* medium and large devices */
 @media screen and (min-width: 992px) {
     #measurements_dropdown {
         display: none;
+    }
+    #options select, #options_numRows {
+        width: 50%;
     }
 }
 

@@ -29,9 +29,139 @@ class MeasurementsView{
 <div class="row">
     <div class="col-xs-12">
     
+        <!-- Options button and panel -->
+        <div class="row">
+            <div class="col-sm-12">
+
+                <button type="button" id="options_btn" class="btn btn-default" data-toggle="collapse" data-target="#options" aria-expanded="false" aria-controls="options">
+                    <span class="glyphicon glyphicon-cog"></span>
+                </button>
+
+            </div>
+        </div>
+        <section class="row">
+            <div class="col-sm-12">
+                <div id="options" class="collapse">
+                    <div class="well well-lg">
+            
+                        <form action="signup_post" id="signupForm" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+                            <div class="row">
+                                <fieldset class="col-sm-4">
+                                    <legend>General Options</legend>
+                                    
+                                    <!-- General Options -->
+                                    <div class="form-group">
+                                        <label for="options_units">Units</label>
+                                        <select id="options_units" name="units" class="form-control">
+                                            <option>mg/dL</option>
+                                            <option>mM</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="options_timeFormat">Time Format</label>
+                                        <select id="options_timeFormat" name="timeFormat" class="form-control">
+                                            <option>12 hour</option>
+                                            <option>24 hour</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="options_tooltips" name="tooltips" />Show Tooltips
+                                            </label>
+                                        </div>
+                                    </div>
+                                
+                                </fieldset>
+                                <fieldset class="col-sm-4">
+                                    <legend>Table Options</legend>
+                                
+                                    <!-- Table Options -->
+                                    <div class="form-group">
+                                        <div id="columns_dropdown" class="dropdown" data-toggle="tooltip" title="Choose the columns you want shown in the table">
+                                            <button type="button" class="dropdown-toggle btn btn-default" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                                <span id="columns_dropdown_label">Show/Hide Columns</span>
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="columns_dropdown_label">
+                                                <li><a href="#" id="systolicPressure_dropdown_btn">Systolic</a></li>
+                                                <li><a href="#" id="diastolicPressure_dropdown_btn">Diastlic</a></li>
+                                                <li role="separator" class="divider"></li>
+                                                <li><a href="#" id="date_dropdown_btn">Date</a></li>
+                                                <li><a href="#" id="time_dropdown_btn">Time</a></li>
+                                                <li><a href="#" id="notes_dropdown_btn">Notes</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="options_numRows">Rows per page</label>
+                                        <input type="text" id="options_numRows" name="numRows" value="10" class="form-control" size="5" maxlength="5" pattern="^[0-9]+$" title="Enter a positive number of 5 digits or less" />
+                                    </div>
+                                    
+                                </fieldset>
+                                <fieldset class="col-sm-4">
+                                    <legend>Chart Options</legend>
+                                
+                                    <!-- Chart Options -->
+                                    <div class="form-group">
+                                        <label for="startDate_options">Start Date</label>
+                                        <div class="input-group date date-picker">
+                                            <input type="text" id="startDate_options" name="startDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="endDate_options">End Date</label>
+                                        <div class="input-group date date-picker">
+                                            <input type="text" id="endDate_options" name="endDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="options_firstChart" name="firstChart" />Show chart
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="options_secondChart" name="secondChart" />Show a second chart
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="options_lastYear" name="lastYear" />Show same time last year
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="options_dailyAverages" name="dailyAverages" />Show daily averages
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                </fieldset>
+                            </div>
+                        </form>
+                
+                    </div>
+                </div>
+            </div>
+        </section>
+    
         <div class="panel panel-primary">
             
-            <!-- for extra small screens -->
+            <!-- dropdown menu for extra small screens -->
             <div id="measurements_dropdown" class="dropdown" data-toggle="tooltip" title="Switch to a different measurement tracker">
                 <button type="button" class="dropdown-toggle btn btn-primary btn-block" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                     <span id="measurements_dropdown_label">Glucose</span>
@@ -48,7 +178,7 @@ class MeasurementsView{
                 </ul>
             </div>
         
-            <!-- for small screens and larger -->
+            <!-- tabs for small screens and larger -->
             <div id="measurements_nav" class="panel-heading collapse navbar-collapse">
                 <ul id="measurements_tabs" class="nav nav-tabs nav-justified" role="tablist">
                 	<li class="measurement-tab active" role="presentation"><a class="measurement-tab" href="#glucose" id="glucose_tab_btn" aria-controls="glucose" role="tab" data-toggle="tooltip" title="Switch to glucose tracker">Glucose</a></li>
@@ -60,48 +190,47 @@ class MeasurementsView{
                 </ul>
             </div>
 
-<div class="tab-content">
+            <!-- Main content -->
+            <div class="tab-content">
+                <section role="tabpanel" id="glucose" class="row tab-pane active">
+                    <div class="col-sm-12">
+                            <?php GlucoseMeasurementsView::showBody(); ?>
+                    </div>
+                </section>
+                
+                <section role="tabpanel" id="bloodPressure" class="row tab-pane">
+                    <div class="col-sm-12">
+                        <?php BloodPressureMeasurementsView::showBody(); ?>
+                    </div>
+                </section>
+                
+                <section role="tabpanel" id="calories" class="row tab-pane">
+                    <div class="col-sm-12">
+                        <?php CalorieMeasurementsView::showBody(); ?>
+                    </div>
+                </section>
+                
+                <section role="tabpanel" id="exercise" class="row tab-pane">
+                    <div class="col-sm-12">
+                        <?php ExerciseMeasurementsView::showBody(); ?>
+                    </div>
+                </section>
+                
+                <section role="tabpanel" id="sleep" class="row tab-pane">
+                    <div class="col-sm-12">
+                        <?php SleepMeasurementsView::showBody(); ?>
+                    </div>
+                </section>
+                
+                <section role="tabpanel" id="weight" class="row tab-pane">
+                    <div class="col-sm-12">
+                        <?php WeightMeasurementsView::showBody(); ?>
+                    </div>
+                </section>
+            </div>
 
-    <section role="tabpanel" id="glucose" class="row tab-pane active">
-        <div class="col-sm-12">
-                <?php GlucoseMeasurementsView::showBody(); ?>
         </div>
-    </section>
-    
-    <section role="tabpanel" id="bloodPressure" class="row tab-pane">
-        <div class="col-sm-12">
-            <?php BloodPressureMeasurementsView::showBody(); ?>
-        </div>
-    </section>
-    
-    <section role="tabpanel" id="calories" class="row tab-pane">
-        <div class="col-sm-12">
-            <?php CalorieMeasurementsView::showBody(); ?>
-        </div>
-    </section>
-    
-    <section role="tabpanel" id="exercise" class="row tab-pane">
-        <div class="col-sm-12">
-            <?php ExerciseMeasurementsView::showBody(); ?>
-        </div>
-    </section>
-    
-    <section role="tabpanel" id="sleep" class="row tab-pane">
-        <div class="col-sm-12">
-            <?php SleepMeasurementsView::showBody(); ?>
-        </div>
-    </section>
-    
-    <section role="tabpanel" id="weight" class="row tab-pane">
-        <div class="col-sm-12">
-            <?php WeightMeasurementsView::showBody(); ?>
-        </div>
-    </section>
-
-</div>
-
-</div>
-</div>
+    </div>
 </div>
         
 <?php
