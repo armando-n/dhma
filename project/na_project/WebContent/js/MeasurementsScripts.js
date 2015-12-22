@@ -333,19 +333,20 @@ function row_clicked(e, dt, type, indexes) {
 		hideFormSection(measType, 'add');
 }
 
-function tableOptions(measType, dataAndTitle) {
+function tableOptions(measType, propNames_colHeaders) {
 	
 	// create columns array and all common columns
 	var columns = [
         { data: 'date', title: 'Date' },
         { data: 'time', title: 'Time' },
-	    { data: 'notes', title: 'Notes' }
+	    { data: 'notes', title: 'Notes' },
+	    { data: 'units', title: 'Units', visible: false}
     ];
 	var orderIndex = (measType == 'bloodPressure') ? 2 : 1;
 
 	// add remaining columns
-	for (var i = dataAndTitle.length-1; i >= 0; i--)
-		columns.unshift({ data: dataAndTitle[i][0], title: dataAndTitle[i][1] });
+	for (var i = propNames_colHeaders.length-1; i >= 0; i--)
+		columns.unshift({ data: propNames_colHeaders[i][0], title: propNames_colHeaders[i][1] });
 	
 	return {
 		ajax: { url: '/na_project/measurements_get_' +measType+ '_all' , dataSrc: '' },
@@ -353,22 +354,38 @@ function tableOptions(measType, dataAndTitle) {
 		order: [[orderIndex, 'desc'], [orderIndex+1, 'desc']],
 		scrollY: '35vh',
 		scrollCollapse: true,
-		paging: false,
+		lengthChange: false,
+		processing: true,
+		pagingType: 'numbers',
+//		paging: false,
 		select: { style: 'single' },
-		dom: 'ftB',
+		dom: 
+			"<'row'<'col-sm-6'><'col-sm-6'f>>" +   // sets filter (search) box in upper right
+			"<'row'<'col-sm-12'tr>>" +             // table and processing message
+			"<'row'<'col-sm-5'i><'col-sm-7'p>>" +  // page info and pagination controls in buttom left and right, respectively
+			"<'row'<'col-sm-12'B>>",               // set add/edit/delete buttons as bottom row
 		createdRow: function (row, data, dataIndex) {
 			$(row).attr('data-toggle', 'tooltip').attr('title', 'Rows can be selected for editing/deletion').addClass('dynamic-tooltip');
 		},
 		initComplete: function (settings, json) {
 			$('#view_' +measType+ '_section th').each(function (index, element) {
 				$(element).attr('data-toggle', 'tooltip').attr('data-placement', 'bottom').attr('title', 'Click to sort by this column');
+				
+//				if (index < propNames_colHeaders.len)
+//					$(element).text($(element).text() + '(' + )
+				
 //				$(element).addClass('dynamic-tooltip'); // TODO figure out why this doesn't work
 			});
 		},
-		buttons: {
+		buttons: table_addEditDeleteButtons_options(measType)
+	};
+}
+
+function table_addEditDeleteButtons_options(measType) {
+	return {
 			name: 'add_edit_delete',
 			buttons: [
-				{ // --------------------------- add button ------------------------------
+				{ // add button
 					name: measType+ '_add',
 					text: 'Add',
 					init: function (dt, node, config) {
@@ -399,13 +416,10 @@ function tableOptions(measType, dataAndTitle) {
 						
 						// clear and put focus in first field of form
 						$('#' +measurementParts[measType][0]+ '_' +measType+ '_add').val('').focus();
-						
-						// jump to form if on a very small screen
-						if ($(window).height() < 400)
-							window.location.assign('#add_' + measType + '_section');
 					}
 				},
-	            { // ------------------------ edit button --------------------------
+				
+	            { // edit button
 					name: measType+ '_edit',
 	            	extend: 'selectedSingle',
 	            	text: 'Edit',
@@ -424,14 +438,10 @@ function tableOptions(measType, dataAndTitle) {
 	            		// show the edit form and put focus on first field
 	            		showFormSection(measType, 'edit', dt);
 	            		$('#' +measurementParts[measType][0]+ '_' +measType+ '_edit').focus();
-	            		
-	            		// jump to form if on a very small screen
-	            		if ($(window).height() < 400)
-	            			window.location.assign('#edit_' + measType + '_section');
-	            		
 	            	}
 	            },
-	            { // -------------------------- delete button --------------------------------
+	            
+	            { // delete button
 	            	name: measType+ '_delete',
 	            	extend: 'selected',
 	            	text: 'Delete',
@@ -442,9 +452,8 @@ function tableOptions(measType, dataAndTitle) {
 					},
 	            	action: deleteMeasurement
 	            }
-            ]
-		}
-	};
+	        ]
+		};
 }
 
 /* creates a primary and secondary chart for the specified measurement type.
