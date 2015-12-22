@@ -48,3 +48,8 @@ ADD_USER_PROFILE_FAILED Failed to add profile to the database
 ADD_MEASUREMENT_FAILED Failed to add measurement to database
 EDIT_MEASUREMENT_FAILED Failed to edit measurement in database
 FACEBOOK_TOO_LONG Facebook cannot be more than 50 characters long.
+NULL_INPUT Input cannot be null
+TIME_FORMAT_INVALID Time format can only be 12 hour or 24 hour
+NUM_ROWS_INVALID The number of rows must be an integer of 5 digits or less
+CHART_TYPE_INVALID The specified chart type is invalid
+DATE_INVALID The specified date is invalid

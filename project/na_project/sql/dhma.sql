@@ -33,6 +33,36 @@ create table UserProfiles(
     foreign key (userID) references Users (userID) on delete cascade
 );
 
+drop table if exists UserMeasurementsOptionsPresets;
+create table UserMeasurementsOptionsPresets(
+    optionsID               integer primary key auto_increment,
+    bloodPressureUnits      enum('mm Hg') default 'mm Hg',
+    calorieUnits            varchar(20) default 'calories',
+    exerciseUnits           varchar(20) default 'minutes',
+    glucoseUnits            varchar(20) default 'mg/dL',
+    sleepUnits              varchar(20) default 'minutes',
+    weightUnits             varchar(20) default 'lbs',
+    timeFormat              enum('12 hour', '24 hour') default '12 hour',
+    showTooltips            boolean default true,
+    showExerciseTypeCol     boolean default false,
+    showDateCol             boolean default true,
+    showTimeCol             boolean default true,
+    showNotesCol            boolean default true,
+    numRows                 integer default 10,
+    showFirstChart          boolean default true,
+    showSecondChart         boolean default true,
+    firstChartType          enum('individual', 'daily', 'weekly', 'monthly', 'yearly') default 'individual',
+    secondChartType         enum('individual', 'daily', 'weekly', 'monthly', 'yearly') default 'monthly',
+    firstChartStart         date default date_sub(now(), interval 30 day),
+    secondChartStart        date default date_sub(now(), interval 1 year),
+    firstChartEnd           date default now(),
+    secondChartEnd          date default now(),
+    chartLastYear           boolean default false,
+    chartDailyAverages      boolean default false,
+    userID                  integer not null,
+    foreign key (userID) references Users (userID) on delete cascade
+);
+
 drop table if exists BloodPressureMeasurements;
 create table BloodPressureMeasurements(
     bpID                integer primary key auto_increment,
