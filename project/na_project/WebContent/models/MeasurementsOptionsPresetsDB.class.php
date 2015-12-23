@@ -2,15 +2,18 @@
 
 class MeasurementsOptionsPresetsDB {
     
-    // adds the specified MeasurementsOptionsPreset object to the database, associating it with the user with the specified userName
-    public static function addPreset($preset, $userName) {
-        $returnPresetID = -1;
+    /* adds the specified MeasurementsOptionsPreset object to the appropriate user in the database.
+     * returns success associative array w/ presetID in data object,
+     * or an associative array w/ key 'error' w/ an error message as value on failure */
+    public static function addPreset($preset) {
+        $resultData = new stdObject();
+        $resultData->returnPresetID = -1;
     
         try {
             if (!($preset instanceof MeasurementsOptionsPreset))
                 throw new InvalidArgumentException('Expected MeasurementsOptionsPreset. Got ' . get_class($preset));
             
-            $userID = self::findUserID($userName);
+            $userID = self::findUserID($preset->getUserName());
                 
             // add the preset and associate with the correct userID
             $stmt = Database::getDB()->prepare(
@@ -54,22 +57,28 @@ class MeasurementsOptionsPresetsDB {
                 ":chartLastYear" => $preset->getChartLastYear(),
                 ":chartDailyAverages" => $preset->getChartDailyAverages()
             ));
-            $returnPresetID = $db->lastInsertId("presetID");
+            $resultData->returnPresetID = $db->lastInsertId("presetID");
     
         } catch (PDOException $e) {
-            return array('error' => $e->getMessage());
+            return array('success' => false, 'error' => $e->getMessage());
         } catch (RuntimeException $e) {
-            return array('error' => 'Database config file not found');
+            return array('success' => false, 'error' => 'Database config file not found');
         } catch (InvalidArgumentException $e) {
-            return array('error' => $e->getMessage());
+            return array('success' => false, 'error' => $e->getMessage());
         } catch (UserNotFoundException $e) {
-            return array('error' => $e->getMessage());
+            return array('success' => false, 'error' => $e->getMessage());
         }
     
-        return $returnPresetID;
+        return array('success' => true, 'data' => $resultData);
     }
     
+    /* edits the old preset with the information in the new preset
+     * returns a success associative array on success w/ number of rows affected in data field,
+     * or returns an error associative array on failure */
     public static function editPreset($oldPreset, $newPreset) {
+        $returnData = new stdObject();
+        $returnData->rowsAffected = 0;
+        
         try {
             if (!($oldPreset instanceof MeasurementsOptionsPreset))
                 throw new InvalidArgumentException('Expected MeasurementsOptionsPreset for old preset. Got ' . get_class($oldPreset));
@@ -136,54 +145,25 @@ class MeasurementsOptionsPresetsDB {
                 ":chartDailyAverages" => $newPreset->getChartDailyAverages(),
                 ":oldPresetName" => $oldPreset->getPresetName()
             ));
+            $returnData->rowsAffected = $stmt->rowCount();
     
         } catch (PDOException $e) {
-            return array('error' => $e->getMessage());
+            return array('success' => false, 'error' => $e->getMessage());
         } catch (RuntimeException $e) {
-            return array('error' => $e->getMessage());
+            return array('success' => false, 'error' => $e->getMessage());
         } catch (InvalidArgumentException $e) {
-            return array('error' => $e->getMessage());
+            return array('success' => false, 'error' => $e->getMessage());
         } catch (UserNotFoundException $e) {
-            return array('error' => $e->getMessage());
+            return array('success' => false, 'error' => $e->getMessage());
         }
-    }
-    
-    // returns an array of MeasurementsOptionsPreset objects for the user with the specified userName
-    public static function getPresetsFor($userName) {
-        $allPresets = array();
-    
-        try {
-            // query database
-            $stmt = Database::getDB()->prepare(
-                "select userName, presetName, bloodPressureUnits,
-                    calorieUnits, exerciseUnits, glucoseUnits, sleepUnits, weightUnits,
-                    timeFormat, showTooltips, showExerciseTypeCol, showDateCol, showTimeCol,
-                    showNotesCol, numRows, showFirstChart, showSecondChart, firstChartType,
-                    secondChartType, firstChartStart, secondChartStart, firstChartEnd,
-                    secondChartEnd, chartLastYear, chartDailyAverages
-                from Users join MeasurementsOptionsPresets using (userID)
-                where userName = :userName"
-            );
-            $stmt->execute(array("userName" => $userName));
-    
-            // create objects for each returned row
-            foreach ($stmt as $row) {
-                $preset = new MeasurementsOptionsPreset($row);
-                if (!is_object($preset) || $preset->getErrorCount() > 0)
-                    throw new RuntimeException("Failed to create valid user profile");
-
-                $allPresets[] = $preset;
-            }
-        } catch (PDOException $e) {
-            return array('error' => $e->getMessage());
-        } catch (RuntimeException $e) {
-            return array('error' => $e->getMessage());
-        }
-    
-        return $allPresets;
+        
+        return array('success' => true, 'data' => $returnData);
     }
     
     public static function deletePreset($userName, $presetName) {
+        $returnData = new stdObject();
+        $returnData->rowsAffected = 0;
+        
         try {
             $userID = self::findUserID($userName);
 
@@ -196,14 +176,92 @@ class MeasurementsOptionsPresetsDB {
                 ":userID" => $userID,
                 ":presetName" => $presetName
             ));
-    
+            $returnData->rowsAffected = $stmt->rowCount();
+
         } catch (PDOException $e) {
-            return array('error' => $e->getMessage());
+            return array('success' => false, 'error' => $e->getMessage());
         } catch (RuntimeException $e) {
-            return array('error' => $e->getMessage());
+            return array('success' => false, 'error' => $e->getMessage());
+        } catch (UserNotFoundException $e) {
+            return array('success' => false, 'error' => $e->getMessage());
+        }
+
+        return array('success' => true, 'data' => $returnData);;
+    }
+    
+    /* on success, returns a success associative array w/ the data field containing
+     * an array of MeasurementsOptionsPreset objects for the user with the specified userName.
+     * returns an error associative array on failure */
+    public static function getPresetsFor($userName) {
+        $allPresets = array();
+    
+        try {
+            $stmt = Database::getDB()->prepare(                // query database
+                "select userName, presetName, bloodPressureUnits,
+                    calorieUnits, exerciseUnits, glucoseUnits, sleepUnits, weightUnits,
+                    timeFormat, showTooltips, showExerciseTypeCol, showDateCol, showTimeCol,
+                    showNotesCol, numRows, showFirstChart, showSecondChart, firstChartType,
+                    secondChartType, firstChartStart, secondChartStart, firstChartEnd,
+                    secondChartEnd, chartLastYear, chartDailyAverages
+                from Users join MeasurementsOptionsPresets using (userID)
+                where userName = :userName"
+            );
+            $stmt->execute(array(":userName" => $userName));
+    
+            foreach ($stmt as $row) {    // create objects for each returned row
+                $preset = new MeasurementsOptionsPreset($row);
+                if (!is_object($preset) || $preset->getErrorCount() > 0)
+                    throw new RuntimeException("Failed to create valid user profile");
+    
+                $allPresets[] = $preset;
+            }
+        } catch (PDOException $e) {
+            return array('success' => false, 'error' => $e->getMessage());
+        } catch (RuntimeException $e) {
+            return array('success' => false, 'error' => $e->getMessage());
         }
     
-        return true;
+        return array('success' => true, 'data' => $allPresets);
+    }
+    
+    /* on success, returns a MeasurementsOptionsPreset object for the specified preset of the specified user
+     * on failure, returns an error associative array */
+    public static function getPreset($userName, $presetName) {
+        try {
+            // query database
+            $stmt = Database::getDB()->prepare(
+                "select userName, presetName, bloodPressureUnits,
+                    calorieUnits, exerciseUnits, glucoseUnits, sleepUnits, weightUnits,
+                    timeFormat, showTooltips, showExerciseTypeCol, showDateCol, showTimeCol,
+                    showNotesCol, numRows, showFirstChart, showSecondChart, firstChartType,
+                    secondChartType, firstChartStart, secondChartStart, firstChartEnd,
+                    secondChartEnd, chartLastYear, chartDailyAverages
+                from Users join MeasurementsOptionsPresets using (userID)
+                where userName = :userName
+                    and presetName = :presetName"
+            );
+            $stmt->execute(array(
+                ":userName" => $userName,
+                ":presetName" => $presetName
+            ));
+
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row === false)
+                throw new NotFoundException('User name "' . htmlspecialchars($userName). '" not found');
+
+            $preset = new MeasurementsOptionsPreset($row);
+            if (!is_object($preset) || $preset->getErrorCount() > 0)
+                throw new RuntimeException("Failed to create valid user profile");
+
+        } catch (PDOException $e) {
+            return array('success' => false, 'error' => $e->getMessage());
+        } catch (RuntimeException $e) {
+            return array('success' => false, 'error' => $e->getMessage());
+        } catch (NotFoundException $e) {
+            return array('success' => false, 'error' => $e->getMessage());
+        }
+
+        return array('success' => true, 'data' => $preset);
     }
     
     // find userID from given userName
