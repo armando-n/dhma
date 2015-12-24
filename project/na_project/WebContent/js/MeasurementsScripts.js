@@ -36,11 +36,13 @@ var cumulativeMeasurements = ['calorie', 'exercise', 'sleep'];
 var selectedRows = [];
 
 $(document).ready(function() {
+	var measurementTypes = ['bloodPressure', 'glucose', 'calorie', 'exercise', 'sleep', 'weight'];
+	
 	// hide some content on load
 	$('.add_measurement_section').hide();
 	$('.edit_measurement_section').hide();
 	
-	// add listener for submit and cancel buttons
+	// add listener for add/save/cancel buttons
 	$('.add_measurement_section').submit(addMeasurement);
 	$('.edit_measurement_section').submit(editMeasurement);
 	$('.cancelMeasurement').click(cancelMeasurement);
@@ -56,79 +58,22 @@ $(document).ready(function() {
 		defaultDate: Date.now()
 	} );
 	
-	// grab measurement data from server and create tables
-	var table_bloodPressure = $('#bloodPressure_table').DataTable(tableOptions('bloodPressure', [ ['systolicPressure', 'Systolic Pressure'], ['diastolicPressure', 'Diastolic Pressure'] ]));
-	var table_glucose = $('#glucose_table').DataTable(tableOptions('glucose', [ ['glucose', 'Glucose (mg/dL)'] ]));
-	var table_calories = $('#calorie_table').DataTable(tableOptions('calorie', [ ['calories', 'Calories'] ]));
-	var table_execrise = $('#exercise_table').DataTable(tableOptions('exercise', [ ['duration', 'Exercise (min)'] ]));
-	var table_sleep = $('#sleep_table').DataTable(tableOptions('sleep', [ ['duration', 'Sleep (min)', ] ]));
-	var table_weight = $('#weight_table').DataTable(tableOptions('weight', [ ['weight', 'Weight (kg)'] ]));
+	// request data from server and create tables
+	$.each(measurementTypes, function(index, measType) {
+		var table = $('#' +measType+ '_table').DataTable(tableOptions(measType));
+		table.button(0, null).container().addClass('btn-group-justified');
+		table.on('select', row_clicked);
+		table.on('deselect', row_deselected);
+	});
 	
-	// make add/edit/delete buttons justified
-	table_bloodPressure.button(0, null).container().addClass('btn-group-justified');
-	table_glucose.button(0, null).container().addClass('btn-group-justified');
-	table_calories.button(0, null).container().addClass('btn-group-justified');
-	table_execrise.button(0, null).container().addClass('btn-group-justified');
-	table_sleep.button(0, null).container().addClass('btn-group-justified');
-	table_weight.button(0, null).container().addClass('btn-group-justified');
-	
-	// add selection handlers for table rows
-	table_bloodPressure.on('select', row_clicked);
-	table_glucose.on('select', row_clicked);
-	table_calories.on('select', row_clicked);
-	table_execrise.on('select', row_clicked);
-	table_sleep.on('select', row_clicked);
-	table_weight.on('select', row_clicked);
-	
-	// add deselection handlers for table rows to hide edit and delete buttons
-	var row_deselected = function(e, dt, type, indexes) {
-		var measType = $(this).attr('id').split('_')[0];
-		dt.button($('#' +measType+ '_edit')).node().hide();
-		dt.button($('#' +measType+ '_delete')).node().hide();
-	};
-	table_bloodPressure.on('deselect', row_deselected);
-	table_glucose.on('deselect', row_deselected);
-	table_calories.on('deselect', row_deselected);
-	table_execrise.on('deselect', row_deselected);
-	table_sleep.on('deselect', row_deselected);
-	table_weight.on('deselect', row_deselected);
-	
-	// grab measurement data from server and create charts
-	createCharts('glucose');
-	createCharts('bloodPressure');
-	createCharts('calorie');
-	createCharts('exercise');
-	createCharts('sleep');
-	createCharts('weight');
+	// request data from server create charts
+	$.each(measurementTypes, function(index, measType) { createCharts(measType); } );
 	
 	// assign handlers for chart date range buttons 
 	$('.btn-change-chart').click(viewNewChart);
 	
 	// add listeners for tab buttons (i.e. for switching to a measurement)
-	$('#measurements_tabs a, #measurements_dropdown li a').click(function (event) {
-		var measType = $(this).attr('id').split('_')[0];
-		var upperMeasType = measType.replace(/([a-z])([A-Z])/g, function(match, p1, p2) { return [p1, p2].join(' '); } );
-		upperMeasType = upperMeasType.replace(/^[a-z]/, function (match) { return match.toUpperCase(); } );
-
-		// show tab, change dropdown label, and deselect menu item
-		$(this).tab('show');
-		$('#measurements_dropdown_label').text(upperMeasType);
-		$('#measurements_dropdown li').removeClass('active');
-		
-		if (measType === 'calories')
-			measType = 'calorie';
-		
-		// update tabs appearance (in case dropdown triggered this event)
-		$('#measurements_tabs .active').removeClass('active');
-		$('#' +measType+ '_tab_btn').parent().addClass('active');
-		
-		// redraw charts and table to avoid overflow and column alignment issues
-		charts[measType+ '_primary'].reflow();
-		charts[measType+ '_secondary'].reflow();
-		$('#' +measType+ '_table').DataTable().draw();
-		
-		event.preventDefault();
-	});
+	$('#measurements_tabs a, #measurements_dropdown li a').click(tab_clicked);
 	
 	// add change listeners for forms
 	var doneToCancel = function() {
@@ -147,7 +92,84 @@ $(document).ready(function() {
 	$('body').tooltip( { selector: '.dynamic-tooltip' } );
 	$('#measurements_dropdown').tooltip();
 	$('#measurements_nav [data-toggle="tooltip"]').tooltip();
+	
+	// hide all but one units select tag
+	$('#units_form-group select:gt(0)').hide();
+	
+	// switch visible unit select tag according to the measurement type selected
+	$('#options_units_measurementType').change(unitsMeasType_selected);
+	
+	// a unit of measure was selected; switch display of tables/charts accordingly
+	$('#units_form-group select').change(units_selected);
+	
 });
+
+function unitsMeasType_selected() {
+	var measTypeSelected = displayNameToAttributeName($(this).val());
+	if (measTypeSelected === 'calories')
+		measTypeSelected = 'calorie';
+
+	// hide currently displayed units select tag
+	$('#units_form-group select').hide();
+	
+	// show the units select tag for the selected measurement type
+	$('#options_units_' +measTypeSelected).show();
+}
+
+// takes a name like "Blood Pressure" and converts it to its attribute-name-friendly "bloodPressure"
+function displayNameToAttributeName(displayName) {
+	var str = displayName.charAt(0).toLowerCase() + displayName.substr(1);
+	return str.replace(/ /, '');
+}
+
+// takes an attribute-name-friendly name like "bloodPressure" and converts it to "Blood Pressure"  
+function attributeNameToDisplayName(attrName) {
+	var result = attrName.replace(/([a-z])([A-Z])/, "$1 $2");
+	result = result.charAt(0).toUpperCase() + result.substr(1);
+	return result;
+}
+
+function units_selected() {
+	var unitsSelected = $(this).val();
+	var measType = $(this).attr('id').split('_')[2];
+	var table = $('#' +measType+ '_table').DataTable();
+	
+	// update rows
+	table.rows().invalidate().draw();
+	
+	// update column header(s)
+	$.each(measurementParts[measType], function(index, partName) {
+		$(table.column(index).header()).text(attributeNameToDisplayName(partName)+ ' (' +unitsSelected+ ')');
+	});
+}
+
+function tab_clicked(event) {
+	var measType = $(this).attr('id').split('_')[0];
+	var upperMeasType = measType.replace(/([a-z])([A-Z])/g, function(match, p1, p2) { return [p1, p2].join(' '); } );
+	upperMeasType = upperMeasType.replace(/^[a-z]/, function (match) { return match.toUpperCase(); } );
+
+	// show tab, change dropdown label, and deselect menu item
+	$(this).tab('show');
+	$('#measurements_dropdown_label').text(upperMeasType);
+	$('#measurements_dropdown li').removeClass('active');
+	
+	// update units selection options to current measurement
+	$('#options_units_measurementType').val(attributeNameToDisplayName(measType)).change();
+	
+	if (measType === 'calories')
+		measType = 'calorie';
+	
+	// update tabs appearance (in case dropdown triggered this event)
+	$('#measurements_tabs .active').removeClass('active');
+	$('#' +measType+ '_tab_btn').parent().addClass('active');
+	
+	// redraw charts and table to avoid overflow and column alignment issues
+	charts[measType+ '_primary'].reflow();
+	charts[measType+ '_secondary'].reflow();
+	$('#' +measType+ '_table').DataTable().draw();
+	
+	event.preventDefault();
+}
 
 function editMeasurement(event) {
 	var measType = $(this).attr('id').split('_')[1];
@@ -167,6 +189,7 @@ function editMeasurement(event) {
 	measData.notes = $('#notes_' +measType+ '_edit').val().trim();
 	measData.userName = $('#userName_' +measType+ '_add').val().trim();
 	measData.oldDateTime = $('#oldDateTime_' +measType).val().trim();
+	measData.units = $('#options_units_' +measType).val();
 	measData.json = true;
 
 	// send add request to server
@@ -267,6 +290,7 @@ function addMeasurement(event) {
 	measData.time = TwelveHourTimeStringTo24HourTimeString($('#time_' +measType+ '_add').val().trim());
 	measData.notes = $('#notes_' +measType+ '_add').val().trim();
 	measData.userName = $('#userName_' +measType+ '_add').val().trim();
+	measData.units = $('#options_units_' +measType).val();
 	measData.json = true;
 
 	// send add request to server and process response
@@ -333,7 +357,13 @@ function row_clicked(e, dt, type, indexes) {
 		hideFormSection(measType, 'add');
 }
 
-function tableOptions(measType, propNames_colHeaders) {
+var row_deselected = function(e, dt, type, indexes) {
+	var measType = $(this).attr('id').split('_')[0];
+	dt.button($('#' +measType+ '_edit')).node().hide();
+	dt.button($('#' +measType+ '_delete')).node().hide();
+};
+
+function tableOptions(measType) {
 	
 	// create columns array and all common columns
 	var columns = [
@@ -343,11 +373,29 @@ function tableOptions(measType, propNames_colHeaders) {
 	    { data: 'units', title: 'Units', visible: false}
     ];
 	var orderIndex = (measType == 'bloodPressure') ? 2 : 1;
+	var propNames = measurementParts[measType];
 
 	// add remaining columns
-	for (var i = propNames_colHeaders.length-1; i >= 0; i--)
-		columns.unshift({ data: propNames_colHeaders[i][0], title: propNames_colHeaders[i][1] });
+	for (var i = propNames.length-1; i >= 0; i--) {
+		columns.unshift(
+			{
+				data: propNames[i],
+				title: attributeNameToDisplayName(propNames[i]) + ' (' +$('#options_units_' +measType).val()+ ')',
+				render: function(data, type, fullRow, meta) {
+					var result = data;
+					if (type === 'display') {
+						var displayUnits = $('#options_units_' +measType).val();
+						if (displayUnits !== fullRow.units) // if necessary, convert data to the units specified in the current measurements options preset
+							result = convertUnits(data, fullRow.units, displayUnits);
+					}
+					return result;
+				}
+			
+			}
+		);
+	}
 	
+	// create and return table options object
 	return {
 		ajax: { url: '/na_project/measurements_get_' +measType+ '_all' , dataSrc: '' },
 		columns: columns,
@@ -357,7 +405,6 @@ function tableOptions(measType, propNames_colHeaders) {
 		lengthChange: false,
 		processing: true,
 		pagingType: 'numbers',
-//		paging: false,
 		select: { style: 'single' },
 		dom: 
 			"<'row'<'col-sm-6'><'col-sm-6'f>>" +   // sets filter (search) box in upper right
@@ -365,6 +412,7 @@ function tableOptions(measType, propNames_colHeaders) {
 			"<'row'<'col-sm-5'i><'col-sm-7'p>>" +  // page info and pagination controls in buttom left and right, respectively
 			"<'row'<'col-sm-12'B>>",               // set add/edit/delete buttons as bottom row
 		createdRow: function (row, data, dataIndex) {
+			// add a tooltip to the row
 			$(row).attr('data-toggle', 'tooltip').attr('title', 'Rows can be selected for editing/deletion').addClass('dynamic-tooltip');
 		},
 		initComplete: function (settings, json) {
@@ -379,6 +427,64 @@ function tableOptions(measType, propNames_colHeaders) {
 		},
 		buttons: table_addEditDeleteButtons_options(measType)
 	};
+}
+
+// takes a value and converts it from oldUnits to newUnits
+function convertUnits(value, oldUnits, newUnits) {
+	switch(oldUnits) {
+		// glucose units
+		case 'mg/dL':
+			if (newUnits === 'mM')
+				return (value * 0.0555).toFixed(2);
+			break;
+		case 'mM':
+			if (newUnits === 'mg/dL')
+				return (value * 18.0182).toFixed(2);
+			break;
+			
+		// blood pressure units
+		case 'mm Hg':
+			return value;
+			
+		// weight units
+		case 'lbs':
+			if (newUnits === 'kg')
+				return (value * 0.45359237).toFixed(2);
+			break;
+		case 'kg':
+			if (newUnits === 'lbs')
+				return (value * 2.20462262185).toFixed(2);
+			break;
+			
+		// calorie units
+		case 'calories':
+			return value;
+			
+		// exercise/sleep units
+		case 'minutes':
+			if (newUnits === 'hours')
+				return (value / 60).toFixed(2);
+			if (newUnits === 'hours:minutes')
+				return '' + Math.floor(value/60) + ':' + (value%60);
+			break;
+		case 'hours':
+			if (newUnits === 'minutes')
+				return Math.floor(value*60);
+			if (newUnits === 'hours:minutes')
+				return '' +Math.floor(value)+ ':' +((value%1).toFixed(2) * 60);
+			break;
+		case 'hours:minutes':
+			var piece = value.split(':');
+			var hours = pieces[0];
+			var minutes = pieces[1];
+			if (newUnits === 'minutes')
+				return hours * 60 + minutes;
+			if (newUnits === 'hours')
+				return parseInt(hours) + (minutes / 60).toFixed(2);
+			break;
+		default:
+			console.log('error: unrecognized unit specified for conversion: ' +oldUnits);
+	}
 }
 
 function table_addEditDeleteButtons_options(measType) {

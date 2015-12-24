@@ -21,6 +21,7 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
     private $isPicturePublic;
     private $sendReminders;
     private $stayLoggedIn;
+    private $measOptPresetName;
     
     public function __construct($formInput = null) {
         $this->formInput = $formInput;
@@ -92,6 +93,14 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
         return $this->stayLoggedIn;
     }
     
+    public function getMeasOptPresetName() {
+        return $this->measOptPresetName;
+    }
+    
+    public function setMeasOptPresetName($presetName) {
+        $this->measOptPresetName = $presetName;
+    }
+    
     // Returns data fields as an associative array
     public function getParameters() {
         $paramArray = array(
@@ -110,7 +119,8 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
                 "isPicturePublic" => $this->isPicturePublic,
                 "sendReminders" => $this->sendReminders,
                 "stayLoggedIn" => $this->stayLoggedIn,
-                "userName" => $this->userName
+                "userName" => $this->userName,
+                "measOptPresetName" => $this->measOptPresetName
         );
         
         return $paramArray;
@@ -132,7 +142,8 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
                 "Profile public: [" . (($this->isProfilePublic === true) ? "true" : "false") . "]\n" .
                 "Picture public: [" . (($this->isPicturePublic === true) ? "true" : "false") . "]\n" .
                 "Send reminders: [" . (($this->sendReminders === true) ? "true" : "false") . "]\n" .
-                "Stay logged in: [" . (($this->stayLoggedIn === true) ? "true" : "false") . "]\n";
+                "Stay logged in: [" . (($this->stayLoggedIn === true) ? "true" : "false") . "]\n" .
+                "Measurements Options Preset Name: [" . $this->measOptPresetName . "]'" ;
         
         return $str;
     }
@@ -157,6 +168,7 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
             $this->isPicturePublic = false;
             $this->sendReminders = false;
             $this->stayLoggedIn = false;
+            $this->measOptPresetName = "";
         }
         else {
             $this->validateFirstName();
@@ -175,6 +187,7 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
             $this->validateSendReminders();
             $this->validateStayLoggedIn();
             $this->validateUserName();
+            $this->validateMeasOptPresetName();
         }
     }
     
@@ -381,6 +394,14 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
         $this->stayLoggedIn = ($value) ? true : false;
     }
     
+    private function validateMeasOptPresetName() {
+        $this->measOptPresetName = $this->extractForm($this->formInput, "measOptPresetName");
+        if (empty($this->measOptPresetName)) {
+            $this->measOptPresetName = null;
+            return;
+        }
+    }
+    
     public function jsonSerialize() {
         $object = new stdClass();
         $object->userName = $this->userName;
@@ -399,6 +420,7 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
         $object->isPicturePublic = $this->isPicturePublic;
         $object->sendReminders = $this->sendReminders;
         $object->stayLoggedIn = $this->stayLoggedIn;
+        $object->measOptPresetName = $this->measOptPresetName;
         
         return $object;
     }

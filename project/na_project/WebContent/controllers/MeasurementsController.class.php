@@ -151,20 +151,23 @@ class MeasurementsController {
                 WeightMeasurementsView::show();
                 break;
             case 'all':
-                $bpMeasurements = BloodPressureMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                $calorieMeasurements = CalorieMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                $exerciseMeasurements = ExerciseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                $glucoseMeasurements = GlucoseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                $sleepMeasurements = SleepMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                $weightMeasurements = WeightMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                $_SESSION['measurements'] = array(
-                    'bloodPressure' => $bpMeasurements,
-                    'calories' => $calorieMeasurements,
-                    'exercise' => $exerciseMeasurements,
-                    'glucose' => $glucoseMeasurements,
-                    'sleep' => $sleepMeasurements,
-                    'weight' => $weightMeasurements
-                );
+                // retrieve all measurements options presets for the user
+                $returnArray = MeasurementsOptionsPresetsDB::getPresetsFor($_SESSION['profile']->getUserName());
+                if (!$returnArray['success'])
+                    $_SESSION['flash'] = 'Error: failed retrieviing your measurements options presets';
+                $_SESSION['measurementsOptionsPresets'] = $returnArray['data'];
+                
+                // find and store the MeasurementsOptionsPreset object for the active preset
+                $activePreset = null;
+                foreach ($_SESSION['measurementsOptionsPresets'] as $curPreset) {
+                    if ($curPreset->getPresetName() === $_SESSION['profile']->getMeasOptPresetName())
+                        $activePreset = $curPreset;
+                }
+                if ($activePreset === null)
+                    $_SESSION['flash'] = 'Error: failed finding your active measurements options preset';
+                $_SESSION['activeMeasurementsOptionsPreset'] = $activePreset;
+                
+                // show the measurements page
                 MeasurementsView::show();
                 break;
         }

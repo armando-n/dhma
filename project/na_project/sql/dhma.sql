@@ -11,6 +11,38 @@ create table Users(
     dateCreated     timestamp default CURRENT_TIMESTAMP
 );
 
+drop table if exists MeasurementsOptionsPresets;
+create table MeasurementsOptionsPresets(
+    presetID                integer primary key auto_increment,
+    presetName              varchar(20) not null,
+    bloodPressureUnits      enum('mm Hg') default 'mm Hg',
+    calorieUnits            enum('calories') default 'calories',
+    exerciseUnits           enum('minutes', 'hours', 'hours:minutes') default 'minutes',
+    glucoseUnits            enum('mg/dL', 'mM') default 'mg/dL',
+    sleepUnits              enum('minutes', 'hours', 'hours:minutes') default 'minutes',
+    weightUnits             enum('lbs', 'kg') default 'lbs',
+    timeFormat              enum('12 hour', '24 hour') default '12 hour',
+    showTooltips            boolean default true,
+    showExerciseTypeCol     boolean default false,
+    showDateCol             boolean default true,
+    showTimeCol             boolean default true,
+    showNotesCol            boolean default true,
+    numRows                 integer default 25,
+    showFirstChart          boolean default true,
+    showSecondChart         boolean default true,
+    firstChartType          enum('individual', 'daily', 'weekly', 'monthly', 'yearly') default 'individual',
+    secondChartType         enum('individual', 'daily', 'weekly', 'monthly', 'yearly') default 'monthly',
+    firstChartStart         date not null, -- date_sub(now(), interval 30 day),
+    secondChartStart        date not null, -- date_sub(now(), interval 1 year),
+    firstChartEnd           date not null, -- now(),
+    secondChartEnd          date not null, -- now(),
+    chartLastYear           boolean default false,
+    chartDailyAverages      boolean default false,
+    userID                  integer not null,
+    foreign key (userID) references Users (userID) on delete cascade,
+    constraint uniq_measOptPresetName unique (presetName, userID)
+);
+
 drop table if exists UserProfiles;
 create table UserProfiles(
     profileID       integer primary key auto_increment,
@@ -29,40 +61,10 @@ create table UserProfiles(
     isPicturePublic boolean default false,
     sendReminders   boolean default false,
     stayLoggedIn    boolean default false,
+    measOptPreset   integer,
     userID          integer not null,
-    foreign key (userID) references Users (userID) on delete cascade
-);
-
-drop table if exists MeasurementsOptionsPresets;
-create table MeasurementsOptionsPresets(
-    presetID                integer primary key auto_increment,
-    presetName              varchar(20) not null,
-    bloodPressureUnits      enum('mm Hg') default 'mm Hg',
-    calorieUnits            varchar(20) default 'calories',
-    exerciseUnits           varchar(20) default 'minutes',
-    glucoseUnits            varchar(20) default 'mg/dL',
-    sleepUnits              varchar(20) default 'minutes',
-    weightUnits             varchar(20) default 'lbs',
-    timeFormat              enum('12 hour', '24 hour') default '12 hour',
-    showTooltips            boolean default true,
-    showExerciseTypeCol     boolean default false,
-    showDateCol             boolean default true,
-    showTimeCol             boolean default true,
-    showNotesCol            boolean default true,
-    numRows                 integer default 10,
-    showFirstChart          boolean default true,
-    showSecondChart         boolean default true,
-    firstChartType          enum('individual', 'daily', 'weekly', 'monthly', 'yearly') default 'individual',
-    secondChartType         enum('individual', 'daily', 'weekly', 'monthly', 'yearly') default 'monthly',
-    firstChartStart         date default date_sub(now(), interval 30 day),
-    secondChartStart        date default date_sub(now(), interval 1 year),
-    firstChartEnd           date default now(),
-    secondChartEnd          date default now(),
-    chartLastYear           boolean default false,
-    chartDailyAverages      boolean default false,
-    userID                  integer not null,
     foreign key (userID) references Users (userID) on delete cascade,
-    constraint uniq_measOptPresetName unique (presetName, userID)
+    foreign key (measOptPreset) references MeasurementsOptionsPresets (presetID)
 );
 
 drop table if exists BloodPressureMeasurements;
@@ -153,20 +155,79 @@ insert into Users (userName, password) values
     ('admin', '$2y$10$D7IJ76T54m8EcNL4UwhYLO.N1xXoGnYijwhJ9TCksQNMTJNvC6aUq');
 update Users set isAdministrator = true where userName = 'admin';
 
+-- measurements options presets data
+insert into MeasurementsOptionsPresets (presetName, bloodPressureUnits, calorieUnits, exerciseUnits,
+    glucoseUnits, sleepUnits, weightUnits, timeFormat, showTooltips, showExerciseTypeCol, showDateCol,
+    showTimeCol, showNotesCol, numRows, showFirstChart, showSecondChart, firstChartType, secondChartType,
+    firstChartStart, secondChartStart, firstChartEnd, secondChartEnd, chartLastYear, chartDailyAverages,
+    userID)
+    values
+        -- member
+        ('Default', default, default, default, default, default, default, default, default, default,
+        default, default, default, default, default, default, default, default,
+        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
+        default, default, 1),
+        -- robbins
+        ('Default', default, default, default, default, default, default, default, default, default,
+        default, default, default, default, default, default, default, default,
+        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
+        default, default, 2),
+        -- john-s
+        ('Default', default, default, default, default, default, default, default, default, default,
+        default, default, default, default, default, default, default, default,
+        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
+        default, default, 3),
+        -- bob
+        ('Default', default, default, default, default, default, default, default, default, default,
+        default, default, default, default, default, default, default, default,
+        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
+        default, default, 4),
+        -- sarahk
+        ('Default', default, default, default, default, default, default, default, default, default,
+        default, default, default, default, default, default, default, default,
+        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
+        default, default, 5),
+        -- whatup
+        ('Default', default, default, default, default, default, default, default, default, default,
+        default, default, default, default, default, default, default, default,
+        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
+        default, default, 6),
+        -- delete-me-1
+        ('Default', default, default, default, default, default, default, default, default, default,
+        default, default, default, default, default, default, default, default,
+        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
+        default, default, 7),
+        -- delete-me-2
+        ('Default', default, default, default, default, default, default, default, default, default,
+        default, default, default, default, default, default, default, default,
+        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
+        default, default, 8),
+        -- delete-me-3
+        ('Default', default, default, default, default, default, default, default, default, default,
+        default, default, default, default, default, default, default, default,
+        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
+        default, default, 9),
+        -- admin
+        ('Default', default, default, default, default, default, default, default, default, default,
+        default, default, default, default, default, default, default, default,
+        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
+        default, default, 10);
+
 -- UserProfile data
-insert into UserProfiles (firstName, lastName, email, phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,  isPicturePublic, sendReminders, stayLoggedIn, userID)
+insert into UserProfiles (firstName, lastName, email, phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,  isPicturePublic, sendReminders, stayLoggedIn, measOptPreset, userID)
     values
-        ("Member", "Guy", "member@email.com", "210-555-2170", "male", "1992-08-07", "United States of America", "member.jpg", null, "light", "#0088BB", true, true, false, false, 1),
-        ("Robin", "Scherbatsky", "robbins@email.com", "210-555-1593", "female", "1980-02-22", "United States of America", "robbins.jpg", "http://www.facebook.com/robbins", "light", "#0088BB", true, true, true, true, 2),
-        ("John", "Smith", "johns@email.com", "314-555-1260", "male", null, "United States of America", "john-s.jpg", null, "dark", "#BB0000", false, false, true, true, 3),
-        ("Bob", "Roberts", "bobrob@email.com", "450-555-1253", "male", "1973-01-12", "United States of America", "bob.jpg", null, "light", "#44DD88", true, false, false, true, 4),
-        ("Sarah", "Kinberg", "sarahk@email.com", "512-555-4826", "female", "1987-08-24", "United States of America", "sarahk.jpg", null, "light", "#0088BB", true, true, false, false, 5),
-        ("Jason", "McMann", "jason@email.com", "341-555-3856", "male", "1983-10-12", "United States of America", "whatup.jpg", null, "dark", "#0088BB", true, true, false, false, 6);
-insert into UserProfiles(email, userID)
+        ("Member", "Guy", "member@email.com", "210-555-2170", "male", "1992-08-07", "United States of America", "member.jpg", null, "light", "#0088BB", true, true, false, false, 1, 1),
+        ("Robin", "Scherbatsky", "robbins@email.com", "210-555-1593", "female", "1980-02-22", "United States of America", "robbins.jpg", "http://www.facebook.com/robbins", "light", "#0088BB", true, true, true, true, 2, 2),
+        ("John", "Smith", "johns@email.com", "314-555-1260", "male", null, "United States of America", "john-s.jpg", null, "dark", "#BB0000", false, false, true, true, 3, 3),
+        ("Bob", "Roberts", "bobrob@email.com", "450-555-1253", "male", "1973-01-12", "United States of America", "bob.jpg", null, "light", "#44DD88", true, false, false, true, 4, 4),
+        ("Sarah", "Kinberg", "sarahk@email.com", "512-555-4826", "female", "1987-08-24", "United States of America", "sarahk.jpg", null, "light", "#0088BB", true, true, false, false, 5, 5),
+        ("Jason", "McMann", "jason@email.com", "341-555-3856", "male", "1983-10-12", "United States of America", "whatup.jpg", null, "dark", "#0088BB", true, true, false, false, 6, 6);
+insert into UserProfiles(email, measOptPreset, userID)
     values
-        ('deleteme1@email.com', 7),
-        ('deleteme2@email.com', 8),
-        ('deleteme3@email.com', 9);
-insert into UserProfiles(email, userID) values ('admin@email.com', 10);
+        ('deleteme1@email.com', 7, 7),
+        ('deleteme2@email.com', 8, 8),
+        ('deleteme3@email.com', 9, 9);
+insert into UserProfiles(email, measOptPreset, userID) values ('admin@email.com', 10, 10);
+
 
 -- measurement data is in separate file 'measurement_inserts.sql' which is generated by /resources/InsertsGenerator.php

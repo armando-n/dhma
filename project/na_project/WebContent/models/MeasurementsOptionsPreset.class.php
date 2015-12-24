@@ -13,15 +13,15 @@ class MeasurementsOptionsPreset extends GenericModelObject implements JsonSerial
     const DEFAULT_SHOW_DATE_COL = true;
     const DEFAULT_SHOW_TIME_COL = true;
     const DEFAULT_SHOW_NOTES_COL = true;
-    const DEFAULT_NUM_ROWS = 10;
+    const DEFAULT_NUM_ROWS = 25;
     const DEFAULT_SHOW_FIRST_CHART = true;
     const DEFAULT_SHOW_SECOND_CHART = true;
     const DEFAULT_FIRST_CHART_TYPE = 'individual';
     const DEFAULT_SECOND_CHART_TYPE = 'monthly';
-    private static final $DEFAULT_FIRST_CHART_START;
-    private static final $DEFAULT_SECOND_CHART_START;
-    private static final $DEFAULT_FIRST_CHART_END;
-    private static final $DEFAULT_SECOND_CHART_END;
+    private static $DEFAULT_FIRST_CHART_START;
+    private static $DEFAULT_SECOND_CHART_START;
+    private static $DEFAULT_FIRST_CHART_END;
+    private static $DEFAULT_SECOND_CHART_END;
     const DEFAULT_CHART_LAST_YEAR = false;
     const DEFAULT_CHART_DAILY_AVERAGES = false;
     
@@ -155,7 +155,7 @@ class MeasurementsOptionsPreset extends GenericModelObject implements JsonSerial
     }
     
     public function getChartDailyAverages() {
-        return $this->dailyAverages;
+        return $this->chartDailyAverages;
     }
     
     // Returns data fields as an associative array
@@ -478,7 +478,7 @@ class MeasurementsOptionsPreset extends GenericModelObject implements JsonSerial
         }
         
         $options = array("options" => array("regexp" => "/^[0-9]{1,5}$/"));
-        if (!filter_var($this->firstName, FILTER_VALIDATE_REGEXP, $options)) {
+        if (!filter_var($this->numRows, FILTER_VALIDATE_REGEXP, $options)) {
             $this->setError("numRows", "NUM_ROWS_INVALID");
             return;
         }

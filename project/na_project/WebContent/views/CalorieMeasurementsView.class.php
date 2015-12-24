@@ -14,14 +14,11 @@ class CalorieMeasurementsView {
     }
     
     public static function showBody() {
-        if (!isset($_SESSION) || !isset($_SESSION['measurements']) || !isset($_SESSION['profile'])):
-            ?><p>Error: measurements not found</p><?php
+        if (!isset($_SESSION) || !isset($_SESSION['profile'])):
+            ?><p>Error: Sorry, I was unable to find your data</p><?php
             return;
         endif;
-        $measurements = $_SESSION['measurements'];
         ?>
-<!-- <div class="panel panel-primary"> -->
-<!--     <div class="panel-heading"><h2>Calories</h2></div> -->
         
 <section class="row">
     <div id="view_calorie_section" class="col-sm-12">

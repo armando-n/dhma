@@ -19,11 +19,33 @@ class MeasurementsView{
     }
     
     public static function showBody() {
-        if (!isset($_SESSION) || !isset($_SESSION['measurements'])):
-            ?><p>Error: unable to show measurements. Data is missing.</p><?php
+        if (!isset($_SESSION) || !isset($_SESSION['measurementsOptionsPresets']) || !isset($_SESSION['activeMeasurementsOptionsPreset'])):
+            ?> <p>Error: unable to show measurements. Data is missing.</p><?php
             return;
         endif;
-        $measurements = $_SESSION['measurements'];
+        
+        $optPresets = $_SESSION['measurementsOptionsPresets'];
+        $preset = $_SESSION['activeMeasurementsOptionsPreset'];
+        
+        $timeFormat_12hour = ($preset->getTimeFormat() === '12 hour') ? ' selected="selected"' : '';
+        $timeFormat_24hour = ($preset->getTimeFormat() === '24 hour') ? ' selected="selected"' : '';
+        $glucoseUnits_mgdL = ($preset->getGlucoseUnits() === 'mg/dL') ? ' selected="selected"' : '';
+        $glucoseUnits_mM = ($preset->getGlucoseUnits() === 'mM') ? ' selected="selected"' : '';
+        $bloodPressureUnits_mmHg = ($preset->getBloodPressureUnits() === 'mm Hg') ? ' selected="selected"' : '';
+        $weightUnits_lbs = ($preset->getWeightUnits() === 'lbs') ? ' selected="selected"' : '';
+        $weightUnits_kg = ($preset->getWeightUnits() === 'kg') ? ' selected="selected"' : '';
+        $calorieUnits_calories = ($preset->getCalorieUnits() === 'calories') ? ' selected="selected"' : '';
+        $exerciseUnits_minutes = ($preset->getExerciseUnits() === 'minutes') ? ' selected="selected"' : '';
+        $exerciseUnits_hours = ($preset->getExerciseUnits() === 'hours') ? ' selected="selected"' : '';
+        $exerciseUnits_hoursMinutes = ($preset->getExerciseUnits() === 'hours:minutes') ? ' selected="selected"' : '';
+        $sleepUnits_minutes = ($preset->getSleepUnits() === 'minutes') ? ' selected="selected"' : '';
+        $sleepUnits_hours = ($preset->getSleepUnits() === 'hours') ? ' selected="selected"' : '';
+        $sleepUnits_hoursMinutes = ($preset->getSleepUnits() === 'hours:minutes') ? ' selected="selected"' : '';
+        $showTooltips = $preset->getShowTooltips() ? ' checked="checked"' : '';
+        $showFirstChart = $preset->getShowFirstChart() ? ' checked="checked"' : '';
+        $showSecondChart = $preset->getShowSecondChart() ? ' checked="checked"' : '';
+        $chartLastYear = $preset->getChartLastYear() ? ' checked="checked"' : '';
+        $chartDailyAverages = $preset->getChartDailyAverages() ? ' checked="checked"' : '';
         ?>
 
 <div class="row">
@@ -51,23 +73,54 @@ class MeasurementsView{
                                     
                                     <!-- General Options -->
                                     <div class="form-group">
-                                        <label for="options_units">Units</label>
-                                        <select id="options_units" name="units" class="form-control">
-                                            <option>mg/dL</option>
-                                            <option>mM</option>
+                                        <label for="options_units_measurementType">Units</label>
+                                        <select id="options_units_measurementType" class="form-control">
+                                            <option>Glucose</option>
+                                            <option>Blood Pressure</option>
+                                            <option>Weight</option>
+                                            <option>Calories</option>
+                                            <option>Exercise</option>
+                                            <option>Sleep</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" id="units_form-group">
+<!--                                         <label for="options_units_glucose">Units</label> -->
+                                        <select id="options_units_glucose" name="glucoseUnits" class="form-control">
+                                            <option<?=$glucoseUnits_mgdL?>>mg/dL</option>
+                                            <option<?=$glucoseUnits_mM?>>mM</option>
+                                        </select>
+                                        <select id="options_units_bloodPressure" name="bloodPressureUnits" class="form-control">
+                                            <option<?=$bloodPressureUnits_mmHg?>>mm Hg</option>
+                                        </select>
+                                        <select id="options_units_weight" name="weightUnits" class="form-control">
+                                            <option<?=$weightUnits_lbs?>>lbs</option>
+                                            <option<?=$weightUnits_kg?>>kg</option>
+                                        </select>
+                                        <select id="options_units_calorie" name="calorieUnits" class="form-control">
+                                            <option<?=$calorieUnits_calories?>>calories</option>
+                                        </select>
+                                        <select id="options_units_exercise" name="exerciseUnits" class="form-control">
+                                            <option<?=$exerciseUnits_minutes?>>minutes</option>
+                                            <option<?=$exerciseUnits_hours?>>hours</option>
+                                            <option<?=$exerciseUnits_hoursMinutes?>>hours:minutes</option>
+                                        </select>
+                                        <select id="options_units_sleep" name="sleepUnits" class="form-control">
+                                            <option<?=$sleepUnits_minutes?>>minutes</option>
+                                            <option<?=$sleepUnits_hours?>>hours</option>
+                                            <option<?=$sleepUnits_hoursMinutes?>>hours:minutes</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="options_timeFormat">Time Format</label>
                                         <select id="options_timeFormat" name="timeFormat" class="form-control">
-                                            <option>12 hour</option>
-                                            <option>24 hour</option>
+                                            <option<?=$timeFormat_12hour?>>12 hour</option>
+                                            <option<?=$timeFormat_24hour?>>24 hour</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" id="options_tooltips" name="tooltips" />Show Tooltips
+                                                <input type="checkbox" id="options_tooltips" name="tooltips"<?=$showTooltips?> />Show Tooltips
                                             </label>
                                         </div>
                                     </div>
@@ -95,7 +148,7 @@ class MeasurementsView{
                                     </div>
                                     <div class="form-group">
                                         <label for="options_numRows">Rows per page</label>
-                                        <input type="text" id="options_numRows" name="numRows" value="10" class="form-control" size="5" maxlength="5" pattern="^[0-9]+$" title="Enter a positive number of 5 digits or less" />
+                                        <input type="text" id="options_numRows" name="numRows" value="<?=$preset->getNumRows()?>" class="form-control" size="5" maxlength="5" pattern="^[0-9]+$" title="Enter a positive number of 5 digits or less" />
                                     </div>
                                     
                                 </fieldset>
@@ -124,28 +177,28 @@ class MeasurementsView{
                                     <div class="form-group">
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" id="options_firstChart" name="firstChart" />Show chart
+                                                <input type="checkbox" id="options_firstChart" name="firstChart"<?=$showFirstChart?> />Show chart
                                             </label>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" id="options_secondChart" name="secondChart" />Show a second chart
+                                                <input type="checkbox" id="options_secondChart" name="secondChart"<?=$showSecondChart?> />Show a second chart
                                             </label>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" id="options_lastYear" name="lastYear" />Show same time last year
+                                                <input type="checkbox" id="options_lastYear" name="lastYear"<?=$chartLastYear?> />Show same time last year
                                             </label>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" id="options_dailyAverages" name="dailyAverages" />Show daily averages
+                                                <input type="checkbox" id="options_dailyAverages" name="dailyAverages"<?=$chartDailyAverages?> />Show daily averages
                                             </label>
                                         </div>
                                     </div>
