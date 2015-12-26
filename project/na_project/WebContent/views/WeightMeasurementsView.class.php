@@ -13,7 +13,7 @@ class WeightMeasurementsView {
         FooterView::show();
     }
     
-    public static function showBody() {
+    public static function showBody($preset) {
         if (!isset($_SESSION) || !isset($_SESSION['profile'])):
             ?><p>Error: Sorry, I was unable to find your data</p><?php
             return;
@@ -38,7 +38,12 @@ class WeightMeasurementsView {
                 <div class="form-group">
                     <label for="weight_weight_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Weight</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="weight_weight_add" name="weight" class="form-control" size="10" required="required" maxlength="10" tabindex="1" pattern="^((\d+)|(\d*\.\d+))$" />
+                        <div class="input-group">
+                            <input type="text" id="weight_weight_add" name="weight" class="form-control" size="10" required="required" maxlength="10" tabindex="1" pattern="^((\d+)|(\d*\.\d+))$" />
+                            <span class="input-group-addon units-addon">
+                                <?=$preset->getWeightUnits()?>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -103,7 +108,12 @@ class WeightMeasurementsView {
                 <div class="form-group">
                     <label for="weight_weight_edit" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Weight</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="weight_weight_edit" name="weight" class="form-control" size="10" required="required" maxlength="10" tabindex="1" pattern="^((\d+)|(\d*\.\d+))$" />
+                        <div class="input-group">
+                            <input type="text" id="weight_weight_edit" name="weight" class="form-control" size="10" required="required" maxlength="10" tabindex="1" pattern="^((\d+)|(\d*\.\d+))$" />
+                            <span class="input-group-addon units-addon">
+                                <?=$preset->getWeightUnits()?>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">

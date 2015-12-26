@@ -13,7 +13,7 @@ class CalorieMeasurementsView {
         FooterView::show();
     }
     
-    public static function showBody() {
+    public static function showBody($preset) {
         if (!isset($_SESSION) || !isset($_SESSION['profile'])):
             ?><p>Error: Sorry, I was unable to find your data</p><?php
             return;
@@ -38,7 +38,12 @@ class CalorieMeasurementsView {
                 <div class="form-group">
                     <label for="calories_calorie_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Calories</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="calories_calorie_add" name="calories" class="form-control" size="10" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
+                        <div class="input-group">
+                            <input type="text" id="calories_calorie_add" name="calories" class="form-control" size="10" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
+                            <span class="input-group-addon units-addon">
+                                <?=$preset->getCalorieUnits()?>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -103,7 +108,12 @@ class CalorieMeasurementsView {
                 <div class="form-group">
                     <label for="calories_calorie_edit" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Calories</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="calories_calorie_edit" name="calories" class="form-control" size="10" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
+                        <div class="input-group">
+                            <input type="text" id="calories_calorie_edit" name="calories" class="form-control" size="10" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
+                            <span class="input-group-addon units-addon">
+                                <?=$preset->getCalorieUnits()?>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">

@@ -180,6 +180,9 @@ function units_selected() {
 	updateChart(primaryChart);
 	updateChart(secondaryChart);
 	
+	// update add/edit forms
+	$('#add_' +measType+ '_section .units-addon').text(displayUnits);
+	$('#edit_' +measType+ '_section .units-addon').text(displayUnits);
 }
 
 function tab_clicked(event) {
@@ -766,7 +769,6 @@ function createChart_Options(measType, title, data, name, per, subtitle, idSuffi
 						switch (per) {
 							case 'all':
 							case 'individual':
-//								console.log(this.value);
 								var date = new Date(this.value);
 								return monthNumToShortName(date.getMonth(), true)+ ' ' +date.getDate();
 							case 'day': // example result: Aug 17

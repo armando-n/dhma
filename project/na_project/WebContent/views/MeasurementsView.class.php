@@ -247,37 +247,37 @@ class MeasurementsView{
             <div class="tab-content">
                 <section role="tabpanel" id="glucose" class="row tab-pane active">
                     <div class="col-sm-12">
-                            <?php GlucoseMeasurementsView::showBody(); ?>
+                            <?php GlucoseMeasurementsView::showBody($preset); ?>
                     </div>
                 </section>
                 
                 <section role="tabpanel" id="bloodPressure" class="row tab-pane">
                     <div class="col-sm-12">
-                        <?php BloodPressureMeasurementsView::showBody(); ?>
+                        <?php BloodPressureMeasurementsView::showBody($preset); ?>
                     </div>
                 </section>
                 
                 <section role="tabpanel" id="calories" class="row tab-pane">
                     <div class="col-sm-12">
-                        <?php CalorieMeasurementsView::showBody(); ?>
+                        <?php CalorieMeasurementsView::showBody($preset); ?>
                     </div>
                 </section>
                 
                 <section role="tabpanel" id="exercise" class="row tab-pane">
                     <div class="col-sm-12">
-                        <?php ExerciseMeasurementsView::showBody(); ?>
+                        <?php ExerciseMeasurementsView::showBody($preset); ?>
                     </div>
                 </section>
                 
                 <section role="tabpanel" id="sleep" class="row tab-pane">
                     <div class="col-sm-12">
-                        <?php SleepMeasurementsView::showBody(); ?>
+                        <?php SleepMeasurementsView::showBody($preset); ?>
                     </div>
                 </section>
                 
                 <section role="tabpanel" id="weight" class="row tab-pane">
                     <div class="col-sm-12">
-                        <?php WeightMeasurementsView::showBody(); ?>
+                        <?php WeightMeasurementsView::showBody($preset); ?>
                     </div>
                 </section>
             </div>

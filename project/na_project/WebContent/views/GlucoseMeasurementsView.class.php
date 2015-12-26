@@ -13,7 +13,7 @@ class GlucoseMeasurementsView {
         FooterView::show();
     }
     
-    public static function showBody() {
+    public static function showBody($preset) {
         if (!isset($_SESSION) || !isset($_SESSION['profile'])):
             ?><p>Error: Sorry, I was unable to find your data</p><?php
             return;
@@ -38,7 +38,12 @@ class GlucoseMeasurementsView {
                 <div class="form-group">
                     <label for="glucose_glucose_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Glucose</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="glucose_glucose_add" name="glucose" class="form-control" size="10" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
+                        <div class="input-group">
+                            <input type="text" id="glucose_glucose_add" name="glucose" class="form-control" size="10" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
+                            <span class="input-group-addon units-addon">
+                                <?=$preset->getGlucoseUnits()?>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -103,7 +108,12 @@ class GlucoseMeasurementsView {
                 <div class="form-group">
                     <label for="glucose_glucose_edit" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Glucose</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="glucose_glucose_edit" name="glucose" class="form-control" size="10" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
+                        <div class="input-group">
+                            <input type="text" id="glucose_glucose_edit" name="glucose" class="form-control" size="10" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
+                            <span class="input-group-addon units-addon">
+                                <?=$preset->getGlucoseUnits()?>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">

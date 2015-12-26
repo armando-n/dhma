@@ -13,7 +13,7 @@ class BloodPressureMeasurementsView {
         FooterView::show();
     }
     
-    public static function showBody() {
+    public static function showBody($preset) {
         if (!isset($_SESSION) || !isset($_SESSION['profile'])):
             ?><p>Error: Sorry, I was unable to find your data</p><?php
             return;
@@ -38,13 +38,23 @@ class BloodPressureMeasurementsView {
                 <div class="form-group">
                     <label for="systolicPressure_bloodPressure_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Systolic Pressure</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="systolicPressure_bloodPressure_add" name="systolicPressure" class="form-control" size="10" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
+                        <div class="input-group">
+                            <input type="text" id="systolicPressure_bloodPressure_add" name="systolicPressure" class="form-control" size="10" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
+                            <span class="input-group-addon units-addon">
+                                <?=$preset->getBloodPressureUnits()?>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="diastolicPressure_bloodPressure_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Diastolic Pressure</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="diastolicPressure_bloodPressure_add" name="diastolicPressure" class="form-control" size="10" required="required" maxlength="4" tabindex="2" pattern="^[0-9]+$" />
+                        <div class="input-group">
+                            <input type="text" id="diastolicPressure_bloodPressure_add" name="diastolicPressure" class="form-control" size="10" required="required" maxlength="4" tabindex="2" pattern="^[0-9]+$" />
+                            <span class="input-group-addon units-addon">
+                                <?=$preset->getBloodPressureUnits()?>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -109,13 +119,23 @@ class BloodPressureMeasurementsView {
                 <div class="form-group">
                     <label for="systolicPressure_bloodPressure_edit" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Systolic Pressure</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="systolicPressure_bloodPressure_edit" name="systolicPressure" class="form-control" size="10" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
+                        <div class="input-group">
+                            <input type="text" id="systolicPressure_bloodPressure_edit" name="systolicPressure" class="form-control" size="10" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
+                            <span class="input-group-addon units-addon">
+                                <?=$preset->getBloodPressureUnits()?>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="diastolicPressure_bloodPressure_edit" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Diastolic Pressure</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="diastolicPressure_bloodPressure_edit" name="diastolicPressure" class="form-control" size="10" required="required" maxlength="4" tabindex="2" pattern="^[0-9]+$" />
+                        <div class="input-group">
+                            <input type="text" id="diastolicPressure_bloodPressure_edit" name="diastolicPressure" class="form-control" size="10" required="required" maxlength="4" tabindex="2" pattern="^[0-9]+$" />
+                            <span class="input-group-addon units-addon">
+                                <?=$preset->getBloodPressureUnits()?>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">

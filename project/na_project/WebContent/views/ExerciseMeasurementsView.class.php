@@ -13,7 +13,7 @@ class ExerciseMeasurementsView {
         FooterView::show();
     }
     
-    public static function showBody() {
+    public static function showBody($preset) {
         if (!isset($_SESSION) || !isset($_SESSION['profile'])):
             ?><p>Error: Sorry, I was unable to find your data</p><?php
             return;
@@ -38,7 +38,12 @@ class ExerciseMeasurementsView {
                 <div class="form-group">
                     <label for="duration_exercise_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Duration</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="duration_exercise_add" name="duration" class="form-control" size="10" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
+                        <div class="input-group">
+                            <input type="text" id="duration_exercise_add" name="duration" class="form-control" size="10" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
+                            <span class="input-group-addon units-addon">
+                                <?=$preset->getExerciseUnits()?>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -109,7 +114,12 @@ class ExerciseMeasurementsView {
                 <div class="form-group">
                     <label for="duration_exercise_edit" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Duration</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
-                        <input type="text" id="duration_exercise_edit" name="duration" class="form-control" size="10" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
+                        <div class="input-group">
+                            <input type="text" id="duration_exercise_edit" name="duration" class="form-control" size="10" required="required" maxlength="4" tabindex="1" pattern="^[0-9]+$" />
+                            <span class="input-group-addon units-addon">
+                                <?=$preset->getExerciseUnits()?>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
