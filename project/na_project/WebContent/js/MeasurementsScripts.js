@@ -35,9 +35,9 @@ var cumulativeMeasurements = ['calorie', 'exercise', 'sleep'];
 
 var selectedRows = [];
 
+var measurementTypes = ['bloodPressure', 'glucose', 'calorie', 'exercise', 'sleep', 'weight'];
+
 $(document).ready(function() {
-	var measurementTypes = ['bloodPressure', 'glucose', 'calorie', 'exercise', 'sleep', 'weight'];
-	
 	// hide some content on load
 	$('.add_measurement_section').hide();
 	$('.edit_measurement_section').hide();
@@ -54,7 +54,7 @@ $(document).ready(function() {
 		showTodayButton: true
 	} );
 	$('.time-picker').datetimepicker( {
-		format: 'hh:mm a',
+		format: 'h:mm a',
 		defaultDate: Date.now()
 	} );
 	
@@ -99,10 +99,28 @@ $(document).ready(function() {
 	// switch visible unit select tag according to the measurement type selected
 	$('#options_units_measurementType').change(unitsMeasType_selected);
 	
-	// a unit of measure was selected; switch display of tables/charts accordingly
+	// a unit of measure was selected; switch display of tables/charts/forms accordingly
 	$('#units_form-group select').change(units_selected);
 	
+	// a time format (12/24-hour) was selected; switch display of tables/charts/forms accordingly
+	$('#options_timeFormat').change(timeFormat_selected);	
 });
+
+function timeFormat_selected() {
+	var timeFormatSelected = $(this).val();
+	
+	// update table rows
+	for (var i = 0; i < measurementTypes.length; i++)
+		$('#' +measurementTypes[i]+ '_table').DataTable().rows().invalidate().draw();
+	
+	// update time picker in add/edit forms
+	$('.time-picker').each(function(index, element) {
+		if (timeFormatSelected === '12 hour')
+			$(element).data("DateTimePicker").format('h:mm a');
+		else
+			$(element).data("DateTimePicker").format('HH:mm');
+	});
+}
 
 function unitsMeasType_selected() {
 	var measTypeSelected = displayNameToAttributeName($(this).val());
@@ -227,7 +245,7 @@ function editMeasurement(event) {
 	
 	// collect data common to each measurement
 	measData.date = $('#date_' +measType+ '_edit').val().trim();
-	measData.time = TwelveHourTimeStringTo24HourTimeString($('#time_' +measType+ '_edit').val().trim());
+	measData.time = convert12To24HourTime($('#time_' +measType+ '_edit').val().trim());
 	measData.notes = $('#notes_' +measType+ '_edit').val().trim();
 	measData.userName = $('#userName_' +measType+ '_add').val().trim();
 	measData.oldDateTime = $('#oldDateTime_' +measType).val().trim();
@@ -329,7 +347,7 @@ function addMeasurement(event) {
 	
 	// collect data common to each measurement
 	measData.date = $('#date_' +measType+ '_add').val().trim();
-	measData.time = TwelveHourTimeStringTo24HourTimeString($('#time_' +measType+ '_add').val().trim());
+	measData.time = convert12To24HourTime($('#time_' +measType+ '_add').val().trim());
 	measData.notes = $('#notes_' +measType+ '_add').val().trim();
 	measData.userName = $('#userName_' +measType+ '_add').val().trim();
 	measData.units = $('#options_units_' +measType).val();
@@ -388,9 +406,10 @@ function row_clicked(e, dt, type, indexes) {
 	
 	// if edit form is visible, fill the edit form with data from the currently selected measurement
 	if (indexes.length == 1 && $('#edit_' +measType+ '_section').is(':visible')) {
-		var row = selectedRows[0].data();
+		var row = selectedRows[0].data(); // this is the original object returned from the server to create the row
 		for (var key in row)
 			$('#' +key+ '_' +measType+ '_edit').val(row[key]);
+		$('#edit_' +measType+ '_section .time-picker').data('DateTimePicker').date(row.time);
 		$('#oldDateTime_' + measType).val(row.date + ' ' + row.time);
 	}
 	
@@ -410,7 +429,14 @@ function tableOptions(measType) {
 	// create columns array and all common columns
 	var columns = [
         { data: 'date', title: 'Date' },
-        { data: 'time', title: 'Time' },
+        { data: 'time', title: 'Time', render: function(data, type, fullRow, meta) {
+        	var result = data;
+        	if (type === 'display') {
+        		if ($('#options_timeFormat').val() === '12 hour')
+        			result = convert24To12HourTime(result);
+        	}
+        	return result;
+        } },
 	    { data: 'notes', title: 'Notes' },
 	    { data: 'units', title: 'Units', visible: false}
     ];
@@ -419,22 +445,19 @@ function tableOptions(measType) {
 
 	// add remaining columns
 	for (var i = propNames.length-1; i >= 0; i--) {
-		columns.unshift(
-			{
-				data: propNames[i],
-				title: attributeNameToDisplayName(propNames[i]) + ' (' +$('#options_units_' +measType).val()+ ')',
-				render: function(data, type, fullRow, meta) {
-					var result = data;
-					if (type === 'display') {
-						var displayUnits = $('#options_units_' +measType).val();
-						if (displayUnits !== fullRow.units) // if necessary, convert data to the units specified in the current measurements options preset
-							result = convertUnits(data, fullRow.units, displayUnits);
-					}
-					return result;
+		columns.unshift({
+			data: propNames[i],
+			title: attributeNameToDisplayName(propNames[i]) + ' (' +$('#options_units_' +measType).val()+ ')',
+			render: function(data, type, fullRow, meta) {
+				var result = data;
+				if (type === 'display') {
+					var displayUnits = $('#options_units_' +measType).val();
+					if (displayUnits !== fullRow.units) // if necessary, convert data to the units specified in the current measurements options preset
+						result = convertUnits(data, fullRow.units, displayUnits);
 				}
-			
-			}
-		);
+				return result;
+			}			
+		});
 	}
 	
 	// create and return table options object
@@ -469,6 +492,26 @@ function tableOptions(measType) {
 		},
 		buttons: table_addEditDeleteButtons_options(measType)
 	};
+}
+
+function convert24To12HourTime(timeStr) {
+	if (timeStr.search(/^\d+:\d\d [ap]m$/) != -1)
+		return timeStr;
+	var pieces = timeStr.split(':');
+	var hours = parseInt(pieces[0]);
+	var minutes = parseInt(pieces[1]);
+	var amOrPm = 'am';
+	
+	if (hours >= 12)
+		amOrPm = 'pm';
+	if (hours > 12)
+		hours = hours % 12;
+	else if (hours === 0)
+		hours = 12;
+	if (minutes < 10)
+		minutes = '0' +minutes;
+	
+	return hours+ ':' +minutes+ ' ' +amOrPm;
 }
 
 // takes a value and converts it from oldUnits to newUnits
@@ -557,10 +600,8 @@ function table_addEditDeleteButtons_options(measType) {
 						if ($('#cancel_add_' +measType+ '_text').text() == 'Done')
 							$('#cancel_add_' +measType+ '_text').text('Cancel');
 						
-						// fill in date/time fields with current date and time
-						var now = new Date();
-						$('#date_' +measType+ '_add').val(now.getFullYear()+ '-' +(now.getMonth()+1)+ '-' +now.getDate());
-						$('#time_' +measType+ '_add').val(now.getHours()+ ':' +now.getMinutes());
+						// fill in date/time fields of add form with current date and time
+						$('#add_' +measType+ '_section .time-picker').data('DateTimePicker').date(new Date());
 						
 						// clear and put focus in first field of form
 						$('#' +measurementParts[measType][0]+ '_' +measType+ '_add').val('').focus();
@@ -578,9 +619,10 @@ function table_addEditDeleteButtons_options(measType) {
 					},
 	            	action: function (e, dt, node, config) {
 	            		// fill the edit form with data from the currently selected measurement
-	            		var row = selectedRows[0].data();
+	            		var row = selectedRows[0].data(); // this is the original object returned from the server to create the row
 	            		for (var key in row)
 	            			$('#' +key+ '_' +measType+ '_edit').val(row[key]);
+	            		$('#edit_' +measType+ '_section .time-picker').data('DateTimePicker').date(row.time);
 	            		$('#oldDateTime_' + measType).val(row.date + ' ' + row.time);
 	            		
 	            		// show the edit form and put focus on first field
@@ -805,7 +847,7 @@ function createChart_Options(measType, title, data, name, per, subtitle, idSuffi
 					if (per === 'all' || per === 'individual') {
 						var date = new Date(this.key);
 						firstLineBody = date.toDateString();
-						secondLineBody = dateTo12HourLocalTimeString(date);
+						secondLineBody = dateToLocalTimeString(date);
 					} else if (per === 'day')
 						firstLineBody = dayValue(this.key);
 					else if (per === 'week')
@@ -889,8 +931,8 @@ function monthNumToShortName(num, isZeroBased) {
 	}
 }
 
-// takes a Date object and returns a time string in a 12-hour format, e.g.: 2:06 pm (CST) 
-function dateTo12HourLocalTimeString(date) {
+// takes a Date object and returns a time string in a 12-hour or 24-hour format, e.g.: 2:06 pm (CST) 
+function dateToLocalTimeString(date) {
 	var pieces = date.toTimeString().split(' ');
 	
 	var timeZone = '(';
@@ -900,15 +942,17 @@ function dateTo12HourLocalTimeString(date) {
 	var timePieces = time.split(':');
 	var hour = timePieces[0];
 	var minute = timePieces[1];
-	var amOrPm = (hour >= 12) ? 'pm' : 'am';
-	hour = hour % 12;
-	hour = (hour == 0) ? 12 : hour;
 	
-	return hour+ ':' +minute+ ' ' +amOrPm+ ' ' +timeZone
+	if ($('#options_timeFormat').val() === '12 hour')
+		return convert24To12HourTime(hour+ ':' +minute)+ ' ' +timeZone;
+	
+	return hour+ ':' +minute+ ' ' +timeZone;
 }
 
-// takes a string in 12-hour format and returns a string in 24-hour format
-function TwelveHourTimeStringTo24HourTimeString(timeString) {
+// takes a string in 12-hour format and returns a string in 24-hour format, e.g. 14:02
+function convert12To24HourTime(timeString) {
+	if (timeString.search(/^\d\d:\d\d$/) != -1)
+		return timeString;
 	var pieces = timeString.split(' ');
 	var numbers = pieces[0];
 	var amOrPm = pieces[1];
@@ -918,6 +962,8 @@ function TwelveHourTimeStringTo24HourTimeString(timeString) {
 	
 	if (amOrPm === 'pm' && hour != 12)
 		hour += 12;
+	else if (amOrPm === 'am' && hour == 12)
+		hour = 0;
 	
 	if (hour < 10)
 		hour = '0' + hour;
