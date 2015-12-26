@@ -102,12 +102,12 @@ class MeasurementsView{
                                         <select id="options_units_exercise" name="exerciseUnits" class="form-control">
                                             <option<?=$exerciseUnits_minutes?>>minutes</option>
                                             <option<?=$exerciseUnits_hours?>>hours</option>
-                                            <option<?=$exerciseUnits_hoursMinutes?>>hours:minutes</option>
+                                            <!-- <option<?php//$exerciseUnits_hoursMinutes?>>hours:minutes</option> -->
                                         </select>
                                         <select id="options_units_sleep" name="sleepUnits" class="form-control">
                                             <option<?=$sleepUnits_minutes?>>minutes</option>
                                             <option<?=$sleepUnits_hours?>>hours</option>
-                                            <option<?=$sleepUnits_hoursMinutes?>>hours:minutes</option>
+                                            <!-- <option<?php//$sleepUnits_hoursMinutes?>>hours:minutes</option> -->
                                         </select>
                                     </div>
                                     <div class="form-group">
