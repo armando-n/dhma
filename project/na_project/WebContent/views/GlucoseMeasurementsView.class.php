@@ -24,7 +24,7 @@ class GlucoseMeasurementsView {
     <div id="view_glucose_section" class="col-sm-12">
         <div class="row">
             <div class="col-sm-12">
-                <table id="glucose_table" class="table table-striped table-hover table-condensed table-responsive">
+                <table id="glucose_table" class="table table-striped table-hover table-condensed table-responsive measurement-table">
                     <!-- DataTable is inserted here -->
                 </table>
             </div>

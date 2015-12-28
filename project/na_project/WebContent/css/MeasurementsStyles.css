@@ -1,3 +1,7 @@
+.dropdown-menu .glyphicon {
+	margin-right: .75em;
+}
+
 #options_btn {
 	float: right;
 	margin-bottom: 2em;

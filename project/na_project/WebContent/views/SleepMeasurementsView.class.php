@@ -24,7 +24,7 @@ class SleepMeasurementsView {
     <div id="view_sleep_section" class="col-sm-12">
         <div class="row">
             <div class="col-sm-12">
-                <table id="sleep_table" class="table table-striped table-hover table-condensed table-responsive">
+                <table id="sleep_table" class="table table-striped table-hover table-condensed table-responsive measurement-table">
                     <!-- DataTable is inserted here -->
                 </table>
             </div>

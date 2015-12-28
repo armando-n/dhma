@@ -46,6 +46,11 @@ class MeasurementsView{
         $showSecondChart = $preset->getShowSecondChart() ? ' checked="checked"' : '';
         $chartLastYear = $preset->getChartLastYear() ? ' checked="checked"' : '';
         $chartDailyAverages = $preset->getChartDailyAverages() ? ' checked="checked"' : '';
+        
+        $showExerciseTypeCol = $preset->getShowExerciseTypeCol() ? ' class="glyphicon glyphicon-ok"' : '';
+        $showDateCol = $preset->getShowDateCol() ? ' class="glyphicon glyphicon-ok"' : '';
+        $showTimeCol = $preset->getShowTimeCol() ? ' class="glyphicon glyphicon-ok"' : '';
+        $showNotesCol = $preset->getShowNotesCol() ? ' class="glyphicon glyphicon-ok"' : '';
         ?>
 
 <div class="row">
@@ -137,12 +142,11 @@ class MeasurementsView{
                                                 <span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="columns_dropdown_label">
-                                                <li><a href="#" id="systolicPressure_dropdown_btn">Systolic</a></li>
-                                                <li><a href="#" id="diastolicPressure_dropdown_btn">Diastlic</a></li>
+                                                <li><a href="#" id="colvis_type" class="col-visibility-exercise"><span<?=$showExerciseTypeCol?>></span><span id="colvis_type_text">Type</span></a></li>
                                                 <li role="separator" class="divider"></li>
-                                                <li><a href="#" id="date_dropdown_btn">Date</a></li>
-                                                <li><a href="#" id="time_dropdown_btn">Time</a></li>
-                                                <li><a href="#" id="notes_dropdown_btn">Notes</a></li>
+                                                <li><a href="#" id="colvis_date"><span<?=$showDateCol?>></span><span id="colvis_date_text">Date</span></a></li>
+                                                <li><a href="#" id="colvis_time"><span<?=$showTimeCol?>></span><span id="colvis_time_text">Time</span></a></li>
+                                                <li><a href="#" id="colvis_notes"><span<?=$showNotesCol?>></span><span id="colvis_notes_text">Notes</span></a></li>
                                             </ul>
                                         </div>
                                     </div>

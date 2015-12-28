@@ -24,7 +24,7 @@ class ExerciseMeasurementsView {
     <div id="view_exercise_section" class="col-sm-12">
         <div class="row">
             <div class="col-sm-12">
-                <table id="exercise_table" class="table table-striped table-hover table-condensed table-responsive">
+                <table id="exercise_table" class="table table-striped table-hover table-condensed table-responsive measurement-table">
                     <!-- DataTable is inserted here -->
                 </table>
             </div>

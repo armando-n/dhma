@@ -41,6 +41,7 @@ $(document).ready(function() {
 	// hide some content on load
 	$('.add_measurement_section').hide();
 	$('.edit_measurement_section').hide();
+	$('.col-visibility-exercise').hide();
 	
 	// add listener for add/save/cancel buttons
 	$('.add_measurement_section').submit(addMeasurement);
@@ -107,7 +108,34 @@ $(document).ready(function() {
 	
 	// the showTooltips checkbox was clicked
 	$('#options_showTooltips').change(showTooltips_clicked);
+	
+	// a column visibility dropdown menu item was clicked
+	$('#columns_dropdown li a').click(columnVisibility_clicked);
 });
+
+function columnVisibility_clicked(event) {
+	event.preventDefault();
+	var colName = $(this).attr('id').split('_')[1];
+	var iconSpan = $('span:first', this);
+	if (iconSpan.hasClass('glyphicon')) {
+		// hide checkmark icon
+		iconSpan.removeClass('glyphicon glyphicon-ok');
+		$('#colvis_' +colName+ '_text').css('margin-left', '1.6em');
+		
+		// hide column in all tables if it is common, or in visible table only otherwise
+		if ($.inArray(colName, ['date', 'time', 'notes']) !== -1)
+			$('.measurement-table').each(function(index, element) {
+				$(element).DataTable().column(colName+ ':name').visible(false);
+			});
+		else
+			$('.measurement-table:visible').DataTable().column(colName+ ':name').visible(false);
+	} else {
+		// show checkmark icon and show column
+		iconSpan.addClass('glyphicon glyphicon-ok');
+		$('#colvis_' +colName+ '_text').css('margin-left', '0em');
+		$('.measurement-table:visible').DataTable().column(colName+ ':name').visible(true);
+	}
+}
 
 function showTooltips_clicked() {
 	if (document.getElementById('options_showTooltips').checked)
@@ -228,6 +256,12 @@ function tab_clicked(event) {
 	
 	if (measType === 'calories')
 		measType = 'calorie';
+	
+	// update column visibility options
+	if (measType === 'exercise')
+		$('.col-visibility-exercise').show();
+	else
+		$('.col-visibility-exercise').hide();
 	
 	// update tabs appearance (in case dropdown triggered this event)
 	$('#measurements_tabs .active').removeClass('active');
@@ -438,8 +472,8 @@ function tableOptions(measType) {
 	
 	// create columns array and all common columns
 	var columns = [
-        { data: 'date', title: 'Date' },
-        { data: 'time', title: 'Time', render: function(data, type, fullRow, meta) {
+        { name: 'date', data: 'date', title: 'Date' },
+        { name: 'time', data: 'time', title: 'Time', render: function(data, type, fullRow, meta) {
         	var result = data;
         	if (type === 'display') {
         		if ($('#options_timeFormat').val() === '12 hour')
@@ -447,15 +481,18 @@ function tableOptions(measType) {
         	}
         	return result;
         } },
-	    { data: 'notes', title: 'Notes' },
-	    { data: 'units', title: 'Units', visible: false}
+	    { name: 'notes', data: 'notes', title: 'Notes' },
+	    { name: 'units', data: 'units', title: 'Units', visible: false}
     ];
-	var orderIndex = (measType == 'bloodPressure') ? 2 : 1;
+	var orderIndex = (measType == 'bloodPressure' || measType == 'exercise') ? 2 : 1;
 	var propNames = measurementParts[measType];
 
 	// add remaining columns
+	if (measType === 'exercise')
+		columns.unshift( { name: 'type', data: 'type', title: 'Type', visible: ($('#colvis_type span:first').hasClass('glyphicon') === true) } );
 	for (var i = propNames.length-1; i >= 0; i--) {
 		columns.unshift({
+			name: propNames[i],
 			data: propNames[i],
 			title: attributeNameToDisplayName(propNames[i]) + ' (' +$('#options_units_' +measType).val()+ ')',
 			render: function(data, type, fullRow, meta) {
