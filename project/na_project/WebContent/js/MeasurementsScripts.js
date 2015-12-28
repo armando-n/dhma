@@ -103,8 +103,18 @@ $(document).ready(function() {
 	$('#units_form-group select').change(units_selected);
 	
 	// a time format (12/24-hour) was selected; switch display of tables/charts/forms accordingly
-	$('#options_timeFormat').change(timeFormat_selected);	
+	$('#options_timeFormat').change(timeFormat_selected);
+	
+	// the showTooltips checkbox was clicked
+	$('#options_showTooltips').change(showTooltips_clicked);
 });
+
+function showTooltips_clicked() {
+	if (document.getElementById('options_showTooltips').checked)
+		$('.tooltip-help').tooltip('enable');
+	else
+		$('.tooltip-help').tooltip('disable');
+}
 
 function timeFormat_selected() {
 	var timeFormatSelected = $(this).val();
@@ -478,7 +488,7 @@ function tableOptions(measType) {
 			"<'row'<'col-sm-12'B>>",               // set add/edit/delete buttons as bottom row
 		createdRow: function (row, data, dataIndex) {
 			// add a tooltip to the row
-			$(row).attr('data-toggle', 'tooltip').attr('title', 'Rows can be selected for editing/deletion').addClass('dynamic-tooltip');
+			$(row).attr('data-toggle', 'tooltip').attr('title', 'Rows can be selected for editing/deletion').addClass('dynamic-tooltip tooltip-help');
 		},
 		initComplete: function (settings, json) {
 			$('#view_' +measType+ '_section th').each(function (index, element) {
@@ -581,7 +591,7 @@ function table_addEditDeleteButtons_options(measType) {
 					text: 'Add',
 					init: function (dt, node, config) {
 						node.attr('id', measType+ '_add');
-						node.attr('data-toggle', 'tooltip').attr('title', 'Show a form for adding a new ' +measType+ ' entry.');
+						node.attr('data-toggle', 'tooltip').attr('title', 'Show a form for adding a new ' +measType+ ' entry.').addClass('tooltip-help');
 						node.prepend('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;');
 					},
 					action: function (e, dt, node, config) {
@@ -614,7 +624,7 @@ function table_addEditDeleteButtons_options(measType) {
 	            	text: 'Edit',
 	            	init: function (dt, node, config) {
 						node.hide().attr('id', measType+ '_edit');
-						node.attr('data-toggle', 'tooltip').attr('title', 'Show a form for editing the selected ' +measType+ ' entry.');
+						node.attr('data-toggle', 'tooltip').attr('title', 'Show a form for editing the selected ' +measType+ ' entry.').addClass('tooltip-help');
 						node.prepend('<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;');
 					},
 	            	action: function (e, dt, node, config) {
@@ -637,7 +647,7 @@ function table_addEditDeleteButtons_options(measType) {
 	            	text: 'Delete',
 	            	init: function (dt, node, config) {
 						node.hide().attr('id', measType+ '_delete').addClass('btn-danger');
-						node.attr('data-toggle', 'tooltip').attr('title', 'Delete the selected ' +measType+ ' entry.');
+						node.attr('data-toggle', 'tooltip').attr('title', 'Delete the selected ' +measType+ ' entry.').addClass('tooltip-help');
 						node.prepend('<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;');
 					},
 	            	action: deleteMeasurement

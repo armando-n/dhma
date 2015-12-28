@@ -120,7 +120,7 @@ class MeasurementsView{
                                     <div class="form-group">
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" id="options_tooltips" name="tooltips"<?=$showTooltips?> />Show Tooltips
+                                                <input type="checkbox" id="options_showTooltips" name="showTooltips"<?=$showTooltips?> />Show Help Tooltips
                                             </label>
                                         </div>
                                     </div>
@@ -215,7 +215,7 @@ class MeasurementsView{
         <div class="panel panel-primary">
             
             <!-- dropdown menu for extra small screens -->
-            <div id="measurements_dropdown" class="dropdown" data-toggle="tooltip" title="Switch to a different measurement tracker">
+            <div id="measurements_dropdown" class="dropdown tooltip-help" data-toggle="tooltip" title="Switch to a different measurement tracker">
                 <button type="button" class="dropdown-toggle btn btn-primary btn-block" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                     <span id="measurements_dropdown_label">Glucose</span>
                     <span class="caret"></span>
@@ -234,12 +234,12 @@ class MeasurementsView{
             <!-- tabs for small screens and larger -->
             <div id="measurements_nav" class="panel-heading collapse navbar-collapse">
                 <ul id="measurements_tabs" class="nav nav-tabs nav-justified" role="tablist">
-                	<li class="measurement-tab active" role="presentation"><a class="measurement-tab" href="#glucose" id="glucose_tab_btn" aria-controls="glucose" role="tab" data-toggle="tooltip" title="Switch to glucose tracker">Glucose</a></li>
-                	<li class="measurement-tab" role="presentation"><a class="measurement-tab" href="#bloodPressure" id="bloodPressure_tab_btn" aria-controls="bloodPressure" role="tab" data-toggle="tooltip" title="Switch to blood pressure tracker">Blood Pressure</a></li>
-                	<li class="measurement-tab" role="presentation"><a class="measurement-tab" href="#weight" id="weight_tab_btn" aria-controls="weight" role="tab" data-toggle="tooltip" title="Switch to weight tracker">Weight</a></li>
-                	<li class="measurement-tab" role="presentation"><a class="measurement-tab" href="#calories" id="calories_tab_btn" aria-controls="calories" role="tab" data-toggle="tooltip" title="Switch to calorie tracker">Calories</a></li>
-                	<li class="measurement-tab" role="presentation"><a class="measurement-tab" href="#exercise" id="exercise_tab_btn" aria-controls="exercise" role="tab" data-toggle="tooltip" title="Switch to exercise tracker">Exercise</a></li>
-                	<li class="measurement-tab" role="presentation"><a class="measurement-tab" href="#sleep" id="sleep_tab_btn" aria-controls="sleep" role="tab" data-toggle="tooltip" title="Switch to sleep tracker">Sleep</a></li>
+                	<li class="measurement-tab active" role="presentation"><a class="measurement-tab tooltip-help" href="#glucose" id="glucose_tab_btn" aria-controls="glucose" role="tab" data-toggle="tooltip" title="Switch to glucose tracker">Glucose</a></li>
+                	<li class="measurement-tab" role="presentation"><a class="measurement-tab tooltip-help" href="#bloodPressure" id="bloodPressure_tab_btn" aria-controls="bloodPressure" role="tab" data-toggle="tooltip" title="Switch to blood pressure tracker">Blood Pressure</a></li>
+                	<li class="measurement-tab" role="presentation"><a class="measurement-tab tooltip-help" href="#weight" id="weight_tab_btn" aria-controls="weight" role="tab" data-toggle="tooltip" title="Switch to weight tracker">Weight</a></li>
+                	<li class="measurement-tab" role="presentation"><a class="measurement-tab tooltip-help" href="#calories" id="calories_tab_btn" aria-controls="calories" role="tab" data-toggle="tooltip" title="Switch to calorie tracker">Calories</a></li>
+                	<li class="measurement-tab" role="presentation"><a class="measurement-tab tooltip-help" href="#exercise" id="exercise_tab_btn" aria-controls="exercise" role="tab" data-toggle="tooltip" title="Switch to exercise tracker">Exercise</a></li>
+                	<li class="measurement-tab" role="presentation"><a class="measurement-tab tooltip-help" href="#sleep" id="sleep_tab_btn" aria-controls="sleep" role="tab" data-toggle="tooltip" title="Switch to sleep tracker">Sleep</a></li>
                 </ul>
             </div>
 

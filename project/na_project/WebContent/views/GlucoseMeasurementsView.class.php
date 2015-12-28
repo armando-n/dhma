@@ -185,27 +185,27 @@ class GlucoseMeasurementsView {
             <div class="col-sm-12 btn-group btn-group-justified" role="group">
 
                 <div class="btn-group" role="group">
-                    <button type="button" id="glucose_individual_chart_btn_primary" class="btn btn-default btn-change-chart active" data-toggle="tooltip" title="Show a chart of individual glucose entries">
+                    <button type="button" id="glucose_individual_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help active" data-toggle="tooltip" title="Show a chart of individual glucose entries">
                         Individual
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="glucose_day_chart_btn_primary" class="btn btn-default btn-change-chart" data-toggle="tooltip" title="Show a chart of daily glucose averages">
+                    <button type="button" id="glucose_day_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily glucose averages">
                         Daily
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="glucose_week_chart_btn_primary" class="btn btn-default btn-change-chart" data-toggle="tooltip" title="Show a chart of weekly glucose averages">
+                    <button type="button" id="glucose_week_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly glucose averages">
                         Weekly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="glucose_month_chart_btn_primary" class="btn btn-default btn-change-chart" data-toggle="tooltip" title="Show a chart of monthly glucose averages">
+                    <button type="button" id="glucose_month_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of monthly glucose averages">
                         Monthly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="glucose_year_chart_btn_primary" class="btn btn-default btn-change-chart" data-toggle="tooltip" title="Show a chart of yearly glucose averages">
+                    <button type="button" id="glucose_year_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly glucose averages">
                         Yearly
                     </button>
                 </div>
@@ -224,26 +224,26 @@ class GlucoseMeasurementsView {
             <div class="col-sm-12 btn-group btn-group-justified" role="group">
             
                 <div class="btn-group" role="group">
-                    <button type="button" id="glucose_individual_chart_btn_secondary" class="btn btn-default btn-change-chart" data-toggle="tooltip" title="Show a chart of individual glucose entries">
+                    <button type="button" id="glucose_individual_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of individual glucose entries">
                         Individual
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="glucose_day_chart_btn_secondary" class="btn btn-default btn-change-chart" data-toggle="tooltip" title="Show a chart of daily glucose averages">
+                    <button type="button" id="glucose_day_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily glucose averages">
                         Daily
                     </button>
                 </div><div class="btn-group" role="group">
-                    <button type="button" id="glucose_week_chart_btn_secondary" class="btn btn-default btn-change-chart" data-toggle="tooltip" title="Show a chart of weekly glucose averages">
+                    <button type="button" id="glucose_week_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly glucose averages">
                         Weekly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="glucose_month_chart_btn_secondary" class="btn btn-default btn-change-chart active" data-toggle="tooltip" title="Show a chart of monthly glucose averages">
+                    <button type="button" id="glucose_month_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help active" data-toggle="tooltip" title="Show a chart of monthly glucose averages">
                         Monthly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="glucose_year_chart_btn_secondary" class="btn btn-default btn-change-chart" data-toggle="tooltip" title="Show a chart of yearly glucose averages">
+                    <button type="button" id="glucose_year_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly glucose averages">
                         Yearly
                     </button>
                 </div>
