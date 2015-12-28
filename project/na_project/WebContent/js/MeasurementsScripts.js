@@ -111,7 +111,16 @@ $(document).ready(function() {
 	
 	// a column visibility dropdown menu item was clicked
 	$('#columns_dropdown li a').click(columnVisibility_clicked);
+	
+	// the number of rows option was changed
+	$('#options_numRows').change(numRows_changed);
 });
+
+function numRows_changed() {
+	$('.measurement-table').each(function(index, element) {
+		$(element).DataTable().page.len($('#options_numRows').val()).draw();
+	});
+}
 
 function columnVisibility_clicked(event) {
 	event.preventDefault();
@@ -517,6 +526,7 @@ function tableOptions(measType) {
 		lengthChange: false,
 		processing: true,
 		pagingType: 'numbers',
+		pageLength: $('#options_numRows').val(),
 		select: { style: 'single' },
 		dom: 
 			"<'row'<'col-sm-6'><'col-sm-6'f>>" +   // sets filter (search) box in upper right

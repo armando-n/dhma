@@ -71,7 +71,7 @@ class MeasurementsView{
                 <div id="options" class="collapse">
                     <div class="well well-lg">
             
-                        <form action="signup_post" id="signupForm" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+                        <form action="meausrementsOptionsPresets_post" id="measurementsOptionsPresetsForm" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
                             <div class="row">
                                 <fieldset class="col-sm-4">
                                     <legend>General Options</legend>
