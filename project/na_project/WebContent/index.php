@@ -62,6 +62,7 @@ switch ($control) {
     case "users" :
     case "members" : UsersController::run(); break;
     case "faq" : FaqView::show(); break;
+    case "demo" : DemoController::run(); break;
     case "home":
     default:
         $_SESSION['styles'] = array('HomeStyles.css');
