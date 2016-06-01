@@ -37,86 +37,137 @@ class MeasurementsController {
         }
     }
     
-    // example call: /measurements_get_all                         (all time)
-    // example call: /measurements_get_bloodPressure_all           (all time)
-    // example call: /measurements_get_bloodPressure_individual    (for last 30 days)
-    // example call: /measurements_get_bloodPressure_day           (for last 30 days)
-    // example call: /measurements_get_bloodPressure_week          (for last year)
-    // example call: /measurements_get_bloodPressure_month         (for last year)
-    // example call: /measurements_get_bloodPressure_year          (for last 5 years)
-    // example call: /measurements_get_exercise_dailyavg_week
-    // example call: /measurements_get_sleep_dailyavg_month
-    // example call: /measurements_get_calories_dailyavg_year
+    /* labels used for various parts of a call: /control_action_arg[0]_arg[1]_..._arg[n-1]
+     * example call: /measurements_get_all                          (all time)         (gets all known data for all measurement types at once)
+     * example call: /measurements_get_bloodPressure_individual     (for last 30 days) (for both cumulative and non-cumulative measurements)
+     * example call: /measurements_get_bloodPressure_day            (for last 30 days) (for both cumulative and non-cumulative measurements)
+     * example call: /measurements_get_bloodPressure_week           (for last year)    (for both cumulative and non-cumulative measurements)
+     * example call: /measurements_get_bloodPressure_month          (for last year)    (for both cumulative and non-cumulative measurements)
+     * example call: /measurements_get_bloodPressure_year           (for last 5 years) (for both cumulative and non-cumulative measurements)
+     * example call: /measurements_get_bloodPressure_all            (all time)         (for both cumulative and non-cumulative measurements)
+     * example call: /measurements_get_exercise_dailyavg_week       (for last year)    (for cumulative measurements)
+     * example call: /measurements_get_exercise_dailyavg_month      (for last year)    (for cumulative measurements)
+     * example call: /measurements_get_exercise_dailyavg_year       (for last 5 years) (for cumulative measurements)
+     * example call: /measurements_get_exercise_dailyavg_all        (all time)         (for cumulative measurements)
+     * example call: /measurements_get_sleep_dailyavg_week                             (just a reminder that sleep is cumulative)
+     * example call: /measurements_get_calories_dailyavg_month                         (just a reminder that calories are cumulative)
+     * example call: /measurements_get_bloodPressure_individual_2015-01-25_2016-02-15  (from Jan 25 2015 to Feb 15 2016) (non-cumulative/cumulative)
+     * example call: /measurements_get_bloodPressure_day_2015-01-25_2016-02-15         (from Jan 25 2015 to Feb 15 2016) (non-cumulative/cumulative)
+     * example call: /measurements_get_bloodPressure_week_2015-01-25_2016-02-15        (from Jan 25 2015 to Feb 15 2016) (non-cumulative/cumulative)
+     * example call: /measurements_get_bloodPressure_month_2015-01-25_2016-02-15       (from Jan 25 2015 to Feb 15 2016) (non-cumulative/cumulative)
+     * example call: /measurements_get_bloodPressure_year_2015-01-25_2016-02-15        (from Jan 25 2015 to Feb 15 2016) (non-cumulative/cumulative)
+     * example call: /measurements_get_bloodPressure_all_2015-01-25_2016-02-15         (from Jan 25 2015 to Feb 15 2016) (non-cumulative/cumulative)
+     * example call: /measurements_get_exercise_dailyavg_week_2015-01-25_2016-02-15        (from Jan 25 2015 to Feb 15 2016) (cumulative only)
+     * example call: /measurements_get_exercise_dailyavg_month_2015-01-25_2016-02-15       (from Jan 25 2015 to Feb 15 2016) (cumulative only)
+     * example call: /measurements_get_exercise_dailyavg_year_2015-01-25_2016-02-15        (from Jan 25 2015 to Feb 15 2016) (cumulative only)
+     * example call: /measurements_get_exercise_dailyavg_all_2015-01-25_2016-02-15         (from Jan 25 2015 to Feb 15 2016) (cumulative only)
+     * example call: /measurements_get_sleep_dailyavg_year_2015-01-25_2016-02-15           (just a reminder that sleep is cumulative)
+     * example call: /measurements_get_calories_dailyavg_year_2015-01-25_2016-02-15        (just a reminder that calories are cumulative)
+     */
     private static function get() {        
         
-        // partial input validation
-        if (!isset($_SESSION['arguments'])) {
-            self::error('Error: 2 arguments expected');
-            return;
-        }
-        if (strpos($_SESSION['arguments'], '_') === false && $_SESSION['arguments'] !== 'all') {
-            self::error('Error: invalid argument(s)');
+        if (!isset($_SESSION['arguments'])) { // arguments don't exist (i.e. there is nothing past 'get' in the call)
+            self::error('Error: arguments expected');
             return;
         }
         
-        // all measurements of all types requested
-        if (strpos($_SESSION['arguments'], '_') === false && $_SESSION['arguments'] === 'all') {
-            $allMeasurements = new stdClass();
-            $allMeasurements->bloodPressure = BloodPressureMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-            $allMeasurements->calories = CalorieMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-            $allMeasurements->exercise = ExerciseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-            $allMeasurements->glucose = GlucoseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-            $allMeasurements->sleep = SleepMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-            $allMeasurements->weight = WeightMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-            echo json_encode($allMeasurements, JSON_PRETTY_PRINT);
+        // were all measurements of all types requested?
+        if (strpos($_SESSION['arguments'], '_') === false) {
+            if ($_SESSION['arguments'] === 'all')
+                self::getAll();
+            else
+                self::error('Error: invalid argument(s)');
+            return;
         }
         
         // measurements of a specific type requested, either as individual measurements or as daily/weekly/monthly/yearly averages
-        else {
-            
-            // validate arguments
-            $args = explode('_', $_SESSION['arguments']);
-            if (count($args) == 3)
-                list($firstArg, $secondArg, $thirdArg) = $args;
-            else
-                list($firstArg, $secondArg) = $args; 
-            $allowedFirst = array('bloodPressure', 'calorie', 'exercise', 'glucose', 'sleep', 'weight');
-            $allowedSecond = array('dailyavg', 'all', 'individual', 'day', 'week', 'month', 'year');
-            $allowedThird = array('week', 'month', 'year');
-            if (!in_array($firstArg, $allowedFirst) || !in_array($secondArg, $allowedSecond)) {
-                echo '{"error":"One or both arguments invalid. firstarg: ' .$firstArg. '; secondarg: ' .$secondArg. '"}';
-                return; 
+        // TODO I'm working on this to implement date range selections
+        $allowedMeasTypes = array('bloodPressure', 'calorie', 'exercise', 'glucose', 'sleep', 'weight');
+        $allowedPeriods = array('individual', 'day', 'week', 'month', 'year', 'all');
+        $allowedAvgPeriods = array('week', 'month', 'year', 'all');
+        $dateRegExpOptions = array("options" => array("regexp" => "/^((\d{4}[\/-]\d\d[\/-]\d\d)|(\d\d[\/-]\d\d[\/-]\d{4}))$/")); // YYYY-MM-DD or MM-DD-YYYY
+        
+        // break up arguments, taking into account a possible extra argument for daily average requests
+        $args = explode('_', $_SESSION['arguments']);
+        $measType = $args[0];
+        if ($args[1] !== 'dailyavg') { // no daily avgs requested
+            $dailyAvgWanted = false;
+            $timePeriod = $args[1];
+            if (count($args) === 4) {
+                $startDate = $args[2];
+                $endDate = $args[3];
             }
-            if (isset($thirdArg) && !in_array($thirdArg, $allowedThird)) {
-                echo '{"error":"One or more arguments invalid"}';
-                return;
+        } else {                       // daily avgs requested
+            $dailyAvgWanted = true;
+            $timePeriod = $args[2];
+            if (count($args) === 5) {
+                $startDate = $args[3];
+                $endDate = $args[4];
             }
-            
-            /* class/function to call depends on measurement type and what the data requested.
-             * The data requested can be individual measurements, or daily/weekly/monthly/yearly averages. */
-            $dbClassName = ucfirst($firstArg) . 'MeasurementsDB';
-            if ($secondArg === 'all')
-                $queryCommand = 'return ' .$dbClassName. '::getMeasurementsBy("userName", "' .$_SESSION['profile']->getUserName(). '");';
-            else if ($secondArg === 'individual')
-                $queryCommand = 'return ' .$dbClassName. '::getMeasurementsBounded("userName", "' .$_SESSION['profile']->getUserName(). '");';
-            else if ($secondArg === 'dailyavg') // TODO finish this
-                $queryCommand = 'return ' .$dbClassName. '::getAverageMeasurements("' .$_SESSION["profile"]->getUserName(). '", "' .$thirdArg. '", true);';
-            else
-                $queryCommand = 'return ' .$dbClassName. '::getAverageMeasurements("' .$_SESSION["profile"]->getUserName(). '", "' .$secondArg. '");';
-            
-            // get measurement data and check for error message
-            $measurements = eval($queryCommand);
-            if (array_key_exists('error', $measurements)) {
-                echo '{"error":"' .$measurements['error']. '"}';
-                return;
-            }
-            
-            // output measurement data in json
-            if (isset($_GET['debug']))
-                echo '<pre>' .json_encode($measurements, JSON_PRETTY_PRINT). '</pre>';
-            else
-                echo json_encode($measurements, JSON_PRETTY_PRINT);
         }
+        
+        // validate arguments
+        if (!in_array($measType, $allowedMeasTypes)) {
+            echo '{"error":"Requested measurement type ' .$measType. ' invalid."}';
+            return;
+        }
+        if ($dailyAvgWanted && !in_array($timePeriod, $allowedAvgPeriods)) {
+            echo '{"error":"Requested period ' .$timePeriod. ' invalid for daily average data."}';
+            return;
+        } else if (!$dailyAvgWanted && !in_array($timePeriod, $allowedPeriods)) {
+            echo '{"error":"Requested period ' .$timePeriod. ' invalid."}';
+            return;
+        }
+        if (isset($startDate) && isset($endDate)) {
+            if (!filter_var($startDate, FILTER_VALIDATE_REGEXP, $dateRegExpOptions)) {
+                echo '{"error":"Requested start date ' .$startDate. ' invalid."}';
+                return;
+            }
+            if (!filter_var($endDate, FILTER_VALIDATE_REGEXP, $dateRegExpOptions)) {
+                echo '{"error":"Requested end date ' .$endDate. ' invalid."}';
+                return;
+            }
+        } else {
+            $startDate = null;
+            $endDate = null;
+        }
+            
+        /* class/function to call depends on measurement type and what data was requested.
+         * The data requested can be individual measurements, daily/weekly/monthly/yearly averages,
+         * with or without the date range specified. If no date range is specified, a default will be used.
+         * The function call is constructed manually as a string, then evaluated with PHP's eval() function.*/
+        $dbModelClass = ucfirst($args[0]) . 'MeasurementsDB'; // determine which measurement DB model should be called
+        if ($timePeriod === 'all')
+            $queryCommand = 'return ' .$dbModelClass. '::getMeasurementsBy("userName", "' .$_SESSION['profile']->getUserName(). '");';
+        else if ($timePeriod === 'individual')
+            $queryCommand = 'return ' .$dbModelClass. '::getMeasurementsBounded("userName", "' .$_SESSION['profile']->getUserName(). '", "' .$minDate. '", "' .$maxDate. '");';
+        else
+            $queryCommand = 'return ' .$dbModelClass. '::getTimePeriodMeasurements("' .$_SESSION["profile"]->getUserName(). '", "' .$timePeriod. '", ' .$dailyAvgWanted. ', "' .$minDate. '", "' .$maxDate. '");';
+        $measurements = eval($queryCommand); // request measurement data
+        
+        // check for error message and output error if one is found
+        if (array_key_exists('error', $measurements)) {
+            echo '{"error":"' .$measurements['error']. '"}';
+            return;
+        }
+        
+        // no errors found; output measurement data in json
+        if (isset($_GET['debug']))
+            echo '<pre>' .json_encode($measurements, JSON_PRETTY_PRINT). '</pre>';
+        else
+            echo json_encode($measurements, JSON_PRETTY_PRINT);
+        
+    }
+    
+    private static function getAll() {
+        $allMeasurements = new stdClass();
+        $allMeasurements->bloodPressure = BloodPressureMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+        $allMeasurements->calories = CalorieMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+        $allMeasurements->exercise = ExerciseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+        $allMeasurements->glucose = GlucoseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+        $allMeasurements->sleep = SleepMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+        $allMeasurements->weight = WeightMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
+        echo json_encode($allMeasurements, JSON_PRETTY_PRINT);
     }
     
     private static function show() {
