@@ -76,6 +76,9 @@ $(document).ready(function() {
 	// add listeners for tab buttons (i.e. for switching to a measurement)
 	$('#measurements_tabs a, #measurements_dropdown li a').click(tab_clicked);
 	
+	// add listeners for chart settings tabs
+	$('#charts_settings_tabs a').click(chartSettingsTab_clicked);
+	
 	// add change listeners for forms
 	var doneToCancel = function() {
 		var id_pieces = $(this).attr('id').split('_');
@@ -114,7 +117,18 @@ $(document).ready(function() {
 	
 	// the number of rows option was changed
 	$('#options_numRows').change(numRows_changed);
+	
+	// start date option was changed
+	$('#options_startDate').change(date_changed);
 });
+
+// TODO updates the charts when the date range is changed in options
+function date_changed() {
+	var startDate = $('#options_startDate').value();
+	var endDate = $('#options_endDate').value();
+	
+	
+}
 
 function numRows_changed() {
 	$('.measurement-table').each(function(index, element) {
@@ -187,7 +201,8 @@ function displayNameToAttributeName(displayName) {
 	return str.replace(/ /, '');
 }
 
-// takes an attribute-name-friendly name like "bloodPressure" and converts it to "Blood Pressure"  
+// takes an attribute-name-friendly name like "bloodPressure" and converts it to "Blood Pressure"
+// note that this currently only works for one-word or two-word property names
 function attributeNameToDisplayName(attrName) {
 	var result = attrName.replace(/([a-z])([A-Z])/, "$1 $2");
 	result = result.charAt(0).toUpperCase() + result.substr(1);
@@ -210,7 +225,7 @@ function units_selected() {
 		$(table.column(index).header()).text(attributeNameToDisplayName(partName)+ ' (' +unitsSelected+ ')');
 	});
 	
-	// update charts
+	// function to update a single chart
 	var updateChart = function(chart) {
 		for (var i = 0; i < chart.series.length; i++) {
 			var series = chart.series[i];
@@ -248,6 +263,11 @@ function units_selected() {
 	// update add/edit forms
 	$('#add_' +measType+ '_section .units-addon').text(displayUnits);
 	$('#edit_' +measType+ '_section .units-addon').text(displayUnits);
+}
+
+function chartSettingsTab_clicked(event) {
+	event.preventDefault();
+	$(this).tab('show');
 }
 
 function tab_clicked(event) {
@@ -477,27 +497,26 @@ function row_deselected(e, dt, type, indexes) {
 	dt.button($('#' +measType+ '_delete')).node().hide();
 }
 
+// returns the table options object for the specified type of measurement (e.g. for bloodPressure, or exercise, etc.)
 function tableOptions(measType) {
 	
-	// create columns array and all common columns
+	// create columns array and add all common columns
 	var columns = [
         { name: 'date', data: 'date', title: 'Date' },
         { name: 'time', data: 'time', title: 'Time', render: function(data, type, fullRow, meta) {
-        	var result = data;
-        	if (type === 'display') {
-        		if ($('#options_timeFormat').val() === '12 hour')
-        			result = convert24To12HourTime(result);
-        	}
-        	return result;
+        	if (type === 'display' && $('#options_timeFormat').val() === '12 hour')
+    			return convert24To12HourTime(data);
+        	else
+        		return data;
         } },
 	    { name: 'notes', data: 'notes', title: 'Notes' },
 	    { name: 'units', data: 'units', title: 'Units', visible: false}
     ];
-	var orderIndex = (measType == 'bloodPressure' || measType == 'exercise') ? 2 : 1;
-	var propNames = measurementParts[measType];
+	var orderIndex = (measType == 'bloodPressure' || measType == 'exercise') ? 2 : 1; // index of col for ordering
+	var propNames = measurementParts[measType]; // the actual measurement properties name(s) (e.g. systolicPressure/diastolicPresssure, duration, etc.)
 
 	// add remaining columns
-	if (measType === 'exercise')
+	if (measType === 'exercise') // for exercise, the type of exercise (running/aerobics/etc.) may or may not be hidden, so check options
 		columns.unshift( { name: 'type', data: 'type', title: 'Type', visible: ($('#colvis_type span:first').hasClass('glyphicon') === true) } );
 	for (var i = propNames.length-1; i >= 0; i--) {
 		columns.unshift({
@@ -505,22 +524,22 @@ function tableOptions(measType) {
 			data: propNames[i],
 			title: attributeNameToDisplayName(propNames[i]) + ' (' +$('#options_units_' +measType).val()+ ')',
 			render: function(data, type, fullRow, meta) {
-				var result = data;
+				// for display purposes, it may be necessary to convert data to the units specified in the current measurements options preset
 				if (type === 'display') {
 					var displayUnits = $('#options_units_' +measType).val();
-					if (displayUnits !== fullRow.units) // if necessary, convert data to the units specified in the current measurements options preset
-						result = convertUnits(data, fullRow.units, displayUnits);
+					if (displayUnits !== fullRow.units)
+						return convertUnits(data, fullRow.units, displayUnits);
 				}
-				return result;
+				return data;
 			}			
 		});
 	}
 	
-	// create and return table options object
+	// request data from server, then create and return table options object
 	return {
 		ajax: { url: '/na_project/measurements_get_' +measType+ '_all' , dataSrc: '' },
 		columns: columns,
-		order: [[orderIndex, 'desc'], [orderIndex+1, 'desc']],
+		order: [[orderIndex, 'desc'], [orderIndex+1, 'desc']], // order descending by date then by time
 		scrollY: '35vh',
 		scrollCollapse: true,
 		lengthChange: false,
@@ -533,11 +552,10 @@ function tableOptions(measType) {
 			"<'row'<'col-sm-12'tr>>" +             // table and processing message
 			"<'row'<'col-sm-5'i><'col-sm-7'p>>" +  // page info and pagination controls in buttom left and right, respectively
 			"<'row'<'col-sm-12'B>>",               // set add/edit/delete buttons as bottom row
-		createdRow: function (row, data, dataIndex) {
-			// add a tooltip to the row
+		createdRow: function (row, data, dataIndex) { // add a tooltip to the row
 			$(row).attr('data-toggle', 'tooltip').attr('title', 'Rows can be selected for editing/deletion').addClass('dynamic-tooltip tooltip-help');
 		},
-		initComplete: function (settings, json) {
+		initComplete: function (settings, json) { // when the table is finished loading, add tooltips to column headers
 			$('#view_' +measType+ '_section th').each(function (index, element) {
 				$(element).attr('data-toggle', 'tooltip').attr('data-placement', 'bottom').attr('title', 'Click to sort by this column');
 				
@@ -547,22 +565,29 @@ function tableOptions(measType) {
 //				$(element).addClass('dynamic-tooltip'); // TODO figure out why this doesn't work
 			});
 		},
-		buttons: table_addEditDeleteButtons_options(measType)
+		buttons: table_addEditDeleteButtons_options(measType) // creates the add/edit/delete buttons for the table
 	};
 }
 
+// timeStr should be a string in HH:MM or H:MM format, with 0 <= HH <= 24
 function convert24To12HourTime(timeStr) {
+	
+	// timeStr is already in 12 hour format, so simply return it
 	if (timeStr.search(/^\d+:\d\d [ap]m$/) != -1)
 		return timeStr;
+	
+	// break down the 24 hour timeStr
 	var pieces = timeStr.split(':');
 	var hours = parseInt(pieces[0]);
 	var minutes = parseInt(pieces[1]);
 	var amOrPm = 'am';
 	
-	if (hours >= 12)
+	// build the 12 hour formatted string
+	if (hours >= 12) {
 		amOrPm = 'pm';
-	if (hours > 12)
-		hours = hours % 12;
+		if (hours > 12)
+			hours = hours % 12;
+	}
 	else if (hours === 0)
 		hours = 12;
 	if (minutes < 10)
@@ -587,6 +612,7 @@ function convertUnits(value, oldUnits, newUnits) {
 		// blood pressure units
 		case 'mm Hg':
 			return value;
+			break;
 			
 		// weight units
 		case 'lbs':
@@ -601,6 +627,7 @@ function convertUnits(value, oldUnits, newUnits) {
 		// calorie units
 		case 'calories':
 			return value;
+			break;
 			
 		// exercise/sleep units
 		case 'minutes':
