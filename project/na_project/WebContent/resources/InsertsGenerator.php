@@ -1,13 +1,14 @@
 <?php
 
 $numOfInserts = 730; // 1 insert per day, so also num of days
+$dbName = "na_projectdb";
 
-$str = '';
+$outputStr = "use $dbName;\n";
 for ($i = 1; $i <= 10; $i++)
-    $str = $str . generateMeasurements($i);
+    $outputStr = $outputStr . generateMeasurements($i);
 
 $outfile = fopen("measurement_inserts.sql", "w");
-fwrite($outfile, $str);
+fwrite($outfile, $outputStr);
 fclose($outfile);
 
 function generateMeasurements($userID) {
