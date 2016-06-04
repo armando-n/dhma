@@ -1,8 +1,11 @@
 <?php
 class WeightMeasurementsDB {
     
-    // takes a WeightMeasurement object as its first argument. No other argument is required. A second argument
-    // can be the userID, which reduces the amount of work necessary by 1 query
+    /* Adds the WeightMeasurement object that must be passed as the first argument.
+     * Returns the automatically assigned measurement ID.
+     * Only the first argument is required.
+     * A second argument can be the userID, which reduces the amount of work necessary by 1 query.
+     */
     public static function addMeasurement() {
         $measurementID = -1;
         $userID = -1;
@@ -48,6 +51,9 @@ class WeightMeasurementsDB {
         return $measurementID;
     }
     
+    /* Updates a measurement's attributes to the attribute values in $newMeasurement.
+     * $oldMeasurement should contain the measurement's old attribute values.
+     */
     public static function editMeasurement($oldMeasurement, $newMeasurement) {
         try {
             $db = Database::getDB();
@@ -87,7 +93,9 @@ class WeightMeasurementsDB {
         return $newMeasurement;
     }
     
-    // returns an array of all WeightMeasurement objects found in the database
+    /* Returns an array of all WeightMeasurement objects found in the database for all users.
+     * TODO This method serves no purpose that I can see. It was probably required for the original assignment. Delete this?
+     */
     public static function getAllMeasurements() {
         $allMeasurements = array();
         
@@ -111,6 +119,7 @@ class WeightMeasurementsDB {
         return $allMeasurements;
     }
     
+    // Returns a WeightMeasurement object for the specified user with the specified date and time.
     public static function getMeasurement($userName, $dateAndTime) {
         $measurement = null;
         if ( ($dashPos = strrpos($dateAndTime, '-')) > 8)
@@ -138,31 +147,33 @@ class WeightMeasurementsDB {
         return $measurement;
     }
     
-    // returns an array of WeightMeasurement objects, sorted by date
-    public static function getMeasurementsBy($type, $value, $order = 'desc') {
+    // Returns an array of all WeightMeasurement objects for the specified user, sorted by date
+    public static function getMeasurementsBy($byAttrName, $byAttrValue, $order = 'desc') {
         $allowedOrders = array('asc', 'desc');
-        $allowedTypes = array('userName', 'userID');
-        $measurementsArray = array();
+        $allowedByAttrs = array('userName', 'userID');
+        $measurements = array();
     
         try {
+            // validate arguments
             if (!in_array($order, $allowedOrders))
                 throw new Exception("$order is not an allowed order");
-            if (!in_array($type, $allowedTypes))
-                throw new PDOException("$type not allowed search criterion for weight measurement");
+            if (!in_array($byAttrName, $allowedByAttrs))
+                throw new PDOException("$byAttrName not allowed search criterion for weight measurement");
             
+            // create and run database query
             $db = Database::getDB();
             $stmt = $db->prepare(
                 "select *
                 from Users join WeightMeasurements using (userID)
-                where ($type = :$type)
+                where ($byAttrName = :$byAttrName)
                 order by dateAndTime $order");
-            $stmt->execute(array(":$type" => $value));
+            $stmt->execute(array(":$byAttrName" => $byAttrValue));
             
-            $str = '';
+            // collect returned data in an array of WeightMeasurement objects
             foreach ($stmt as $row) {
-                $measurement = new WeightMeasurement($row);
-                if (is_object($measurement) && $measurement->getErrorCount() == 0)
-                    $measurementsArray[] = $measurement;
+                $msmt = new WeightMeasurement($row);
+                if (is_object($msmt) && $msmt->getErrorCount() == 0)
+                    $measurements[] = $msmt;
             }
     
         } catch (PDOException $e) {
@@ -171,31 +182,40 @@ class WeightMeasurementsDB {
             echo $e->getMessage();
         }
     
-        return $measurementsArray;
+        return $measurements;
     }
     
-    public static function getMeasurementsBounded($type, $value, $minDate = 'date_sub(now(), interval 30 day)', $maxDate = 'now()', $order = 'asc') {
+    /* Returns an array of WeightMeasurement objects for the specified user, sorted by date.
+     * The date range must be specified using $minDate and $maxDate.
+     * IMPORTANT!: minDate and maxDate are expected to have been verified already (to avoid SQL injection)
+     */
+    public static function getMeasurementsBounded($byAttrName, $byAttrValue, $minDate = null, $maxDate = null, $order = 'asc') {
         $allowedOrders = array('asc', 'desc');
-        $allowedTypes = array('userName', 'userID');
+        $allowedByAttrs = array('userName', 'userID');
         $measurements = array();
     
         try {
+            // validate arguments, setting defaults for date range if not set
             if (!in_array($order, $allowedOrders))
-                throw new PDOException("$order is not an allowed order");
-            if (!in_array($type, $allowedTypes))
-                throw new PDOException("$type not allowed search criterion for measurement");
+                throw new PDOException("Invalid order specified");
+            if (!in_array($byAttrName, $allowedByAttrs))
+                throw new PDOException("Invalid search criterion for measurement");
+            if (is_null($minDate) || is_null($maxDate))
+                throw new PDOException("Both minimum and maximum dates must be specified in time period measurement requests");
 
+            // create and run database query
             $db = Database::getDB();
             $stmt = $db->prepare(
                 "select *
                 from Users join WeightMeasurements using (userID)
-                where ($type = :$type)
-                    and date(dateAndTime) > $minDate
-                    and date(dateAndTime) < $maxDate
+                where ($byAttrName = :$byAttrName)
+                    and date(dateAndTime) >= '$minDate'
+                    and date(dateAndTime) <= '$maxDate'
                 order by dateAndTime $order"
             );
-            $stmt->execute(array(":$type" => $value));
+            $stmt->execute(array(":$byAttrName" => $byAttrValue));
 
+            // collect returned data in an array of WeightMeasurement objects
             foreach ($stmt as $row) {
                 $msmt = new WeightMeasurement($row);
                 if (is_object($msmt) && $msmt->getErrorCount() == 0)
@@ -211,51 +231,53 @@ class WeightMeasurementsDB {
         return $measurements;
     }
     
-    // returns an array of stdClass objects representing the average measurement over the specified time period, sorted by date
-    public static function getAverageMeasurements($userName, $timePeriod, $dailyAvgWanted = false, $order = 'asc') {
+    /* Note that this function's implementation is for a non-cumulative measurement type, which behaves differently than cumulative measurement types.
+     * $timePeriod can be "day", "week", "month", or "year". It specifies whether you want weekly averages, monthly averages, etc.
+     * The $timePeriod-ly averages are given for each $timePeriod that falls within the date range specified by $minDate and $maxDate.
+     * If $groupEachDay is false, this returns an array of stdClass objects representing the average INDIVIDUAL measurement over each $timePeriod.
+     * In other words, it would return the average INDIVIDUAL measurement for each month, if $timePeriod was "month".
+     * If $groupEachDay is true, the stdClass objects returned instead represent the average of each DAY'S AVERAGED measurements over each $timePeriod.
+     * In other words, it would return the average DAILY AVERAGE measurement for each month, if $timePeriod was "month".
+     * $timePeriod set to "day" will behave the same regardless of the value of $groupEachDay, for obvious reasons. (It's a bit rendundant).
+     * IMPORTANT!: $minDate and $maxDate are expected to have been verified already (to avoid SQL injection)
+     */
+    public static function getTimePeriodMeasurements($userName, $timePeriod, $groupEachDay, $minDate, $maxDate, $order = 'asc') {
         $allowedOrders = array('asc', 'desc');
         $measurements = array();
     
         try {
-            if ($dailyAvgWanted)
-                throw new PDOException("Daily average call is not applicable to weight measurements");
-            
+            // validate arguments
+            if ($groupEachDay)
+                throw new PDOException("Grouping each day is not applicable to weight measurements");
             if (!in_array($order, $allowedOrders))
-                throw new PDOException("$order is not an allowed order");
-            
+                throw new PDOException("Invalid order specified");
+            if (is_null($minDate) || is_null($maxDate))
+                throw new PDOException("Both minimum and maximum dates must be specified in time period measurement requests");
+
+            // validate $timePeriod; also determine date column format and default date interval
             switch ($timePeriod) {
-                case 'day':
-                    $interval = '30 day';
-                    $periodCol = "date(dateAndTime)";
-                    break;
-                case 'week':
-                    $interval = '1 year';
-                    $periodCol = "concat(year(dateAndTime),'-', week(dateAndTime))";
-                    break;
-                case 'month':
-                    $interval = '1 year';
-                    $periodCol = "concat(year(dateAndTime),'-', month(dateAndTime))";
-                    break;
-                case 'year':
-                    $interval = '5 year';
-                    $periodCol = "year(dateAndTime)";
-                    break;
+                case 'day': $periodColumnName = "date(dateAndTime)"; break;
+                case 'week': $periodColumnName = "concat(year(dateAndTime),'-', week(dateAndTime))"; break;
+                case 'month': $periodColumnName = "concat(year(dateAndTime),'-', month(dateAndTime))"; break;
+                case 'year': $periodColumnName = "year(dateAndTime)"; break;
                 default:
-                    throw new PDOException("$timePeriod not allowed search criterion for measurement");
+                    throw new PDOException("Invalid time period specified");
             }
 
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, $periodCol $timePeriod, units,
+                "select userName, $periodColumnName $timePeriod, units,
                     replace(format(avg(weight), 2), ',', '') weight
                 from Users join WeightMeasurements using (userID)
                 where userName = :userName
-                    and dateAndTime > date_sub(now(), interval $interval)
+                    and date(dateAndTime) >= '$minDate'
+                    and date(dateAndTime) <= '$maxDate'
                 group by $timePeriod
                 order by dateAndTime $order"
             );
             $stmt->execute(array(":userName" => $userName));
 
+            // collect returned data in an array of stdClass objects
             foreach ($stmt as $row) {
                 $msmt = new stdClass();
                 $msmt->$timePeriod = $row[$timePeriod];
@@ -274,6 +296,7 @@ class WeightMeasurementsDB {
         return $measurements;
     }
     
+    // Deletes the measurement with the specified date, time, and user name
     public static function deleteMeasurement($userName, $dateAndTime) {
         try {
             $db = Database::getDB();

@@ -1,8 +1,10 @@
 <?php
 class BloodPressureMeasurementsDB {
     
-    /* Takes a BloodPressureMeasurement object as its first argument. No other argument is required.
-     * A second argument can be the userID, which reduces the amount of work necessary by 1 query
+    /* Adds the BloodPressureMeasurement object that must be passed as the first argument.
+     * Returns the automatically assigned measurement ID.
+     * Only the first argument is required.
+     * A second argument can be the userID, which reduces the amount of work necessary by 1 query.
      */
     public static function addMeasurement() {
         $measurementID = -1;
@@ -52,6 +54,9 @@ class BloodPressureMeasurementsDB {
         return $measurementID;
     }
     
+    /* Updates a measurement's attributes to the attribute values in $newMeasurement.
+     * $oldMeasurement should contain the measurement's old attribute values.
+     */
     public static function editMeasurement($oldMeasurement, $newMeasurement) {
         try {
             $db = Database::getDB();
@@ -106,9 +111,9 @@ class BloodPressureMeasurementsDB {
             $stmt->execute();
 
             foreach ($stmt as $row) {
-                $msmt = new BloodPressureMeasurement($row);
-                if (is_object($msmt) && $msmt->getErrorCount() == 0)
-                    $allMeasurements[] = $msmt;
+                $measurement = new BloodPressureMeasurement($row);
+                if (is_object($measurement) && $measurement->getErrorCount() == 0)
+                    $allMeasurements[] = $measurement;
             }
             
         } catch (PDOException $e) {
@@ -120,7 +125,7 @@ class BloodPressureMeasurementsDB {
         return $allMeasurements;
     }
     
-    // Returns a BloodPressurMeasurement object for the specified user that was taken at the specified date and time.
+    // Returns a BloodPressureMeasurement object for the specified user with the specified date and time.
     public static function getMeasurement($userName, $dateAndTime) {
         $measurement = null;
         if ( ($dashPos = strrpos($dateAndTime, '-')) > 8)
@@ -149,26 +154,29 @@ class BloodPressureMeasurementsDB {
     }
     
     // Returns an array of all BloodPressureMeasurement objects for the specified user, sorted by date
-    public static function getMeasurementsBy($type, $value, $order = 'desc') {
+    public static function getMeasurementsBy($byAttrName, $byAttrValue, $order = 'desc') {
         $allowedOrders = array('asc', 'desc');
-        $allowedTypes = array('userName', 'userID');
+        $allowedByAttrs = array('userName', 'userID');
         $measurements = array();
     
         try {
+            // validate arguments
             if (!in_array($order, $allowedOrders))
                 throw new PDOException("$order is not an allowed order");
-            if (!in_array($type, $allowedTypes))
-                throw new PDOException("$type not allowed search criterion for blood pressure measurement");
+            if (!in_array($byAttrName, $allowedByAttrs))
+                throw new PDOException("$byAttrName not allowed search criterion for blood pressure measurement");
             
+            // create and run database query
             $db = Database::getDB();
             $stmt = $db->prepare(
                 "select *
                 from Users join BloodPressureMeasurements using (userID)
-                where ($type = :$type)
+                where ($byAttrName = :$byAttrName)
                 order by dateAndTime $order"
             );
-            $stmt->execute(array(":$type" => $value));
+            $stmt->execute(array(":$byAttrName" => $byAttrValue));
             
+            // collect returned data in an array of BloodPressureMeasurement objects
             foreach ($stmt as $row) {
                 $msmt = new BloodPressureMeasurement($row);
                 if (is_object($msmt) && $msmt->getErrorCount() == 0)
@@ -185,36 +193,36 @@ class BloodPressureMeasurementsDB {
     }
     
     /* Returns an array of BloodPressureMeasurement objects for the specified user, sorted by date.
-     * An optional date range may be specified using $minDate and $maxDate. If not, only measurements from the last 30 days will be returned.
-     * IMPORTANT!: minDate and maxDate are expected to have been verified already (to avoid SQL injection)
+     * The date range must be specified using $minDate and $maxDate.
+     * IMPORTANT!: $minDate and $maxDate are expected to have been verified already (to avoid SQL injection)
      */
-    public static function getMeasurementsBounded($byAttrName, $byAttrValue, $minDate = null, $maxDate = null, $order = 'asc') {
+    public static function getMeasurementsBounded($byAttrName, $byAttrValue, $minDate, $maxDate, $order = 'asc') {
         $allowedOrders = array('asc', 'desc');
         $allowedByAttrs = array('userName', 'userID');
         $measurements = array();
     
         try {
-            // validate arguments
+            // validate arguments, setting defaults for date range if not set
             if (!in_array($order, $allowedOrders))
-                throw new PDOException("$order is not an allowed order");
+                throw new PDOException("Invalid order specified");
             if (!in_array($byAttrName, $allowedByAttrs))
-                throw new PDOException("$byAttrName not allowed search criterion for measurement");
-            if (is_null($minDate) || is_null($maxDate) || $minDate === 'null' || $maxDate === 'null') {
-                $minDate = "date_sub(now(), interval 30 day)";
-                $maxDate = "now()";
-            }
+                throw new PDOException("Invalid search criterion for measurement");
+            if (is_null($minDate) || is_null($maxDate))
+                throw new PDOException("Both minimum and maximum dates must be specified in time period measurement requests");
 
+            // create and run database query
             $db = Database::getDB();
             $stmt = $db->prepare(
                 "select *
                 from Users join BloodPressureMeasurements using (userID)
                 where ($byAttrName = :$byAttrName)
-                    and date(dateAndTime) >= $minDate
-                    and date(dateAndTime) <= $maxDate
+                    and date(dateAndTime) >= '$minDate'
+                    and date(dateAndTime) <= '$maxDate'
                 order by dateAndTime $order"
             );
             $stmt->execute(array(":$byAttrName" => $byAttrValue));
 
+            // collect returned data in an array of BloodPressureMeasurement objects
             foreach ($stmt as $row) {
                 $msmt = new BloodPressureMeasurement($row);
                 if (is_object($msmt) && $msmt->getErrorCount() == 0)
@@ -230,62 +238,55 @@ class BloodPressureMeasurementsDB {
         return $measurements;
     }
     
-    /* Returns an array of stdClass objects representing the AVERAGE measurements over the specified time periods, sorted by date, for the specified user.
-     * For example, if $timePeriod is 'month', it will return monthly averages.
-     * An optional date range may be specified using $minDate and $maxDate. If not specified, defaults will be used.
-     * IMPORTANT!: minDate and maxDate are expected to have been verified already (to avoid SQL injection)
+    /* Note that this function's implementation is for a non-cumulative measurement type, which behaves differently than cumulative measurement types.
+     * $timePeriod can be "day", "week", "month", or "year". It specifies whether you want weekly averages, monthly averages, etc.
+     * The $timePeriod-ly averages are given for each $timePeriod that falls within the date range specified by $minDate and $maxDate.
+     * If $groupEachDay is false, this returns an array of stdClass objects representing the average INDIVIDUAL measurement over each $timePeriod.
+     * In other words, it would return the average INDIVIDUAL measurement for each month, if $timePeriod was "month".
+     * If $groupEachDay is true, the stdClass objects returned instead represent the average of each DAY'S AVERAGED measurements over each $timePeriod.
+     * In other words, it would return the average DAILY AVERAGE measurement for each month, if $timePeriod was "month".
+     * $timePeriod set to "day" will behave the same regardless of the value of $groupEachDay, for obvious reasons. (It's a bit rendundant).
+     * IMPORTANT!: $minDate and $maxDate are expected to have been verified already (to avoid SQL injection)
      */
-    public static function getTimePeriodMeasurements($userName, $timePeriod, $dailyAvgWanted = false, $minDate = null, $maxDate = null, $order = 'asc') {
+    public static function getTimePeriodMeasurements($userName, $timePeriod, $groupEachDay, $minDate, $maxDate, $order = 'asc') {
         $allowedOrders = array('asc', 'desc');
         $measurements = array();
-    
+
         try {
-            if ($dailyAvgWanted)
-                throw new PDOException("Daily average call is not applicable to blood pressure measurements");
-            
+            // validate arguments
+            if ($groupEachDay)
+                throw new PDOException("Grouping each day is not applicable to blood pressure measurements");
             if (!in_array($order, $allowedOrders))
-                throw new PDOException("$order is not an allowed order");
+                throw new PDOException("Invalid order specified");
+            if (is_null($minDate) || is_null($maxDate))
+                throw new PDOException("Both minimum and maximum dates must be specified in time period measurement requests");
             
+            // validate $timePeriod; also determine date column format and default date interval
             switch ($timePeriod) {
-                case 'day':
-                    $defaultInterval = '30 day';
-                    $periodColName = "date(dateAndTime)";
-                    break;
-                case 'week':
-                    $defaultInterval = '1 year';
-                    $periodColName = "concat(year(dateAndTime),'-', week(dateAndTime))";
-                    break;
-                case 'month':
-                    $defaultInterval = '1 year';
-                    $periodColName = "concat(year(dateAndTime),'-', month(dateAndTime))";
-                    break;
-                case 'year':
-                    $defaultInterval = '5 year';
-                    $periodColName = "year(dateAndTime)";
-                    break;
+                case 'day': $periodColumnName = "date(dateAndTime)"; break;
+                case 'week': $periodColumnName = "concat(year(dateAndTime),'-', week(dateAndTime))"; break;
+                case 'month': $periodColumnName = "concat(year(dateAndTime),'-', month(dateAndTime))"; break;
+                case 'year': $periodColumnName = "year(dateAndTime)"; break;
                 default:
-                    throw new PDOException("$timePeriod not allowed search criterion for measurement");
-            }
-            
-            if (is_null($minDate) || is_null($maxDate) || $minDate === 'null' || $maxDate === 'null') {
-                $minDate = "date_sub(now(), interval $defaultInterval)";
-                $maxDate = "now()";
+                    throw new PDOException("Invalid time period specified");
             }
 
+            // create and run database query
             $db = Database::getDB();
             $stmt = $db->prepare(
-                "select userName, $periodColName $timePeriod, units,
+                "select userName, $periodColumnName $timePeriod, units,
                     replace(format(avg(systolicPressure), 2), ',', '') systolicPressure,
                     replace(format(avg(diastolicPressure), 2), ',', '') diastolicPressure
                 from Users join BloodPressureMeasurements using (userID)
                 where userName = :userName
-                    and dateAndTime >= $minDate
-                    and dateAndTimem <= $maxDate
+                    and date(dateAndTime) >= '$minDate'
+                    and date(dateAndTime) <= '$maxDate'
                 group by $timePeriod
                 order by dateAndTime $order"
             );
             $stmt->execute(array(":userName" => $userName));
 
+            // collect returned data in an array of stdClass objects
             foreach ($stmt as $row) {
                 $msmt = new stdClass();
                 $msmt->$timePeriod = $row[$timePeriod];
@@ -301,10 +302,11 @@ class BloodPressureMeasurementsDB {
         } catch (RuntimeException $e) {
             return array('error' => $e->getMessage());
         }
-    
+
         return $measurements;
     }
     
+    // Deletes the measurement with the specified date, time, and user name
     public static function deleteMeasurement($userName, $dateAndTime) {
         try {
             $db = Database::getDB();
