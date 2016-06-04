@@ -45,24 +45,24 @@ class MeasurementsController {
      * example call: /measurements_get_bloodPressure_month          (for last year)    (for both cumulative and non-cumulative measurements)
      * example call: /measurements_get_bloodPressure_year           (for last 5 years) (for both cumulative and non-cumulative measurements)
      * example call: /measurements_get_bloodPressure_all            (all time)         (for both cumulative and non-cumulative measurements)
-     * example call: /measurements_get_exercise_dailyavg_week       (for last year)    (for cumulative measurements)
-     * example call: /measurements_get_exercise_dailyavg_month      (for last year)    (for cumulative measurements)
-     * example call: /measurements_get_exercise_dailyavg_year       (for last 5 years) (for cumulative measurements)
-     * example call: /measurements_get_exercise_dailyavg_all        (all time)         (for cumulative measurements)
-     * example call: /measurements_get_sleep_dailyavg_week                             (just a reminder that sleep is cumulative)
-     * example call: /measurements_get_calories_dailyavg_month                         (just a reminder that calories are cumulative)
+     * example call: /measurements_get_exercise_dailyavg_week       (for last year)    (for cumulative measurements) TODO change 'dailyavg' to 'groupdays'
+     * example call: /measurements_get_exercise_dailyavg_month      (for last year)    (for cumulative measurements) TODO change 'dailyavg' to 'groupdays'
+     * example call: /measurements_get_exercise_dailyavg_year       (for last 5 years) (for cumulative measurements) TODO change 'dailyavg' to 'groupdays'
+     * example call: /measurements_get_exercise_dailyavg_all        (all time)         (for cumulative measurements) TODO change 'dailyavg' to 'groupdays'
+     * example call: /measurements_get_sleep_dailyavg_week                             (just a reminder that sleep is cumulative)      TODO change 'dailyavg' to 'groupdays'
+     * example call: /measurements_get_calories_dailyavg_month                         (just a reminder that calories are cumulative)  TODO change 'dailyavg' to 'groupdays'
      * example call: /measurements_get_bloodPressure_individual_2015-01-25_2016-02-15  (from Jan 25 2015 to Feb 15 2016) (non-cumulative/cumulative)
      * example call: /measurements_get_bloodPressure_day_2015-01-25_2016-02-15         (from Jan 25 2015 to Feb 15 2016) (non-cumulative/cumulative)
      * example call: /measurements_get_bloodPressure_week_2015-01-25_2016-02-15        (from Jan 25 2015 to Feb 15 2016) (non-cumulative/cumulative)
      * example call: /measurements_get_bloodPressure_month_2015-01-25_2016-02-15       (from Jan 25 2015 to Feb 15 2016) (non-cumulative/cumulative)
      * example call: /measurements_get_bloodPressure_year_2015-01-25_2016-02-15        (from Jan 25 2015 to Feb 15 2016) (non-cumulative/cumulative)
      * example call: /measurements_get_bloodPressure_all_2015-01-25_2016-02-15         (from Jan 25 2015 to Feb 15 2016) (non-cumulative/cumulative)
-     * example call: /measurements_get_exercise_dailyavg_week_2015-01-25_2016-02-15        (from Jan 25 2015 to Feb 15 2016) (cumulative only)
-     * example call: /measurements_get_exercise_dailyavg_month_2015-01-25_2016-02-15       (from Jan 25 2015 to Feb 15 2016) (cumulative only)
-     * example call: /measurements_get_exercise_dailyavg_year_2015-01-25_2016-02-15        (from Jan 25 2015 to Feb 15 2016) (cumulative only)
-     * example call: /measurements_get_exercise_dailyavg_all_2015-01-25_2016-02-15         (from Jan 25 2015 to Feb 15 2016) (cumulative only)
-     * example call: /measurements_get_sleep_dailyavg_year_2015-01-25_2016-02-15           (just a reminder that sleep is cumulative)
-     * example call: /measurements_get_calories_dailyavg_year_2015-01-25_2016-02-15        (just a reminder that calories are cumulative)
+     * example call: /measurements_get_exercise_dailyavg_week_2015-01-25_2016-02-15        (from Jan 25 2015 to Feb 15 2016) (cumulative only) TODO change 'dailyavg' to 'groupdays'
+     * example call: /measurements_get_exercise_dailyavg_month_2015-01-25_2016-02-15       (from Jan 25 2015 to Feb 15 2016) (cumulative only) TODO change 'dailyavg' to 'groupdays'
+     * example call: /measurements_get_exercise_dailyavg_year_2015-01-25_2016-02-15        (from Jan 25 2015 to Feb 15 2016) (cumulative only) TODO change 'dailyavg' to 'groupdays'
+     * example call: /measurements_get_exercise_dailyavg_all_2015-01-25_2016-02-15         (from Jan 25 2015 to Feb 15 2016) (cumulative only) TODO change 'dailyavg' to 'groupdays'
+     * example call: /measurements_get_sleep_dailyavg_year_2015-01-25_2016-02-15           (just a reminder that sleep is cumulative)          TODO change 'dailyavg' to 'groupdays'
+     * example call: /measurements_get_calories_dailyavg_year_2015-01-25_2016-02-15        (just a reminder that calories are cumulative)      TODO change 'dailyavg' to 'groupdays'
      */
     private static function get() {        
         
@@ -72,11 +72,8 @@ class MeasurementsController {
         }
         
         // were all measurements of all types requested?
-        if (strpos($_SESSION['arguments'], '_') === false) {
-            if ($_SESSION['arguments'] === 'all')
-                self::getAll();
-            else
-                self::error('Error: invalid argument(s)');
+        if ($_SESSION['arguments'] === 'all') {
+            self::getAll();
             return;
         }
         
@@ -86,24 +83,18 @@ class MeasurementsController {
         $allowedPeriods = array('individual', 'day', 'week', 'month', 'year', 'all');
         $allowedAvgPeriods = array('week', 'month', 'year', 'all');
         $dateRegExpOptions = array("options" => array("regexp" => "/^((\d{4}[\/-]\d\d[\/-]\d\d)|(\d\d[\/-]\d\d[\/-]\d{4}))$/")); // YYYY-MM-DD or MM-DD-YYYY
+        $groupEachDay = false;
         
         // break up arguments, taking into account a possible extra argument for daily average requests
         $args = explode('_', $_SESSION['arguments']);
-        $measType = $args[0];
-        if ($args[1] !== 'dailyavg') { // no daily avgs requested
-            $dailyAvgWanted = false;
-            $timePeriod = $args[1];
-            if (count($args) === 4) {
-                $startDate = $args[2];
-                $endDate = $args[3];
-            }
-        } else {                       // daily avgs requested
-            $dailyAvgWanted = true;
-            $timePeriod = $args[2];
-            if (count($args) === 5) {
-                $startDate = $args[3];
-                $endDate = $args[4];
-            }
+        $measType = array_shift($args);
+        if ( ($timePeriod = array_shift($args)) === 'dailyavg') {
+            $groupEachDay = true;
+            $timePeriod = array_shift($args);
+        }
+        if (count($args) === 2) {
+            $minDate = array_shift($args);
+            $maxDate = array_shift($args);
         }
         
         // validate arguments
@@ -111,39 +102,44 @@ class MeasurementsController {
             echo '{"error":"Requested measurement type ' .$measType. ' invalid."}';
             return;
         }
-        if ($dailyAvgWanted && !in_array($timePeriod, $allowedAvgPeriods)) {
+        if ($groupEachDay && !in_array($timePeriod, $allowedAvgPeriods)) {
             echo '{"error":"Requested period ' .$timePeriod. ' invalid for daily average data."}';
             return;
-        } else if (!$dailyAvgWanted && !in_array($timePeriod, $allowedPeriods)) {
+        } else if (!$groupEachDay && !in_array($timePeriod, $allowedPeriods)) {
             echo '{"error":"Requested period ' .$timePeriod. ' invalid."}';
             return;
         }
-        if (isset($startDate) && isset($endDate)) {
-            if (!filter_var($startDate, FILTER_VALIDATE_REGEXP, $dateRegExpOptions)) {
-                echo '{"error":"Requested start date ' .$startDate. ' invalid."}';
+        if (isset($minDate) && isset($maxDate)) {
+            if (!filter_var($minDate, FILTER_VALIDATE_REGEXP, $dateRegExpOptions)) {
+                echo '{"error":"Requested start date ' .$minDate. ' invalid."}';
                 return;
             }
-            if (!filter_var($endDate, FILTER_VALIDATE_REGEXP, $dateRegExpOptions)) {
-                echo '{"error":"Requested end date ' .$endDate. ' invalid."}';
+            if (!filter_var($maxDate, FILTER_VALIDATE_REGEXP, $dateRegExpOptions)) {
+                echo '{"error":"Requested end date ' .$maxDate. ' invalid."}';
                 return;
             }
         } else {
-            $startDate = null;
-            $endDate = null;
+            $minDate = null;
+            $maxDate = null;
         }
+        
+//         echo "arguments: {$_SESSION['arguments']}\n\t";
+//         echo "timePeriod: $timePeriod\n\t";
+//         echo "groupEachDay: " .($groupEachDay ? 'true' : 'false'). "\n\t";
+//         echo "minDate: " .(is_null($minDate) ? 'null' : $minDate). "\n\t";
+//         echo "maxDate: " .(is_null($maxDate) ? 'null' : $maxDate). "\n";
             
         /* class/function to call depends on measurement type and what data was requested.
          * The data requested can be individual measurements, daily/weekly/monthly/yearly averages,
          * with or without the date range specified. If no date range is specified, a default will be used.
-         * The function call is constructed manually as a string, then evaluated with PHP's eval() function.*/
-        $dbModelClass = ucfirst($args[0]) . 'MeasurementsDB'; // determine which measurement DB model should be called
+         * The function call is constructed manually as a string and then executed.*/
+        $dbModelClass = ucfirst($measType) . 'MeasurementsDB'; // determine which measurement DB model should be called
         if ($timePeriod === 'all')
-            $queryCommand = 'return ' .$dbModelClass. '::getMeasurementsBy("userName", "' .$_SESSION['profile']->getUserName(). '");';
+            $measurements = call_user_func("$dbModelClass::getMeasurementsBy", 'userName', $_SESSION['profile']->getUserName());
         else if ($timePeriod === 'individual')
-            $queryCommand = 'return ' .$dbModelClass. '::getMeasurementsBounded("userName", "' .$_SESSION['profile']->getUserName(). '", "' .$minDate. '", "' .$maxDate. '");';
+            $measurements = call_user_func("$dbModelClass::getMeasurementsBounded", 'userName', $_SESSION['profile']->getUserName(), $minDate, $maxDate);
         else
-            $queryCommand = 'return ' .$dbModelClass. '::getTimePeriodMeasurements("' .$_SESSION["profile"]->getUserName(). '", "' .$timePeriod. '", ' .$dailyAvgWanted. ', "' .$minDate. '", "' .$maxDate. '");';
-        $measurements = eval($queryCommand); // request measurement data
+            $measurements = call_user_func("$dbModelClass::getTimePeriodMeasurements", $_SESSION['profile']->getUserName(), $timePeriod, $groupEachDay, $minDate, $maxDate);
         
         // check for error message and output error if one is found
         if (array_key_exists('error', $measurements)) {

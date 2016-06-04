@@ -162,34 +162,18 @@ class MeasurementsView{
                                     <!-- tabs for each chart's settings -->
                                     <div id="charts_settings" class="collapse navbar-collapse">
                                         <ul id="charts_settings_tabs" class="nav nav-tabs nav-justified" role="tablist">
-                                            <li class="active" role="presentation"><a class="tooltip-help" href="#chart1-settings" id="chart1_settings_tab_btn" aria-controls="chart1-settings" role="tab" data-toggle="tooltip" title="Settings for the first chart">Chart 1</a></li>
-                                            <li role="presentation"><a class="tooltip-help" href="#chart2-settings" id="chart2_settings_tab_btn" aria-controls="chart2-settings" role="tab" data-toggle="tooltip" title="Settings for a second chart, which is available for larger screen sizes">Chart 2</a></li>
+                                            <li class="active" role="presentation"><a class="tooltip-help" href="#chart1-settings" id="chart1_settings_tab_btn" aria-controls="chart1_settings_tab_btn" role="tab" data-toggle="tab" title="Settings for the first chart">Chart 1</a></li>
+                                            <li role="presentation"><a class="tooltip-help" href="#chart2-settings" id="chart2_settings_tab_btn" aria-controls="chart2_settings_tab_btn" role="tab" data-toggle="tab" title="Settings for a second chart, which is available for larger screen sizes">Chart 2</a></li>
                                         </ul>
                                     </div>
                                     
                                     <!-- Chart Settings -->
                                     <div class="tab-content">
+                                    
+                                        <!-- First Chart's Settings -->
                                         <section role="tabpanel" id="chart1-settings" class="row tab-pane active">
                                             <div class="col-sm-12">
                                             
-                                                <div class="form-group">
-                                                    <label for="options_startDate">Start Date</label>
-                                                    <div class="input-group date date-picker">
-                                                        <input type="text" id="options_startDate" name="startDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
-                                                        <span class="input-group-addon">
-                                                            <span class="glyphicon glyphicon-calendar"></span>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="options_endDate">End Date</label>
-                                                    <div class="input-group date date-picker">
-                                                        <input type="text" id="options_endDate" name="endDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
-                                                        <span class="input-group-addon">
-                                                            <span class="glyphicon glyphicon-calendar"></span>
-                                                        </span>
-                                                    </div>
-                                                </div>
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label>
@@ -198,10 +182,21 @@ class MeasurementsView{
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox" id="options_secondChart" name="secondChart"<?=$showSecondChart?> />Show a second chart
-                                                        </label>
+                                                    <label for="options_startDate_primary-chart">Start Date</label>
+                                                    <div id="startDate-picker_primary" class="input-group date date-picker">
+                                                        <input type="text" id="options_startDate_primary-chart" name="firstChartStartDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="options_endDate_primary-chart">End Date</label>
+                                                    <div id="endDate-picker_primary" class="input-group date date-picker endDate-picker">
+                                                        <input type="text" id="options_endDate_primary-chart" name="firstChartEndDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -222,9 +217,50 @@ class MeasurementsView{
                                             </div>
                                         </section>
                                         
+                                        <!-- Second Chart's Settings -->
                                         <section role="tabpanel" id="chart2-settings" class="row tab-pane active">
                                             <div class="col-sm-12">
-                                                Second Chart's Settings
+                                            
+                                                <div class="form-group">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" id="options_secondChart" name="firstChart"<?=$showSecondChart?> />Show chart
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="options_startDate_secondary-chart">Start Date</label>
+                                                    <div id="startDate-picker_secondary" class="input-group date date-picker">
+                                                        <input type="text" id="options_startDate_secondary-chart" name="secondChartStartDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="options_endDate_secondary-chart">End Date</label>
+                                                    <div id="endDate-picker_secondary" class="input-group date date-picker endDate-picker">
+                                                        <input type="text" id="options_endDate_secondary-chart" name="secondChartEndDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" id="options_lastYear" name="lastYear"<?=$chartLastYear?> />Show same time last year
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" id="options_dailyAverages" name="dailyAverages"<?=$chartDailyAverages?> />Show daily averages
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                
                                             </div>
                                         </section>
                                         
