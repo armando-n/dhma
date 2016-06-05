@@ -11,10 +11,10 @@ create table Users(
     dateCreated     timestamp default CURRENT_TIMESTAMP
 );
 
-drop table if exists MeasurementsOptionsPresets;
-create table MeasurementsOptionsPresets(
-    presetID                integer primary key auto_increment,
-    presetName              varchar(20) not null,
+drop table if exists MeasurementsOptions;
+create table MeasurementsOptions(
+    optionsID               integer primary key auto_increment,
+    optionsName             varchar(20) not null,
     bloodPressureUnits      enum('mm Hg') default 'mm Hg',
     calorieUnits            enum('calories') default 'calories',
     exerciseUnits           enum('minutes', 'hours', 'hours:minutes') default 'minutes',
@@ -40,31 +40,31 @@ create table MeasurementsOptionsPresets(
     chartDailyAverages      boolean default false,
     userID                  integer not null,
     foreign key (userID) references Users (userID) on delete cascade,
-    constraint uniq_measOptPresetName unique (presetName, userID)
+    constraint uniq_measOpts unique (optionsName, userID)
 );
 
 drop table if exists UserProfiles;
 create table UserProfiles(
-    profileID       integer primary key auto_increment,
-    firstName       varchar(50),
-    lastName        varchar(50),
-    email           varchar(50),
-    phone           varchar(20),
-    gender          enum('male', 'female', 'other'),
-    dob             date,
-    country         varchar(50),
-    picture         varchar(50) default 'profile_default.png',
-    facebook        varchar(50),
-    theme           varchar(20),
-    accentColor     char(7), -- example: '#0088BB'
-    isProfilePublic boolean default false,
-    isPicturePublic boolean default false,
-    sendReminders   boolean default false,
-    stayLoggedIn    boolean default false,
-    measOptPreset   integer,
-    userID          integer not null,
+    profileID             integer primary key auto_increment,
+    firstName             varchar(50),
+    lastName              varchar(50),
+    email                 varchar(50),
+    phone                 varchar(20),
+    gender                enum('male', 'female', 'other'),
+    dob                   date,
+    country               varchar(50),
+    picture               varchar(50) default 'profile_default.png',
+    facebook              varchar(50),
+    theme                 varchar(20),
+    accentColor           char(7), -- example: '#0088BB'
+    isProfilePublic       boolean default false,
+    isPicturePublic       boolean default false,
+    sendReminders         boolean default false,
+    stayLoggedIn          boolean default false,
+    measurementsOptionsID integer,
+    userID                integer not null,
     foreign key (userID) references Users (userID) on delete cascade,
-    foreign key (measOptPreset) references MeasurementsOptionsPresets (presetID)
+    foreign key (measurementsOptionsID) references MeasurementsOptions (optionsID)
 );
 
 drop table if exists BloodPressureMeasurements;
@@ -155,8 +155,8 @@ insert into Users (userName, password) values
     ('admin', '$2y$10$D7IJ76T54m8EcNL4UwhYLO.N1xXoGnYijwhJ9TCksQNMTJNvC6aUq');
 update Users set isAdministrator = true where userName = 'admin';
 
--- measurements options presets data
-insert into MeasurementsOptionsPresets (presetName, bloodPressureUnits, calorieUnits, exerciseUnits,
+-- measurements options data
+insert into MeasurementsOptions (optionsName, bloodPressureUnits, calorieUnits, exerciseUnits,
     glucoseUnits, sleepUnits, weightUnits, timeFormat, showTooltips, showExerciseTypeCol, showDateCol,
     showTimeCol, showNotesCol, numRows, showFirstChart, showSecondChart, firstChartType, secondChartType,
     firstChartStart, secondChartStart, firstChartEnd, secondChartEnd, chartLastYear, chartDailyAverages,
@@ -214,7 +214,7 @@ insert into MeasurementsOptionsPresets (presetName, bloodPressureUnits, calorieU
         default, default, 10);
 
 -- UserProfile data
-insert into UserProfiles (firstName, lastName, email, phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,  isPicturePublic, sendReminders, stayLoggedIn, measOptPreset, userID)
+insert into UserProfiles (firstName, lastName, email, phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,  isPicturePublic, sendReminders, stayLoggedIn, measurementsOptionsID, userID)
     values
         ("Member", "Guy", "member@email.com", "210-555-2170", "male", "1992-08-07", "United States of America", "member.jpg", null, "light", "#0088BB", true, true, false, false, 1, 1),
         ("Robin", "Scherbatsky", "robbins@email.com", "210-555-1593", "female", "1980-02-22", "United States of America", "robbins.jpg", "http://www.facebook.com/robbins", "light", "#0088BB", true, true, true, true, 2, 2),
@@ -222,12 +222,12 @@ insert into UserProfiles (firstName, lastName, email, phone, gender, dob, countr
         ("Bob", "Roberts", "bobrob@email.com", "450-555-1253", "male", "1973-01-12", "United States of America", "bob.jpg", null, "light", "#44DD88", true, false, false, true, 4, 4),
         ("Sarah", "Kinberg", "sarahk@email.com", "512-555-4826", "female", "1987-08-24", "United States of America", "sarahk.jpg", null, "light", "#0088BB", true, true, false, false, 5, 5),
         ("Jason", "McMann", "jason@email.com", "341-555-3856", "male", "1983-10-12", "United States of America", "whatup.jpg", null, "dark", "#0088BB", true, true, false, false, 6, 6);
-insert into UserProfiles(email, measOptPreset, userID)
+insert into UserProfiles(email, measurementsOptionsID, userID)
     values
         ('deleteme1@email.com', 7, 7),
         ('deleteme2@email.com', 8, 8),
         ('deleteme3@email.com', 9, 9);
-insert into UserProfiles(email, measOptPreset, userID) values ('admin@email.com', 10, 10);
+insert into UserProfiles(email, measurementsOptionsID, userID) values ('admin@email.com', 10, 10);
 
 
 -- measurement data is in separate file 'measurement_inserts.sql' which is generated by /resources/InsertsGenerator.php

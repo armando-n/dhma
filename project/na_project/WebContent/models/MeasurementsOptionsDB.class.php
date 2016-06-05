@@ -1,29 +1,29 @@
 <?php
 
-class MeasurementsOptionsPresetsDB {
+class MeasurementsOptionsDB {
     
-    /* adds the specified MeasurementsOptionsPreset object to the appropriate user in the database.
-     * returns success associative array w/ presetID in data object,
+    /* adds the specified MeasurementsOptions object to the appropriate user in the database.
+     * returns success associative array w/ optionsID in data object,
      * or an associative array w/ key 'error' w/ an error message as value on failure */
-    public static function addPreset($preset) {
+    public static function addOptions($options) {
         $resultData = new stdObject();
-        $resultData->returnPresetID = -1;
+        $resultData->returnOptionsID = -1;
     
         try {
-            if (!($preset instanceof MeasurementsOptionsPreset))
-                throw new InvalidArgumentException('Expected MeasurementsOptionsPreset. Got ' . get_class($preset));
+            if (!($options instanceof MeasurementsOptions))
+                throw new InvalidArgumentException('Expected MeasurementsOptions. Got ' . get_class($options));
             
-            $userID = self::findUserID($preset->getUserName());
+            $userID = self::findUserID($options->getUserName());
                 
-            // add the preset and associate with the correct userID
+            // add the options and associate with the correct userID
             $stmt = Database::getDB()->prepare(
-                "insert into MeasurementsOptionsPresets (userID, presetName, bloodPressureUnits,
+                "insert into MeasurementsOptions (userID, optionsName, bloodPressureUnits,
                     calorieUnits, exerciseUnits, glucoseUnits, sleepUnits, weightUnits,
                     timeFormat, showTooltips, showExerciseTypeCol, showDateCol, showTimeCol,
                     showNotesCol, numRows, showFirstChart, showSecondChart, firstChartType,
                     secondChartType, firstChartStart, secondChartStart, firstChartEnd,
                     secondChartEnd, chartLastYear, chartDailyAverages)
-                values (:userID, :presetName, :bloodPressureUnits,
+                values (:userID, :optionsName, :bloodPressureUnits,
                     :calorieUnits, :exerciseUnits, :glucoseUnits, :sleepUnits, :weightUnits,
                     :timeFormat, :showTooltips, :showExerciseTypeCol, :showDateCol, :showTimeCol,
                     :showNotesCol, :numRows, :showFirstChart, :showSecondChart, :firstChartType,
@@ -32,32 +32,32 @@ class MeasurementsOptionsPresetsDB {
             );
             $stmt->execute(array(
                 ":userID" => $userID,
-                ":presetName" => $preset->getPresetName(),
-                ":bloodPressureUnits" => $preset->getBloodPressureUnits(),
-                ":calorieUnits" => $preset->getCalorieUnits(),
-                ":exerciseUnits" => $preset->getExerciseUnits(),
-                ":glucoseUnits" => $preset->getGlucoseUnits(),
-                ":sleepUnits" => $preset->getSleepUnits(),
-                ":weightUnits" => $preset->getWeightUnits(),
-                ":timeFormat" => $preset->getTimeFormat(),
-                ":showTooltips" => $preset->getShowTooltips(),
-                ":showExerciseTypeCol" => $preset->getShowExerciseTypeCol(),
-                ":showDateCol" => $preset->getShowDateCol(),
-                ":showTimeCol" => $preset->getShowTimeCol(),
-                ":showNotesCol" => $preset->getShowNotesCol(),
-                ":numRows" => $preset->getNumRows(),
-                ":showFirstChart" => $preset->getShowFirstChart(),
-                ":showSecondChart" => $preset->getShowSecondChart(),
-                ":firstChartType" => $preset->getFirstChartType(),
-                ":secondChartType" => $preset->getSecondChartType(),
-                ":firstChartStart" => $preset->getFirstChartStart(),
-                ":secondChartStart" => $preset->getSecondChartStart(),
-                ":firstChartEnd" => $preset->getFirstChartEnd(),
-                ":secondChartEnd" => $preset->getSecondChartEnd(),
-                ":chartLastYear" => $preset->getChartLastYear(),
-                ":chartDailyAverages" => $preset->getChartDailyAverages()
+                ":optionsName" => $options->getOptionsName(),
+                ":bloodPressureUnits" => $options->getBloodPressureUnits(),
+                ":calorieUnits" => $options->getCalorieUnits(),
+                ":exerciseUnits" => $options->getExerciseUnits(),
+                ":glucoseUnits" => $options->getGlucoseUnits(),
+                ":sleepUnits" => $options->getSleepUnits(),
+                ":weightUnits" => $options->getWeightUnits(),
+                ":timeFormat" => $options->getTimeFormat(),
+                ":showTooltips" => $options->getShowTooltips(),
+                ":showExerciseTypeCol" => $options->getShowExerciseTypeCol(),
+                ":showDateCol" => $options->getShowDateCol(),
+                ":showTimeCol" => $options->getShowTimeCol(),
+                ":showNotesCol" => $options->getShowNotesCol(),
+                ":numRows" => $options->getNumRows(),
+                ":showFirstChart" => $options->getShowFirstChart(),
+                ":showSecondChart" => $options->getShowSecondChart(),
+                ":firstChartType" => $options->getFirstChartType(),
+                ":secondChartType" => $options->getSecondChartType(),
+                ":firstChartStart" => $options->getFirstChartStart(),
+                ":secondChartStart" => $options->getSecondChartStart(),
+                ":firstChartEnd" => $options->getFirstChartEnd(),
+                ":secondChartEnd" => $options->getSecondChartEnd(),
+                ":chartLastYear" => $options->getChartLastYear(),
+                ":chartDailyAverages" => $options->getChartDailyAverages()
             ));
-            $resultData->returnPresetID = $db->lastInsertId("presetID");
+            $resultData->returnOptionsID = $db->lastInsertId("optionsID");
     
         } catch (PDOException $e) {
             return array('success' => false, 'error' => $e->getMessage());
@@ -72,25 +72,25 @@ class MeasurementsOptionsPresetsDB {
         return array('success' => true, 'data' => $resultData);
     }
     
-    /* edits the old preset with the information in the new preset
+    /* edits the old options with the information in the new options
      * returns a success associative array on success w/ number of rows affected in data field,
      * or returns an error associative array on failure */
-    public static function editPreset($oldPreset, $newPreset) {
+    public static function editOptions($oldOptions, $newOptions) {
         $returnData = new stdObject();
         $returnData->rowsAffected = 0;
         
         try {
-            if (!($oldPreset instanceof MeasurementsOptionsPreset))
-                throw new InvalidArgumentException('Expected MeasurementsOptionsPreset for old preset. Got ' . get_class($oldPreset));
-            if (!($newPreset instanceof MeasurementsOptionsPreset))
-                throw new InvalidArgumentException('Expected MeasurementsOptionsPreset for new preset. Got ' . get_class($newPreset));
+            if (!($oldOptions instanceof MeasurementsOptions))
+                throw new InvalidArgumentException('Expected MeasurementsOptions for old options. Got ' . get_class($oldOptions));
+            if (!($newOptions instanceof MeasurementsOptions))
+                throw new InvalidArgumentException('Expected MeasurementsOptions for new options. Got ' . get_class($newOptions));
             
-            $userID = self::findUserID($oldPreset->getUserName());
+            $userID = self::findUserID($oldOptions->getUserName());
             
-            // edit the preset
+            // edit the options
             $stmt = Database::getDB()->prepare(
-                "update MeasurementsOptionsPresets
-                set presetName = :newPresetName,
+                "update MeasurementsOptions
+                set optionsName = :newOptionsName,
                     bloodPressureUnits = :bloodPressureUnits,
                     calorieUnits = :calorieUnits,
                     exerciseUnits = :exerciseUnits,
@@ -115,35 +115,35 @@ class MeasurementsOptionsPresetsDB {
                     chartLastYear = :chartLastYear,
                     chartDailyAverages = :chartDailyAverages
                 where userID = :userID
-                    and presetName = :oldPresetName"
+                    and optionsName = :oldOptionsName"
             );
             $stmt->execute(array(
                 ":userID" => $userID,
-                ":newPresetName" => $newPreset->getPresetName(),
-                ":bloodPressureUnits" => $newPreset->getBloodPressureUnits(),
-                ":calorieUnits" => $newPreset->getCalorieUnits(),
-                ":exerciseUnits" => $newPreset->getExerciseUnits(),
-                ":glucoseUnits" => $newPreset->getGlucoseUnits(),
-                ":sleepUnits" => $newPreset->getSleepUnits(),
-                ":weightUnits" => $newPreset->getWeightUnits(),
-                ":timeFormat" => $newPreset->getTimeFormat(),
-                ":showTooltips" => $newPreset->getShowTooltips(),
-                ":showExerciseTypeCol" => $newPreset->getShowExerciseTypeCol(),
-                ":showDateCol" => $newPreset->getShowDateCol(),
-                ":showTimeCol" => $newPreset->getShowTimeCol(),
-                ":showNotesCol" => $newPreset->getShowNotesCol(),
-                ":numRows" => $newPreset->getNumRows(),
-                ":showFirstChart" => $newPreset->getShowFirstChart(),
-                ":showSecondChart" => $newPreset->getShowSecondChart(),
-                ":firstChartType" => $newPreset->getFirstChartType(),
-                ":secondChartType" => $newPreset->getSecondChartType(),
-                ":firstChartStart" => $newPreset->getFirstChartStart(),
-                ":secondChartStart" => $newPreset->getSecondChartStart(),
-                ":firstChartEnd" => $newPreset->getFirstChartEnd(),
-                ":secondChartEnd" => $newPreset->getSecondChartEnd(),
-                ":chartLastYear" => $newPreset->getChartLastYear(),
-                ":chartDailyAverages" => $newPreset->getChartDailyAverages(),
-                ":oldPresetName" => $oldPreset->getPresetName()
+                ":newOptionsName" => $newOptions->getOptionsName(),
+                ":bloodPressureUnits" => $newOptions->getBloodPressureUnits(),
+                ":calorieUnits" => $newOptions->getCalorieUnits(),
+                ":exerciseUnits" => $newOptions->getExerciseUnits(),
+                ":glucoseUnits" => $newOptions->getGlucoseUnits(),
+                ":sleepUnits" => $newOptions->getSleepUnits(),
+                ":weightUnits" => $newOptions->getWeightUnits(),
+                ":timeFormat" => $newOptions->getTimeFormat(),
+                ":showTooltips" => $newOptions->getShowTooltips(),
+                ":showExerciseTypeCol" => $newOptions->getShowExerciseTypeCol(),
+                ":showDateCol" => $newOptions->getShowDateCol(),
+                ":showTimeCol" => $newOptions->getShowTimeCol(),
+                ":showNotesCol" => $newOptions->getShowNotesCol(),
+                ":numRows" => $newOptions->getNumRows(),
+                ":showFirstChart" => $newOptions->getShowFirstChart(),
+                ":showSecondChart" => $newOptions->getShowSecondChart(),
+                ":firstChartType" => $newOptions->getFirstChartType(),
+                ":secondChartType" => $newOptions->getSecondChartType(),
+                ":firstChartStart" => $newOptions->getFirstChartStart(),
+                ":secondChartStart" => $newOptions->getSecondChartStart(),
+                ":firstChartEnd" => $newOptions->getFirstChartEnd(),
+                ":secondChartEnd" => $newOptions->getSecondChartEnd(),
+                ":chartLastYear" => $newOptions->getChartLastYear(),
+                ":chartDailyAverages" => $newOptions->getChartDailyAverages(),
+                ":oldOptionsName" => $oldOptions->getOptionsName()
             ));
             $returnData->rowsAffected = $stmt->rowCount();
     
@@ -160,7 +160,7 @@ class MeasurementsOptionsPresetsDB {
         return array('success' => true, 'data' => $returnData);
     }
     
-    public static function deletePreset($userName, $presetName) {
+    public static function deleteOptions($userName, $optionsName) {
         $returnData = new stdObject();
         $returnData->rowsAffected = 0;
         
@@ -168,13 +168,13 @@ class MeasurementsOptionsPresetsDB {
             $userID = self::findUserID($userName);
 
             $stmt = Database::getDB()->prepare(
-                "delete from MeasurementsOptionsPresets
+                "delete from MeasurementsOptions
                 where userID = :userID
-                    and presetName = :presetName"
+                    and optionsName = :optionsName"
             );
             $stmt->execute(array(
                 ":userID" => $userID,
-                ":presetName" => $presetName
+                ":optionsName" => $optionsName
             ));
             $returnData->rowsAffected = $stmt->rowCount();
 
@@ -190,30 +190,30 @@ class MeasurementsOptionsPresetsDB {
     }
     
     /* on success, returns a success associative array w/ the data field containing
-     * an array of MeasurementsOptionsPreset objects for the user with the specified userName.
+     * an array of MeasurementsOptions objects for the user with the specified userName.
      * returns an error associative array on failure */
-    public static function getPresetsFor($userName) {
-        $allPresets = array();
+    public static function getOptionsFor($userName) {
+        $allOptions = array();
     
         try {
             $stmt = Database::getDB()->prepare(                // query database
-                "select userName, presetName, bloodPressureUnits,
+                "select userName, optionsName, bloodPressureUnits,
                     calorieUnits, exerciseUnits, glucoseUnits, sleepUnits, weightUnits,
                     timeFormat, showTooltips, showExerciseTypeCol, showDateCol, showTimeCol,
                     showNotesCol, numRows, showFirstChart, showSecondChart, firstChartType,
                     secondChartType, firstChartStart, secondChartStart, firstChartEnd,
                     secondChartEnd, chartLastYear, chartDailyAverages
-                from Users join MeasurementsOptionsPresets using (userID)
+                from Users join MeasurementsOptions using (userID)
                 where userName = :userName"
             );
             $stmt->execute(array(":userName" => $userName));
     
             foreach ($stmt as $row) {    // create objects for each returned row
-                $preset = new MeasurementsOptionsPreset($row);
-                if (!is_object($preset) || $preset->getErrorCount() > 0)
+                $options = new MeasurementsOptions($row);
+                if (!is_object($options) || $options->getErrorCount() > 0)
                     throw new RuntimeException("Failed to create valid user profile");
     
-                $allPresets[] = $preset;
+                $allOptions[] = $options;
             }
         } catch (PDOException $e) {
             return array('success' => false, 'error' => $e->getMessage());
@@ -221,36 +221,36 @@ class MeasurementsOptionsPresetsDB {
             return array('success' => false, 'error' => $e->getMessage());
         }
     
-        return array('success' => true, 'data' => $allPresets);
+        return array('success' => true, 'data' => $allOptions);
     }
     
-    /* on success, returns a MeasurementsOptionsPreset object for the specified preset of the specified user
+    /* on success, returns a MeasurementsOptions object for the specified options of the specified user
      * on failure, returns an error associative array */
-    public static function getPreset($userName, $presetName) {
+    public static function getOptions($userName, $optionsName) {
         try {
             // query database
             $stmt = Database::getDB()->prepare(
-                "select userName, presetName, bloodPressureUnits,
+                "select userName, optionsName, bloodPressureUnits,
                     calorieUnits, exerciseUnits, glucoseUnits, sleepUnits, weightUnits,
                     timeFormat, showTooltips, showExerciseTypeCol, showDateCol, showTimeCol,
                     showNotesCol, numRows, showFirstChart, showSecondChart, firstChartType,
                     secondChartType, firstChartStart, secondChartStart, firstChartEnd,
                     secondChartEnd, chartLastYear, chartDailyAverages
-                from Users join MeasurementsOptionsPresets using (userID)
+                from Users join MeasurementsOptions using (userID)
                 where userName = :userName
-                    and presetName = :presetName"
+                    and optionsName = :optionsName"
             );
             $stmt->execute(array(
                 ":userName" => $userName,
-                ":presetName" => $presetName
+                ":optionsName" => $optionsName
             ));
 
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($row === false)
                 throw new NotFoundException('User name "' . htmlspecialchars($userName). '" not found');
 
-            $preset = new MeasurementsOptionsPreset($row);
-            if (!is_object($preset) || $preset->getErrorCount() > 0)
+            $options = new MeasurementsOptions($row);
+            if (!is_object($options) || $options->getErrorCount() > 0)
                 throw new RuntimeException("Failed to create valid user profile");
 
         } catch (PDOException $e) {
@@ -261,8 +261,7 @@ class MeasurementsOptionsPresetsDB {
             return array('success' => false, 'error' => $e->getMessage());
         }
 
-        return array('success' => true, 'data' => $preset);
-    }
+        return array('success' => true, 'data' => $options);
     
     // find userID from given userName
     private static function findUserID($userName) {

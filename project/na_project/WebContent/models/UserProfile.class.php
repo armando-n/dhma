@@ -21,7 +21,7 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
     private $isPicturePublic;
     private $sendReminders;
     private $stayLoggedIn;
-    private $measOptPresetName;
+    private $measurementsOptions;
     
     public function __construct($formInput = null) {
         $this->formInput = $formInput;
@@ -93,34 +93,34 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
         return $this->stayLoggedIn;
     }
     
-    public function getMeasOptPresetName() {
-        return $this->measOptPresetName;
+    public function getMeasurementsOptions() {
+        return $this->measurementsOptions;
     }
     
-    public function setMeasOptPresetName($presetName) {
-        $this->measOptPresetName = $presetName;
+    public function setMeasurementsOptions($optionsName) {
+        $this->measurementsOptions = $optionsName;
     }
     
     // Returns data fields as an associative array
     public function getParameters() {
         $paramArray = array(
-                "firstName" => $this->firstName,
-                "lastName" => $this->lastName,
-                "email" => $this->email,
-                "phone" => $this->phone,
-                "gender" => $this->gender,
-                "dob" => $this->dob,
-                "country" => $this->country,
-                "picture" => $this->picture,
-                "facebook" => $this->facebook,
-                "theme" => $this->theme,
-                "accentColor" => $this->accentColor,
-                "isProfilePublic" => $this->isProfilePublic,
-                "isPicturePublic" => $this->isPicturePublic,
-                "sendReminders" => $this->sendReminders,
-                "stayLoggedIn" => $this->stayLoggedIn,
-                "userName" => $this->userName,
-                "measOptPresetName" => $this->measOptPresetName
+            "firstName" => $this->firstName,
+            "lastName" => $this->lastName,
+            "email" => $this->email,
+            "phone" => $this->phone,
+            "gender" => $this->gender,
+            "dob" => $this->dob,
+            "country" => $this->country,
+            "picture" => $this->picture,
+            "facebook" => $this->facebook,
+            "theme" => $this->theme,
+            "accentColor" => $this->accentColor,
+            "isProfilePublic" => $this->isProfilePublic,
+            "isPicturePublic" => $this->isPicturePublic,
+            "sendReminders" => $this->sendReminders,
+            "stayLoggedIn" => $this->stayLoggedIn,
+            "userName" => $this->userName,
+            "measurementsOptions" => $this->measurementsOptions
         );
         
         return $paramArray;
@@ -128,22 +128,22 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
     
     public function __toString() {
         $str =
-                "First name: [" . $this->firstName . "]\n" .
-                "Last name: [" . $this->lastName . "]\n" .
-                "E-mail address: [" . $this->email . "]\n" .
-                "Phone number: [" . $this->phone . "]\n" .
-                "Gender: [" . $this->gender . "]\n" .
-                "Date of birth: [" . $this->dob . "]\n" .
-                "Country: [" . $this->country . "]\n" .
-                "Picture: [" . $this->picture . "]\n" .
-                "Facebook: [" . $this->facebook . "]\n" .
-                "Theme: [" . $this->theme . "]\n" .
-                "Accent color: [" . $this->accentColor . "]\n" .
-                "Profile public: [" . (($this->isProfilePublic === true) ? "true" : "false") . "]\n" .
-                "Picture public: [" . (($this->isPicturePublic === true) ? "true" : "false") . "]\n" .
-                "Send reminders: [" . (($this->sendReminders === true) ? "true" : "false") . "]\n" .
-                "Stay logged in: [" . (($this->stayLoggedIn === true) ? "true" : "false") . "]\n" .
-                "Measurements Options Preset Name: [" . $this->measOptPresetName . "]'" ;
+            "First name: [" . $this->firstName . "]\n" .
+            "Last name: [" . $this->lastName . "]\n" .
+            "E-mail address: [" . $this->email . "]\n" .
+            "Phone number: [" . $this->phone . "]\n" .
+            "Gender: [" . $this->gender . "]\n" .
+            "Date of birth: [" . $this->dob . "]\n" .
+            "Country: [" . $this->country . "]\n" .
+            "Picture: [" . $this->picture . "]\n" .
+            "Facebook: [" . $this->facebook . "]\n" .
+            "Theme: [" . $this->theme . "]\n" .
+            "Accent color: [" . $this->accentColor . "]\n" .
+            "Profile public: [" . (($this->isProfilePublic === true) ? "true" : "false") . "]\n" .
+            "Picture public: [" . (($this->isPicturePublic === true) ? "true" : "false") . "]\n" .
+            "Send reminders: [" . (($this->sendReminders === true) ? "true" : "false") . "]\n" .
+            "Stay logged in: [" . (($this->stayLoggedIn === true) ? "true" : "false") . "]\n" .
+            "Measurements Options : [" . $this->measurementsOptions . "]'" ;
         
         return $str;
     }
@@ -168,7 +168,7 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
             $this->isPicturePublic = false;
             $this->sendReminders = false;
             $this->stayLoggedIn = false;
-            $this->measOptPresetName = "";
+            $this->measurementsOptions = "";
         }
         else {
             $this->validateFirstName();
@@ -187,7 +187,7 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
             $this->validateSendReminders();
             $this->validateStayLoggedIn();
             $this->validateUserName();
-            $this->validateMeasOptPresetName();
+            $this->validateMeasurementsOptions();
         }
     }
     
@@ -394,10 +394,10 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
         $this->stayLoggedIn = ($value) ? true : false;
     }
     
-    private function validateMeasOptPresetName() {
-        $this->measOptPresetName = $this->extractForm($this->formInput, "measOptPresetName");
-        if (empty($this->measOptPresetName)) {
-            $this->measOptPresetName = null;
+    private function validateMeasurementsOptions() {
+        $this->measurementsOptions = $this->extractForm($this->formInput, "measurementsOptions");
+        if (empty($this->measurementsOptions)) {
+            $this->measurementsOptions = null;
             return;
         }
     }
@@ -420,7 +420,7 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
         $object->isPicturePublic = $this->isPicturePublic;
         $object->sendReminders = $this->sendReminders;
         $object->stayLoggedIn = $this->stayLoggedIn;
-        $object->measOptPresetName = $this->measOptPresetName;
+        $object->measurementsOptions = $this->measurementsOptions;
         
         return $object;
     }

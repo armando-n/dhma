@@ -1,5 +1,5 @@
 <?php
-class MeasurementsOptionsPreset extends GenericModelObject implements JsonSerializable {
+class MeasurementsOptions extends GenericModelObject implements JsonSerializable {
     
     const DEFAULT_BLOODPRESSURE_UNITS = 'mm Hg';
     const DEFAULT_CALORIE_UNITS = 'calories';
@@ -26,7 +26,7 @@ class MeasurementsOptionsPreset extends GenericModelObject implements JsonSerial
     const DEFAULT_CHART_DAILY_AVERAGES = false;
     
     private $formInput;
-    private $presetName;
+    private $optionsName;
     private $userName;
     private $bloodPressureUnits;
     private $calorieUnits;
@@ -58,8 +58,8 @@ class MeasurementsOptionsPreset extends GenericModelObject implements JsonSerial
         $this->initialize();
     }
     
-    public function getPresetName() {
-        return $this->presetName;
+    public function getOptionsName() {
+        return $this->optionsName;
     }
     
     public function getUserName() {
@@ -161,7 +161,7 @@ class MeasurementsOptionsPreset extends GenericModelObject implements JsonSerial
     // Returns data fields as an associative array
     public function getParameters() {
         $paramArray = array(
-            "presetName" => $this->presetName,
+            "optionsName" => $this->optionsName,
             "userName" => $this->userName,
             "bloodPressureUnits" => $this->bloodPressureUnits,
             "calorieUnits" => $this->calorieUnits,
@@ -193,7 +193,7 @@ class MeasurementsOptionsPreset extends GenericModelObject implements JsonSerial
     
     public function __toString() {
         $str =
-            "Preset Name: [" . $this->presetName . "]\n" .
+            "Options Name: [" . $this->optionsName . "]\n" .
             "User Name: [" . $this->userName . "]\n" .
             "Blood Pressure Units: [" . $this->bloodPressureUnits . "]\n" .
             "Calorie Units: [" . $this->calorieUnits . "]\n" .
@@ -224,7 +224,7 @@ class MeasurementsOptionsPreset extends GenericModelObject implements JsonSerial
     
     public function jsonSerialize() {
         $object = new stdClass();
-        $object->presetName = $this->presetName;
+        $object->optionsName = $this->optionsName;
         $object->userName = $this->userName;
         $object->bloodPressureUnits = $this->bloodPressureUnits;
         $object->calorieUnits = $this->calorieUnits;
@@ -258,46 +258,46 @@ class MeasurementsOptionsPreset extends GenericModelObject implements JsonSerial
         $this->errors = array();
         
         if (is_null($this->formInput)) {
-            $this->setError('measurementsOptionsPreset', 'NULL_INPUT');
+            $this->setError('measurementsOptions', 'NULL_INPUT');
+            return;
         }
-        else {
-            self::$DEFAULT_FIRST_CHART_START = (new DateTime())->sub(new DateInterval('P1M'));
-            self::$DEFAULT_SECOND_CHART_START = (new DateTime())->sub(new DateInterval('P1Y'));
-            self::$DEFAULT_FIRST_CHART_END = new DateTime();
-            self::$DEFAULT_SECOND_CHART_END = new DateTime();
-            $this->validatePresetName();
-            $this->validateUserName();
-            $this->validateBloodPressureUnits();
-            $this->validateCalorieUnits();
-            $this->validateExerciseUnits();
-            $this->validateGlucoseUnits();
-            $this->validateSleepUnits();
-            $this->validateWeightUnits();
-            $this->validateTimeFormat();
-            $this->validateShowTooltips();
-            $this->validateShowExerciseTypeCol();
-            $this->validateShowDateCol();
-            $this->validateShowTimeCol();
-            $this->validateShowNotesCol();
-            $this->validateNumRows();
-            $this->validateShowFirstChart();
-            $this->validateShowSecondChart();
-            $this->validateFirstChartType();
-            $this->validateSecondChartType();
-            $this->validateFirstChartStart();
-            $this->validateSecondChartStart();
-            $this->validateFirstChartEnd();
-            $this->validateSecondChartEnd();
-            $this->validateChartLastYear();
-            $this->validateChartDailyAverages();
-        }
+        
+        self::$DEFAULT_FIRST_CHART_START = (new DateTime())->sub(new DateInterval('P1M'));
+        self::$DEFAULT_SECOND_CHART_START = (new DateTime())->sub(new DateInterval('P1Y'));
+        self::$DEFAULT_FIRST_CHART_END = new DateTime();
+        self::$DEFAULT_SECOND_CHART_END = new DateTime();
+        $this->validateOptionsName();
+        $this->validateUserName();
+        $this->validateBloodPressureUnits();
+        $this->validateCalorieUnits();
+        $this->validateExerciseUnits();
+        $this->validateGlucoseUnits();
+        $this->validateSleepUnits();
+        $this->validateWeightUnits();
+        $this->validateTimeFormat();
+        $this->validateShowTooltips();
+        $this->validateShowExerciseTypeCol();
+        $this->validateShowDateCol();
+        $this->validateShowTimeCol();
+        $this->validateShowNotesCol();
+        $this->validateNumRows();
+        $this->validateShowFirstChart();
+        $this->validateShowSecondChart();
+        $this->validateFirstChartType();
+        $this->validateSecondChartType();
+        $this->validateFirstChartStart();
+        $this->validateSecondChartStart();
+        $this->validateFirstChartEnd();
+        $this->validateSecondChartEnd();
+        $this->validateChartLastYear();
+        $this->validateChartDailyAverages();
     }
     
-    private function validatePresetName() {
-        $this->presetName = $this->extractForm($this->formInput, "presetName");
-        if (empty($this->presetName)) {
-            $this->presetName = null;
-            $this->setError("presetName", "PRESET_NAME_EMPTY");
+    private function validateOptionsName() {
+        $this->optionsName = $this->extractForm($this->formInput, "optionsName");
+        if (empty($this->optionsName)) {
+            $this->optionsName = null;
+            $this->setError("optionsName", "OPTIONS_NAME_EMPTY");
             return;
         }
     }

@@ -11,11 +11,11 @@ class UserProfilesDB {
                 "insert into UserProfiles (firstName, lastName, email, phone,
                 gender, dob, country, picture, facebook, theme, accentColor,
                 isProfilePublic, isPicturePublic, sendReminders, stayLoggedIn,
-                measOptPreset, userID)
+                measurementsOptionsID, userID)
                 values (:firstName, :lastName, :email, :phone, :gender, :dob,
                     :country, :picture, :facebook, :theme, :accentColor,
                     :isProfilePublic, :isPicturePublic, :sendReminders,
-                    :stayLoggedIn, :measOptPreset, :userID)"
+                    :stayLoggedIn, :measurementsOptionsID, :userID)"
             );
             $stmt->execute(array(
                 ":firstName" => $profile->getFirstName(),
@@ -33,7 +33,7 @@ class UserProfilesDB {
                 ":isPicturePublic" => $profile->isPicturePublic(),
                 ":sendReminders" => $profile->isSendRemindersSet(),
                 ":stayLoggedIn" => $profile->isStayLoggedInSet(),
-                ":measOptPreset" => $profile->getMeasOptPresetName(),
+                ":measurementsOptionsID" => $profile->getMeasurementsOptions(),
                 ":userID" => $userID
             ));
             $returnProfileID = $db->lastInsertId("profileID");
@@ -90,9 +90,9 @@ class UserProfilesDB {
                 "select userID, userName, dateCreated, profileID, firstName, lastName, email,
                     phone, gender, dob, country, picture, facebook, theme, accentColor,
                     isProfilePublic, isPicturePublic, sendReminders, stayLoggedIn,
-                    presetName as measOptPresetName
-                from Users join (UserProfiles join MeasurementsOptionsPresets using (userID)) using (userID)
-                where UserProfiles.measOptPreset = MeasurementsOptionsPresets.presetID"
+                    optionsName as measurementsOptions
+                from Users join (UserProfiles join MeasurementsOptions using (userID)) using (userID)
+                where UserProfiles.measurementsOptionsID = MeasurementsOptions.optionsID"
             );
             $stmt->execute();
         
@@ -125,10 +125,10 @@ class UserProfilesDB {
             $stmt = $db->prepare(
                 "select userID, userName, dateCreated, profileID, firstName, lastName, email,
                     phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,
-                    isPicturePublic, sendReminders, stayLoggedIn, presetName as measOptPresetName
-                from Users join (UserProfiles join MeasurementsOptionsPresets using (userID)) using (userID)
+                    isPicturePublic, sendReminders, stayLoggedIn, optionsName as measurementsOptions
+                from Users join (UserProfiles join MeasurementsOptions using (userID)) using (userID)
                 where ($type = :$type)
-                    and UserProfiles.measOptPreset = MeasurementsOptionsPresets.presetID");
+                    and UserProfiles.measurementsOptionsID = MeasurementsOptions.optionsID");
             $stmt->execute(array(":$type" => $value));
             
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -156,10 +156,10 @@ class UserProfilesDB {
             $stmt = $db->prepare(
                 "select userID, userName, dateCreated, profileID, firstName, lastName, email,
                     phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,
-                    isPicturePublic, sendReminders, stayLoggedIn, presetName as measOptPresetName
-                from Users join (UserProfiles join MeasurementsOptionsPresets using (userID)) using (userID)
-                where UserProfiles.measOptPreset = MeasurementsOptionsPresets.presetID
-                order by dateCreated $order");
+                    isPicturePublic, sendReminders, stayLoggedIn, optionsName as measurementsOptions
+                from Users join (UserProfiles join MeasurementsOptions using (userID)) using (userID)
+                where UserProfiles.measurementsOptionsID = MeasurementsOptions.optionsID
+                order by dateCreated $order"); // TODO this query is inefficient, fix it
             $stmt->execute();
     
             foreach ($stmt as $row) {
@@ -203,9 +203,9 @@ class UserProfilesDB {
             $stmt = $db->prepare(
                 "select userID, userName, dateCreated, profileID, firstName, lastName, email,
                     phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,
-                    isPicturePublic, sendReminders, stayLoggedIn, presetName as measOptPresetName
-                from Users join (UserProfiles join MeasurementsOptionsPresets using (userID)) using (userID)
-                where UserProfiles.measOptPreset = MeasurementsOptionsPresets.presetID
+                    isPicturePublic, sendReminders, stayLoggedIn, optionsName as measurementsOptions
+                from Users join (UserProfiles join MeasurementsOptions using (userID)) using (userID)
+                where UserProfiles.measurementsOptionsID = MeasurementsOptions.optionsID
                     and dateCreated $operator :date");
             $stmt->execute(array(":date" => $datetime->format('Y-m-d')));
     
