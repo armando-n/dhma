@@ -2,6 +2,7 @@
 class MeasurementsOptions extends GenericModelObject implements JsonSerializable {
     
     const DATE_FORMAT = "Y-m-d";
+    const DEFAULT_ACTIVE_MEASUREMENT = 'glucose';
     const DEFAULT_BLOODPRESSURE_UNITS = 'mm Hg';
     const DEFAULT_CALORIE_UNITS = 'calories';
     const DEFAULT_EXERCISE_UNITS = 'minutes';
@@ -88,6 +89,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     
     private $formInput;
     private $optionsName;
+    private $activeMeasurement;
     private $userName;
     private $bloodPressureUnits;
     private $calorieUnits;
@@ -187,6 +189,10 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
         return $this->userName;
     }
     
+    public function getActiveMeasurement() {
+        return $this->activeMeasurement;
+    }
+    
     public function getBloodPressureUnits() {
         return $this->bloodPressureUnits;
     }
@@ -280,243 +286,243 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     }
     
     public function getIndividualBloodPressureChartStart() {
-        return $this->individualBloodPressureChartStart;
+        return $this->individualBloodPressureChartStart->format(self::DATE_FORMAT);
     }
     
     public function getIndividualBloodPressureChartEnd() {
-        return $this->individualBloodPressureChartEnd;
+        return $this->individualBloodPressureChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getDailyBloodPressureChartStart() {
-        return $this->dailyBloodPressureChartStart;
+        return $this->dailyBloodPressureChartStart->format(self::DATE_FORMAT);
     }
     
     public function getDailyBloodPressureChartEnd() {
-        return $this->dailyBloodPressureChartEnd;
+        return $this->dailyBloodPressureChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getWeeklyBloodPressureChartStart() {
-        return $this->weeklyBloodPressureChartStart;
+        return $this->weeklyBloodPressureChartStart->format(self::DATE_FORMAT);
     }
     
     public function getWeeklyBloodPressureChartEnd() {
-        return $this->weeklyBloodPressureChartEnd;
+        return $this->weeklyBloodPressureChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getMonthlyBloodPressureChartStart() {
-        return $this->monthlyBloodPressureChartStart;
+        return $this->monthlyBloodPressureChartStart->format(self::DATE_FORMAT);
     }
     
     public function getMonthlyBloodPressureChartEnd() {
-        return $this->monthlyBloodPressureChartEnd;
+        return $this->monthlyBloodPressureChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getYearlyBloodPressureChartStart() {
-        return $this->yearlyBloodPressureChartStart;
+        return $this->yearlyBloodPressureChartStart->format(self::DATE_FORMAT);
     }
     
     public function getYearlyBloodPressureChartEnd() {
-        return $this->yearlyBloodPressureChartEnd;
+        return $this->yearlyBloodPressureChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getIndividualCaloriesChartStart() {
-        return $this->individualCaloriesChartStart;
+        return $this->individualCaloriesChartStart->format(self::DATE_FORMAT);
     }
     
     public function getIndividualCaloriesChartEnd() {
-        return $this->individualCaloriesChartEnd;
+        return $this->individualCaloriesChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getDailyCaloriesChartStart() {
-        return $this->dailyCaloriesChartStart;
+        return $this->dailyCaloriesChartStart->format(self::DATE_FORMAT);
     }
     
     public function getDailyCaloriesChartEnd() {
-        return $this->dailyCaloriesChartEnd;
+        return $this->dailyCaloriesChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getWeeklyCaloriesChartStart() {
-        return $this->weeklyCaloriesChartStart;
+        return $this->weeklyCaloriesChartStart->format(self::DATE_FORMAT);
     }
     
     public function getWeeklyCaloriesChartEnd() {
-        return $this->weeklyCaloriesChartEnd;
+        return $this->weeklyCaloriesChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getMonthlyCaloriesChartStart() {
-        return $this->monthlyCaloriesChartStart;
+        return $this->monthlyCaloriesChartStart->format(self::DATE_FORMAT);
     }
     
     public function getMonthlyCaloriesChartEnd() {
-        return $this->monthlyCaloriesChartEnd;
+        return $this->monthlyCaloriesChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getYearlyCaloriesChartStart() {
-        return $this->yearlyCaloriesChartStart;
+        return $this->yearlyCaloriesChartStart->format(self::DATE_FORMAT);
     }
     
     public function getYearlyCaloriesChartEnd() {
-        return $this->yearlyCaloriesChartEnd;
+        return $this->yearlyCaloriesChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getIndividualExerciseChartStart() {
-        return $this->individualExerciseChartStart;
+        return $this->individualExerciseChartStart->format(self::DATE_FORMAT);
     }
     
     public function getIndividualExerciseChartEnd() {
-        return $this->individualExerciseChartEnd;
+        return $this->individualExerciseChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getDailyExerciseChartStart() {
-        return $this->dailyExerciseChartStart;
+        return $this->dailyExerciseChartStart->format(self::DATE_FORMAT);
     }
     
     public function getDailyExerciseChartEnd() {
-        return $this->dailyExerciseChartEnd;
+        return $this->dailyExerciseChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getWeeklyExerciseChartStart() {
-        return $this->weeklyExerciseChartStart;
+        return $this->weeklyExerciseChartStart->format(self::DATE_FORMAT);
     }
     
     public function getWeeklyExerciseChartEnd() {
-        return $this->weeklyExerciseChartEnd;
+        return $this->weeklyExerciseChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getMonthlyExerciseChartStart() {
-        return $this->monthlyExerciseChartStart;
+        return $this->monthlyExerciseChartStart->format(self::DATE_FORMAT);
     }
     
     public function getMonthlyExerciseChartEnd() {
-        return $this->monthlyExerciseChartEnd;
+        return $this->monthlyExerciseChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getYearlyExerciseChartStart() {
-        return $this->yearlyExerciseChartStart;
+        return $this->yearlyExerciseChartStart->format(self::DATE_FORMAT);
     }
     
     public function getYearlyExerciseChartEnd() {
-        return $this->yearlyExerciseChartEnd;
+        return $this->yearlyExerciseChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getIndividualGlucoseChartStart() {
-        return $this->individualGlucoseChartStart;
+        return $this->individualGlucoseChartStart->format(self::DATE_FORMAT);
     }
     
     public function getIndividualGlucoseChartEnd() {
-        return $this->individualGlucoseChartEnd;
+        return $this->individualGlucoseChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getDailyGlucoseChartStart() {
-        return $this->dailyGlucoseChartStart;
+        return $this->dailyGlucoseChartStart->format(self::DATE_FORMAT);
     }
     
     public function getDailyGlucoseChartEnd() {
-        return $this->dailyGlucoseChartEnd;
+        return $this->dailyGlucoseChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getWeeklyGlucoseChartStart() {
-        return $this->weeklyGlucoseChartStart;
+        return $this->weeklyGlucoseChartStart->format(self::DATE_FORMAT);
     }
     
     public function getWeeklyGlucoseChartEnd() {
-        return $this->weeklyGlucoseChartEnd;
+        return $this->weeklyGlucoseChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getMonthlyGlucoseChartStart() {
-        return $this->monthlyGlucoseChartStart;
+        return $this->monthlyGlucoseChartStart->format(self::DATE_FORMAT);
     }
     
     public function getMonthlyGlucoseChartEnd() {
-        return $this->monthlyGlucoseChartEnd;
+        return $this->monthlyGlucoseChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getYearlyGlucoseChartStart() {
-        return $this->yearlyGlucoseChartStart;
+        return $this->yearlyGlucoseChartStart->format(self::DATE_FORMAT);
     }
     
     public function getYearlyGlucoseChartEnd() {
-        return $this->yearlyGlucoseChartEnd;
+        return $this->yearlyGlucoseChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getIndividualSleepChartStart() {
-        return $this->individualSleepChartStart;
+        return $this->individualSleepChartStart->format(self::DATE_FORMAT);
     }
     
     public function getIndividualSleepChartEnd() {
-        return $this->individualSleepChartEnd;
+        return $this->individualSleepChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getDailySleepChartStart() {
-        return $this->dailySleepChartStart;
+        return $this->dailySleepChartStart->format(self::DATE_FORMAT);
     }
     
     public function getDailySleepChartEnd() {
-        return $this->dailySleepChartEnd;
+        return $this->dailySleepChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getWeeklySleepChartStart() {
-        return $this->weeklySleepChartStart;
+        return $this->weeklySleepChartStart->format(self::DATE_FORMAT);
     }
     
     public function getWeeklySleepChartEnd() {
-        return $this->weeklySleepChartEnd;
+        return $this->weeklySleepChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getMonthlySleepChartStart() {
-        return $this->monthlySleepChartStart;
+        return $this->monthlySleepChartStart->format(self::DATE_FORMAT);
     }
     
     public function getMonthlySleepChartEnd() {
-        return $this->monthlySleepChartEnd;
+        return $this->monthlySleepChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getYearlySleepChartStart() {
-        return $this->yearlySleepChartStart;
+        return $this->yearlySleepChartStart->format(self::DATE_FORMAT);
     }
     
     public function getYearlySleepChartEnd() {
-        return $this->yearlySleepChartEnd;
+        return $this->yearlySleepChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getIndividualWeightChartStart() {
-        return $this->individualWeightChartStart;
+        return $this->individualWeightChartStart->format(self::DATE_FORMAT);
     }
     
     public function getIndividualWeightChartEnd() {
-        return $this->individualWeightChartEnd;
+        return $this->individualWeightChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getDailyWeightChartStart() {
-        return $this->dailyWeightChartStart;
+        return $this->dailyWeightChartStart->format(self::DATE_FORMAT);
     }
     
     public function getDailyWeightChartEnd() {
-        return $this->dailyWeightChartEnd;
+        return $this->dailyWeightChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getWeeklyWeightChartStart() {
-        return $this->weeklyWeightChartStart;
+        return $this->weeklyWeightChartStart->format(self::DATE_FORMAT);
     }
     
     public function getWeeklyWeightChartEnd() {
-        return $this->weeklyWeightChartEnd;
+        return $this->weeklyWeightChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getMonthlyWeightChartStart() {
-        return $this->monthlyWeightChartStart;
+        return $this->monthlyWeightChartStart->format(self::DATE_FORMAT);
     }
     
     public function getMonthlyWeightChartEnd() {
-        return $this->monthlyWeightChartEnd;
+        return $this->monthlyWeightChartEnd->format(self::DATE_FORMAT);
     }
     
     public function getYearlyWeightChartStart() {
-        return $this->yearlyWeightChartStart;
+        return $this->yearlyWeightChartStart->format(self::DATE_FORMAT);
     }
     
     public function getYearlyWeightChartEnd() {
-        return $this->yearlyWeightChartEnd;
+        return $this->yearlyWeightChartEnd->format(self::DATE_FORMAT);
     }
     
     // Returns data fields as an associative array
@@ -524,6 +530,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
         $paramArray = array(
             'optionsName' => $this->optionsName,
             'userName' => $this->userName,
+            'activeMeasurement' => $this->activeMeasurement,
             'bloodPressureUnits' => $this->bloodPressureUnits,
             'calorieUnits' => $this->calorieUnits,
             'exerciseUnits' => $this->exerciseUnits,
@@ -616,6 +623,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
         $str =
             "Options Name: [$this->optionsName]\n" .
             "User Name: [$this->userName]\n" .
+            "Active Measurement: [$this->activeMeasurement]\n" .
             "Blood Pressure Units: [$this->bloodPressureUnits]\n" .
             "Calorie Units: [$this->calorieUnits]\n" .
             "Exercise Units: [$this->exerciseUnits]\n" .
@@ -707,6 +715,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
         $object = new stdClass();
         $object->optionsName = $this->optionsName;
         $object->userName = $this->userName;
+        $object->activeMeasurement = $this->activeMeasurement;
         $object->bloodPressureUnits = $this->bloodPressureUnits;
         $object->calorieUnits = $this->calorieUnits;
         $object->exerciseUnits = $this->exerciseUnits;
@@ -868,6 +877,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
         self::$DEFAULT_YEARLY_WEIGHT_CHART_START = $fiveYearsAgo;
         self::$DEFAULT_YEARLY_WEIGHT_CHART_END = $now;
         $this->validateOptionsName();
+        $this->validateActiveMeasurement();
         $this->validateUserName();
         $this->validateBloodPressureUnits();
         $this->validateCalorieUnits();
@@ -920,6 +930,20 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
         $options = array("options" => array("regexp" => "/^[a-zA-Z0-9-]+$/"));
         if (!filter_var($this->userName, FILTER_VALIDATE_REGEXP, $options)) {
             $this->setError("userName", "USER_NAME_HAS_INVALID_CHARS");
+            return;
+        }
+    }
+    
+    private function validateActiveMeasurement() {
+        $this->activeMeasurement = $this->extractForm($this->formInput, 'activeMeasurement');
+        if (empty($this->activeMeasurement)) {
+            $this->activeMeasurement = self::DEFAULT_ACTIVE_MEASUREMENT;
+            return;
+        }
+        
+        $allowed = array('bloodPressure', 'calories', 'exercise', 'glucose', 'sleep', 'weight');
+        if (!in_array($this->activeMeasurement, $allowed)) {
+            $this->setError('activeMeasurement', 'INVALID_ACTIVE_MEASUREMENT');
             return;
         }
     }

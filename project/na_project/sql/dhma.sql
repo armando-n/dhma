@@ -15,6 +15,7 @@ drop table if exists MeasurementsOptions;
 create table MeasurementsOptions(
     optionsID                     integer primary key auto_increment,
     optionsName                   varchar(20) not null,
+    activeMeasurement             enum('bloodPressure', 'calories', 'exercise', 'glucose', 'sleep', 'weight') default 'glucose',
     bloodPressureUnits            enum('mm Hg') default 'mm Hg',
     calorieUnits                  enum('calories') default 'calories',
     exerciseUnits                 enum('minutes') default 'minutes',
@@ -216,10 +217,7 @@ insert into Users (userName, password) values
 update Users set isAdministrator = true where userName = 'admin';
 
 -- measurements options data
-insert into MeasurementsOptions (optionsName, bloodPressureUnits, calorieUnits, exerciseUnits,
-    glucoseUnits, sleepUnits, weightUnits, timeFormat, showTooltips, showSecondaryCols, showDateCol,
-    showTimeCol, showNotesCol, numRows, showTable, tableSize, chartPlacement, showFirstChart,
-    showSecondChart, firstChartType, secondChartType, chartLastYear, chartGroupDays,
+insert into MeasurementsOptions (optionsName,
     individualBloodPressureChartStart, individualBloodPressureChartEnd,
     dailyBloodPressureChartStart, dailyBloodPressureChartEnd,
     weeklyBloodPressureChartStart, weeklyBloodPressureChartEnd,
@@ -253,9 +251,7 @@ insert into MeasurementsOptions (optionsName, bloodPressureUnits, calorieUnits, 
     userID)
     values
         -- member
-        ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default, default, default,
-        default, default, default,
+        ('Default',
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
@@ -288,9 +284,7 @@ insert into MeasurementsOptions (optionsName, bloodPressureUnits, calorieUnits, 
         date_sub(now(), interval 5 year), now(),  -- yearly weight chart
         1),
         -- robbins
-        ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default, default, default,
-        default, default, default,
+        ('Default',
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
@@ -323,9 +317,7 @@ insert into MeasurementsOptions (optionsName, bloodPressureUnits, calorieUnits, 
         date_sub(now(), interval 5 year), now(),  -- yearly weight chart
         2),
         -- john-s
-        ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default, default, default,
-        default, default, default,
+        ('Default',
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
@@ -358,9 +350,7 @@ insert into MeasurementsOptions (optionsName, bloodPressureUnits, calorieUnits, 
         date_sub(now(), interval 5 year), now(),  -- yearly weight chart
         3),
         -- bob
-        ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default, default, default,
-        default, default, default,
+        ('Default',
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
@@ -393,9 +383,7 @@ insert into MeasurementsOptions (optionsName, bloodPressureUnits, calorieUnits, 
         date_sub(now(), interval 5 year), now(),  -- yearly weight chart
         4),
         -- sarahk
-        ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default, default, default,
-        default, default, default,
+        ('Default',
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
@@ -428,9 +416,7 @@ insert into MeasurementsOptions (optionsName, bloodPressureUnits, calorieUnits, 
         date_sub(now(), interval 5 year), now(),  -- yearly weight chart
         5),
         -- whatup
-        ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default, default, default,
-        default, default, default,
+        ('Default',
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
@@ -463,9 +449,7 @@ insert into MeasurementsOptions (optionsName, bloodPressureUnits, calorieUnits, 
         date_sub(now(), interval 5 year), now(),  -- yearly weight chart
         6),
         -- delete-me-1
-        ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default, default, default,
-        default, default, default,
+        ('Default',
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
@@ -498,9 +482,7 @@ insert into MeasurementsOptions (optionsName, bloodPressureUnits, calorieUnits, 
         date_sub(now(), interval 5 year), now(),  -- yearly weight chart
         7),
         -- delete-me-2
-        ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default, default, default,
-        default, default, default,
+        ('Default',
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
@@ -533,9 +515,7 @@ insert into MeasurementsOptions (optionsName, bloodPressureUnits, calorieUnits, 
         date_sub(now(), interval 5 year), now(),  -- yearly weight chart
         8),
         -- delete-me-3
-        ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default, default, default,
-        default, default, default,
+        ('Default',
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
@@ -568,9 +548,7 @@ insert into MeasurementsOptions (optionsName, bloodPressureUnits, calorieUnits, 
         date_sub(now(), interval 5 year), now(),  -- yearly weight chart
         9),
         -- admin
-        ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default, default, default,
-        default, default, default,
+        ('Default',
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
