@@ -18,7 +18,7 @@ class MeasurementsOptionsDB {
         $stmt = Database::getDB()->prepare(
             "insert into MeasurementsOptions (userID, optionsName, bloodPressureUnits,
                 calorieUnits, exerciseUnits, glucoseUnits, sleepUnits, weightUnits,
-                timeFormat, showTooltips, showSecondaryCols, showDateCol, showTimeCol,
+                timeFormat, durationFormat, showTooltips, showSecondaryCols, showDateCol, showTimeCol,
                 showNotesCol, numRows, showTable, tableSize, chartPlacement, showFirstChart,
                 showSecondChart, firstChartType, secondChartType, chartLastYear, chartGroupDays,
                 individualBloodPressureChartStart, individualBloodPressureChartEnd,
@@ -53,7 +53,7 @@ class MeasurementsOptionsDB {
                 yearlyWeightChartStart, yearlyWeightChartEnd)
             values (:userID, :optionsName, :bloodPressureUnits,
                 :calorieUnits, :exerciseUnits, :glucoseUnits, :sleepUnits, :weightUnits,
-                :timeFormat, :showTooltips, :showSecondaryCols, :showDateCol, :showTimeCol,
+                :timeFormat, :durationFormat, :showTooltips, :showSecondaryCols, :showDateCol, :showTimeCol,
                 :showNotesCol, :numRows, :showTable, :tableSize, :chartPlacement,
                 :showFirstChart, :showSecondChart, :firstChartType, :secondChartType,
                 :chartLastYear, :chartGroupDays,
@@ -98,6 +98,7 @@ class MeasurementsOptionsDB {
             ':sleepUnits' => $options->getSleepUnits(),
             ':weightUnits' => $options->getWeightUnits(),
             ':timeFormat' => $options->getTimeFormat(),
+            ':durationFormat' => $options->getDurationFormat(),
             ':showTooltips' => $options->getShowTooltips(),
             ':showSecondaryCols' => $options->getShowSecondaryCols(),
             ':showDateCol' => $options->getShowDateCol(),
@@ -204,6 +205,7 @@ class MeasurementsOptionsDB {
                 sleepUnits = :sleepUnits,
                 weightUnits = :weightUnits,
                 timeFormat = :timeFormat,
+                durationFormat = :durationFormat,
                 showTooltips = :showTooltips,
                 showSecondaryCols = :showSecondaryCols,
                 showDateCol = :showDateCol,
@@ -291,6 +293,7 @@ class MeasurementsOptionsDB {
             ':sleepUnits' => $newOptions->getSleepUnits(),
             ':weightUnits' => $newOptions->getWeightUnits(),
             ':timeFormat' => $newOptions->getTimeFormat(),
+            ':durationFormat' => $newOptions->getDurationFormat(),
             ':showTooltips' => $newOptions->getShowTooltips(),
             ':showSecondaryCols' => $newOptions->getShowSecondaryCols(),
             ':showDateCol' => $newOptions->getShowDateCol(),
@@ -408,7 +411,7 @@ class MeasurementsOptionsDB {
         $stmt = Database::getDB()->prepare(
             "select userName, optionsName, bloodPressureUnits,
                 calorieUnits, exerciseUnits, glucoseUnits, sleepUnits, weightUnits,
-                timeFormat, showTooltips, showSecondaryCols, showDateCol, showTimeCol,
+                timeFormat, durationFormat, showTooltips, showSecondaryCols, showDateCol, showTimeCol,
                 showNotesCol, numRows, showTable, tableSize, chartPlacement, showFirstChart,
                 showSecondChart, firstChartType, secondChartType, chartLastYear, chartGroupDays,
                 individualBloodPressureChartStart, individualBloodPressureChartEnd,
@@ -450,7 +453,7 @@ class MeasurementsOptionsDB {
         foreach ($stmt as $row) {
             $options = new MeasurementsOptions($row);
             if (!is_object($options) || $options->getErrorCount() > 0)
-                throw new RuntimeException("Failed to create valid measurements options");
+                throw new RuntimeException('Failed to create valid measurements options: ' . array_shift($options->getErrors()));
 
             $allOptions[] = $options;
         }
@@ -465,7 +468,7 @@ class MeasurementsOptionsDB {
         $stmt = Database::getDB()->prepare(
             "select userName, optionsName, bloodPressureUnits,
                 calorieUnits, exerciseUnits, glucoseUnits, sleepUnits, weightUnits,
-                timeFormat, showTooltips, showSecondaryCols, showDateCol, showTimeCol,
+                timeFormat, durationFormat, showTooltips, showSecondaryCols, showDateCol, showTimeCol,
                 showNotesCol, numRows, showTable, tableSize, chartPlacement, showFirstChart,
                 showSecondChart, firstChartType, secondChartType, chartLastYear, chartGroupDays,
                 individualBloodPressureChartStart, individualBloodPressureChartEnd,
@@ -513,7 +516,7 @@ class MeasurementsOptionsDB {
 
         $options = new MeasurementsOptions($row);
         if (!is_object($options) || $options->getErrorCount() > 0)
-            throw new RuntimeException("Failed to create valid measurements options");
+            throw new RuntimeException('Failed to create valid measurements options: ' . array_shift($options->getErrors()));
 
         return $options;
     }

@@ -6,9 +6,10 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     const DEFAULT_CALORIE_UNITS = 'calories';
     const DEFAULT_EXERCISE_UNITS = 'minutes';
     const DEFAULT_GLUCOSE_UNITS = 'mg/dL';
-    const DEFAULT_SLEEP_UNITS = 'hours:minutes';
+    const DEFAULT_SLEEP_UNITS = 'minutes';
     const DEFAULT_WEIGHT_UNITS = 'lbs';
     const DEFAULT_TIME_FORMAT = '12 hour';
+    const DEFAULT_DURATION_FORMAT = 'hours:minutes';
     const DEFAULT_SHOW_TOOLTIPS = true;
     const DEFAULT_SHOW_SECONDARY_COLS = true;
     const DEFAULT_SHOW_DATE_COL = true;
@@ -22,6 +23,8 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     const DEFAULT_SHOW_SECOND_CHART = true;
     const DEFAULT_FIRST_CHART_TYPE = 'individual';
     const DEFAULT_SECOND_CHART_TYPE = 'monthly';
+    const DEFAULT_CHART_LAST_YEAR = false;
+    const DEFAULT_CHART_GROUP_DAYS = false;
     private static $DEFAULT_INDIVIDUAL_BLOODPRESSURE_CHART_START;
     private static $DEFAULT_INDIVIDUAL_BLOODPRESSURE_CHART_END;
     private static $DEFAULT_DAILY_BLOODPRESSURE_CHART_START;
@@ -82,8 +85,6 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     private static $DEFAULT_MONTHLY_WEIGHT_CHART_END;
     private static $DEFAULT_YEARLY_WEIGHT_CHART_START;
     private static $DEFAULT_YEARLY_WEIGHT_CHART_END;
-    const DEFAULT_CHART_LAST_YEAR = false;
-    const DEFAULT_CHART_GROUP_DAYS = false;
     
     private $formInput;
     private $optionsName;
@@ -95,6 +96,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     private $sleepUnits;
     private $weightUnits;
     private $timeFormat;
+    private $durationFormat;
     private $showTooltips;
     private $showSecondaryCols;
     private $showDateCol;
@@ -211,6 +213,10 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     
     public function getTimeFormat() {
         return $this->timeFormat;
+    }
+    
+    public function getDurationFormat() {
+        return $this->durationFormat;
     }
     
     public function getShowTooltips() {
@@ -525,6 +531,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             'sleepUnits' => $this->sleepUnits,
             'weightUnits' => $this->weightUnits,
             'timeFormat' => $this->timeFormat,
+            'durationFormat' => $this->durationFormat,
             'showTooltips' => $this->showTooltips,
             'showSecondaryCols' => $this->showSecondaryCols,
             'showDateCol' => $this->showDateCol,
@@ -538,6 +545,8 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             'showSecondChart' => $this->showSecondChart,
             'firstChartType' => $this->firstChartType,
             'secondChartType' => $this->secondChartType,
+            'chartLastYear' => $this->chartLastYear,
+            'chartGroupDays' => $this->chartGroupDays,
             'individualBloodPressureChartStart' => $this->individualBloodPressureChartStart->format(self::DATE_FORMAT),
             'individualBloodPressureChartEnd' => $this->individualBloodPressureChartEnd->format(self::DATE_FORMAT),
             'dailyBloodPressureChartStart' => $this->dailyBloodPressureChartStart->format(self::DATE_FORMAT),
@@ -597,9 +606,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             'monthlyWeightChartStart' => $this->monthlyWeightChartStart->format(self::DATE_FORMAT),
             'monthlyWeightChartEnd' => $this->monthlyWeightChartEnd->format(self::DATE_FORMAT),
             'yearlyWeightChartStart' => $this->yearlyWeightChartStart->format(self::DATE_FORMAT),
-            'yearlyWeightChartEnd' => $this->yearlyWeightChartEnd->format(self::DATE_FORMAT),
-            'chartLastYear' => $this->chartLastYear,
-            'chartGroupDays' => $this->chartGroupDays
+            'yearlyWeightChartEnd' => $this->yearlyWeightChartEnd->format(self::DATE_FORMAT)
         );
         
         return $paramArray;
@@ -616,6 +623,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             "Sleep Units: [$this->sleepUnits]\n" .
             "Weight Units: [$this->weightUnits]\n" .
             "Time Format: [$this->timeFormat]\n" .
+            "Duration Format: [$this->durationFormat]\n" .
             "Show Tooltips: [" .(($this->showTooltips === true) ? "true" : "false"). "]\n" .
             "Show Secondary Columns: [" .(($this->showSecondaryCols === true) ? "true" : "false"). "]\n" .
             "Show Date Column: [" .(($this->showDateCol === true) ? "true" : "false"). "]\n" .
@@ -629,6 +637,8 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             "Show Second Chart: [" .(($this->showSecondChart === true) ? "true" : "false"). "]\n" .
             "First Chart Type: [$this->firstChartType]\n" .
             "Second Chart Type: [ $this->secondChartType]\n" .
+            "Chart Last Year: [" .(($this->chartLastYear === true) ? "true" : "false"). "]\n" .
+            "Chart Group Days: [" .(($this->chartGroupDays === true) ? "true" : "false"). "]\n" .
             "Individual Blood Pressure Chart Start Date: [" .$this->individualBloodPressureChartStart->format(self::DATE_FORMAT). "]\n" .
             "Individual Blood Pressure Chart End Date: [" .$this->individualBloodPressureChartEnd->format(self::DATE_FORMAT). "]\n" .
             "Daily Blood Pressure Chart Start Date: [" .$this->dailyBloodPressureChartStart->format(self::DATE_FORMAT). "]\n" .
@@ -688,9 +698,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             "Monthly Weight Chart Start Date: [" .$this->monthlyWeightChartStart->format(self::DATE_FORMAT). "]\n" .
             "Monthly Weight Chart End Date: [" .$this->monthlyWeightChartEnd->format(self::DATE_FORMAT). "]\n" .
             "Yearly Weight Chart Start Date: [" .$this->yearlyWeightChartStart->format(self::DATE_FORMAT). "]\n" .
-            "Yearly Weight Chart End Date: [" .$this->yearlyWeightChartEnd->format(self::DATE_FORMAT). "]\n" .
-            "Chart Last Year: [" .(($this->chartLastYear === true) ? "true" : "false"). "]\n" .
-            "Chart Group Days: [" .(($this->chartGroupDays === true) ? "true" : "false"). "]";
+            "Yearly Weight Chart End Date: [" .$this->yearlyWeightChartEnd->format(self::DATE_FORMAT). "]";
         
         return $str;
     }
@@ -706,6 +714,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
         $object->sleepUnits = $this->sleepUnits;
         $object->weightUnits = $this->weightUnits;
         $object->timeFormat = $this->timeFormat;
+        $object->durationFormat = $this->durationFormat;
         $object->showTooltips = $this->showTooltips;
         $object->showSecondaryCols = $this->showSecondaryCols;
         $object->showDateCol = $this->showDateCol;
@@ -719,6 +728,8 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
         $object->showSecondChart = $this->showSecondChart;
         $object->firstChartType = $this->firstChartType;
         $object->secondChartType = $this->secondChartType;
+        $object->chartLastYear = $this->chartLastYear;
+        $object->chartGroupDays = $this->chartGroupDays;
         $object->individualBloodPressureChartStart = $this->individualBloodPressureChartStart;
         $object->individualBloodPressureChartEnd = $this->individualBloodPressureChartEnd;
         $object->dailyBloodPressureChartStart = $this->dailyBloodPressureChartStart;
@@ -779,8 +790,6 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
         $object->monthlyWeightChartEnd = $this->monthlyWeightChartEnd;
         $object->yearlyWeightChartStart = $this->yearlyWeightChartStart;
         $object->yearlyWeightChartEnd = $this->yearlyWeightChartEnd;
-        $object->chartLastYear = $this->chartLastYear;
-        $object->chartGroupDays = $this->chartGroupDays;
     
         return $object;
     }
@@ -867,6 +876,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
         $this->validateSleepUnits();
         $this->validateWeightUnits();
         $this->validateTimeFormat();
+        $this->validateDurationFormat();
         $this->validateShowTooltips();
         $this->validateShowSecondaryCols();
         $this->validateShowDateCol();
@@ -1008,6 +1018,20 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
         $allowed = array('12 hour', '24 hour');
         if (!in_array($this->timeFormat, $allowed)) {
             $this->setError("timeFormat", "TIME_FORMAT_INVALID");
+            return;
+        }
+    }
+    
+    private function validateDurationFormat() {
+        $this->durationFormat = $this->extractForm($this->formInput, 'durationFormat');
+        if (empty($this->durationFormat)) {
+            $this->durationFormat = self::DEFAULT_DURATION_FORMAT;
+            return;
+        }
+        
+        $allowed = array('minutes', 'hours', 'hours:minutes');
+        if (!in_array($this->durationFormat, $allowed)) {
+            $this->setError('durationFormat', 'DURATION_FORMAT_INVALID');
             return;
         }
     }

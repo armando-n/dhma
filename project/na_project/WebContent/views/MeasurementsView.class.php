@@ -19,38 +19,38 @@ class MeasurementsView{
     }
     
     public static function showBody() {
-        if (!isset($_SESSION) || !isset($_SESSION['measurementsOptionsPresets']) || !isset($_SESSION['activeMeasurementsOptionsPreset'])):
+        if (!isset($_SESSION) || !isset($_SESSION['allMeasurementsOptions']) || !isset($_SESSION['activeMeasurementsOptions'])):
             ?> <p>Error: unable to show measurements. Data is missing.</p><?php
             return;
         endif;
         
-        $optPresets = $_SESSION['measurementsOptionsPresets'];
-        $preset = $_SESSION['activeMeasurementsOptionsPreset'];
+        $allOptions = $_SESSION['allMeasurementsOptions'];
+        $activeOptions = $_SESSION['activeMeasurementsOptions'];
         
-        $timeFormat_12hour = ($preset->getTimeFormat() === '12 hour') ? ' selected="selected"' : '';
-        $timeFormat_24hour = ($preset->getTimeFormat() === '24 hour') ? ' selected="selected"' : '';
-        $glucoseUnits_mgdL = ($preset->getGlucoseUnits() === 'mg/dL') ? ' selected="selected"' : '';
-        $glucoseUnits_mM = ($preset->getGlucoseUnits() === 'mM') ? ' selected="selected"' : '';
-        $bloodPressureUnits_mmHg = ($preset->getBloodPressureUnits() === 'mm Hg') ? ' selected="selected"' : '';
-        $weightUnits_lbs = ($preset->getWeightUnits() === 'lbs') ? ' selected="selected"' : '';
-        $weightUnits_kg = ($preset->getWeightUnits() === 'kg') ? ' selected="selected"' : '';
-        $calorieUnits_calories = ($preset->getCalorieUnits() === 'calories') ? ' selected="selected"' : '';
-        $exerciseUnits_minutes = ($preset->getExerciseUnits() === 'minutes') ? ' selected="selected"' : '';
-        $exerciseUnits_hours = ($preset->getExerciseUnits() === 'hours') ? ' selected="selected"' : '';
-        $exerciseUnits_hoursMinutes = ($preset->getExerciseUnits() === 'hours:minutes') ? ' selected="selected"' : '';
-        $sleepUnits_minutes = ($preset->getSleepUnits() === 'minutes') ? ' selected="selected"' : '';
-        $sleepUnits_hours = ($preset->getSleepUnits() === 'hours') ? ' selected="selected"' : '';
-        $sleepUnits_hoursMinutes = ($preset->getSleepUnits() === 'hours:minutes') ? ' selected="selected"' : '';
-        $showTooltips = $preset->getShowTooltips() ? ' checked="checked"' : '';
-        $showFirstChart = $preset->getShowFirstChart() ? ' checked="checked"' : '';
-        $showSecondChart = $preset->getShowSecondChart() ? ' checked="checked"' : '';
-        $chartLastYear = $preset->getChartLastYear() ? ' checked="checked"' : '';
-        $chartDailyAverages = $preset->getChartDailyAverages() ? ' checked="checked"' : '';
+        $timeFormat_12hour = ($activeOptions->getTimeFormat() === '12 hour') ? ' selected="selected"' : '';
+        $timeFormat_24hour = ($activeOptions->getTimeFormat() === '24 hour') ? ' selected="selected"' : '';
+        $glucoseUnits_mgdL = ($activeOptions->getGlucoseUnits() === 'mg/dL') ? ' selected="selected"' : '';
+        $glucoseUnits_mM = ($activeOptions->getGlucoseUnits() === 'mM') ? ' selected="selected"' : '';
+        $bloodPressureUnits_mmHg = ($activeOptions->getBloodPressureUnits() === 'mm Hg') ? ' selected="selected"' : '';
+        $weightUnits_lbs = ($activeOptions->getWeightUnits() === 'lbs') ? ' selected="selected"' : '';
+        $weightUnits_kg = ($activeOptions->getWeightUnits() === 'kg') ? ' selected="selected"' : '';
+        $calorieUnits_calories = ($activeOptions->getCalorieUnits() === 'calories') ? ' selected="selected"' : '';
+        $exerciseUnits_minutes = ($activeOptions->getExerciseUnits() === 'minutes') ? ' selected="selected"' : '';
+        $exerciseUnits_hours = ($activeOptions->getExerciseUnits() === 'hours') ? ' selected="selected"' : '';
+        $exerciseUnits_hoursMinutes = ($activeOptions->getExerciseUnits() === 'hours:minutes') ? ' selected="selected"' : '';
+        $sleepUnits_minutes = ($activeOptions->getSleepUnits() === 'minutes') ? ' selected="selected"' : '';
+        $sleepUnits_hours = ($activeOptions->getSleepUnits() === 'hours') ? ' selected="selected"' : '';
+        $sleepUnits_hoursMinutes = ($activeOptions->getSleepUnits() === 'hours:minutes') ? ' selected="selected"' : '';
+        $showTooltips = $activeOptions->getShowTooltips() ? ' checked="checked"' : '';
+        $showFirstChart = $activeOptions->getShowFirstChart() ? ' checked="checked"' : '';
+        $showSecondChart = $activeOptions->getShowSecondChart() ? ' checked="checked"' : '';
+        $chartLastYear = $activeOptions->getChartLastYear() ? ' checked="checked"' : '';
+        $chartGroupDays = $activeOptions->getChartGroupDays() ? ' checked="checked"' : '';
         
-        $showExerciseTypeCol = $preset->getShowExerciseTypeCol() ? ' class="glyphicon glyphicon-ok"' : '';
-        $showDateCol = $preset->getShowDateCol() ? ' class="glyphicon glyphicon-ok"' : '';
-        $showTimeCol = $preset->getShowTimeCol() ? ' class="glyphicon glyphicon-ok"' : '';
-        $showNotesCol = $preset->getShowNotesCol() ? ' class="glyphicon glyphicon-ok"' : '';
+        $showSecondaryCols = $activeOptions->getShowSecondaryCols() ? ' class="glyphicon glyphicon-ok"' : '';
+        $showDateCol = $activeOptions->getShowDateCol() ? ' class="glyphicon glyphicon-ok"' : '';
+        $showTimeCol = $activeOptions->getShowTimeCol() ? ' class="glyphicon glyphicon-ok"' : '';
+        $showNotesCol = $activeOptions->getShowNotesCol() ? ' class="glyphicon glyphicon-ok"' : '';
         ?>
 
 <div class="row">
@@ -71,7 +71,7 @@ class MeasurementsView{
                 <div id="options" class="collapse">
                     <div class="well well-lg">
             
-                        <form action="meausrementsOptionsPresets_post" id="measurementsOptionsPresetsForm" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+                        <form action="meausrementsOptions_post" id="measurementsOptionsForm" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
                             <div class="row">
                                 <fieldset class="col-sm-4">
                                     <legend>General Options</legend>
@@ -142,7 +142,7 @@ class MeasurementsView{
                                                 <span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="columns_dropdown_label">
-                                                <li><a href="#" id="colvis_type" class="col-visibility-exercise"><span<?=$showExerciseTypeCol?>></span><span id="colvis_type_text">Type</span></a></li>
+                                                <li><a href="#" id="colvis_type" class="col-visibility-exercise"><span<?=$showSecondaryCols?>></span><span id="colvis_type_text">Type</span></a></li>
                                                 <li role="separator" class="divider"></li>
                                                 <li><a href="#" id="colvis_date"><span<?=$showDateCol?>></span><span id="colvis_date_text">Date</span></a></li>
                                                 <li><a href="#" id="colvis_time"><span<?=$showTimeCol?>></span><span id="colvis_time_text">Time</span></a></li>
@@ -152,7 +152,7 @@ class MeasurementsView{
                                     </div>
                                     <div class="form-group">
                                         <label for="options_numRows">Rows per page</label>
-                                        <input type="text" id="options_numRows" name="numRows" value="<?=$preset->getNumRows()?>" class="form-control" size="5" maxlength="5" pattern="^[0-9]+$" title="Enter a positive number of 5 digits or less" />
+                                        <input type="text" id="options_numRows" name="numRows" value="<?=$activeOptions->getNumRows()?>" class="form-control" size="5" maxlength="5" pattern="^[0-9]+$" title="Enter a positive number of 5 digits or less" />
                                     </div>
                                     
                                 </fieldset>
@@ -209,7 +209,7 @@ class MeasurementsView{
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input type="checkbox" id="options_dailyAverages" name="dailyAverages"<?=$chartDailyAverages?> />Show daily averages
+                                                            <input type="checkbox" id="options_dailyAverages" name="dailyAverages"<?=$chartGroupDays?> />Show daily averages
                                                         </label>
                                                     </div>
                                                 </div>
@@ -256,7 +256,7 @@ class MeasurementsView{
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input type="checkbox" id="options_dailyAverages" name="dailyAverages"<?=$chartDailyAverages?> />Show daily averages
+                                                            <input type="checkbox" id="options_dailyAverages" name="dailyAverages"<?=$chartGroupDays?> />Show daily averages
                                                         </label>
                                                     </div>
                                                 </div>
@@ -310,37 +310,37 @@ class MeasurementsView{
             <div class="tab-content">
                 <section role="tabpanel" id="glucose" class="row tab-pane active">
                     <div class="col-sm-12">
-                            <?php GlucoseMeasurementsView::showBody($preset); ?>
+                            <?php GlucoseMeasurementsView::showBody($activeOptions); ?>
                     </div>
                 </section>
                 
                 <section role="tabpanel" id="bloodPressure" class="row tab-pane">
                     <div class="col-sm-12">
-                        <?php BloodPressureMeasurementsView::showBody($preset); ?>
+                        <?php BloodPressureMeasurementsView::showBody($activeOptions); ?>
                     </div>
                 </section>
                 
                 <section role="tabpanel" id="calories" class="row tab-pane">
                     <div class="col-sm-12">
-                        <?php CalorieMeasurementsView::showBody($preset); ?>
+                        <?php CalorieMeasurementsView::showBody($activeOptions); ?>
                     </div>
                 </section>
                 
                 <section role="tabpanel" id="exercise" class="row tab-pane">
                     <div class="col-sm-12">
-                        <?php ExerciseMeasurementsView::showBody($preset); ?>
+                        <?php ExerciseMeasurementsView::showBody($activeOptions); ?>
                     </div>
                 </section>
                 
                 <section role="tabpanel" id="sleep" class="row tab-pane">
                     <div class="col-sm-12">
-                        <?php SleepMeasurementsView::showBody($preset); ?>
+                        <?php SleepMeasurementsView::showBody($activeOptions); ?>
                     </div>
                 </section>
                 
                 <section role="tabpanel" id="weight" class="row tab-pane">
                     <div class="col-sm-12">
-                        <?php WeightMeasurementsView::showBody($preset); ?>
+                        <?php WeightMeasurementsView::showBody($activeOptions); ?>
                     </div>
                 </section>
             </div>

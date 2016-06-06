@@ -198,21 +198,21 @@ class MeasurementsController {
                 WeightMeasurementsView::show();
                 break;
             case 'all':
-                // retrieve all measurements options presets for the user
-                $returnArray = MeasurementsOptionsPresetsDB::getPresetsFor($_SESSION['profile']->getUserName());
-                if (!$returnArray['success'])
-                    $_SESSION['flash'] = 'Error: failed retrieviing your measurements options presets';
-                $_SESSION['measurementsOptionsPresets'] = $returnArray['data'];
+                // retrieve all measurements options for the user
+                $allOptions = MeasurementsOptionsDB::getOptionsFor($_SESSION['profile']->getUserName());
+                if (empty($allOptions))
+                    $_SESSION['flash'] = 'Error: failed retrieviing your measurements options';
+                $_SESSION['allMeasurementsOptions'] = $allOptions;
                 
-                // find and store the MeasurementsOptionsPreset object for the active preset
-                $activePreset = null;
-                foreach ($_SESSION['measurementsOptionsPresets'] as $curPreset) {
-                    if ($curPreset->getPresetName() === $_SESSION['profile']->getMeasOptPresetName())
-                        $activePreset = $curPreset;
+                // find and store the MeasurementsOptions object for the active measurements options
+                $activeOptions = null;
+                foreach ($_SESSION['allMeasurementsOptions'] as $currentOptions) {
+                    if ($currentOptions->getOptionsName() === $_SESSION['profile']->getMeasurementsOptions())
+                        $activeOptions = $currentOptions;
                 }
-                if ($activePreset === null)
-                    $_SESSION['flash'] = 'Error: failed finding your active measurements options preset';
-                $_SESSION['activeMeasurementsOptionsPreset'] = $activePreset;
+                if ($activeOptions === null)
+                    $_SESSION['flash'] = 'Error: failed to find your active measurements options';
+                $_SESSION['activeMeasurementsOptions'] = $activeOptions;
                 
                 // show the measurements page
                 MeasurementsView::show();

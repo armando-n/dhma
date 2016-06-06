@@ -56,3 +56,4 @@ DATE_INVALID The specified date is invalid
 OPTIONS_NAME_EMPTY Preset name cannot be empty
 TABLE_SIZE_INVALID The table size must be an integer of 5 digits or less
 CHART_PLACEMENT_INVALID The only valid chart placements are left, right, top, and bottom
+DURATION_FORMAT_INVALID Duration format can only be minutes, hours, or hours:minutes
