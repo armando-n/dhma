@@ -13,32 +13,91 @@ create table Users(
 
 drop table if exists MeasurementsOptions;
 create table MeasurementsOptions(
-    optionsID               integer primary key auto_increment,
-    optionsName             varchar(20) not null,
-    bloodPressureUnits      enum('mm Hg') default 'mm Hg',
-    calorieUnits            enum('calories') default 'calories',
-    exerciseUnits           enum('minutes', 'hours', 'hours:minutes') default 'minutes',
-    glucoseUnits            enum('mg/dL', 'mM') default 'mg/dL',
-    sleepUnits              enum('minutes', 'hours', 'hours:minutes') default 'minutes',
-    weightUnits             enum('lbs', 'kg') default 'lbs',
-    timeFormat              enum('12 hour', '24 hour') default '12 hour',
-    showTooltips            boolean default true,
-    showExerciseTypeCol     boolean default false,
-    showDateCol             boolean default true,
-    showTimeCol             boolean default true,
-    showNotesCol            boolean default true,
-    numRows                 integer default 25,
-    showFirstChart          boolean default true,
-    showSecondChart         boolean default true,
-    firstChartType          enum('individual', 'daily', 'weekly', 'monthly', 'yearly') default 'individual',
-    secondChartType         enum('individual', 'daily', 'weekly', 'monthly', 'yearly') default 'monthly',
-    firstChartStart         date not null, -- date_sub(now(), interval 30 day),
-    secondChartStart        date not null, -- date_sub(now(), interval 1 year),
-    firstChartEnd           date not null, -- now(),
-    secondChartEnd          date not null, -- now(),
-    chartLastYear           boolean default false,
-    chartDailyAverages      boolean default false,
-    userID                  integer not null,
+    optionsID                     integer primary key auto_increment,
+    optionsName                   varchar(20) not null,
+    bloodPressureUnits            enum('mm Hg') default 'mm Hg',
+    calorieUnits                  enum('calories') default 'calories',
+    exerciseUnits                 enum('minutes', 'hours', 'hours:minutes') default 'hours:minutes',
+    glucoseUnits                  enum('mg/dL', 'mM') default 'mg/dL',
+    sleepUnits                    enum('minutes', 'hours', 'hours:minutes') default 'hours:minutes',
+    weightUnits                   enum('lbs', 'kg') default 'lbs',
+    timeFormat                    enum('12 hour', '24 hour') default '12 hour',
+    showTooltips                  boolean default true,
+    showSecondaryCols             boolean default true, -- e.g. exercise type column
+    showDateCol                   boolean default true,
+    showTimeCol                   boolean default true,
+    showNotesCol                  boolean default true,
+    numRows                       integer default 25,
+    showTable                     boolean default true,
+    tableSize                     integer default 35,
+    chartPlacement                enum('left', 'right', 'top', 'bottom') default 'bottom',
+    showFirstChart                boolean default true,
+    showSecondChart               boolean default true,
+    firstChartType                enum('individual', 'daily', 'weekly', 'monthly', 'yearly') default 'individual',
+    secondChartType               enum('individual', 'daily', 'weekly', 'monthly', 'yearly') default 'monthly',
+    chartLastYear                 boolean default false,
+    chartGroupDays                boolean default false,
+    individualBloodPressureChartStart date not null,
+    individualBloodPressureChartEnd   date not null,
+    dailyBloodPressureChartStart      date not null,
+    dailyBloodPressureChartEnd        date not null,
+    weeklyBloodPressurechartStart     date not null,
+    weeklyBloodPressurechartEnd       date not null,
+    monthlyBloodPressureChartStart    date not null,
+    monthlyBloodPressureChartEnd      date not null,
+    yearlyBloodPressureChartStart     date not null,
+    yearlyBloodPressureChartEnd       date not null,
+    individualCaloriesChartStart      date not null,
+    individualCaloriesChartEnd        date not null,
+    dailyCaloriesChartStart           date not null,
+    dailyCaloriesChartEnd             date not null,
+    weeklyCaloriesChartStart          date not null,
+    weeklyCaloriesChartEnd            date not null,
+    monthlyCaloriesChartStart         date not null,
+    monthlyCaloriesChartEnd           date not null,
+    yearlyCaloriesChartStart          date not null,
+    yearlyCaloriesChartEnd            date not null,
+    individualExerciseChartStart      date not null,
+    individualExerciseChartEnd        date not null,
+    dailyExerciseChartStart           date not null,
+    dailyExerciseChartEnd             date not null,
+    weeklyExerciseChartStart          date not null,
+    weeklyExerciseChartEnd            date not null,
+    monthlyExerciseChartStart         date not null,
+    monthlyExerciseChartEnd           date not null,
+    yearlyExerciseChartStart          date not null,
+    yearlyExerciseChartEnd            date not null,
+    individualGlucoseChartStart       date not null,
+    individualGlucoseChartEnd         date not null,
+    dailyGlucoseChartStart            date not null,
+    dailyGlucoseChartEnd              date not null,
+    weeklyGlucoseChartStart           date not null,
+    weeklyGlucoseChartEnd             date not null,
+    monthlyGlucoseChartStart          date not null,
+    monthlyGlucoseChartEnd            date not null,
+    yearlyGlucoseChartStart           date not null,
+    yearlyGlucoseChartEnd             date not null,
+    individualSleepChartStart         date not null,
+    individualSleepChartEnd           date not null,
+    dailySleepChartStart              date not null,
+    dailySleepChartEnd                date not null,
+    weeklySleepChartStart             date not null,
+    weeklySleepChartEnd               date not null,
+    monthlySleepChartStart            date not null,
+    monthlySleepChartEnd              date not null,
+    yearlySleepChartStart             date not null,
+    yearlySleepChartEnd               date not null,
+    individualWeightChartStart        date not null,
+    individualWeightChartEnd          date not null,
+    dailyWeightChartStart             date not null,
+    dailyWeightChartEnd               date not null,
+    weeklyWeightChartStart            date not null,
+    weeklyWeightChartEnd              date not null,
+    monthlyWeightChartStart           date not null,
+    monthlyWeightChartEnd             date not null,
+    yearlyWeightChartStart            date not null,
+    yearlyWeightChartEnd              date not null,
+    userID                           integer not null,
     foreign key (userID) references Users (userID) on delete cascade,
     constraint uniq_measOpts unique (optionsName, userID)
 );
@@ -157,61 +216,391 @@ update Users set isAdministrator = true where userName = 'admin';
 
 -- measurements options data
 insert into MeasurementsOptions (optionsName, bloodPressureUnits, calorieUnits, exerciseUnits,
-    glucoseUnits, sleepUnits, weightUnits, timeFormat, showTooltips, showExerciseTypeCol, showDateCol,
-    showTimeCol, showNotesCol, numRows, showFirstChart, showSecondChart, firstChartType, secondChartType,
-    firstChartStart, secondChartStart, firstChartEnd, secondChartEnd, chartLastYear, chartDailyAverages,
+    glucoseUnits, sleepUnits, weightUnits, timeFormat, showTooltips, showSecondaryCols, showDateCol,
+    showTimeCol, showNotesCol, numRows, showTable, tableSize, chartPlacement, showFirstChart,
+    showSecondChart, firstChartType, secondChartType, chartLastYear, chartGroupDays,
+    individualBloodPressureChartStart, individualBloodPressureChartEnd,
+    dailyBloodPressureChartStart, dailyBloodPressureChartEnd,
+    weeklyBloodPressureChartStart, weeklyBloodPressureChartEnd,
+    monthlyBloodPressureChartStart, monthlyBloodPressureChartEnd,
+    yearlyBloodPressureChartStart, yearlyBloodPressureChartEnd,
+    individualCaloriesChartStart, individualCaloriesChartEnd,
+    dailyCaloriesChartStart, dailyCaloriesChartEnd,
+    weeklyCaloriesChartStart, weeklyCaloriesChartEnd,
+    monthlyCaloriesChartStart, monthlyCaloriesChartEnd,
+    yearlyCaloriesChartStart, yearlyCaloriesChartEnd,
+    individualExerciseChartStart, individualExerciseChartEnd,
+    dailyExerciseChartStart, dailyExerciseChartEnd,
+    weeklyExerciseChartStart, weeklyExerciseChartEnd,
+    monthlyExerciseChartStart, monthlyExerciseChartEnd,
+    yearlyExerciseChartStart, yearlyExerciseChartEnd,
+    individualGlucoseChartStart, individualGlucoseChartEnd,
+    dailyGlucoseChartStart, dailyGlucoseChartEnd,
+    weeklyGlucoseChartStart, weeklyGlucoseChartEnd,
+    monthlyGlucoseChartStart, monthlyGlucoseChartEnd,
+    yearlyGlucoseChartStart, yearlyGlucoseChartEnd,
+    individualSleepChartStart, individualSleepChartEnd,
+    dailySleepChartStart, dailySleepChartEnd,
+    weeklySleepChartStart, weeklySleepChartEnd,
+    monthlySleepChartStart, monthlySleepChartEnd,
+    yearlySleepChartStart, yearlySleepChartEnd,
+    individualWeightChartStart, individualWeightChartEnd,
+    dailyWeightChartStart, dailyWeightChartEnd,
+    weeklyWeightChartStart, weeklyWeightChartEnd,
+    monthlyWeightChartStart, monthlyWeightChartEnd,
+    yearlyWeightChartStart, yearlyWeightChartEnd,
     userID)
     values
         -- member
         ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default,
-        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
-        default, default, 1),
+        default, default, default, default, default, default, default, default, default, default,
+        default, default, default,
+        date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- monthly blood pressure chart
+        date_sub(now(), interval 5 year), now(),  -- yearly blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- individual calories chart
+        date_sub(now(), interval 1 month), now(), -- daily calories chart
+        date_sub(now(), interval 1 year), now(),  -- weekly calories chart
+        date_sub(now(), interval 1 year), now(),  -- monthly calories chart
+        date_sub(now(), interval 5 year), now(),  -- yearly calories chart
+        date_sub(now(), interval 1 month), now(), -- individual exercise chart
+        date_sub(now(), interval 1 month), now(), -- daily exercise chart
+        date_sub(now(), interval 1 year), now(),  -- weekly exercise chart
+        date_sub(now(), interval 1 year), now(),  -- monthly exercise chart
+        date_sub(now(), interval 5 year), now(),  -- yearly exercise chart
+        date_sub(now(), interval 1 month), now(), -- individual glucose chart
+        date_sub(now(), interval 1 month), now(), -- daily glucose chart
+        date_sub(now(), interval 1 year), now(),  -- weekly glucose chart
+        date_sub(now(), interval 1 year), now(),  -- monthly glucose chart
+        date_sub(now(), interval 5 year), now(),  -- yearly glucose chart
+        date_sub(now(), interval 1 month), now(), -- individual sleep chart
+        date_sub(now(), interval 1 month), now(), -- daily sleep chart
+        date_sub(now(), interval 1 year), now(),  -- weekly sleep chart
+        date_sub(now(), interval 1 year), now(),  -- monthly sleep chart
+        date_sub(now(), interval 5 year), now(),  -- yearly sleep chart
+        date_sub(now(), interval 1 month), now(), -- individual weight chart
+        date_sub(now(), interval 1 month), now(), -- daily weight chart
+        date_sub(now(), interval 1 year), now(),  -- weekly weight chart
+        date_sub(now(), interval 1 year), now(),  -- monthly weight chart
+        date_sub(now(), interval 5 year), now(),  -- yearly weight chart
+        1),
         -- robbins
         ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default,
-        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
-        default, default, 2),
+        default, default, default, default, default, default, default, default, default, default,
+        default, default, default,
+        date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- monthly blood pressure chart
+        date_sub(now(), interval 5 year), now(),  -- yearly blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- individual calories chart
+        date_sub(now(), interval 1 month), now(), -- daily calories chart
+        date_sub(now(), interval 1 year), now(),  -- weekly calories chart
+        date_sub(now(), interval 1 year), now(),  -- monthly calories chart
+        date_sub(now(), interval 5 year), now(),  -- yearly calories chart
+        date_sub(now(), interval 1 month), now(), -- individual exercise chart
+        date_sub(now(), interval 1 month), now(), -- daily exercise chart
+        date_sub(now(), interval 1 year), now(),  -- weekly exercise chart
+        date_sub(now(), interval 1 year), now(),  -- monthly exercise chart
+        date_sub(now(), interval 5 year), now(),  -- yearly exercise chart
+        date_sub(now(), interval 1 month), now(), -- individual glucose chart
+        date_sub(now(), interval 1 month), now(), -- daily glucose chart
+        date_sub(now(), interval 1 year), now(),  -- weekly glucose chart
+        date_sub(now(), interval 1 year), now(),  -- monthly glucose chart
+        date_sub(now(), interval 5 year), now(),  -- yearly glucose chart
+        date_sub(now(), interval 1 month), now(), -- individual sleep chart
+        date_sub(now(), interval 1 month), now(), -- daily sleep chart
+        date_sub(now(), interval 1 year), now(),  -- weekly sleep chart
+        date_sub(now(), interval 1 year), now(),  -- monthly sleep chart
+        date_sub(now(), interval 5 year), now(),  -- yearly sleep chart
+        date_sub(now(), interval 1 month), now(), -- individual weight chart
+        date_sub(now(), interval 1 month), now(), -- daily weight chart
+        date_sub(now(), interval 1 year), now(),  -- weekly weight chart
+        date_sub(now(), interval 1 year), now(),  -- monthly weight chart
+        date_sub(now(), interval 5 year), now(),  -- yearly weight chart
+        2),
         -- john-s
         ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default,
-        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
-        default, default, 3),
+        default, default, default, default, default, default, default, default, default, default,
+        default, default, default,
+        date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- monthly blood pressure chart
+        date_sub(now(), interval 5 year), now(),  -- yearly blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- individual calories chart
+        date_sub(now(), interval 1 month), now(), -- daily calories chart
+        date_sub(now(), interval 1 year), now(),  -- weekly calories chart
+        date_sub(now(), interval 1 year), now(),  -- monthly calories chart
+        date_sub(now(), interval 5 year), now(),  -- yearly calories chart
+        date_sub(now(), interval 1 month), now(), -- individual exercise chart
+        date_sub(now(), interval 1 month), now(), -- daily exercise chart
+        date_sub(now(), interval 1 year), now(),  -- weekly exercise chart
+        date_sub(now(), interval 1 year), now(),  -- monthly exercise chart
+        date_sub(now(), interval 5 year), now(),  -- yearly exercise chart
+        date_sub(now(), interval 1 month), now(), -- individual glucose chart
+        date_sub(now(), interval 1 month), now(), -- daily glucose chart
+        date_sub(now(), interval 1 year), now(),  -- weekly glucose chart
+        date_sub(now(), interval 1 year), now(),  -- monthly glucose chart
+        date_sub(now(), interval 5 year), now(),  -- yearly glucose chart
+        date_sub(now(), interval 1 month), now(), -- individual sleep chart
+        date_sub(now(), interval 1 month), now(), -- daily sleep chart
+        date_sub(now(), interval 1 year), now(),  -- weekly sleep chart
+        date_sub(now(), interval 1 year), now(),  -- monthly sleep chart
+        date_sub(now(), interval 5 year), now(),  -- yearly sleep chart
+        date_sub(now(), interval 1 month), now(), -- individual weight chart
+        date_sub(now(), interval 1 month), now(), -- daily weight chart
+        date_sub(now(), interval 1 year), now(),  -- weekly weight chart
+        date_sub(now(), interval 1 year), now(),  -- monthly weight chart
+        date_sub(now(), interval 5 year), now(),  -- yearly weight chart
+        3),
         -- bob
         ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default,
-        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
-        default, default, 4),
+        default, default, default, default, default, default, default, default, default, default,
+        default, default, default,
+        date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- monthly blood pressure chart
+        date_sub(now(), interval 5 year), now(),  -- yearly blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- individual calories chart
+        date_sub(now(), interval 1 month), now(), -- daily calories chart
+        date_sub(now(), interval 1 year), now(),  -- weekly calories chart
+        date_sub(now(), interval 1 year), now(),  -- monthly calories chart
+        date_sub(now(), interval 5 year), now(),  -- yearly calories chart
+        date_sub(now(), interval 1 month), now(), -- individual exercise chart
+        date_sub(now(), interval 1 month), now(), -- daily exercise chart
+        date_sub(now(), interval 1 year), now(),  -- weekly exercise chart
+        date_sub(now(), interval 1 year), now(),  -- monthly exercise chart
+        date_sub(now(), interval 5 year), now(),  -- yearly exercise chart
+        date_sub(now(), interval 1 month), now(), -- individual glucose chart
+        date_sub(now(), interval 1 month), now(), -- daily glucose chart
+        date_sub(now(), interval 1 year), now(),  -- weekly glucose chart
+        date_sub(now(), interval 1 year), now(),  -- monthly glucose chart
+        date_sub(now(), interval 5 year), now(),  -- yearly glucose chart
+        date_sub(now(), interval 1 month), now(), -- individual sleep chart
+        date_sub(now(), interval 1 month), now(), -- daily sleep chart
+        date_sub(now(), interval 1 year), now(),  -- weekly sleep chart
+        date_sub(now(), interval 1 year), now(),  -- monthly sleep chart
+        date_sub(now(), interval 5 year), now(),  -- yearly sleep chart
+        date_sub(now(), interval 1 month), now(), -- individual weight chart
+        date_sub(now(), interval 1 month), now(), -- daily weight chart
+        date_sub(now(), interval 1 year), now(),  -- weekly weight chart
+        date_sub(now(), interval 1 year), now(),  -- monthly weight chart
+        date_sub(now(), interval 5 year), now(),  -- yearly weight chart
+        4),
         -- sarahk
         ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default,
-        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
-        default, default, 5),
+        default, default, default, default, default, default, default, default, default, default,
+        default, default, default,
+        date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- monthly blood pressure chart
+        date_sub(now(), interval 5 year), now(),  -- yearly blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- individual calories chart
+        date_sub(now(), interval 1 month), now(), -- daily calories chart
+        date_sub(now(), interval 1 year), now(),  -- weekly calories chart
+        date_sub(now(), interval 1 year), now(),  -- monthly calories chart
+        date_sub(now(), interval 5 year), now(),  -- yearly calories chart
+        date_sub(now(), interval 1 month), now(), -- individual exercise chart
+        date_sub(now(), interval 1 month), now(), -- daily exercise chart
+        date_sub(now(), interval 1 year), now(),  -- weekly exercise chart
+        date_sub(now(), interval 1 year), now(),  -- monthly exercise chart
+        date_sub(now(), interval 5 year), now(),  -- yearly exercise chart
+        date_sub(now(), interval 1 month), now(), -- individual glucose chart
+        date_sub(now(), interval 1 month), now(), -- daily glucose chart
+        date_sub(now(), interval 1 year), now(),  -- weekly glucose chart
+        date_sub(now(), interval 1 year), now(),  -- monthly glucose chart
+        date_sub(now(), interval 5 year), now(),  -- yearly glucose chart
+        date_sub(now(), interval 1 month), now(), -- individual sleep chart
+        date_sub(now(), interval 1 month), now(), -- daily sleep chart
+        date_sub(now(), interval 1 year), now(),  -- weekly sleep chart
+        date_sub(now(), interval 1 year), now(),  -- monthly sleep chart
+        date_sub(now(), interval 5 year), now(),  -- yearly sleep chart
+        date_sub(now(), interval 1 month), now(), -- individual weight chart
+        date_sub(now(), interval 1 month), now(), -- daily weight chart
+        date_sub(now(), interval 1 year), now(),  -- weekly weight chart
+        date_sub(now(), interval 1 year), now(),  -- monthly weight chart
+        date_sub(now(), interval 5 year), now(),  -- yearly weight chart
+        5),
         -- whatup
         ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default,
-        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
-        default, default, 6),
+        default, default, default, default, default, default, default, default, default, default,
+        default, default, default,
+        date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- monthly blood pressure chart
+        date_sub(now(), interval 5 year), now(),  -- yearly blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- individual calories chart
+        date_sub(now(), interval 1 month), now(), -- daily calories chart
+        date_sub(now(), interval 1 year), now(),  -- weekly calories chart
+        date_sub(now(), interval 1 year), now(),  -- monthly calories chart
+        date_sub(now(), interval 5 year), now(),  -- yearly calories chart
+        date_sub(now(), interval 1 month), now(), -- individual exercise chart
+        date_sub(now(), interval 1 month), now(), -- daily exercise chart
+        date_sub(now(), interval 1 year), now(),  -- weekly exercise chart
+        date_sub(now(), interval 1 year), now(),  -- monthly exercise chart
+        date_sub(now(), interval 5 year), now(),  -- yearly exercise chart
+        date_sub(now(), interval 1 month), now(), -- individual glucose chart
+        date_sub(now(), interval 1 month), now(), -- daily glucose chart
+        date_sub(now(), interval 1 year), now(),  -- weekly glucose chart
+        date_sub(now(), interval 1 year), now(),  -- monthly glucose chart
+        date_sub(now(), interval 5 year), now(),  -- yearly glucose chart
+        date_sub(now(), interval 1 month), now(), -- individual sleep chart
+        date_sub(now(), interval 1 month), now(), -- daily sleep chart
+        date_sub(now(), interval 1 year), now(),  -- weekly sleep chart
+        date_sub(now(), interval 1 year), now(),  -- monthly sleep chart
+        date_sub(now(), interval 5 year), now(),  -- yearly sleep chart
+        date_sub(now(), interval 1 month), now(), -- individual weight chart
+        date_sub(now(), interval 1 month), now(), -- daily weight chart
+        date_sub(now(), interval 1 year), now(),  -- weekly weight chart
+        date_sub(now(), interval 1 year), now(),  -- monthly weight chart
+        date_sub(now(), interval 5 year), now(),  -- yearly weight chart
+        6),
         -- delete-me-1
         ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default,
-        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
-        default, default, 7),
+        default, default, default, default, default, default, default, default, default, default,
+        default, default, default,
+        date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- monthly blood pressure chart
+        date_sub(now(), interval 5 year), now(),  -- yearly blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- individual calories chart
+        date_sub(now(), interval 1 month), now(), -- daily calories chart
+        date_sub(now(), interval 1 year), now(),  -- weekly calories chart
+        date_sub(now(), interval 1 year), now(),  -- monthly calories chart
+        date_sub(now(), interval 5 year), now(),  -- yearly calories chart
+        date_sub(now(), interval 1 month), now(), -- individual exercise chart
+        date_sub(now(), interval 1 month), now(), -- daily exercise chart
+        date_sub(now(), interval 1 year), now(),  -- weekly exercise chart
+        date_sub(now(), interval 1 year), now(),  -- monthly exercise chart
+        date_sub(now(), interval 5 year), now(),  -- yearly exercise chart
+        date_sub(now(), interval 1 month), now(), -- individual glucose chart
+        date_sub(now(), interval 1 month), now(), -- daily glucose chart
+        date_sub(now(), interval 1 year), now(),  -- weekly glucose chart
+        date_sub(now(), interval 1 year), now(),  -- monthly glucose chart
+        date_sub(now(), interval 5 year), now(),  -- yearly glucose chart
+        date_sub(now(), interval 1 month), now(), -- individual sleep chart
+        date_sub(now(), interval 1 month), now(), -- daily sleep chart
+        date_sub(now(), interval 1 year), now(),  -- weekly sleep chart
+        date_sub(now(), interval 1 year), now(),  -- monthly sleep chart
+        date_sub(now(), interval 5 year), now(),  -- yearly sleep chart
+        date_sub(now(), interval 1 month), now(), -- individual weight chart
+        date_sub(now(), interval 1 month), now(), -- daily weight chart
+        date_sub(now(), interval 1 year), now(),  -- weekly weight chart
+        date_sub(now(), interval 1 year), now(),  -- monthly weight chart
+        date_sub(now(), interval 5 year), now(),  -- yearly weight chart
+        7),
         -- delete-me-2
         ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default,
-        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
-        default, default, 8),
+        default, default, default, default, default, default, default, default, default, default,
+        default, default, default,
+        date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- monthly blood pressure chart
+        date_sub(now(), interval 5 year), now(),  -- yearly blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- individual calories chart
+        date_sub(now(), interval 1 month), now(), -- daily calories chart
+        date_sub(now(), interval 1 year), now(),  -- weekly calories chart
+        date_sub(now(), interval 1 year), now(),  -- monthly calories chart
+        date_sub(now(), interval 5 year), now(),  -- yearly calories chart
+        date_sub(now(), interval 1 month), now(), -- individual exercise chart
+        date_sub(now(), interval 1 month), now(), -- daily exercise chart
+        date_sub(now(), interval 1 year), now(),  -- weekly exercise chart
+        date_sub(now(), interval 1 year), now(),  -- monthly exercise chart
+        date_sub(now(), interval 5 year), now(),  -- yearly exercise chart
+        date_sub(now(), interval 1 month), now(), -- individual glucose chart
+        date_sub(now(), interval 1 month), now(), -- daily glucose chart
+        date_sub(now(), interval 1 year), now(),  -- weekly glucose chart
+        date_sub(now(), interval 1 year), now(),  -- monthly glucose chart
+        date_sub(now(), interval 5 year), now(),  -- yearly glucose chart
+        date_sub(now(), interval 1 month), now(), -- individual sleep chart
+        date_sub(now(), interval 1 month), now(), -- daily sleep chart
+        date_sub(now(), interval 1 year), now(),  -- weekly sleep chart
+        date_sub(now(), interval 1 year), now(),  -- monthly sleep chart
+        date_sub(now(), interval 5 year), now(),  -- yearly sleep chart
+        date_sub(now(), interval 1 month), now(), -- individual weight chart
+        date_sub(now(), interval 1 month), now(), -- daily weight chart
+        date_sub(now(), interval 1 year), now(),  -- weekly weight chart
+        date_sub(now(), interval 1 year), now(),  -- monthly weight chart
+        date_sub(now(), interval 5 year), now(),  -- yearly weight chart
+        8),
         -- delete-me-3
         ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default,
-        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
-        default, default, 9),
+        default, default, default, default, default, default, default, default, default, default,
+        default, default, default,
+        date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- monthly blood pressure chart
+        date_sub(now(), interval 5 year), now(),  -- yearly blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- individual calories chart
+        date_sub(now(), interval 1 month), now(), -- daily calories chart
+        date_sub(now(), interval 1 year), now(),  -- weekly calories chart
+        date_sub(now(), interval 1 year), now(),  -- monthly calories chart
+        date_sub(now(), interval 5 year), now(),  -- yearly calories chart
+        date_sub(now(), interval 1 month), now(), -- individual exercise chart
+        date_sub(now(), interval 1 month), now(), -- daily exercise chart
+        date_sub(now(), interval 1 year), now(),  -- weekly exercise chart
+        date_sub(now(), interval 1 year), now(),  -- monthly exercise chart
+        date_sub(now(), interval 5 year), now(),  -- yearly exercise chart
+        date_sub(now(), interval 1 month), now(), -- individual glucose chart
+        date_sub(now(), interval 1 month), now(), -- daily glucose chart
+        date_sub(now(), interval 1 year), now(),  -- weekly glucose chart
+        date_sub(now(), interval 1 year), now(),  -- monthly glucose chart
+        date_sub(now(), interval 5 year), now(),  -- yearly glucose chart
+        date_sub(now(), interval 1 month), now(), -- individual sleep chart
+        date_sub(now(), interval 1 month), now(), -- daily sleep chart
+        date_sub(now(), interval 1 year), now(),  -- weekly sleep chart
+        date_sub(now(), interval 1 year), now(),  -- monthly sleep chart
+        date_sub(now(), interval 5 year), now(),  -- yearly sleep chart
+        date_sub(now(), interval 1 month), now(), -- individual weight chart
+        date_sub(now(), interval 1 month), now(), -- daily weight chart
+        date_sub(now(), interval 1 year), now(),  -- weekly weight chart
+        date_sub(now(), interval 1 year), now(),  -- monthly weight chart
+        date_sub(now(), interval 5 year), now(),  -- yearly weight chart
+        9),
         -- admin
         ('Default', default, default, default, default, default, default, default, default, default,
-        default, default, default, default, default, default, default, default,
-        date_sub(now(), interval 1 month), date_sub(now(), interval 1 year), now(), now(),
-        default, default, 10);
+        default, default, default, default, default, default, default, default, default, default,
+        default, default, default,
+        date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
+        date_sub(now(), interval 1 year), now(),  -- monthly blood pressure chart
+        date_sub(now(), interval 5 year), now(),  -- yearly blood pressure chart
+        date_sub(now(), interval 1 month), now(), -- individual calories chart
+        date_sub(now(), interval 1 month), now(), -- daily calories chart
+        date_sub(now(), interval 1 year), now(),  -- weekly calories chart
+        date_sub(now(), interval 1 year), now(),  -- monthly calories chart
+        date_sub(now(), interval 5 year), now(),  -- yearly calories chart
+        date_sub(now(), interval 1 month), now(), -- individual exercise chart
+        date_sub(now(), interval 1 month), now(), -- daily exercise chart
+        date_sub(now(), interval 1 year), now(),  -- weekly exercise chart
+        date_sub(now(), interval 1 year), now(),  -- monthly exercise chart
+        date_sub(now(), interval 5 year), now(),  -- yearly exercise chart
+        date_sub(now(), interval 1 month), now(), -- individual glucose chart
+        date_sub(now(), interval 1 month), now(), -- daily glucose chart
+        date_sub(now(), interval 1 year), now(),  -- weekly glucose chart
+        date_sub(now(), interval 1 year), now(),  -- monthly glucose chart
+        date_sub(now(), interval 5 year), now(),  -- yearly glucose chart
+        date_sub(now(), interval 1 month), now(), -- individual sleep chart
+        date_sub(now(), interval 1 month), now(), -- daily sleep chart
+        date_sub(now(), interval 1 year), now(),  -- weekly sleep chart
+        date_sub(now(), interval 1 year), now(),  -- monthly sleep chart
+        date_sub(now(), interval 5 year), now(),  -- yearly sleep chart
+        date_sub(now(), interval 1 month), now(), -- individual weight chart
+        date_sub(now(), interval 1 month), now(), -- daily weight chart
+        date_sub(now(), interval 1 year), now(),  -- weekly weight chart
+        date_sub(now(), interval 1 year), now(),  -- monthly weight chart
+        date_sub(now(), interval 5 year), now(),  -- yearly weight chart
+        10);
 
 -- UserProfile data
 insert into UserProfiles (firstName, lastName, email, phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,  isPicturePublic, sendReminders, stayLoggedIn, measurementsOptionsID, userID)

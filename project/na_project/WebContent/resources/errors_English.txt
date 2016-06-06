@@ -54,3 +54,5 @@ NUM_ROWS_INVALID The number of rows must be an integer of 5 digits or less
 CHART_TYPE_INVALID The specified chart type is invalid
 DATE_INVALID The specified date is invalid
 OPTIONS_NAME_EMPTY Preset name cannot be empty
+TABLE_SIZE_INVALID The table size must be an integer of 5 digits or less
+CHART_PLACEMENT_INVALID The only valid chart placements are left, right, top, and bottom
