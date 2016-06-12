@@ -16,8 +16,8 @@ class MeasurementsOptionsDB {
             
         // create and run database query
         $stmt = Database::getDB()->prepare(
-            "insert into MeasurementsOptions (userID, optionsName, activeMeasurement, bloodPressureUnits,
-                calorieUnits, exerciseUnits, glucoseUnits, sleepUnits, weightUnits,
+            "insert into MeasurementsOptions (userID, optionsName, isActive, activeMeasurement,
+                bloodPressureUnits, calorieUnits, exerciseUnits, glucoseUnits, sleepUnits, weightUnits,
                 timeFormat, durationFormat, showTooltips, showSecondaryCols, showDateCol, showTimeCol,
                 showNotesCol, numRows, showTable, tableSize, chartPlacement, showFirstChart,
                 showSecondChart, firstChartType, secondChartType, chartLastYear, chartGroupDays,
@@ -51,7 +51,7 @@ class MeasurementsOptionsDB {
                 weeklyWeightChartStart, weeklyWeightChartEnd,
                 monthlyWeightChartStart, monthlyWeightChartEnd,
                 yearlyWeightChartStart, yearlyWeightChartEnd)
-            values (:userID, :optionsName, :activeMeasurement, :bloodPressureUnits,
+            values (:userID, :optionsName, :isActive, :activeMeasurement, :bloodPressureUnits,
                 :calorieUnits, :exerciseUnits, :glucoseUnits, :sleepUnits, :weightUnits,
                 :timeFormat, :durationFormat, :showTooltips, :showSecondaryCols, :showDateCol, :showTimeCol,
                 :showNotesCol, :numRows, :showTable, :tableSize, :chartPlacement,
@@ -91,6 +91,7 @@ class MeasurementsOptionsDB {
         $stmt->execute(array(
             ':userID' => $userID,
             ':optionsName' => $options->getOptionsName(),
+            ':isActive' => $options->isActive(),
             ':activeMeasurement' => $options->getActiveMeasurement(),
             ':bloodPressureUnits' => $options->getBloodPressureUnits(),
             ':calorieUnits' => $options->getCalorieUnits(),
@@ -199,6 +200,7 @@ class MeasurementsOptionsDB {
         $stmt = Database::getDB()->prepare(
             "update MeasurementsOptions
             set optionsName = :newOptionsName,
+                isActive = :isActive,
                 activeMeasurement = :activeMeasurement,
                 bloodPressureUnits = :bloodPressureUnits,
                 calorieUnits = :calorieUnits,
@@ -288,6 +290,7 @@ class MeasurementsOptionsDB {
         );
         $stmt->execute(array(
             ':newOptionsName' => $newOptions->getOptionsName(),
+            ':isActive' => $newOptions->isActive(),
             ':activeMeasurement' => $newOptions->getActiveMeasurement(),
             ':bloodPressureUnits' => $newOptions->getBloodPressureUnits(),
             ':calorieUnits' => $newOptions->getCalorieUnits(),
@@ -412,7 +415,7 @@ class MeasurementsOptionsDB {
     
         // create and run database query
         $stmt = Database::getDB()->prepare(
-            "select userName, optionsName, activeMeasurement, bloodPressureUnits,
+            "select userName, optionsName, isActive, activeMeasurement, bloodPressureUnits,
                 calorieUnits, exerciseUnits, glucoseUnits, sleepUnits, weightUnits,
                 timeFormat, durationFormat, showTooltips, showSecondaryCols, showDateCol, showTimeCol,
                 showNotesCol, numRows, showTable, tableSize, chartPlacement, showFirstChart,
@@ -469,7 +472,7 @@ class MeasurementsOptionsDB {
     public static function getOptions($userName, $optionsName) {
         // create and run database query
         $stmt = Database::getDB()->prepare(
-            "select userName, optionsName, activeMeasurement, bloodPressureUnits,
+            "select userName, optionsName, isActive, activeMeasurement, bloodPressureUnits,
                 calorieUnits, exerciseUnits, glucoseUnits, sleepUnits, weightUnits,
                 timeFormat, durationFormat, showTooltips, showSecondaryCols, showDateCol, showTimeCol,
                 showNotesCol, numRows, showTable, tableSize, chartPlacement, showFirstChart,

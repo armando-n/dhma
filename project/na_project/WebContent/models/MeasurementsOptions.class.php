@@ -2,6 +2,7 @@
 class MeasurementsOptions extends GenericModelObject implements JsonSerializable {
     
     const DATE_FORMAT = "Y-m-d";
+    const DEFAULT_ISACTIVE = false;
     const DEFAULT_ACTIVE_MEASUREMENT = 'glucose';
     const DEFAULT_BLOODPRESSURE_UNITS = 'mm Hg';
     const DEFAULT_CALORIE_UNITS = 'calories';
@@ -89,6 +90,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     
     private $formInput;
     private $optionsName;
+    private $isActive;
     private $activeMeasurement;
     private $userName;
     private $bloodPressureUnits;
@@ -187,6 +189,10 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     
     public function getUserName() {
         return $this->userName;
+    }
+    
+    public function isActive() {
+        return $this->isActive;
     }
     
     public function getActiveMeasurement() {
@@ -530,6 +536,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
         $paramArray = array(
             'optionsName' => $this->optionsName,
             'userName' => $this->userName,
+            'isActive' => $this->isActive,
             'activeMeasurement' => $this->activeMeasurement,
             'bloodPressureUnits' => $this->bloodPressureUnits,
             'calorieUnits' => $this->calorieUnits,
@@ -623,6 +630,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
         $str =
             "Options Name: [$this->optionsName]\n" .
             "User Name: [$this->userName]\n" .
+            "Is Active: [" .(($this->isActive) ? "true" : "false"). "]\n" .
             "Active Measurement: [$this->activeMeasurement]\n" .
             "Blood Pressure Units: [$this->bloodPressureUnits]\n" .
             "Calorie Units: [$this->calorieUnits]\n" .
@@ -715,6 +723,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
         $object = new stdClass();
         $object->optionsName = $this->optionsName;
         $object->userName = $this->userName;
+        $object->isActive = $this->isActive;
         $object->activeMeasurement = $this->activeMeasurement;
         $object->bloodPressureUnits = $this->bloodPressureUnits;
         $object->calorieUnits = $this->calorieUnits;
@@ -877,6 +886,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
         self::$DEFAULT_YEARLY_WEIGHT_CHART_START = $fiveYearsAgo;
         self::$DEFAULT_YEARLY_WEIGHT_CHART_END = $now;
         $this->validateOptionsName();
+        $this->validateIsActive();
         $this->validateActiveMeasurement();
         $this->validateUserName();
         $this->validateBloodPressureUnits();
@@ -932,6 +942,16 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             $this->setError("userName", "USER_NAME_HAS_INVALID_CHARS");
             return;
         }
+    }
+    
+    private function validateIsActive() {
+        $value = $this->extractForm($this->formInput, 'isActive');
+        if (empty($value) && !is_numeric($value)) {
+            $this->isActive = self::DEFAULT_ISACTIVE;
+            return;
+        }
+        
+        $this->isActive = ($value) ? true : false;
     }
     
     private function validateActiveMeasurement() {
@@ -1062,7 +1082,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     
     private function validateShowTooltips() {
         $value = $this->extractForm($this->formInput, "showTooltips");
-        if (empty($value)) {
+        if (empty($value) && !is_numeric($value)) {
             $this->showTooltips = self::DEFAULT_SHOW_TOOLTIPS;
             return;
         }
@@ -1072,7 +1092,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     
     private function validateShowSecondaryCols() {
         $value = $this->extractForm($this->formInput, "showSecondaryCols");
-        if (empty($value)) {
+        if (empty($value) && !is_numeric($value)) {
             $this->showSecondaryCols= self::DEFAULT_SHOW_EXERCISETYPE_COL;
             return;
         }
@@ -1082,7 +1102,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     
     private function validateShowDateCol() {
         $value = $this->extractForm($this->formInput, "showDateCol");
-        if (empty($value)) {
+        if (empty($value) && !is_numeric($value)) {
             $this->showDateCol = self::DEFAULT_SHOW_DATE_COL;
             return;
         }
@@ -1092,7 +1112,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     
     private function validateShowTimeCol() {
         $value = $this->extractForm($this->formInput, "showTimeCol");
-        if (empty($value)) {
+        if (empty($value) && !is_numeric($value)) {
             $this->showTimeCol = self::DEFAULT_SHOW_TIME_COL;
             return;
         }
@@ -1102,7 +1122,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     
     private function validateShowNotesCol() {
         $value = $this->extractForm($this->formInput, "showNotesCol");
-        if (empty($value)) {
+        if (empty($value) && !is_numeric($value)) {
             $this->showNotesCol = self::DEFAULT_SHOW_NOTES_COL;
             return;
         }
@@ -1126,7 +1146,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     
     private function validateShowTable() {
         $value = $this->extractForm($this->formInput, "showTable");
-        if (empty($value)) {
+        if (empty($value) && !is_numeric($value)) {
             $this->showTable = self::DEFAULT_SHOW_TABLE;
             return;
         }
@@ -1167,7 +1187,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     
     private function validateShowFirstChart() {
         $value = $this->extractForm($this->formInput, "showFirstChart");
-        if (empty($value)) {
+        if (empty($value) && !is_numeric($value)) {
             $this->showFirstChart = self::DEFAULT_SHOW_FIRST_CHART;
             return;
         }
@@ -1177,7 +1197,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     
     private function validateShowSecondChart() {
         $value = $this->extractForm($this->formInput, "showSecondChart");
-        if (empty($value)) {
+        if (empty($value) && !is_numeric($value)) {
             $this->showSecondChart = self::DEFAULT_SHOW_SECOND_CHART;
             return;
         }
@@ -1215,7 +1235,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     
     private function validateChartLastYear() {
         $value = $this->extractForm($this->formInput, "chartLastYear");
-        if (empty($value)) {
+        if (empty($value) && !is_numeric($value)) {
             $this->chartLastYear = self::DEFAULT_CHART_LAST_YEAR;
             return;
         }
@@ -1225,7 +1245,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
     
     private function validateChartGroupDays() {
         $value = $this->extractForm($this->formInput, "chartGroupDays");
-        if (empty($value)) {
+        if (empty($value) && !is_numeric($value)) {
             $this->chartGroupDays = self::DEFAULT_CHART_GROUP_DAYS;
             return;
         }

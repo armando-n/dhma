@@ -207,7 +207,7 @@ class MeasurementsController {
                 // find and store the MeasurementsOptions object for the active measurements options
                 $activeOptions = null;
                 foreach ($_SESSION['allMeasurementsOptions'] as $currentOptions) {
-                    if ($currentOptions->getOptionsName() === $_SESSION['profile']->getMeasurementsOptions())
+                    if ($currentOptions->isActive())
                         $activeOptions = $currentOptions;
                 }
                 if ($activeOptions === null)

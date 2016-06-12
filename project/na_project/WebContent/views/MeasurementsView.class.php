@@ -24,33 +24,59 @@ class MeasurementsView{
             return;
         endif;
         
+        // Note that some options are retrieved directly in the options area. only selects, checkboxes, and glyphicon stuff is retrieved here
+        
+        // html attribute strings required to activate/select/check/mark active options
+        $msmtActive = ' active';
+        $optionSelected = ' selected="selected"';
+        $optionChecked = ' checked="checked"';
+        $optionOk = ' class="glyphicon glyphicon-ok"';
+        
         $allOptions = $_SESSION['allMeasurementsOptions'];
         $activeOptions = $_SESSION['activeMeasurementsOptions'];
+        $activeOptionsName = $activeOptions->getOptionsName();
+        $activeMeasurement = $activeOptions->getActiveMeasurement();
         
-        $timeFormat_12hour = ($activeOptions->getTimeFormat() === '12 hour') ? ' selected="selected"' : '';
-        $timeFormat_24hour = ($activeOptions->getTimeFormat() === '24 hour') ? ' selected="selected"' : '';
-        $glucoseUnits_mgdL = ($activeOptions->getGlucoseUnits() === 'mg/dL') ? ' selected="selected"' : '';
-        $glucoseUnits_mM = ($activeOptions->getGlucoseUnits() === 'mM') ? ' selected="selected"' : '';
-        $bloodPressureUnits_mmHg = ($activeOptions->getBloodPressureUnits() === 'mm Hg') ? ' selected="selected"' : '';
-        $weightUnits_lbs = ($activeOptions->getWeightUnits() === 'lbs') ? ' selected="selected"' : '';
-        $weightUnits_kg = ($activeOptions->getWeightUnits() === 'kg') ? ' selected="selected"' : '';
-        $calorieUnits_calories = ($activeOptions->getCalorieUnits() === 'calories') ? ' selected="selected"' : '';
-        $exerciseUnits_minutes = ($activeOptions->getExerciseUnits() === 'minutes') ? ' selected="selected"' : '';
-        $exerciseUnits_hours = ($activeOptions->getExerciseUnits() === 'hours') ? ' selected="selected"' : '';
-        $exerciseUnits_hoursMinutes = ($activeOptions->getExerciseUnits() === 'hours:minutes') ? ' selected="selected"' : '';
-        $sleepUnits_minutes = ($activeOptions->getSleepUnits() === 'minutes') ? ' selected="selected"' : '';
-        $sleepUnits_hours = ($activeOptions->getSleepUnits() === 'hours') ? ' selected="selected"' : '';
-        $sleepUnits_hoursMinutes = ($activeOptions->getSleepUnits() === 'hours:minutes') ? ' selected="selected"' : '';
-        $showTooltips = $activeOptions->getShowTooltips() ? ' checked="checked"' : '';
-        $showFirstChart = $activeOptions->getShowFirstChart() ? ' checked="checked"' : '';
-        $showSecondChart = $activeOptions->getShowSecondChart() ? ' checked="checked"' : '';
-        $chartLastYear = $activeOptions->getChartLastYear() ? ' checked="checked"' : '';
-        $chartGroupDays = $activeOptions->getChartGroupDays() ? ' checked="checked"' : '';
+        // options that require an active class to be added
+        $glucoseActive = ($activeMeasurement === 'glucose') ? $msmtActive : '';
+        $bloodPressureActive = ($activeMeasurement === 'bloodPressure') ? $msmtActive : '';
+        $weightActive =  ($activeMeasurement === 'weight') ? $msmtActive : '';
+        $caloriesActive = ($activeMeasurement === 'calories') ? $msmtActive : '';
+        $exerciseActive = ($activeMeasurement === 'exercise') ? $msmtActive : '';
+        $sleepActive = ($activeMeasurement === 'sleep') ? $msmtActive : '';
         
-        $showSecondaryCols = $activeOptions->getShowSecondaryCols() ? ' class="glyphicon glyphicon-ok"' : '';
-        $showDateCol = $activeOptions->getShowDateCol() ? ' class="glyphicon glyphicon-ok"' : '';
-        $showTimeCol = $activeOptions->getShowTimeCol() ? ' class="glyphicon glyphicon-ok"' : '';
-        $showNotesCol = $activeOptions->getShowNotesCol() ? ' class="glyphicon glyphicon-ok"' : '';
+        // options that use select/option tags are retrieved here
+        $glucoseUnits_mgdL = ($activeOptions->getGlucoseUnits() === 'mg/dL') ? $optionSelected : '';
+        $glucoseUnits_mM = ($activeOptions->getGlucoseUnits() === 'mM') ? $optionSelected : '';
+        $bloodPressureUnits_mmHg = ($activeOptions->getBloodPressureUnits() === 'mm Hg') ? $optionSelected : '';
+        $weightUnits_lbs = ($activeOptions->getWeightUnits() === 'lbs') ? $optionSelected : '';
+        $weightUnits_kg = ($activeOptions->getWeightUnits() === 'kg') ? $optionSelected : '';
+        $calorieUnits_calories = ($activeOptions->getCalorieUnits() === 'calories') ? $optionSelected : '';
+        $exerciseUnits_minutes = ($activeOptions->getExerciseUnits() === 'minutes') ? $optionSelected : '';
+        $exerciseUnits_hours = ($activeOptions->getExerciseUnits() === 'hours') ? $optionSelected : '';
+        $exerciseUnits_hoursMinutes = ($activeOptions->getExerciseUnits() === 'hours:minutes') ? $optionSelected : '';
+        $sleepUnits_minutes = ($activeOptions->getSleepUnits() === 'minutes') ? $optionSelected : '';
+        $sleepUnits_hours = ($activeOptions->getSleepUnits() === 'hours') ? $optionSelected : '';
+        $sleepUnits_hoursMinutes = ($activeOptions->getSleepUnits() === 'hours:minutes') ? $optionSelected : '';
+        $timeFormat_12hour = ($activeOptions->getTimeFormat() === '12 hour') ? $optionSelected : '';
+        $timeFormat_24hour = ($activeOptions->getTimeFormat() === '24 hour') ? $optionSelected : '';
+        $durationFormat_minutes = ($activeOptions->getDurationFormat() === 'minutes') ? $optionSelected : '';
+        $durationFormat_hours = ($activeOptions->getDurationFormat() === 'hours') ? $optionSelected : '';
+        $durationFormat_hoursMinutes = ($activeOptions->getDurationFormat() === 'hours:minutes') ? $optionSelected : '';
+        
+        // options that use checkboxes are retrieved here
+        $showTooltips = $activeOptions->getShowTooltips() ? $optionChecked : '';
+        $showTable = $activeOptions->getShowTable() ? $optionChecked : '';
+        $showFirstChart = $activeOptions->getShowFirstChart() ? $optionChecked : '';
+        $showSecondChart = $activeOptions->getShowSecondChart() ? $optionChecked : '';
+        $chartLastYear = $activeOptions->getChartLastYear() ? $optionChecked : '';
+        $chartGroupDays = $activeOptions->getChartGroupDays() ? $optionChecked : '';
+        
+        // options that use an ok glyphicon (check mark icon) are retrieved here
+        $showSecondaryCols = $activeOptions->getShowSecondaryCols() ? $optionOk : '';
+        $showDateCol = $activeOptions->getShowDateCol() ? $optionOk : '';
+        $showTimeCol = $activeOptions->getShowTimeCol() ? $optionOk : '';
+        $showNotesCol = $activeOptions->getShowNotesCol() ? $optionOk : '';
         ?>
 
 <div class="row">
@@ -123,6 +149,14 @@ class MeasurementsView{
                                         </select>
                                     </div>
                                     <div class="form-group">
+                                        <label for="options_durationFormat">Duration Format</label>
+                                        <select id="options_durationFormat" name="durationFormat" class="form-control">
+                                            <option<?=$durationFormat_minutes?>>minutes</option>
+                                            <option<?=$durationFormat_hours?>>hours</option>
+                                            <option<?=$durationFormat_hoursMinutes?>>hours:minutes</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" id="options_showTooltips" name="showTooltips"<?=$showTooltips?> />Show Help Tooltips
@@ -135,6 +169,13 @@ class MeasurementsView{
                                     <legend>Table Options</legend>
                                 
                                     <!-- Table Options -->
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="options_showTable" name="showTable"<?=$showTable?> />Show table
+                                            </label>
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <div id="columns_dropdown" class="dropdown" data-toggle="tooltip" title="Choose the columns you want shown in the table">
                                             <button type="button" class="dropdown-toggle btn btn-default" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -192,12 +233,17 @@ class MeasurementsView{
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="options_endDate_primary-chart">End Date</label>
-                                                    <div id="endDate-picker_primary" class="input-group date date-picker endDate-picker">
+                                                    <div id="endDate-picker_primary" class="input-group date date-picker">
                                                         <input type="text" id="options_endDate_primary-chart" name="firstChartEndDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
                                                         <span class="input-group-addon">
                                                             <span class="glyphicon glyphicon-calendar"></span>
                                                         </span>
                                                     </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button id="updateCharts_primary" type="button" class="btn btn-default updateCharts-btn">
+                                                        <span>Update Charts</span>
+                                                    </button>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="checkbox">
@@ -209,7 +255,7 @@ class MeasurementsView{
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input type="checkbox" id="options_dailyAverages" name="dailyAverages"<?=$chartGroupDays?> />Show daily averages
+                                                            <input type="checkbox" id="options_dailyAverages" name="dailyAverages"<?=$chartGroupDays?> />Group each day
                                                         </label>
                                                     </div>
                                                 </div>
@@ -239,12 +285,17 @@ class MeasurementsView{
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="options_endDate_secondary-chart">End Date</label>
-                                                    <div id="endDate-picker_secondary" class="input-group date date-picker endDate-picker">
+                                                    <div id="endDate-picker_secondary" class="input-group date date-picker">
                                                         <input type="text" id="options_endDate_secondary-chart" name="secondChartEndDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
                                                         <span class="input-group-addon">
                                                             <span class="glyphicon glyphicon-calendar"></span>
                                                         </span>
                                                     </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button id="updateCharts_secondary" type="button" class="btn btn-default updateCharts-btn">
+                                                        <span>Update Charts</span>
+                                                    </button>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="checkbox">
@@ -256,12 +307,77 @@ class MeasurementsView{
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input type="checkbox" id="options_dailyAverages" name="dailyAverages"<?=$chartGroupDays?> />Show daily averages
+                                                            <input type="checkbox" id="options_dailyAverages" name="dailyAverages"<?=$chartGroupDays?> />Group each day
                                                         </label>
                                                     </div>
                                                 </div>
                                                 
                                             </div>
+                                        </section>
+                                        <section id="chart-data" class="hidden-data">
+                                            <div id="firstChartType"><?=$activeOptions->getFirstChartType()?></div>
+                                            <div id="secondChartType"><?=$activeOptions->getSecondChartType()?></div>
+                                            <div id="activeMeasurement"><?=$activeOptions->getActiveMeasurement()?></div>
+                                            <div id="individual_bloodPressure_chartStart"><?=$activeOptions->getIndividualBloodPressureChartStart()?></div>
+                                            <div id="individual_bloodPressure_chartEnd"><?=$activeOptions->getIndividualBloodPressureChartEnd()?></div>
+                                            <div id="daily_bloodPressure_chartStart"><?=$activeOptions->getDailyBloodPressureChartStart()?></div>
+                                            <div id="daily_bloodPressure_chartEnd"><?=$activeOptions->getDailyBloodPressureChartEnd()?></div>
+                                            <div id="weekly_bloodPressure_chartStart"><?=$activeOptions->getWeeklyBloodPressureChartStart()?></div>
+                                            <div id="weekly_bloodPressure_chartEnd"><?=$activeOptions->getWeeklyBloodPressureChartEnd()?></div>
+                                            <div id="monthly_bloodPressure_chartStart"><?=$activeOptions->getMonthlyBloodPressureChartStart()?></div>
+                                            <div id="monthly_bloodPressure_chartEnd"><?=$activeOptions->getMonthlyBloodPressureChartEnd()?></div>
+                                            <div id="yearly_bloodPressure_chartStart"><?=$activeOptions->getYearlyBloodPressureChartStart()?></div>
+                                            <div id="yearly_bloodPressure_chartEnd"><?=$activeOptions->getYearlyBloodPressureChartEnd()?></div>
+                                            <div id="individual_calories_chartStart"><?=$activeOptions->getIndividualCaloriesChartStart()?></div>
+                                            <div id="individual_calories_chartEnd"><?=$activeOptions->getIndividualCaloriesChartEnd()?></div>
+                                            <div id="daily_calories_chartStart"><?=$activeOptions->getDailyCaloriesChartStart()?></div>
+                                            <div id="daily_calories_chartEnd"><?=$activeOptions->getDailyCaloriesChartEnd()?></div>
+                                            <div id="weekly_calories_chartStart"><?=$activeOptions->getWeeklyCaloriesChartStart()?></div>
+                                            <div id="weekly_calories_chartEnd"><?=$activeOptions->getWeeklyCaloriesChartEnd()?></div>
+                                            <div id="monthly_calories_chartStart"><?=$activeOptions->getMonthlyCaloriesChartStart()?></div>
+                                            <div id="monthly_calories_chartEnd"><?=$activeOptions->getMonthlyCaloriesChartEnd()?></div>
+                                            <div id="yearly_calories_chartStart"><?=$activeOptions->getYearlyCaloriesChartStart()?></div>
+                                            <div id="yearly_calories_chartEnd"><?=$activeOptions->getYearlyCaloriesChartEnd()?></div>
+                                            <div id="individual_exercise_chartStart"><?=$activeOptions->getIndividualExerciseChartStart()?></div>
+                                            <div id="individual_exercise_chartEnd"><?=$activeOptions->getIndividualExerciseChartEnd()?></div>
+                                            <div id="daily_exercise_chartStart"><?=$activeOptions->getDailyExerciseChartStart()?></div>
+                                            <div id="daily_exercise_chartEnd"><?=$activeOptions->getDailyExerciseChartEnd()?></div>
+                                            <div id="weekly_exercise_chartStart"><?=$activeOptions->getWeeklyExerciseChartStart()?></div>
+                                            <div id="weekly_exercise_chartEnd"><?=$activeOptions->getWeeklyExerciseChartEnd()?></div>
+                                            <div id="monthly_exercise_chartStart"><?=$activeOptions->getMonthlyExerciseChartStart()?></div>
+                                            <div id="monthly_exercise_chartEnd"><?=$activeOptions->getMonthlyExerciseChartEnd()?></div>
+                                            <div id="yearly_exercise_chartStart"><?=$activeOptions->getYearlyExerciseChartStart()?></div>
+                                            <div id="yearly_exercise_chartEnd"><?=$activeOptions->getYearlyExerciseChartEnd()?></div>
+                                            <div id="individual_glucose_chartStart"><?=$activeOptions->getIndividualGlucoseChartStart()?></div>
+                                            <div id="individual_glucose_chartEnd"><?=$activeOptions->getIndividualGlucoseChartEnd()?></div>
+                                            <div id="daily_glucose_chartStart"><?=$activeOptions->getDailyGlucoseChartStart()?></div>
+                                            <div id="daily_glucose_chartEnd"><?=$activeOptions->getDailyGlucoseChartEnd()?></div>
+                                            <div id="weekly_glucose_chartStart"><?=$activeOptions->getWeeklyGlucoseChartStart()?></div>
+                                            <div id="weekly_glucose_chartEnd"><?=$activeOptions->getWeeklyGlucoseChartEnd()?></div>
+                                            <div id="monthly_glucose_chartStart"><?=$activeOptions->getMonthlyGlucoseChartStart()?></div>
+                                            <div id="monthly_glucose_chartEnd"><?=$activeOptions->getMonthlyGlucoseChartEnd()?></div>
+                                            <div id="yearly_glucose_chartStart"><?=$activeOptions->getYearlyGlucoseChartStart()?></div>
+                                            <div id="yearly_glucose_chartEnd"><?=$activeOptions->getYearlyGlucoseChartEnd()?></div>
+                                            <div id="individual_sleep_chartStart"><?=$activeOptions->getIndividualSleepChartStart()?></div>
+                                            <div id="individual_sleep_chartEnd"><?=$activeOptions->getIndividualSleepChartEnd()?></div>
+                                            <div id="daily_sleep_chartStart"><?=$activeOptions->getDailySleepChartStart()?></div>
+                                            <div id="daily_sleep_chartEnd"><?=$activeOptions->getDailySleepChartEnd()?></div>
+                                            <div id="weekly_sleep_chartStart"><?=$activeOptions->getWeeklySleepChartStart()?></div>
+                                            <div id="weekly_sleep_chartEnd"><?=$activeOptions->getWeeklySleepChartEnd()?></div>
+                                            <div id="monthly_sleep_chartStart"><?=$activeOptions->getMonthlySleepChartStart()?></div>
+                                            <div id="monthly_sleep_chartEnd"><?=$activeOptions->getMonthlySleepChartEnd()?></div>
+                                            <div id="yearly_sleep_chartStart"><?=$activeOptions->getYearlySleepChartStart()?></div>
+                                            <div id="yearly_sleep_chartEnd"><?=$activeOptions->getYearlySleepChartEnd()?></div>
+                                            <div id="individual_weight_chartStart"><?=$activeOptions->getIndividualWeightChartStart()?></div>
+                                            <div id="individual_weight_chartEnd"><?=$activeOptions->getIndividualWeightChartEnd()?></div>
+                                            <div id="daily_weight_chartStart"><?=$activeOptions->getDailyWeightChartStart()?></div>
+                                            <div id="daily_weight_chartEnd"><?=$activeOptions->getDailyWeightChartEnd()?></div>
+                                            <div id="weekly_weight_chartStart"><?=$activeOptions->getWeeklyWeightChartStart()?></div>
+                                            <div id="weekly_weight_chartEnd"><?=$activeOptions->getWeeklyWeightChartEnd()?></div>
+                                            <div id="monthly_weight_chartStart"><?=$activeOptions->getMonthlyWeightChartStart()?></div>
+                                            <div id="monthly_weight_chartEnd"><?=$activeOptions->getMonthlyWeightChartEnd()?></div>
+                                            <div id="yearly_weight_chartStart"><?=$activeOptions->getYearlyWeightChartStart()?></div>
+                                            <div id="yearly_weight_chartEnd"><?=$activeOptions->getYearlyWeightChartEnd()?></div>
                                         </section>
                                         
                                     </div> <!-- End Chart Settings -->
@@ -297,48 +413,48 @@ class MeasurementsView{
             <!-- tabs for small screens and larger -->
             <div id="measurements_nav" class="panel-heading collapse navbar-collapse">
                 <ul id="measurements_tabs" class="nav nav-tabs nav-justified" role="tablist">
-                	<li class="measurement-tab active" role="presentation"><a class="measurement-tab tooltip-help" href="#glucose" id="glucose_tab_btn" aria-controls="glucose" role="tab" data-toggle="tooltip" title="Switch to glucose tracker">Glucose</a></li>
-                	<li class="measurement-tab" role="presentation"><a class="measurement-tab tooltip-help" href="#bloodPressure" id="bloodPressure_tab_btn" aria-controls="bloodPressure" role="tab" data-toggle="tooltip" title="Switch to blood pressure tracker">Blood Pressure</a></li>
-                	<li class="measurement-tab" role="presentation"><a class="measurement-tab tooltip-help" href="#weight" id="weight_tab_btn" aria-controls="weight" role="tab" data-toggle="tooltip" title="Switch to weight tracker">Weight</a></li>
-                	<li class="measurement-tab" role="presentation"><a class="measurement-tab tooltip-help" href="#calories" id="calories_tab_btn" aria-controls="calories" role="tab" data-toggle="tooltip" title="Switch to calorie tracker">Calories</a></li>
-                	<li class="measurement-tab" role="presentation"><a class="measurement-tab tooltip-help" href="#exercise" id="exercise_tab_btn" aria-controls="exercise" role="tab" data-toggle="tooltip" title="Switch to exercise tracker">Exercise</a></li>
-                	<li class="measurement-tab" role="presentation"><a class="measurement-tab tooltip-help" href="#sleep" id="sleep_tab_btn" aria-controls="sleep" role="tab" data-toggle="tooltip" title="Switch to sleep tracker">Sleep</a></li>
+                	<li class="measurement-tab<?=$glucoseActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#glucose" id="glucose_tab_btn" aria-controls="glucose" role="tab" data-toggle="tooltip" title="Switch to glucose tracker">Glucose</a></li>
+                	<li class="measurement-tab<?=$bloodPressureActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#bloodPressure" id="bloodPressure_tab_btn" aria-controls="bloodPressure" role="tab" data-toggle="tooltip" title="Switch to blood pressure tracker">Blood Pressure</a></li>
+                	<li class="measurement-tab<?=$weightActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#weight" id="weight_tab_btn" aria-controls="weight" role="tab" data-toggle="tooltip" title="Switch to weight tracker">Weight</a></li>
+                	<li class="measurement-tab<?=$caloriesActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#calories" id="calories_tab_btn" aria-controls="calories" role="tab" data-toggle="tooltip" title="Switch to calorie tracker">Calories</a></li>
+                	<li class="measurement-tab<?=$exerciseActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#exercise" id="exercise_tab_btn" aria-controls="exercise" role="tab" data-toggle="tooltip" title="Switch to exercise tracker">Exercise</a></li>
+                	<li class="measurement-tab<?=$sleepActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#sleep" id="sleep_tab_btn" aria-controls="sleep" role="tab" data-toggle="tooltip" title="Switch to sleep tracker">Sleep</a></li>
                 </ul>
             </div>
 
             <!-- Main content -->
             <div class="tab-content">
-                <section role="tabpanel" id="glucose" class="row tab-pane active">
+                <section role="tabpanel" id="glucose" class="row tab-pane<?=$glucoseActive?>">
                     <div class="col-sm-12">
                             <?php GlucoseMeasurementsView::showBody($activeOptions); ?>
                     </div>
                 </section>
                 
-                <section role="tabpanel" id="bloodPressure" class="row tab-pane">
+                <section role="tabpanel" id="bloodPressure" class="row tab-pane<?=$bloodPressureActive?>">
                     <div class="col-sm-12">
                         <?php BloodPressureMeasurementsView::showBody($activeOptions); ?>
                     </div>
                 </section>
                 
-                <section role="tabpanel" id="calories" class="row tab-pane">
+                <section role="tabpanel" id="calories" class="row tab-pane<?=$caloriesActive?>">
                     <div class="col-sm-12">
                         <?php CalorieMeasurementsView::showBody($activeOptions); ?>
                     </div>
                 </section>
                 
-                <section role="tabpanel" id="exercise" class="row tab-pane">
+                <section role="tabpanel" id="exercise" class="row tab-pane<?=$exerciseActive?>">
                     <div class="col-sm-12">
                         <?php ExerciseMeasurementsView::showBody($activeOptions); ?>
                     </div>
                 </section>
                 
-                <section role="tabpanel" id="sleep" class="row tab-pane">
+                <section role="tabpanel" id="sleep" class="row tab-pane<?=$sleepActive?>">
                     <div class="col-sm-12">
                         <?php SleepMeasurementsView::showBody($activeOptions); ?>
                     </div>
                 </section>
                 
-                <section role="tabpanel" id="weight" class="row tab-pane">
+                <section role="tabpanel" id="weight" class="row tab-pane<?=$weightActive?>">
                     <div class="col-sm-12">
                         <?php WeightMeasurementsView::showBody($activeOptions); ?>
                     </div>

@@ -11,11 +11,11 @@ class UserProfilesDB {
                 "insert into UserProfiles (firstName, lastName, email, phone,
                 gender, dob, country, picture, facebook, theme, accentColor,
                 isProfilePublic, isPicturePublic, sendReminders, stayLoggedIn,
-                measurementsOptionsID, userID)
+                userID)
                 values (:firstName, :lastName, :email, :phone, :gender, :dob,
                     :country, :picture, :facebook, :theme, :accentColor,
                     :isProfilePublic, :isPicturePublic, :sendReminders,
-                    :stayLoggedIn, :measurementsOptionsID, :userID)"
+                    :stayLoggedIn, :userID)"
             );
             $stmt->execute(array(
                 ":firstName" => $profile->getFirstName(),
@@ -33,7 +33,6 @@ class UserProfilesDB {
                 ":isPicturePublic" => $profile->isPicturePublic(),
                 ":sendReminders" => $profile->isSendRemindersSet(),
                 ":stayLoggedIn" => $profile->isStayLoggedInSet(),
-                ":measurementsOptionsID" => $profile->getMeasurementsOptions(),
                 ":userID" => $userID
             ));
             $returnProfileID = $db->lastInsertId("profileID");
@@ -49,29 +48,49 @@ class UserProfilesDB {
     
     public static function editUserProfile($oldProfile, $newProfile) {
         try {
-            $db = Database::getDB();
-            $oldParams = $oldProfile->getParameters();
-            $newParams = $newProfile->getParameters();
-            $numParams = count($oldProfile);
+            if (!($oldProfile instanceof UserProfile))
+                throw new IllegalArgumentException('Expected UserProfile for old profile. Got ' .get_class($oldProfile));
+            if (!($newProfile instanceof UserProfile))
+                throw new IllegalArgumentException('Expected UserProfile for new profile. Got ' .get_class($newProfile));
             
-            foreach ($newParams as $key => $value) {
-                if ($key === 'userName')
-                    continue;
-                
-                if (!array_key_exists($key, $oldParams))
-                    throw new PDOException('Key ' . htmlspecialchars($key) . ' is invalid');
-                
-                if ($oldParams[$key] !== $newParams[$key]) {
-                    $stmt = $db->prepare(
-                        "update UserProfiles set $key = :value
-                         where userID in
-                            (select userID from Users where userName = :userName)");
-                    $stmt->execute(array(
-                        ":value" => $value,
-                        "userName" => $newParams['userName']
-                    ));
-                }
-            }
+            $stmt = Database::getDB()->prepare(
+                'update UserProfiles
+                set firstName = :firstName,
+                    lastName = :lastName,
+                    email = :email,
+                    phone = :phone,
+                    gender = :gender,
+                    dob = :dob,
+                    country = :country,
+                    picture = :picture,
+                    facebook = :facebook,
+                    theme = :theme,
+                    accentColor = :accentColor,
+                    isProfilePublic = :isProfilePublic,
+                    isPicturePublic = :isPicturePublic,
+                    sendReminders = :sendReminders,
+                    stayLoggedIn = :stayLoggedIn
+                where userID in
+                    (select userID from Users where userName = :oldUserName)'
+            );
+            $stmt->execute(array(
+                ':firstName' => $newProfile->getFirstName(),
+                ':lastName' => $newProfile->getLastName(),
+                ':email' => $newProfile->getEmail(),
+                ':phone' => $newProfile->getPhoneNumber(),
+                ':gender' => $newProfile->getGender(),
+                ':dob' => $newProfile->getDOB(),
+                ':country' => $newProfile->getCountry(),
+                ':picture' => $newProfile->getPicture(),
+                ':facebook' => $newProfile->getFacebook(),
+                ':theme' => $newProfile->getTheme(),
+                ':accentColor' => $newProfile->getAccentColor(),
+                ':isProfilePublic' => $newProfile->isProfilePublic(),
+                ':isPicturePublic' => $newProfile->isPicturePublic(),
+                ':sendReminders' => $newProfile->isSendRemindersSet(),
+                ':stayLoggedIn' => $newProfile->isStayLoggedInSet(),
+                ':oldUserName' => $oldProfile->getUserName()
+            ));
             
         } catch (PDOException $e) {
             echo $e->getMessage();
@@ -89,10 +108,8 @@ class UserProfilesDB {
             $stmt = $db->prepare(
                 "select userID, userName, dateCreated, profileID, firstName, lastName, email,
                     phone, gender, dob, country, picture, facebook, theme, accentColor,
-                    isProfilePublic, isPicturePublic, sendReminders, stayLoggedIn,
-                    optionsName as measurementsOptions
-                from Users join (UserProfiles join MeasurementsOptions using (userID)) using (userID)
-                where UserProfiles.measurementsOptionsID = MeasurementsOptions.optionsID"
+                    isProfilePublic, isPicturePublic, sendReminders, stayLoggedIn
+                from Users join UserProfiles using (userID)"
             );
             $stmt->execute();
         
@@ -125,10 +142,9 @@ class UserProfilesDB {
             $stmt = $db->prepare(
                 "select userID, userName, dateCreated, profileID, firstName, lastName, email,
                     phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,
-                    isPicturePublic, sendReminders, stayLoggedIn, optionsName as measurementsOptions
-                from Users join (UserProfiles join MeasurementsOptions using (userID)) using (userID)
-                where ($type = :$type)
-                    and UserProfiles.measurementsOptionsID = MeasurementsOptions.optionsID");
+                    isPicturePublic, sendReminders, stayLoggedIn
+                from Users join UserProfiles using (userID)
+                where ($type = :$type)");
             $stmt->execute(array(":$type" => $value));
             
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -156,10 +172,9 @@ class UserProfilesDB {
             $stmt = $db->prepare(
                 "select userID, userName, dateCreated, profileID, firstName, lastName, email,
                     phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,
-                    isPicturePublic, sendReminders, stayLoggedIn, optionsName as measurementsOptions
-                from Users join (UserProfiles join MeasurementsOptions using (userID)) using (userID)
-                where UserProfiles.measurementsOptionsID = MeasurementsOptions.optionsID
-                order by dateCreated $order"); // TODO this query is inefficient, fix it
+                    isPicturePublic, sendReminders, stayLoggedIn
+                from Users join UserProfiles using (userID)
+                order by dateCreated $order");
             $stmt->execute();
     
             foreach ($stmt as $row) {
@@ -203,10 +218,9 @@ class UserProfilesDB {
             $stmt = $db->prepare(
                 "select userID, userName, dateCreated, profileID, firstName, lastName, email,
                     phone, gender, dob, country, picture, facebook, theme, accentColor, isProfilePublic,
-                    isPicturePublic, sendReminders, stayLoggedIn, optionsName as measurementsOptions
-                from Users join (UserProfiles join MeasurementsOptions using (userID)) using (userID)
-                where UserProfiles.measurementsOptionsID = MeasurementsOptions.optionsID
-                    and dateCreated $operator :date");
+                    isPicturePublic, sendReminders, stayLoggedIn
+                from Users join UserProfiles using (userID)
+                where dateCreated $operator :date");
             $stmt->execute(array(":date" => $datetime->format('Y-m-d')));
     
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);

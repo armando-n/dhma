@@ -1,3 +1,7 @@
+.hidden-data {
+	display: none
+}
+
 .dropdown-menu .glyphicon {
 	margin-right: .75em;
 }
