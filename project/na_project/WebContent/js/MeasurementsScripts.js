@@ -31,6 +31,34 @@ var units = {
 	weight: 'kilograms'
 }
 
+var timePeriodStrings = {
+	individual: {
+		period: 'individual',
+		xProperty: 'dateAndTime',
+		title: 'Individual Entries'
+	},
+	daily: {
+		period: 'day',
+		xProperty: 'day',
+		title: 'Daily'
+	},
+	weekly: {
+		period: 'week',
+		xProperty: 'week',
+		title: 'Weekly'
+	},
+	monthly: {
+		period: 'month',
+		xProperty: 'month',
+		title: 'Weekly'
+	},
+	yearly: {
+		period: 'year',
+		xProperty: 'year',
+		title: 'Yearly'
+	}
+}
+
 var cumulativeMeasurements = ['calorie', 'exercise', 'sleep'];
 
 var selectedRows = [];
@@ -48,24 +76,50 @@ $(document).ready(function() {
 	$('.edit_measurement_section').submit(editMeasurement);
 	$('.cancelMeasurement').click(cancelMeasurement);
 	
+	var firstChartStartID = '#'+$('#firstChartType').text()+'_'+$('#activeMeasurement').text()+'_chartStart';
+	var firstChartEndID = '#'+$('#firstChartType').text()+'_'+$('#activeMeasurement').text()+'_chartEnd';
+	var secondChartStartID = '#'+$('#secondChartType').text()+'_'+$('#activeMeasurement').text()+'_chartStart';
+	var secondChartEndID = '#'+$('#secondChartType').text()+'_'+$('#activeMeasurement').text()+'_chartEnd';
+	
 	// add date pickers for chart options
 	$('#startDate-picker_primary').datetimepicker( {
 		format: 'YYYY-MM-DD',
-		defaultDate: Date.now() - (1000*60*60*24 * 30),
-		maxDate: Date.now()
+		defaultDate: $(firstChartStartID).text(),
+//		maxDate: $(firstChartEnd).text() // I'm not sure why setting min/max dates doesn't work here...API bug?
 	} );
 	$('#startDate-picker_secondary').datetimepicker( {
 		format: 'YYYY-MM-DD',
-		defaultDate: Date.now() - (1000*60*60*24 * 365),
-		maxDate: Date.now()
+		defaultDate: $(secondChartStartID).text(),
+//		maxDate: new Date($(secondChartEnd).text())
 	} );
-	$('.endDate-picker').datetimepicker( {
+	$('#endDate-picker_primary').datetimepicker( {
 		format: 'YYYY-MM-DD',
 		useCurrent: false, // important due to some issue with the API
-		defaultDate: Date.now(),
-		minDate: Date.now() - (1000*60*60*24 * 30),
+		defaultDate: $(firstChartEndID).text(),
+//		minDate: $(firstChartStart).text(),
 		showTodayButton: true
 	} );
+	$('#endDate-picker_secondary').datetimepicker( {
+		format: 'YYYY-MM-DD',
+		useCurrent: false, // important due to some issue with the API
+		defaultDate: $(secondChartEndID).text(),
+//		minDate: $(secondChartStart).text(),
+		showTodayButton: true
+	} );
+	var firstStartDatePicker = $('#startDate-picker_primary').data("DateTimePicker");
+	var firstEndDatePicker = $('#endDate-picker_primary').data("DateTimePicker");
+	var secondStartDatePicker = $('#startDate-picker_secondary').data("DateTimePicker");
+	var secondEndDatePicker = $('#endDate-picker_secondary').data("DateTimePicker");
+	firstStartDatePicker.maxDate(firstEndDatePicker.date());
+	firstEndDatePicker.minDate(firstStartDatePicker.date());
+	secondStartDatePicker.maxDate(secondEndDatePicker.date());
+	secondEndDatePicker.minDate(secondStartDatePicker.date());
+	
+	// chart date pickers changed
+	$('#startDate-picker_primary').on('dp.change', chartStartDate_picked);
+	$('#startDate-picker_secondary').on('dp.change', chartStartDate_picked);
+	$('#endDate-picker_primary').on('dp.change', chartEndDate_picked);
+	$('#endDate-picker_secondary').on('dp.change', chartEndDate_picked);
 	
 	// add date/time pickers for add/edit forms
 	$('.add_measurement_section .date-picker').datetimepicker( {
@@ -97,6 +151,10 @@ $(document).ready(function() {
 	
 	// request data from server and create charts
 	$.each(measurementTypes, function(index, measType) { createCharts(measType); } );
+	
+	// show/hide table according to loaded measurements options
+	if (!$('#options_showTable').is(':checked'))
+		$.each(measurementTypes, function(index, measType) { $('#' +measType+ '_table_section').hide(); } );
 	
 	// assign handlers for chart date range buttons 
 	$('.btn-change-chart').click(viewNewChart);
@@ -140,22 +198,18 @@ $(document).ready(function() {
 	// the showTooltips checkbox was clicked
 	$('#options_showTooltips').change(showTooltips_clicked);
 	
+	// show table option clicked
+	$('#options_showTable').change(function (event) { $.each(measurementTypes, function(index, measType) { $('#'+measType+'_table_section').toggle(); }); });
+	
 	// a column visibility dropdown menu item was clicked
 	$('#columns_dropdown li a').click(columnVisibility_clicked);
 	
 	// the number of rows option was changed
 	$('#options_numRows').change(numRows_changed);
 	
-	// start or end date option was changed
-	$('#startDate-picker_primary').on('dp.change', changeChartRange);
-	$('#startDate-picker_secondary').on('dp.change', changeChartRange);
-	$('.endDate-picker').on('dp.change', changeChartRange);
+	// update charts button clicked
+	$('.updateCharts-btn').click(changeChartRange);
 });
-
-// TODO updates the charts when the date range is changed in options
-function date_changed(event) {
-	
-}
 
 function numRows_changed() {
 	$('.measurement-table').each(function(index, element) {
@@ -583,7 +637,7 @@ function tableOptions(measType) {
 			$(row).attr('data-toggle', 'tooltip').attr('title', 'Rows can be selected for editing/deletion').addClass('dynamic-tooltip tooltip-help');
 		},
 		initComplete: function (settings, json) { // when the table is finished loading, add tooltips to column headers
-			$('#view_' +measType+ '_section th').each(function (index, element) {
+			$('#' +measType+ '_table_section th').each(function (index, element) {
 				$(element).attr('data-toggle', 'tooltip').attr('data-placement', 'bottom').attr('title', 'Click to sort by this column');
 				
 //				if (index < propNames_colHeaders.len)
@@ -761,20 +815,28 @@ function table_addEditDeleteButtons_options(measType) {
  * defaults to individual and monthly views for primary and secondary charts, respectively */
 function createCharts(measType) {
 	var measNames = measurementParts[measType];
-	var avgOrTotal = ($.inArray(measType, cumulativeMeasurements) === -1) ? 'Averages' : 'Totals';
+	var measTypeAdjusted = (measType === 'calorie') ? 'calories' : measType;
+//	measTypeAdjusted = measTypeAdjusted.charAt(0).toUpperCase()+measTypeAdjusted.slice(1);
+	var firstTimePeriod = $('#firstChartType').text();
+	var secondTimePeriod = $('#secondChartType').text();
+	var firstStartDate = $('#' + firstTimePeriod +'_'+ measTypeAdjusted +'_'+ 'chartStart').text();
+	var firstEndDate = $('#' + firstTimePeriod +'_'+ measTypeAdjusted +'_'+ 'chartEnd').text();
+	var secondStartDate = $('#' + secondTimePeriod +'_'+ measTypeAdjusted +'_'+ 'chartStart').text();
+	var secondEndDate = $('#' + secondTimePeriod +'_'+ measTypeAdjusted +'_'+ 'chartEnd').text();
 	
 	// create two charts, a primary chart w/ individual view, and a secondary chart w/ monthly view
-	createChart(measType, 'individual', 'dateAndTime', 'primary', 'Individual Entries', 'Over Past Month');
-	createChart(measType, 'month', 'month', 'secondary', 'Monthly ' +avgOrTotal, 'Over Past Year');
+	createChart(measType, firstTimePeriod, firstStartDate, firstEndDate, 'primary', 'Over Past Month');
+	createChart(measType, secondTimePeriod, secondStartDate, secondEndDate, 'secondary', 'Over Past Year');
 }
 
 // create a chart with the specified properties
-function createChart(measType, timePeriods, xValPropertyName, primOrSec, title, subtitle) {
-	var startDate = $('#options_startDate_' +primOrSec+ '-chart').val();
-	var endDate = $('#options_endDate_' +primOrSec+ '-chart').val();
+function createChart(measType, timePeriods, startDate, endDate, primOrSec, subtitle) {
+	var avgOrTotal = '';
+	if (timePeriods !== 'individual')
+		avgOrTotal = ($.inArray(measType, cumulativeMeasurements) === -1) ? ' Averages' : ' Totals';
 	
 	$.ajax({
-		'url': 'measurements_get_' +measType+ '_' +timePeriods+ '_' +startDate+ '_' +endDate,
+		'url': 'measurements_get_' +measType+ '_' +timePeriodStrings[timePeriods]['period']+ '_' +startDate+ '_' +endDate,
 		'dataType': 'json',
 		'success': function(response) {
 			var measNames = measurementParts[measType];
@@ -787,12 +849,12 @@ function createChart(measType, timePeriods, xValPropertyName, primOrSec, title, 
 				partName = measNames[i];
 				data.push( {
 					name: partName,
-					data: createChartSeries(response, xValPropertyName, partName, displayUnits)
+					data: createChartSeries(response, timePeriodStrings[timePeriods]['xProperty'], partName, displayUnits)
 				} );
 			}
 			
 			// create chart
-			var chartOptions = createChart_Options(measType, title, data, measNames, timePeriods, subtitle, primOrSec);
+			var chartOptions = createChart_Options(measType, timePeriodStrings[timePeriods]['title']+avgOrTotal, data, measNames, timePeriodStrings[timePeriods]['period'], subtitle, primOrSec);
 			if (charts[measType+ '_' +primOrSec] !== null)
 				charts[measType+ '_' +primOrSec].destroy();
 			charts[measType+ '_' +primOrSec] = new Highcharts.Chart(chartOptions);
@@ -830,56 +892,6 @@ function createChart_Options(measType, title, data, name, per, subtitle, idSuffi
 	var series = [];
 	var numOfSeriesData = data.length;
 	var xValue;
-//	var minY = 100000;
-//	var maxY = 0;
-//	var formatStr;
-	
-	
-	
-//	for (var j = 0; j < numOfSeriesData; j++) {	
-		
-		
-//		for (var k = 0; k < data[j].length; k++) {
-//			if (data[j][k][1] < minY)
-//				minY = data[j][k][1];
-//			if (data[j][k][1] > maxY)
-//				maxY = data[j][k][1];
-//		}
-//		if (data[j][1] < minY)
-//			minY = data[j][1];
-//		if (data[j][1] > maxY)
-//			maxY = data[j][1];
-		
-		
-//		series.push( {
-//			name: name[j],
-//			data: data[j]
-//		} );
-//	}
-	
-	
-//	Date.prototype.getWeek = function() {
-//	    var onejan = new Date(this.getFullYear(),0,1);
-//	    return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
-//	} 
-//	var min;
-//	var max;
-//	var now = new Date();
-//	var thirtyDaysAgo = new Date(now.valueOf() - (1000 * 60 * 60 * 24 * 30));
-//	thirtyDaysAgo = thirtyDaysAgo.getFullYear()+ '-' +thirtyDaysAgo.getMonth()+ '-' +thirtyDaysAgo.getDate();
-//	var fiftyTwoWeeksAgo = new Date(now.valueOf() - (1000 * 60 * 60 * 24 * 7 * 52));
-//	fiftyTwoWeeksAgo = fiftyTwoWeeksAgo.getFullYear()+ '-' +fiftyTwoWeeksAgo.getWeek();
-//	var twelveMonthsAgo = new Date(now.valueOf() - (1000 * 60 * 60 * 24 * 356));
-//	twelveMonthsAgo = twelveMonthsAgo.getFullYear()+ '-' +twelveMonthsAgo.getMonth();
-//	var fiveYearsAgo = new Date(now.valueOf() - (1000 * 60 * 60 * 24 * 356 * 5));
-//	fiveYearsAgo = fiveYearsAgo.getFullYear();
-//	switch (per) {
-//		case 'individual': min = lastMonth(); max = todaysEnd();
-//		case 'day': min = thirtyDaysAgo; max = now.getFullYear()+ '-' +now.getMonth()+ '-' +now.getDate();
-//		case 'week': min = fiftyTwoWeeksAgo; max = now.getFullYear()+ '-' +now.getWeek();
-//		case 'month': min = twelveMonthsAgo; max = now.getFullYear()+ '-' +now.getMonth();
-//		case 'year': min = fiveYearsAgo; max = now.getFullYear();
-//	}
 	
 	var dayValue = function(value) {
 		var pieces = value.split('-');
@@ -918,8 +930,6 @@ function createChart_Options(measType, title, data, name, per, subtitle, idSuffi
 			subtitle: { text: subtitle },
 			xAxis: {
 				type: 'category',
-//				min: min,
-//				max: max,
 				labels: {
 					formatter: function() {
 						switch (per) {
@@ -941,8 +951,6 @@ function createChart_Options(measType, title, data, name, per, subtitle, idSuffi
 			},
 			yAxis: {
 				title: { text: $('#options_units_' +measType).val() }
-//				min: minY,
-//				max: maxY
 			},
 			series: data,
 			tooltip: {
@@ -995,78 +1003,64 @@ function createChart_Options(measType, title, data, name, per, subtitle, idSuffi
 	return chartOptions;
 }
 
-// called by the date pickers in options
-function changeChartRange(event) {
-	var idPieces = $(this).attr('id').split('_'); // date picker ID example: startDate-picker_primary
-	var startOrEndPicker = idPieces[0];
-	var primOrSec = idPieces[1];
+// called by the update chart button in options
+function changeChartRange() {
+	var primOrSec = $(this).attr('id').split('_')[1]; // update charts button ID example: updateCharts_primary
 	var measType = $('#measurements_tabs .active a').attr('id').split('_')[0]; // use active tab to determine visible measurement type
 	var startDate = $('#options_startDate_' +primOrSec+ '-chart').val();       // appropriate text input box controlled by a date picker
 	var endDate = $('#options_endDate_' +primOrSec+ '-chart').val();           // appropriate text input box controlled by a date picker
-	var otherPicker;
-	var minOrMax;
-	
-	// determine the other date picker to limit, how to limit it (min/max), and other properties
-	if (startOrEndPicker === 'startDate-picker') {
-		otherPicker = 'endDate-picker';
-		minOrMax = 'min';
-	} else if (startOrEndPicker === 'endDate-picker') {
-		otherPicker = 'startDate-picker';
-		minOrMax = 'max';
-	} else
-		alert('Unrecognized date range picker');
 	measType = (measType === 'calories') ? 'calorie' : measType;
 	var avgOrTotal = ($.inArray(measType, cumulativeMeasurements) === -1) ? 'Averages' : 'Totals';
 	var timePeriods = $('#' +measType+ '_charts_' +primOrSec+ '_column .btn-change-chart.active').attr('id').split('_')[1];
 	
-	// make the other date picker for the same chart limited in its choices as a result of this change event
-	$('#' +otherPicker+ '_' +primOrSec).data("DateTimePicker")[minOrMax+ "Date"](event.date);
+	// store updated start and end data for this chart in the DOM
+	var measTypeAdjusted = (measType === 'calorie') ? 'calories' : measType;
+	$('#' + timePeriods +'_'+ measTypeAdjusted +'_'+ 'chartStart').text(startDate);
+	$('#' + timePeriods +'_'+ measTypeAdjusted +'_'+ 'chartEnd').text(endDate);
 	
 	// create the new chart
-	switch (timePeriods) {
-		case 'individual':
-			createChart(measType, timePeriods, 'dateAndTime', primOrSec, 'Individual Entries', 'Over Past Month'); break;
-		case 'day':
-			createChart(measType, timePeriods, timePeriods, primOrSec, 'Daily ' +avgOrTotal, 'Over Past Month'); break;
-		case 'week':
-			createChart(measType, timePeriods, timePeriods, primOrSec, 'Weekly ' +avgOrTotal, 'Over Past Year'); break;
-		case 'month':
-			createChart(measType, timePeriods, timePeriods, primOrSec, 'Monthly ' +avgOrTotal, 'Over Past Year'); break;
-		case 'year':
-			createChart(measType, timePeriods, timePeriods, primOrSec, 'Yearly ' +avgOrTotal, 'Over Past 5 Years'); break;
-		default:
-			createChart(measType, timePeriods, timePeriods, primOrSec, '', '');
-	}
+	createChart(measType, timePeriods, startDate, endDate, primOrSec, 'Over Past Month');
 }
 
-function viewNewChart() {
+// called by the chart selection buttons below each chart
+function viewNewChart(event) {
 	// deactivate/activate associated buttons
 	$(this).parent().parent().find('.active').removeClass('active');
 	$(this).addClass('active');
 	
-	// collect information on the chart being changed
+	// collect information on the new chart to load
 	var id_pieces = $(this).attr('id').split('_');
 	var measType = id_pieces[0];
 	var chartType = id_pieces[1];
 	var primOrSec = id_pieces[4];
-//	var measNames = measurementParts[measType];
-	var avgOrTotal = ($.inArray(measType, cumulativeMeasurements) === -1) ? 'Averages' : 'Totals';
+	var measTypeAdjusted = (measType === 'calorie') ? 'calories' : measType;
+	var startDate = $('#' + chartType +'_'+ measTypeAdjusted +'_chartStart').text();
+	var endDate = $('#' + chartType +'_'+ measTypeAdjusted +'_chartEnd').text();
+	
+	// clear min/max on date pickers so no conflicts arise when setting the new dates
+	$('#startDate-picker_'+primOrSec).data("DateTimePicker").maxDate(false);
+	$('#endDate-picker_'+primOrSec).data("DateTimePicker").minDate(false);
+	
+	// update dates in options area
+	$('#startDate-picker_' +primOrSec).data('DateTimePicker').date(startDate);
+	$('#endDate-picker_' +primOrSec).data('DateTimePicker').date(endDate);
 	
 	// create the new chart
-	switch (chartType) {
-		case 'individual':
-			createChart(measType, chartType, 'dateAndTime', primOrSec, 'Individual Entries', 'Over Past Month'); break;
-		case 'day':
-			createChart(measType, chartType, chartType, primOrSec, 'Daily ' +avgOrTotal, 'Over Past Month'); break;
-		case 'week':
-			createChart(measType, chartType, chartType, primOrSec, 'Weekly ' +avgOrTotal, 'Over Past Year'); break;
-		case 'month':
-			createChart(measType, chartType, chartType, primOrSec, 'Monthly ' +avgOrTotal, 'Over Past Year'); break;
-		case 'year':
-			createChart(measType, chartType, chartType, primOrSec, 'Yearly ' +avgOrTotal, 'Over Past 5 Years'); break;
-		default:
-			createChart(measType, chartType, chartType, primOrSec, '', '');
-	}
+	createChart(measType, chartType, startDate, endDate, primOrSec, 'Over Past Month');
+}
+
+// called when a chart date range date picker date changed in options
+function chartStartDate_picked() {
+	// update linked date picker's limits
+	var primOrSec = $(this).attr('id').split('_')[1];
+	$('#endDate-picker_'+primOrSec).data("DateTimePicker").minDate($('#startDate-picker_'+primOrSec).data("DateTimePicker").date());
+}
+
+// called when a chart date range date picker date changed in options
+function chartEndDate_picked() {
+	// update linked date picker's limits
+	var primOrSec = $(this).attr('id').split('_')[1];
+	$('#startDate-picker_'+primOrSec).data("DateTimePicker").maxDate($('#endDate-picker_'+primOrSec).data("DateTimePicker").date());
 }
 
 function monthNumToShortName(num, isZeroBased) {
@@ -1182,8 +1176,8 @@ function hideFormSection(meas_type, form_type) {
 	
 	// hide form
 	$('#' + form_type + '_' + meas_type + '_section').hide();
-	$('#view_' + meas_type + '_section').removeClass('col-sm-8');
-	$('#view_' + meas_type + '_section').addClass('col-sm-12');
+	$('#' + meas_type + '_table_section').removeClass('col-sm-8');
+	$('#' + meas_type + '_table_section').addClass('col-sm-12');
 	
 	// deactivate button
 	$('#' + meas_type + '_' + form_type).removeClass('active');
@@ -1200,8 +1194,8 @@ function showFormSection(meas_type, form_type, dt) {
 	
 	// show form
 	$('#' + form_type + '_' + meas_type + '_section').show();
-	$('#view_' + meas_type + '_section').removeClass('col-sm-12');
-	$('#view_' + meas_type + '_section').addClass('col-sm-8');
+	$('#' + meas_type + '_table_section').removeClass('col-sm-12');
+	$('#' + meas_type + '_table_section').addClass('col-sm-8');
 	
 	// activate button
 	$('#' +meas_type+ '_' +form_type).addClass('active');

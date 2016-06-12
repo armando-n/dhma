@@ -21,7 +21,7 @@ class WeightMeasurementsView {
         ?>
         
 <section class="row">
-    <div id="view_weight_section" class="col-sm-12">
+    <div id="weight_table_section" class="col-sm-12">
         <div class="row">
             <div class="col-sm-12">
                 <table id="weight_table" class="table table-striped table-hover table-condensed table-responsive measurement-table">
@@ -190,22 +190,22 @@ class WeightMeasurementsView {
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="weight_day_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily weight averages">
+                    <button type="button" id="weight_daily_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily weight averages">
                         Daily
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="weight_week_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly weight averages">
+                    <button type="button" id="weight_weekly_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly weight averages">
                         Weekly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="weight_month_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of monthly weight averages">
+                    <button type="button" id="weight_monthly_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of monthly weight averages">
                         Monthly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="weight_year_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly weight averages">
+                    <button type="button" id="weight_yearly_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly weight averages">
                         Yearly
                     </button>
                 </div>
@@ -229,21 +229,21 @@ class WeightMeasurementsView {
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="weight_day_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily weight averages">
+                    <button type="button" id="weight_daily_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily weight averages">
                         Daily
                     </button>
                 </div><div class="btn-group" role="group">
-                    <button type="button" id="weight_week_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly weight averages">
+                    <button type="button" id="weight_weekly_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly weight averages">
                         Weekly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="weight_month_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help active" data-toggle="tooltip" title="Show a chart of monthly weight averages">
+                    <button type="button" id="weight_monthly_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help active" data-toggle="tooltip" title="Show a chart of monthly weight averages">
                         Monthly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="weight_year_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly weight averages">
+                    <button type="button" id="weight_yearly_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly weight averages">
                         Yearly
                     </button>
                 </div>

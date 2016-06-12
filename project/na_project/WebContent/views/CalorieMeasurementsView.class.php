@@ -21,7 +21,7 @@ class CalorieMeasurementsView {
         ?>
         
 <section class="row">
-    <div id="view_calorie_section" class="col-sm-12">
+    <div id="calorie_table_section" class="col-sm-12">
         <div class="row">
             <div class="col-sm-12">
                 <table id="calorie_table" class="table table-striped table-hover table-condensed table-responsive measurement-table">
@@ -190,22 +190,22 @@ class CalorieMeasurementsView {
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="calorie_day_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily calorie totals">
+                    <button type="button" id="calorie_daily_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily calorie totals">
                         Daily
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="calorie_week_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly calorie totals">
+                    <button type="button" id="calorie_weekly_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly calorie totals">
                         Weekly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="calorie_month_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of monthly calorie totals">
+                    <button type="button" id="calorie_monthly_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of monthly calorie totals">
                         Monthly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="calorie_year_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly calorie totals">
+                    <button type="button" id="calorie_yearly_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly calorie totals">
                         Yearly
                     </button>
                 </div>
@@ -229,21 +229,21 @@ class CalorieMeasurementsView {
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="calorie_day_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily calorie totals">
+                    <button type="button" id="calorie_daily_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily calorie totals">
                         Daily
                     </button>
                 </div><div class="btn-group" role="group">
-                    <button type="button" id="calorie_week_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly calorie totals">
+                    <button type="button" id="calorie_weekly_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly calorie totals">
                         Weekly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="calorie_month_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help active" data-toggle="tooltip" title="Show a chart of monthly calorie totals">
+                    <button type="button" id="calorie_monthly_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help active" data-toggle="tooltip" title="Show a chart of monthly calorie totals">
                         Monthly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="calorie_year_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly calorie totals">
+                    <button type="button" id="calorie_yearly_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly calorie totals">
                         Yearly
                     </button>
                 </div>

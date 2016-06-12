@@ -21,7 +21,7 @@ class BloodPressureMeasurementsView {
         ?>
 
 <section class="row">
-    <div id="view_bloodPressure_section" class="col-sm-12">
+    <div id="bloodPressure_table_section" class="col-sm-12">
         <div class="row">
             <div class="col-sm-12">
                 <table id="bloodPressure_table" class="table table-striped table-hover table-condensed table-responsive measurement-table">
@@ -212,22 +212,22 @@ class BloodPressureMeasurementsView {
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="bloodPressure_day_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily blood pressure averages">
+                    <button type="button" id="bloodPressure_daily_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily blood pressure averages">
                         Daily
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="bloodPressure_week_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly blood pressure averages">
+                    <button type="button" id="bloodPressure_weekly_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly blood pressure averages">
                         Weekly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="bloodPressure_month_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of monthly blood pressure averages">
+                    <button type="button" id="bloodPressure_monthly_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of monthly blood pressure averages">
                         Monthly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="bloodPressure_year_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly blood pressure averages">
+                    <button type="button" id="bloodPressure_yearly_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly blood pressure averages">
                         Yearly
                     </button>
                 </div>
@@ -251,21 +251,21 @@ class BloodPressureMeasurementsView {
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="bloodPressure_day_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily blood pressure averages">
+                    <button type="button" id="bloodPressure_daily_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily blood pressure averages">
                         Daily
                     </button>
                 </div><div class="btn-group" role="group">
-                    <button type="button" id="bloodPressure_week_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly blood pressure averages">
+                    <button type="button" id="bloodPressure_weekly_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly blood pressure averages">
                         Weekly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="bloodPressure_month_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help active" data-toggle="tooltip" title="Show a monthly of daily blood pressure averages">
+                    <button type="button" id="bloodPressure_monthly_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help active" data-toggle="tooltip" title="Show a monthly of daily blood pressure averages">
                         Monthly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="bloodPressure_year_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly blood pressure averages">
+                    <button type="button" id="bloodPressure_yearly_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly blood pressure averages">
                         Yearly
                     </button>
                 </div>

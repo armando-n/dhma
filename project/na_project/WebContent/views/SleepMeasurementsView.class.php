@@ -21,7 +21,7 @@ class SleepMeasurementsView {
         ?>
         
 <section class="row">
-    <div id="view_sleep_section" class="col-sm-12">
+    <div id="sleep_table_section" class="col-sm-12">
         <div class="row">
             <div class="col-sm-12">
                 <table id="sleep_table" class="table table-striped table-hover table-condensed table-responsive measurement-table">
@@ -190,22 +190,22 @@ class SleepMeasurementsView {
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="sleep_day_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily sleep totals">
+                    <button type="button" id="sleep_daily_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily sleep totals">
                         Daily
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="sleep_week_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly sleep totals">
+                    <button type="button" id="sleep_weekly_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly sleep totals">
                         Weekly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="sleep_month_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of monthly sleep totals">
+                    <button type="button" id="sleep_monthly_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of monthly sleep totals">
                         Monthly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="sleep_year_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly sleep totals">
+                    <button type="button" id="sleep_yearly_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly sleep totals">
                         Yearly
                     </button>
                 </div>
@@ -229,21 +229,21 @@ class SleepMeasurementsView {
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="sleep_day_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily sleep totals">
+                    <button type="button" id="sleep_daily_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily sleep totals">
                         Daily
                     </button>
                 </div><div class="btn-group" role="group">
-                    <button type="button" id="sleep_week_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly sleep totals">
+                    <button type="button" id="sleep_weekly_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly sleep totals">
                         Weekly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="sleep_month_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help active" data-toggle="tooltip" title="Show a chart of monthly sleep totals">
+                    <button type="button" id="sleep_monthly_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help active" data-toggle="tooltip" title="Show a chart of monthly sleep totals">
                         Monthly
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" id="sleep_year_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly sleep totals">
+                    <button type="button" id="sleep_yearly_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly sleep totals">
                         Yearly
                     </button>
                 </div>
