@@ -14,11 +14,11 @@ class MeasurementsOptionsController {
                 throw new MissingArgumentException('Command not found');
     
             switch ($_SESSION['action']) {
-                case 'add'      : $resultData = self::add();
-                case 'edit'     : $resultData = self::edit();
-                case 'delete'   : $resultData = self::delete();
-                case 'get'      : $resultData = self::get();
-                default         : throw new InvalidArgumentException('Unrecognized command');
+                case 'add'      : $resultData = self::add(); break;
+                case 'edit'     : $resultData = self::edit(); break;
+                case 'delete'   : $resultData = self::delete(); break;
+                case 'get'      : $resultData = self::get(); break;
+                default         : throw new InvalidArgumentException('Unrecognized command: ' . $_SESSION['action']);
             }
             
             echo json_encode(array('success' => true, 'data' => $resultData), JSON_PRETTY_PRINT);

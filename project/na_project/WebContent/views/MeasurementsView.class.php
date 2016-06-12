@@ -218,7 +218,7 @@ class MeasurementsView{
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input type="checkbox" id="options_firstChart" name="firstChart"<?=$showFirstChart?> />Show chart
+                                                            <input type="checkbox" id="options_showFirstChart" name="showFirstChart"<?=$showFirstChart?> />Show chart
                                                         </label>
                                                     </div>
                                                 </div>
@@ -270,7 +270,7 @@ class MeasurementsView{
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input type="checkbox" id="options_secondChart" name="firstChart"<?=$showSecondChart?> />Show chart
+                                                            <input type="checkbox" id="options_showSecondChart" name="showSecondChart"<?=$showSecondChart?> />Show chart
                                                         </label>
                                                     </div>
                                                 </div>
@@ -300,14 +300,14 @@ class MeasurementsView{
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input type="checkbox" id="options_lastYear" name="lastYear"<?=$chartLastYear?> />Show same time last year
+                                                            <input type="checkbox" id="options_chartLastYear" name="chartLastYear"<?=$chartLastYear?> />Show same time last year
                                                         </label>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input type="checkbox" id="options_dailyAverages" name="dailyAverages"<?=$chartGroupDays?> />Group each day
+                                                            <input type="checkbox" id="options_chartGroupDays" name="chartGroupDays"<?=$chartGroupDays?> />Group each day
                                                         </label>
                                                     </div>
                                                 </div>
@@ -315,6 +315,7 @@ class MeasurementsView{
                                             </div>
                                         </section>
                                         <section id="chart-data" class="hidden-data">
+                                            <div id="userName"><?=$_SESSION['profile']->getUserName()?></div>
                                             <div id="firstChartType"><?=$activeOptions->getFirstChartType()?></div>
                                             <div id="secondChartType"><?=$activeOptions->getSecondChartType()?></div>
                                             <div id="activeMeasurement"><?=$activeOptions->getActiveMeasurement()?></div>

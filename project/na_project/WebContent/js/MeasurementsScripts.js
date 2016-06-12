@@ -115,12 +115,6 @@ $(document).ready(function() {
 	secondStartDatePicker.maxDate(secondEndDatePicker.date());
 	secondEndDatePicker.minDate(secondStartDatePicker.date());
 	
-	// chart date pickers changed
-	$('#startDate-picker_primary').on('dp.change', chartStartDate_picked);
-	$('#startDate-picker_secondary').on('dp.change', chartStartDate_picked);
-	$('#endDate-picker_primary').on('dp.change', chartEndDate_picked);
-	$('#endDate-picker_secondary').on('dp.change', chartEndDate_picked);
-	
 	// add date/time pickers for add/edit forms
 	$('.add_measurement_section .date-picker').datetimepicker( {
 		format: 'YYYY-MM-DD',
@@ -186,6 +180,10 @@ $(document).ready(function() {
 	// hide all but one units select tag
 	$('#units_form-group select:gt(0)').hide();
 	
+	setOptionsChangedListeners();
+});
+
+function setOptionsChangedListeners() {
 	// switch visible unit select tag according to the measurement type selected
 	$('#options_units_measurementType').change(unitsMeasType_selected);
 	
@@ -199,21 +197,140 @@ $(document).ready(function() {
 	$('#options_showTooltips').change(showTooltips_clicked);
 	
 	// show table option clicked
-	$('#options_showTable').change(function (event) { $.each(measurementTypes, function(index, measType) { $('#'+measType+'_table_section').toggle(); }); });
+	$('#options_showTable').change(function (event) {
+		$.each(measurementTypes, function(index, measType) { $('#'+measType+'_table_section').toggle(); });
+		options_changed(); // store changes
+	});
 	
 	// a column visibility dropdown menu item was clicked
 	$('#columns_dropdown li a').click(columnVisibility_clicked);
 	
 	// the number of rows option was changed
-	$('#options_numRows').change(numRows_changed);
+	$('#options_numRows').change(function() {
+		$('.measurement-table').each(function(index, element) { $(element).DataTable().page.len($('#options_numRows').val()).draw(); });
+		options_changed(); // store changes
+	});
 	
 	// update charts button clicked
 	$('.updateCharts-btn').click(changeChartRange);
-});
+	
+	// chart date pickers changed
+	$('#startDate-picker_primary').on('dp.change', chartStartDate_picked);
+	$('#startDate-picker_secondary').on('dp.change', chartStartDate_picked);
+	$('#endDate-picker_primary').on('dp.change', chartEndDate_picked);
+	$('#endDate-picker_secondary').on('dp.change', chartEndDate_picked);
+}
 
-function numRows_changed() {
-	$('.measurement-table').each(function(index, element) {
-		$(element).DataTable().page.len($('#options_numRows').val()).draw();
+// fires when any option is changed, storing the change in the server
+function options_changed() {
+	var optionsData = {};
+	optionsData.userName = $('#userName').text();
+	optionsData.optionsName = 'Session';
+	optionsData.oldOptionsName = 'Session';
+	optionsData.isActive = true;
+	optionsData.activeMeasurement = $('#measurements_tabs .active a').attr('id').split('_')[0]; // use active tab to determine visible measurement type
+	optionsData.bloodPressureUnits = $('#options_units_bloodPressure').val();
+	optionsData.calorieUnits = $('#options_units_calorie').val();
+	optionsData.exerciseUnits = $('#options_units_exercise').val();
+	optionsData.glucoseUnits = $('#options_units_glucose').val();
+	optionsData.sleepUnits = $('#options_units_sleep').val();
+	optionsData.weightUnits = $('#options_units_weight').val();
+	optionsData.timeFormat = $('#options_timeFormat').val();
+	optionsData.durationFormat = $('#options_durationFormat').val();
+	optionsData.showTooltips = $('#options_showTooltips').is(':checked') ? true : false;
+	optionsData.showSecondaryCols = true // TODO change this when fully implemented
+	optionsData.showDateCol = $('#colvis_date span:first').hasClass('glyphicon') ? true : false;
+	optionsData.showTimeCol = $('#colvis_time span:first').hasClass('glyphicon') ? true : false;
+	optionsData.showNotesCol = $('#colvis_notes span:first').hasClass('glyphicon') ? true : false;
+	optionsData.numRows = $('#options_numRows').val();
+	optionsData.showTable = $('#options_showTable').is(':checked') ? true : false;
+	optionsData.tableSize = 35; // TODO change this when fully implemeneted
+	optionsData.chartPlacement = 'bottom'; // TODO change this when fully implemented
+	optionsData.showFirstChart = $('#options_showFirstChart').is(':checked') ? true : false;
+	optionsData.showSecondChart = $('#options_showSecondChart').is(':checked') ? true : false;
+	optionsData.firstChartType = $('#' +optionsData.activeMeasurement+ '_charts_primary_column .btn-change-chart.active').attr('id').split('_')[1]; // based on active chart type button
+	optionsData.secondChartType = $('#' +optionsData.activeMeasurement+ '_charts_secondary_column .btn-change-chart.active').attr('id').split('_')[1]; // based on active chart type button
+	optionsData.chartLastYear = $('#options_chartLastYear').is(':checked') ? true : false;
+	optionsData.chartGroupDays = $('#options_chartGroupDays').is(':checked') ? true : false;
+	optionsData.individualBloodPressureChartStart = $('#individual_bloodPressure_chartStart').text();
+	optionsData.individualBloodPressureChartEnd = $('#individual_bloodPressure_chartEnd').text();
+	optionsData.dailyBloodPressureChartStart = $('#daily_bloodPressure_chartStart').text();
+	optionsData.dailyBloodPressureChartEnd = $('#daily_bloodPressure_chartEnd').text();
+	optionsData.weeklyBloodPressureChartStart = $('#weekly_bloodPressure_chartStart').text();
+	optionsData.weeklyBloodPressureChartEnd = $('#weekly_bloodPressure_chartEnd').text();
+	optionsData.monthlyBloodPressureChartStart = $('#monthly_bloodPressure_chartStart').text();
+	optionsData.monthlyBloodPressureChartEnd = $('#monthly_bloodPressure_chartEnd').text();
+	optionsData.yearlyBloodPressureChartStart = $('#yearly_bloodPressure_chartStart').text();
+	optionsData.yearlyBloodPressureChartEnd = $('#yearly_bloodPressure_chartEnd').text();
+	optionsData.individualCaloriesChartStart = $('#individual_calories_chartStart').text();
+	optionsData.individualCaloriesChartEnd = $('#individual_calories_chartEnd').text();
+	optionsData.dailyCaloriesChartStart = $('#daily_calories_chartStart').text();
+	optionsData.dailyCaloriesChartEnd = $('#daily_calories_chartEnd').text();
+	optionsData.weeklyCaloriesChartStart = $('#weekly_calories_chartStart').text();
+	optionsData.weeklyCaloriesChartEnd = $('#weekly_calories_chartEnd').text();
+	optionsData.monthlyCaloriesChartStart = $('#monthly_calories_chartStart').text();
+	optionsData.monthlyCaloriesChartEnd = $('#monthly_calories_chartEnd').text();
+	optionsData.yearlyCaloriesChartStart = $('#yearly_calories_chartStart').text();
+	optionsData.yearlyCaloriesChartEnd = $('#yearly_calories_chartEnd').text();
+	optionsData.individualExerciseChartStart = $('#individual_exercise_chartStart').text();
+	optionsData.individualExerciseChartEnd = $('#individual_exercise_chartEnd').text();
+	optionsData.dailyExerciseChartStart = $('#daily_exercise_chartStart').text();
+	optionsData.dailyExerciseChartEnd = $('#daily_exercise_chartEnd').text();
+	optionsData.weeklyExerciseChartStart = $('#weekly_exercise_chartStart').text();
+	optionsData.weeklyExerciseChartEnd = $('#weekly_exercise_chartEnd').text();
+	optionsData.monthlyExerciseChartStart = $('#monthly_exercise_chartStart').text();
+	optionsData.monthlyExerciseChartEnd = $('#monthly_exercise_chartEnd').text();
+	optionsData.yearlyExerciseChartStart = $('#yearly_exercise_chartStart').text();
+	optionsData.yearlyExerciseChartEnd = $('#yearly_exercise_chartEnd').text();
+	optionsData.individualGlucoseChartStart = $('#individual_glucose_chartStart').text();
+	optionsData.individualGlucoseChartEnd = $('#individual_glucose_chartEnd').text();
+	optionsData.dailyGlucoseChartStart = $('#daily_glucose_chartStart').text();
+	optionsData.dailyGlucoseChartEnd = $('#daily_glucose_chartEnd').text();
+	optionsData.weeklyGlucoseChartStart = $('#weekly_glucose_chartStart').text();
+	optionsData.weeklyGlucoseChartEnd = $('#weekly_glucose_chartEnd').text();
+	optionsData.monthlyGlucoseChartStart = $('#monthly_glucose_chartStart').text();
+	optionsData.monthlyGlucoseChartEnd = $('#monthly_glucose_chartEnd').text();
+	optionsData.yearlyGlucoseChartStart = $('#yearly_glucose_chartStart').text();
+	optionsData.yearlyGlucoseChartEnd = $('#yearly_glucose_chartEnd').text();
+	optionsData.individualSleepChartStart = $('#individual_sleep_chartStart').text();
+	optionsData.individualSleepChartEnd = $('#individual_sleep_chartEnd').text();
+	optionsData.dailySleepChartStart = $('#daily_sleep_chartStart').text();
+	optionsData.dailySleepChartEnd = $('#daily_sleep_chartEnd').text();
+	optionsData.weeklySleepChartStart = $('#weekly_sleep_chartStart').text();
+	optionsData.weeklySleepChartEnd = $('#weekly_sleep_chartEnd').text();
+	optionsData.monthlySleepChartStart = $('#monthly_sleep_chartStart').text();
+	optionsData.monthlySleepChartEnd = $('#monthly_sleep_chartEnd').text();
+	optionsData.yearlySleepChartStart = $('#yearly_sleep_chartStart').text();
+	optionsData.yearlySleepChartEnd = $('#yearly_sleep_chartEnd').text();
+	optionsData.individualWeightChartStart = $('#individual_weight_chartStart').text();
+	optionsData.individualWeightChartEnd = $('#individual_weight_chartEnd').text();
+	optionsData.dailyWeightChartStart = $('#daily_weight_chartStart').text();
+	optionsData.dailyWeightChartEnd = $('#daily_weight_chartEnd').text();
+	optionsData.weeklyWeightChartStart = $('#weekly_weight_chartStart').text();
+	optionsData.weeklyWeightChartEnd = $('#weekly_weight_chartEnd').text();
+	optionsData.monthlyWeightChartStart = $('#monthly_weight_chartStart').text();
+	optionsData.monthlyWeightChartEnd = $('#monthly_weight_chartEnd').text();
+	optionsData.yearlyWeightChartStart = $('#yearly_weight_chartStart').text();
+	optionsData.yearlyWeightChartEnd = $('#yearly_weight_chartEnd').text();
+	
+	// send add request to server
+	$.ajax({
+		url: 'measurementsOptions_edit',
+		data: optionsData,
+		dataType: 'json',
+		method: 'POST',
+		success: function(response) {
+			if (response.success) {
+				if (response.data.rowsAffected < 1) {
+					alert('The specified options could not be found and therefore were not edited.');
+					return;
+				}
+				alert('Options change successfully stored.');
+			}
+			else
+				alert('Changes to options storing failed: ' +response.error);
+		},
+		error: function() { alert('error: check values and try again.'); }
 	});
 }
 
@@ -239,6 +356,9 @@ function columnVisibility_clicked(event) {
 		$('#colvis_' +colName+ '_text').css('margin-left', '0em');
 		$('.measurement-table:visible').DataTable().column(colName+ ':name').visible(true);
 	}
+	
+	// store changes
+	options_changed();
 }
 
 function showTooltips_clicked() {
@@ -246,6 +366,9 @@ function showTooltips_clicked() {
 		$('.tooltip-help').tooltip('enable');
 	else
 		$('.tooltip-help').tooltip('disable');
+	
+	// store changes
+	options_changed();
 }
 
 function timeFormat_selected() {
@@ -262,6 +385,9 @@ function timeFormat_selected() {
 		else
 			$(element).data("DateTimePicker").format('HH:mm');
 	});
+	
+	// store changes
+	options_changed();
 }
 
 function unitsMeasType_selected() {
@@ -344,6 +470,9 @@ function units_selected() {
 	// update add/edit forms
 	$('#add_' +measType+ '_section .units-addon').text(displayUnits);
 	$('#edit_' +measType+ '_section .units-addon').text(displayUnits);
+	
+	// store changes
+	options_changed();
 }
 
 function chartSettingsTab_clicked(event) {
@@ -1020,6 +1149,9 @@ function changeChartRange() {
 	
 	// create the new chart
 	createChart(measType, timePeriods, startDate, endDate, primOrSec, 'Over Past Month');
+	
+	// store changes
+	options_changed();
 }
 
 // called by the chart selection buttons below each chart

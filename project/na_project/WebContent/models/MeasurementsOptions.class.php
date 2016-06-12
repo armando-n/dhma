@@ -951,7 +951,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             return;
         }
         
-        $this->isActive = ($value) ? true : false;
+        $this->isActive = ($value === 'true' || $value === '1') ? true : false;
     }
     
     private function validateActiveMeasurement() {
@@ -1017,7 +1017,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             return;
         }
         
-        $allowed = array('mg/dL');
+        $allowed = array('mg/dL', 'mM');
         if (!in_array($this->glucoseUnits, $allowed)) {
             $this->setError("glucoseUnits", "UNITS_INVALID");
             return;
@@ -1045,7 +1045,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             return;
         }
         
-        $allowed = array('lbs');
+        $allowed = array('lbs', 'kg');
         if (!in_array($this->weightUnits, $allowed)) {
             $this->setError("weightUnits", "UNITS_INVALID");
             return;
@@ -1087,7 +1087,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             return;
         }
 
-        $this->showTooltips = ($value) ? true : false;
+        $this->showTooltips = ($value === 'true' || $value === '1') ? true : false;
     }
     
     private function validateShowSecondaryCols() {
@@ -1097,7 +1097,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             return;
         }
     
-        $this->showSecondaryCols = ($value) ? true : false;
+        $this->showSecondaryCols = ($value === 'true' || $value === '1') ? true : false;
     }
     
     private function validateShowDateCol() {
@@ -1107,7 +1107,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             return;
         }
     
-        $this->showDateCol = ($value) ? true : false;
+        $this->showDateCol = ($value === 'true' || $value === '1') ? true : false;
     }
     
     private function validateShowTimeCol() {
@@ -1117,7 +1117,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             return;
         }
     
-        $this->showTimeCol = ($value) ? true : false;
+        $this->showTimeCol = ($value === 'true' || $value === '1') ? true : false;
     }
     
     private function validateShowNotesCol() {
@@ -1127,7 +1127,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             return;
         }
     
-        $this->showNotesCol = ($value) ? true : false;
+        $this->showNotesCol = ($value === 'true' || $value === '1') ? true : false;
     }
     
     private function validateNumRows() {
@@ -1148,10 +1148,10 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
         $value = $this->extractForm($this->formInput, "showTable");
         if (empty($value) && !is_numeric($value)) {
             $this->showTable = self::DEFAULT_SHOW_TABLE;
+            echo 'using default show table: ' . $this->showTable;
             return;
         }
-        
-        $this->showTable = ($value) ? true : false;
+        $this->showTable = ($value === 'true' || $value === '1') ? true : false;
     }
     
     private function validateTableSize() {
@@ -1192,7 +1192,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             return;
         }
         
-        $this->showFirstChart = ($value) ? true : false;
+        $this->showFirstChart = ($value === 'true' || $value === '1') ? true : false;
     }
     
     private function validateShowSecondChart() {
@@ -1202,7 +1202,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             return;
         }
         
-        $this->showSecondChart = ($value) ? true : false;
+        $this->showSecondChart = ($value === 'true' || $value === '1') ? true : false;
     }
     
     private function validateFirstChartType() {
@@ -1240,7 +1240,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             return;
         }
     
-        $this->chartLastYear = ($value) ? true : false;
+        $this->chartLastYear = ($value === 'true' || $value === '1') ? true : false;
     }
     
     private function validateChartGroupDays() {
@@ -1250,7 +1250,7 @@ class MeasurementsOptions extends GenericModelObject implements JsonSerializable
             return;
         }
     
-        $this->chartGroupDays = ($value) ? true : false;
+        $this->chartGroupDays = ($value === 'true' || $value === '1') ? true : false;
     }
     
     private function validateChartsDates() {

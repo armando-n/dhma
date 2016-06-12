@@ -62,65 +62,65 @@ create table MeasurementsOptions(
     secondChartType               enum('individual', 'daily', 'weekly', 'monthly', 'yearly') default 'monthly',
     chartLastYear                 boolean default false,
     chartGroupDays                boolean default false,
-    individualBloodPressureChartStart date,
+    individualBloodPressureChartStart date not null,
     individualBloodPressureChartEnd   date,
-    dailyBloodPressureChartStart      date,
+    dailyBloodPressureChartStart      date not null, -- null indicates today
     dailyBloodPressureChartEnd        date,
-    weeklyBloodPressurechartStart     date,
+    weeklyBloodPressurechartStart     date not null,
     weeklyBloodPressurechartEnd       date,
-    monthlyBloodPressureChartStart    date,
+    monthlyBloodPressureChartStart    date not null,
     monthlyBloodPressureChartEnd      date,
-    yearlyBloodPressureChartStart     date,
+    yearlyBloodPressureChartStart     date not null,
     yearlyBloodPressureChartEnd       date,
-    individualCaloriesChartStart      date,
+    individualCaloriesChartStart      date not null,
     individualCaloriesChartEnd        date,
-    dailyCaloriesChartStart           date,
+    dailyCaloriesChartStart           date not null,
     dailyCaloriesChartEnd             date,
-    weeklyCaloriesChartStart          date,
+    weeklyCaloriesChartStart          date not null,
     weeklyCaloriesChartEnd            date,
-    monthlyCaloriesChartStart         date,
+    monthlyCaloriesChartStart         date not null,
     monthlyCaloriesChartEnd           date,
-    yearlyCaloriesChartStart          date,
+    yearlyCaloriesChartStart          date not null,
     yearlyCaloriesChartEnd            date,
-    individualExerciseChartStart      date,
+    individualExerciseChartStart      date not null,
     individualExerciseChartEnd        date,
-    dailyExerciseChartStart           date,
+    dailyExerciseChartStart           date not null,
     dailyExerciseChartEnd             date,
-    weeklyExerciseChartStart          date,
+    weeklyExerciseChartStart          date not null,
     weeklyExerciseChartEnd            date,
-    monthlyExerciseChartStart         date,
+    monthlyExerciseChartStart         date not null,
     monthlyExerciseChartEnd           date,
-    yearlyExerciseChartStart          date,
+    yearlyExerciseChartStart          date not null,
     yearlyExerciseChartEnd            date,
-    individualGlucoseChartStart       date,
+    individualGlucoseChartStart       date not null,
     individualGlucoseChartEnd         date,
-    dailyGlucoseChartStart            date,
+    dailyGlucoseChartStart            date not null,
     dailyGlucoseChartEnd              date,
-    weeklyGlucoseChartStart           date,
+    weeklyGlucoseChartStart           date not null,
     weeklyGlucoseChartEnd             date,
-    monthlyGlucoseChartStart          date,
+    monthlyGlucoseChartStart          date not null,
     monthlyGlucoseChartEnd            date,
-    yearlyGlucoseChartStart           date,
+    yearlyGlucoseChartStart           date not null,
     yearlyGlucoseChartEnd             date,
-    individualSleepChartStart         date,
+    individualSleepChartStart         date not null,
     individualSleepChartEnd           date,
-    dailySleepChartStart              date,
+    dailySleepChartStart              date not null,
     dailySleepChartEnd                date,
-    weeklySleepChartStart             date,
+    weeklySleepChartStart             date not null,
     weeklySleepChartEnd               date,
-    monthlySleepChartStart            date,
+    monthlySleepChartStart            date not null,
     monthlySleepChartEnd              date,
-    yearlySleepChartStart             date,
+    yearlySleepChartStart             date not null,
     yearlySleepChartEnd               date,
-    individualWeightChartStart        date,
+    individualWeightChartStart        date not null,
     individualWeightChartEnd          date,
-    dailyWeightChartStart             date,
+    dailyWeightChartStart             date not null,
     dailyWeightChartEnd               date,
-    weeklyWeightChartStart            date,
+    weeklyWeightChartStart            date not null,
     weeklyWeightChartEnd              date,
-    monthlyWeightChartStart           date,
+    monthlyWeightChartStart           date not null,
     monthlyWeightChartEnd             date,
-    yearlyWeightChartStart            date,
+    yearlyWeightChartStart            date not null,
     yearlyWeightChartEnd              date,
     userID                            integer not null, 
     foreign key (userID) references Users (userID) on delete cascade,
@@ -250,7 +250,7 @@ insert into MeasurementsOptions (optionsName, isActive,
     userID)
     values
         -- member
-        ('Default', true,
+        ('Session', true,
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
@@ -283,7 +283,7 @@ insert into MeasurementsOptions (optionsName, isActive,
         date_sub(now(), interval 5 year), now(),  -- yearly weight chart
         1),
         -- robbins
-        ('Default', true,
+        ('Session', true,
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
@@ -316,7 +316,7 @@ insert into MeasurementsOptions (optionsName, isActive,
         date_sub(now(), interval 5 year), now(),  -- yearly weight chart
         2),
         -- john-s
-        ('Default', true,
+        ('Session', true,
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
@@ -349,7 +349,7 @@ insert into MeasurementsOptions (optionsName, isActive,
         date_sub(now(), interval 5 year), now(),  -- yearly weight chart
         3),
         -- bob
-        ('Default', true,
+        ('Session', true,
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
@@ -382,7 +382,7 @@ insert into MeasurementsOptions (optionsName, isActive,
         date_sub(now(), interval 5 year), now(),  -- yearly weight chart
         4),
         -- sarahk
-        ('Default', true,
+        ('Session', true,
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
@@ -415,7 +415,7 @@ insert into MeasurementsOptions (optionsName, isActive,
         date_sub(now(), interval 5 year), now(),  -- yearly weight chart
         5),
         -- whatup
-        ('Default', true,
+        ('Session', true,
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
@@ -448,7 +448,7 @@ insert into MeasurementsOptions (optionsName, isActive,
         date_sub(now(), interval 5 year), now(),  -- yearly weight chart
         6),
         -- delete-me-1
-        ('Default', true,
+        ('Session', true,
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
@@ -481,7 +481,7 @@ insert into MeasurementsOptions (optionsName, isActive,
         date_sub(now(), interval 5 year), now(),  -- yearly weight chart
         7),
         -- delete-me-2
-        ('Default', true,
+        ('Session', true,
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
@@ -514,7 +514,7 @@ insert into MeasurementsOptions (optionsName, isActive,
         date_sub(now(), interval 5 year), now(),  -- yearly weight chart
         8),
         -- delete-me-3
-        ('Default', true,
+        ('Session', true,
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
@@ -547,7 +547,7 @@ insert into MeasurementsOptions (optionsName, isActive,
         date_sub(now(), interval 5 year), now(),  -- yearly weight chart
         9),
         -- admin
-        ('Default', true,
+        ('Session', true,
         date_sub(now(), interval 1 month), now(), -- individual blood pressure chart
         date_sub(now(), interval 1 month), now(), -- daily blood pressure chart
         date_sub(now(), interval 1 year), now(),  -- weekly blood pressure chart
