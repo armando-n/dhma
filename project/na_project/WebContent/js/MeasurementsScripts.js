@@ -157,7 +157,7 @@ $(document).ready(function() {
 	$('#measurements_tabs a, #measurements_dropdown li a').click(tab_clicked);
 	
 	// add listeners for chart settings tabs
-	$('#charts_settings_tabs a').click(chartSettingsTab_clicked);
+	$('#chartsOptions_tabs a').click(chartSettingsTab_clicked);
 	
 	// add change listeners for forms
 	var doneToCancel = function() {

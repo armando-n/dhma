@@ -201,10 +201,14 @@ class MeasurementsView{
                                     
                                     
                                     <!-- tabs for each chart's settings -->
-                                    <div id="charts_settings" class="collapse navbar-collapse">
-                                        <ul id="charts_settings_tabs" class="nav nav-tabs nav-justified" role="tablist">
-                                            <li class="active" role="presentation"><a class="tooltip-help" href="#chart1-settings" id="chart1_settings_tab_btn" aria-controls="chart1_settings_tab_btn" role="tab" data-toggle="tab" title="Settings for the first chart">Chart 1</a></li>
-                                            <li role="presentation"><a class="tooltip-help" href="#chart2-settings" id="chart2_settings_tab_btn" aria-controls="chart2_settings_tab_btn" role="tab" data-toggle="tab" title="Settings for a second chart, which is available for larger screen sizes">Chart 2</a></li>
+                                    <div>
+                                        <ul id="chartsOptions_tabs" class="nav nav-tabs nav-justified" role="tablist">
+                                            <li class="active" role="presentation">
+                                                <a class="tooltip-help" href="#firstChartOptions" aria-controls="firstChartOptions" role="tab" data-toggle="tab" title="Settings for the first chart">First Chart</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a class="tooltip-help" href="#secondChartOptions" aria-controls="secondChartOptions" role="tab" data-toggle="tab" title="Settings for a second chart, which is available for larger screen sizes">Second Chart</a>
+                                            </li>
                                         </ul>
                                     </div>
                                     
@@ -212,7 +216,7 @@ class MeasurementsView{
                                     <div class="tab-content">
                                     
                                         <!-- First Chart's Settings -->
-                                        <section role="tabpanel" id="chart1-settings" class="row tab-pane active">
+                                        <section role="tabpanel" id="firstChartOptions" class="row tab-pane active">
                                             <div class="col-sm-12">
                                             
                                                 <div class="form-group">
@@ -242,7 +246,7 @@ class MeasurementsView{
                                                 </div>
                                                 <div class="form-group">
                                                     <button id="updateCharts_primary" type="button" class="btn btn-default updateCharts-btn">
-                                                        <span>Update Charts</span>
+                                                        <span>Update Chart</span>
                                                     </button>
                                                 </div>
                                                 <div class="form-group">
@@ -264,7 +268,7 @@ class MeasurementsView{
                                         </section>
                                         
                                         <!-- Second Chart's Settings -->
-                                        <section role="tabpanel" id="chart2-settings" class="row tab-pane active">
+                                        <section role="tabpanel" id="secondChartOptions" class="row tab-pane">
                                             <div class="col-sm-12">
                                             
                                                 <div class="form-group">
@@ -294,7 +298,7 @@ class MeasurementsView{
                                                 </div>
                                                 <div class="form-group">
                                                     <button id="updateCharts_secondary" type="button" class="btn btn-default updateCharts-btn">
-                                                        <span>Update Charts</span>
+                                                        <span>Update Chart</span>
                                                     </button>
                                                 </div>
                                                 <div class="form-group">
