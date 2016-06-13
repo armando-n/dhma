@@ -184,35 +184,38 @@ $(document).ready(function() {
 });
 
 function setOptionsChangedListeners() {
-	// switch visible unit select tag according to the measurement type selected
+	// units measType selected
 	$('#options_units_measurementType').change(unitsMeasType_selected);
 	
-	// a unit of measure was selected; switch display of tables/charts/forms accordingly
+	// units
 	$('#units_form-group select').change(units_selected);
 	
-	// a time format (12/24-hour) was selected; switch display of tables/charts/forms accordingly
+	// time format
 	$('#options_timeFormat').change(timeFormat_selected);
 	
-	// the showTooltips checkbox was clicked
+	// show tooltips
 	$('#options_showTooltips').change(showTooltips_clicked);
 	
-	// show table option clicked
+	// show table
 	$('#options_showTable').change(function (event) {
 		$.each(measurementTypes, function(index, measType) { $('#'+measType+'_table_section').toggle(); });
+		var activeMeasurement = $('#activeMeasurement').text();
+		if ($('#'+activeMeasurement+'_table_section').is(':visible'))
+			$('#' +activeMeasurement+ '_table').DataTable().draw(); // avoids column alignment issues on show
 		options_changed(); // store changes
 	});
 	
-	// a column visibility dropdown menu item was clicked
+	// column visibility
 	$('#columns_dropdown li a').click(columnVisibility_clicked);
 	
-	// the number of rows option was changed
+	// num rows
 	$('#options_numRows').change(function() {
 		$('.measurement-table').each(function(index, element) { $(element).DataTable().page.len($('#options_numRows').val()).draw(); });
 		options_changed(); // store changes
 	});
 	
 	// update charts button clicked
-	$('.updateCharts-btn').click(changeChartRange);
+	$('.updateCharts-btn').click(chartRange_update);
 	
 	// chart date pickers changed
 	$('#startDate-picker_primary').on('dp.change', chartStartDate_picked);
@@ -228,7 +231,7 @@ function options_changed() {
 	optionsData.optionsName = 'Session';
 	optionsData.oldOptionsName = 'Session';
 	optionsData.isActive = true;
-	optionsData.activeMeasurement = $('#measurements_tabs .active a').attr('id').split('_')[0]; // use active tab to determine visible measurement type
+	optionsData.activeMeasurement = $('#activeMeasurement').text();
 	optionsData.bloodPressureUnits = $('#options_units_bloodPressure').val();
 	optionsData.calorieUnits = $('#options_units_calorie').val();
 	optionsData.exerciseUnits = $('#options_units_exercise').val();
@@ -322,18 +325,19 @@ function options_changed() {
 		success: function(response) {
 			if (response.success) {
 				if (response.data.rowsAffected < 1) {
-					alert('The specified options could not be found and therefore were not edited.');
+					alert('Stored options not affected. Either options name not found, or stored option was already set to current selection.');
 					return;
 				}
-				alert('Options change successfully stored.');
+//				alert('Options change successfully stored.');
 			}
 			else
 				alert('Changes to options storing failed: ' +response.error);
 		},
-		error: function() { alert('error: check values and try again.'); }
+		error: function() { alert('Error: invalid response when attempting to store changes.'); }
 	});
 }
 
+// a column visibility dropdown menu item was clicked
 function columnVisibility_clicked(event) {
 	event.preventDefault();
 	var colName = $(this).attr('id').split('_')[1];
@@ -371,6 +375,7 @@ function showTooltips_clicked() {
 	options_changed();
 }
 
+// a time format (12/24-hour) was selected; switch display of tables/charts/forms accordingly
 function timeFormat_selected() {
 	var timeFormatSelected = $(this).val();
 	
@@ -390,6 +395,7 @@ function timeFormat_selected() {
 	options_changed();
 }
 
+// switch visible unit select tag according to the measurement type selected
 function unitsMeasType_selected() {
 	var measTypeSelected = displayNameToAttributeName($(this).val());
 	if (measTypeSelected === 'calories')
@@ -416,6 +422,7 @@ function attributeNameToDisplayName(attrName) {
 	return result;
 }
 
+// a unit of measure was selected; switch display of tables/charts/forms accordingly
 function units_selected() {
 	var unitsSelected = $(this).val();
 	var measType = $(this).attr('id').split('_')[2];
@@ -482,6 +489,8 @@ function chartSettingsTab_clicked(event) {
 
 function tab_clicked(event) {
 	var measType = $(this).attr('id').split('_')[0];
+	
+	// change something like 'bloodPressure' to 'Blood Pressure', or 'exercise' to 'Exericse'
 	var upperMeasType = measType.replace(/([a-z])([A-Z])/g, function(match, p1, p2) { return [p1, p2].join(' '); } );
 	upperMeasType = upperMeasType.replace(/^[a-z]/, function (match) { return match.toUpperCase(); } );
 
@@ -500,11 +509,14 @@ function tab_clicked(event) {
 	if (measType === 'calories')
 		measType = 'calorie';
 	
-	// update column visibility options
+	// update secondary column visibility options // TODO this used to be for showExerciseType option, which has been changed to showSecondaryCols option
 	if (measType === 'exercise')
 		$('.col-visibility-exercise').show();
 	else
 		$('.col-visibility-exercise').hide();
+	
+	// update current option values stored in hidden DOM data
+	$('#activeMeasurement').text(measType);
 	
 	// redraw charts and table to avoid overflow and column alignment issues
 	charts[measType+ '_primary'].reflow();
@@ -710,16 +722,28 @@ function row_deselected(e, dt, type, indexes) {
 // returns the table options object for the specified type of measurement (e.g. for bloodPressure, or exercise, etc.)
 function tableOptions(measType) {
 	
+	// determine current column visibility options
+	var dateVisible = $('#colvis_date span:first').hasClass('glyphicon');
+	var timeVisible = $('#colvis_time span:first').hasClass('glyphicon');
+	var notesVisible = $('#colvis_notes span:first').hasClass('glyphicon');
+	
+	// add/remove margins from column visibilty menu items as needed
+	var addMargin = '1.6em';
+	var noMargin = '0em';
+	$('#colvis_date_text').css('margin-left', (dateVisible ? noMargin : addMargin));
+	$('#colvis_time_text').css('margin-left', (timeVisible ? noMargin : addMargin));
+	$('#colvis_notes_text').css('margin-left', (notesVisible ? noMargin : addMargin));
+	
 	// create columns array and add all common columns
 	var columns = [
-        { name: 'date', data: 'date', title: 'Date' },
-        { name: 'time', data: 'time', title: 'Time', render: function(data, type, fullRow, meta) {
+        { name: 'date', data: 'date', title: 'Date', visible: dateVisible },
+        { name: 'time', data: 'time', title: 'Time', visible: timeVisible, render: function(data, type, fullRow, meta) {
         	if (type === 'display' && $('#options_timeFormat').val() === '12 hour')
     			return convert24To12HourTime(data);
         	else
         		return data;
         } },
-	    { name: 'notes', data: 'notes', title: 'Notes' },
+	    { name: 'notes', data: 'notes', title: 'Notes', visible: notesVisible },
 	    { name: 'units', data: 'units', title: 'Units', visible: false}
     ];
 	var orderIndex = (measType == 'bloodPressure' || measType == 'exercise') ? 2 : 1; // index of col for ordering
@@ -1133,9 +1157,9 @@ function createChart_Options(measType, title, data, name, per, subtitle, idSuffi
 }
 
 // called by the update chart button in options
-function changeChartRange() {
+function chartRange_update() {
 	var primOrSec = $(this).attr('id').split('_')[1]; // update charts button ID example: updateCharts_primary
-	var measType = $('#measurements_tabs .active a').attr('id').split('_')[0]; // use active tab to determine visible measurement type
+	var measType = $('#activeMeasurement').text();
 	var startDate = $('#options_startDate_' +primOrSec+ '-chart').val();       // appropriate text input box controlled by a date picker
 	var endDate = $('#options_endDate_' +primOrSec+ '-chart').val();           // appropriate text input box controlled by a date picker
 	measType = (measType === 'calories') ? 'calorie' : measType;
