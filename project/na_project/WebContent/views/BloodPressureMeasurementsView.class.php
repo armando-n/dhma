@@ -197,7 +197,7 @@ class BloodPressureMeasurementsView {
 
 <!-- Charts Section -->
 <section id="bloodPressure_charts_row" class="row">
-    <div id="bloodPressure_charts_primary_column" class="col-sm-12 col-md-6">
+    <div id="bloodPressure_charts_primary_section" class="col-sm-12 col-md-6">
         <div class="row">
             <div id="bloodPressure_chart_primary" class="col-sm-12">
                 <!-- Primary Chart -->
@@ -236,7 +236,7 @@ class BloodPressureMeasurementsView {
         </div>    
     </div>
     
-    <div id="bloodPressure_charts_secondary_column" class="col-sm-12 col-md-6 chart-secondary">
+    <div id="bloodPressure_charts_secondary_section" class="col-sm-12 col-md-6 chart-secondary">
         <div class="row">
             <div id="bloodPressure_chart_secondary" class="col-sm-12">
                 <!-- Secondary Chart -->

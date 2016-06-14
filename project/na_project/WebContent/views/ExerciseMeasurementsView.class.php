@@ -187,7 +187,7 @@ class ExerciseMeasurementsView {
 
 <!-- Charts Section -->
 <section id="exercise_charts_row" class="row">
-    <div id="exercise_charts_primary_column" class="col-sm-12 col-md-6">
+    <div id="exercise_charts_primary_section" class="col-sm-12 col-md-6">
         <div class="row">
             <div id="exercise_chart_primary" class="col-sm-12">
                 <!-- Primary Chart -->
@@ -226,7 +226,7 @@ class ExerciseMeasurementsView {
         </div>    
     </div>
     
-    <div id="exercise_charts_secondary_column" class="col-sm-12 col-md-6 chart-secondary">
+    <div id="exercise_charts_secondary_section" class="col-sm-12 col-md-6 chart-secondary">
         <div class="row">
             <div id="exercise_chart_secondary" class="col-sm-12">
                 <!-- Secondary Chart -->

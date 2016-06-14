@@ -150,6 +150,22 @@ $(document).ready(function() {
 	if (!$('#options_showTable').is(':checked'))
 		$.each(measurementTypes, function(index, measType) { $('#' +measType+ '_table_section').hide(); } );
 	
+	// show/hide charts according to loaded measurements options, and disable showSecondChart checkbox if needed
+	if (!$('#options_showFirstChart').is(':checked')) {
+		$.each(measurementTypes, function(index, measType) {
+			$('#'+measType+'_charts_primary_section').hide();
+			$('#'+measType+'_charts_secondary_section').hide();
+		});
+		$('#options_showSecondChart').prop('disabled', true);
+		$('#options_showSecondChart').parent().addClass('disabled');
+	}
+	else if (!$('#options_showSecondChart').is(':checked')) {
+		$.each(measurementTypes, function(index, measType) {
+			$('#'+measType+'_charts_secondary_section').hide();
+			$('#'+measType+'_charts_primary_section').removeClass('col-md-6').addClass('col-md-12');
+		});
+	}
+	
 	// assign handlers for chart date range buttons 
 	$('.btn-change-chart').click(viewNewChart);
 	
@@ -212,6 +228,12 @@ function setOptionsChangedListeners() {
 		options_changed(); // store changes
 	});
 	
+	// show first chart
+	$('#options_showFirstChart').click(showFirstChart_clicked);
+	
+	// show second chart
+	$('#options_showSecondChart').click(showSecondChart_clicked);
+	
 	// update charts button clicked
 	$('.updateCharts-btn').click(chartRange_update);
 	
@@ -225,6 +247,9 @@ function setOptionsChangedListeners() {
 // fires when any option is changed, storing the change in the server
 function options_changed() {
 	var optionsData = {};
+	var moddedActMeasurement = $('#activeMeasurement').text();
+	if (moddedActMeasurement === 'calories')
+		moddedActMeasurement = 'calorie';
 	optionsData.userName = $('#userName').text();
 	optionsData.optionsName = 'Session';
 	optionsData.oldOptionsName = 'Session';
@@ -249,8 +274,8 @@ function options_changed() {
 	optionsData.chartPlacement = 'bottom'; // TODO change this when fully implemented
 	optionsData.showFirstChart = $('#options_showFirstChart').is(':checked') ? true : false;
 	optionsData.showSecondChart = $('#options_showSecondChart').is(':checked') ? true : false;
-	optionsData.firstChartType = $('#' +optionsData.activeMeasurement+ '_charts_primary_column .btn-change-chart.active').attr('id').split('_')[1]; // based on active chart type button
-	optionsData.secondChartType = $('#' +optionsData.activeMeasurement+ '_charts_secondary_column .btn-change-chart.active').attr('id').split('_')[1]; // based on active chart type button
+	optionsData.firstChartType = $('#' +moddedActMeasurement+ '_charts_primary_section .btn-change-chart.active').attr('id').split('_')[1]; // based on active chart type button
+	optionsData.secondChartType = $('#' +moddedActMeasurement+ '_charts_secondary_section .btn-change-chart.active').attr('id').split('_')[1]; // based on active chart type button
 	optionsData.chartLastYear = $('#options_chartLastYear').is(':checked') ? true : false;
 	optionsData.chartGroupDays = $('#options_chartGroupDays').is(':checked') ? true : false;
 	optionsData.individualBloodPressureChartStart = $('#individual_bloodPressure_chartStart').text();
@@ -333,6 +358,93 @@ function options_changed() {
 		},
 		error: function() { alert('Error: invalid response when attempting to store changes.'); }
 	});
+}
+
+function showFirstChart_clicked() {
+	var activeMeasurement = $('#activeMeasurement').text();
+	if (activeMeasurement === 'calories')
+		activeMeasurement = 'calorie';
+	var firstChart_tab = $('#chartsOptions_tabs a[href="#firstChartOptions"]');
+	var secondChart_tab = $('#chartsOptions_tabs a[href="#secondChartOptions"]');
+	var secondChart_checkbox = $('#options_showSecondChart');
+	
+	// showFirstChart is being unchecked
+	if (! $('#options_showFirstChart').is(':checked')) {
+		
+		// hide all first charts
+		$.each(measurementTypes, function(index, measType) {
+			$('#'+measType+'_charts_primary_section').hide();        
+		});
+		
+		firstChart_tab.click();
+		
+		// disable second chart tab
+		secondChart_tab.addClass('disabled');
+		secondChart_tab.off('click', chartSettingsTab_clicked);
+		secondChart_tab.removeAttr('data-toggle');
+		
+		// disable showSecondChart checkbox
+		secondChart_checkbox.prop('disabled', true);        
+		secondChart_checkbox.parent().addClass('disabled');
+		
+		// hide second charts if visible and uncheck second chart checkbox
+		if ($('#'+activeMeasurement+'_charts_secondary_section').is(':visible')) {
+			$.each(measurementTypes, function(index, measType) {
+				$('#'+measType+'_charts_secondary_section').hide();
+			});
+			secondChart_checkbox.prop('checked', false);
+		}
+	}
+	
+	// showFirstChart is being checked
+	else {
+		// show all first charts, stretching first charts if needed
+		$.each(measurementTypes, function(index, measType) {
+			var firstChart = $('#'+measType+'_charts_primary_section');
+			firstChart.show();
+			if (firstChart.hasClass('col-md-6'))
+				firstChart.removeClass('col-md-6').addClass('col-md-12');
+		});
+		
+		// enable second chart tab
+		secondChart_tab.removeClass('disabled');
+		secondChart_tab.on('click', chartSettingsTab_clicked);
+		secondChart_tab.attr('data-toggle', 'tab');
+		
+		// enable showSecondChart checkbox
+		secondChart_checkbox.prop('disabled', false);
+		secondChart_checkbox.parent().removeClass('disabled');
+		
+		charts[activeMeasurement+'_primary'].reflow();
+	}
+	
+	options_changed();
+}
+
+function showSecondChart_clicked() {
+	var activeMeasurement = $('#activeMeasurement').text();
+	if (activeMeasurement === 'calories')
+		activeMeasurement = 'calorie';
+	
+	// showSecondChart is being unchecked
+	if (! $('#options_showSecondChart').is(':checked')) {
+		$.each(measurementTypes, function(index, measType) {
+			$('#'+measType+'_charts_secondary_section').hide();                                       // hide all second charts
+			$('#'+measType+'_charts_primary_section').removeClass('col-md-6').addClass('col-md-12'); // stretch all first charts
+		});
+	}
+	
+	// showSecondChart is being checked
+	else {
+		$.each(measurementTypes, function(index, measType) {
+			$('#'+measType+'_charts_secondary_section').show();                                       // show all second charts
+			$('#'+measType+'_charts_primary_section').removeClass('col-md-12').addClass('col-md-6');  // shrink all first charts
+		});
+		charts[activeMeasurement+'_secondary'].reflow();
+	}
+	charts[activeMeasurement+'_primary'].reflow();
+	
+	options_changed();
 }
 
 // called when save changes button is clicked in units modal
@@ -532,6 +644,9 @@ function tab_clicked(event) {
 	$('#measurements_tabs .active').removeClass('active');
 	$('#' +measType+ '_tab_btn').parent().addClass('active');
 	
+	// update current option values stored in hidden DOM data
+	$('#activeMeasurement').text(measType);
+	
 	if (measType === 'calories')
 		measType = 'calorie';
 	
@@ -541,13 +656,12 @@ function tab_clicked(event) {
 	else
 		$('.col-visibility-exercise').hide();
 	
-	// update current option values stored in hidden DOM data
-	$('#activeMeasurement').text(measType);
-	
 	// redraw charts and table to avoid overflow and column alignment issues
 	charts[measType+ '_primary'].reflow();
 	charts[measType+ '_secondary'].reflow();
 	$('#' +measType+ '_table').DataTable().draw();
+	
+	options_changed();
 	
 	event.preventDefault();
 }
@@ -592,8 +706,8 @@ function editMeasurement(event) {
 				$('#oldDateTime_' +measType).val(measData.date+ ' ' +measData.time);
 				
 				// refresh charts
-				$('#' +measType+ '_charts_primary_column .active').click();
-				$('#' +measType+ '_charts_secondary_column .active').click();
+				$('#' +measType+ '_charts_primary_section .active').click();
+				$('#' +measType+ '_charts_secondary_section .active').click();
 				
 				// change Cancel button to Done button
 				$('#cancel_edit_' +measType+ '_text').text('Done');
@@ -643,8 +757,8 @@ function deleteMeasurement(e, dt, node, config) {
 					}, 100);
 					
 					// refresh charts
-					$('#' +measType+ '_charts_primary_column .active').click();
-					$('#' +measType+ '_charts_secondary_column .active').click();
+					$('#' +measType+ '_charts_primary_section .active').click();
+					$('#' +measType+ '_charts_secondary_section .active').click();
 				}
 				else
 					alert('delete failed: ' +response.error);
@@ -689,8 +803,8 @@ function addMeasurement(event) {
 				setTimeout(function() { $(newRow.node()).removeClass('success'); }, 3000);
 				
 				// refresh charts
-				$('#' +measType+ '_charts_primary_column .active').click();
-				$('#' +measType+ '_charts_secondary_column .active').click();
+				$('#' +measType+ '_charts_primary_section .active').click();
+				$('#' +measType+ '_charts_secondary_section .active').click();
 				
 				// change Cancel button to Done button
 				$('#cancel_add_' +measType+ '_text').text('Done');
@@ -1189,7 +1303,7 @@ function chartRange_update() {
 	var endDate = $('#options_endDate_' +primOrSec+ '-chart').val();           // appropriate text input box controlled by a date picker
 	measType = (measType === 'calories') ? 'calorie' : measType;
 	var avgOrTotal = ($.inArray(measType, cumulativeMeasurements) === -1) ? 'Averages' : 'Totals';
-	var timePeriods = $('#' +measType+ '_charts_' +primOrSec+ '_column .btn-change-chart.active').attr('id').split('_')[1];
+	var timePeriods = $('#' +measType+ '_charts_' +primOrSec+ '_section .btn-change-chart.active').attr('id').split('_')[1];
 	
 	// store updated start and end data for this chart in the DOM
 	var measTypeAdjusted = (measType === 'calorie') ? 'calories' : measType;

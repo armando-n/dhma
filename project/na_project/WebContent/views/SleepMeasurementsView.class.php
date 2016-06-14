@@ -175,7 +175,7 @@ class SleepMeasurementsView {
 
 <!-- Charts Section -->
 <section id="sleep_charts_row" class="row">
-    <div id="sleep_charts_primary_column" class="col-sm-12 col-md-6">
+    <div id="sleep_charts_primary_section" class="col-sm-12 col-md-6">
         <div class="row">
             <div id="sleep_chart_primary" class="col-sm-12">
                 <!-- Primary Chart -->
@@ -214,7 +214,7 @@ class SleepMeasurementsView {
         </div>    
     </div>
     
-    <div id="sleep_charts_secondary_column" class="col-sm-12 col-md-6 chart-secondary">
+    <div id="sleep_charts_secondary_section" class="col-sm-12 col-md-6 chart-secondary">
         <div class="row">
             <div id="sleep_chart_secondary" class="col-sm-12">
                 <!-- Secondary Chart -->
