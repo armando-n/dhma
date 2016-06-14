@@ -186,14 +186,16 @@ class MeasurementsView{
                                             <option<?=$timeFormat_24hour?>>24 hour</option>
                                         </select>
                                     </div>
+                                    <!-- 
                                     <div class="form-group">
                                         <label for="options_durationFormat">Duration Format</label>
                                         <select id="options_durationFormat" name="durationFormat" class="form-control">
-                                            <option<?=$durationFormat_minutes?>>minutes</option>
-                                            <option<?=$durationFormat_hours?>>hours</option>
-                                            <option<?=$durationFormat_hoursMinutes?>>hours:minutes</option>
+                                            <option<?php//$durationFormat_minutes?>>minutes</option>
+                                            <option<?php//$durationFormat_hours?>>hours</option>
+                                            <option<?php//$durationFormat_hoursMinutes?>>hours:minutes</option>
                                         </select>
                                     </div>
+                                     -->
                                     <div class="form-group">
                                         <div class="checkbox">
                                             <label>
@@ -364,6 +366,7 @@ class MeasurementsView{
                                             <div id="glucoseUnits"><?=$activeOptions->getGlucoseUnits()?></div>
                                             <div id="sleepUnits"><?=$activeOptions->getSleepUnits()?></div>
                                             <div id="weightUnits"><?=$activeOptions->getWeightUnits()?></div>
+                                            <div id="durationFormat"><?=$activeOptions->getDurationFormat()?></div>
                                             <div id="individual_bloodPressure_chartStart"><?=$activeOptions->getIndividualBloodPressureChartStart()?></div>
                                             <div id="individual_bloodPressure_chartEnd"><?=$activeOptions->getIndividualBloodPressureChartEnd()?></div>
                                             <div id="daily_bloodPressure_chartStart"><?=$activeOptions->getDailyBloodPressureChartStart()?></div>

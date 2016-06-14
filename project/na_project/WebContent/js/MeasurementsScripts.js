@@ -262,7 +262,7 @@ function options_changed() {
 	optionsData.sleepUnits = $('#sleepUnits').text();
 	optionsData.weightUnits = $('#weightUnits').text();
 	optionsData.timeFormat = $('#options_timeFormat').val();
-	optionsData.durationFormat = $('#options_durationFormat').val();
+	optionsData.durationFormat = $('#durationFormat').text();
 	optionsData.showTooltips = $('#options_showTooltips').is(':checked') ? true : false;
 	optionsData.showSecondaryCols = true // TODO change this when fully implemented
 	optionsData.showDateCol = $('#colvis_date span:first').hasClass('glyphicon') ? true : false;
@@ -1281,8 +1281,9 @@ function createChart_Options(measType, title, data, name, per, subtitle, idSuffi
 						this.series.name+ ': <strong>' +this.y+ ' ' +displayUnits+ '</strong>';
 					
 					if (measType === 'exercise' || measType === 'sleep') {
-						if (displayUnits === 'minutes')
-							resultStr += ' (' +(this.y / 60).toFixed(2)+ ' hours)';
+						if (displayUnits === 'minutes') {
+							resultStr += '<br />equivalent to: (' +(this.y / 60).toFixed(2)+ ' hours) or (' +(this.y/60/24).toFixed(2)+ ' days)';
+						}
 						else if (displayUnits === 'hours')
 							resultStr += ' (' +(this.y / 24).toFixed(2)+ ' days)';
 					}
