@@ -177,18 +177,16 @@ $(document).ready(function() {
 	$('#measurements_dropdown').tooltip();
 	$('#measurements_nav [data-toggle="tooltip"]').tooltip();
 	
-	// hide all but one units select tag
-	$('#units_form-group select:gt(0)').hide();
-	
 	setOptionsChangedListeners();
 });
 
 function setOptionsChangedListeners() {
-	// units measType selected
-	$('#options_units_measurementType').change(unitsMeasType_selected);
 	
-	// units
-	$('#units_form-group select').change(units_selected);
+	// units changes saved
+	$('#saveUnitsChanges_btn').click(saveUnitsChanges);
+	
+	// units modal canceled/closed without saving
+	$("#unitsOptions_modal button[data-dismiss='modal']").click(cancelUnitsChanges);
 	
 	// time format
 	$('#options_timeFormat').change(timeFormat_selected);
@@ -232,12 +230,12 @@ function options_changed() {
 	optionsData.oldOptionsName = 'Session';
 	optionsData.isActive = true;
 	optionsData.activeMeasurement = $('#activeMeasurement').text();
-	optionsData.bloodPressureUnits = $('#options_units_bloodPressure').val();
-	optionsData.calorieUnits = $('#options_units_calorie').val();
-	optionsData.exerciseUnits = $('#options_units_exercise').val();
-	optionsData.glucoseUnits = $('#options_units_glucose').val();
-	optionsData.sleepUnits = $('#options_units_sleep').val();
-	optionsData.weightUnits = $('#options_units_weight').val();
+	optionsData.bloodPressureUnits = $('#bloodPressureUnits').text();
+	optionsData.calorieUnits = $('#calorieUnits').text();
+	optionsData.exerciseUnits = $('#exerciseUnits').text();
+	optionsData.glucoseUnits = $('#glucoseUnits').text();
+	optionsData.sleepUnits = $('#sleepUnits').text();
+	optionsData.weightUnits = $('#weightUnits').text();
 	optionsData.timeFormat = $('#options_timeFormat').val();
 	optionsData.durationFormat = $('#options_durationFormat').val();
 	optionsData.showTooltips = $('#options_showTooltips').is(':checked') ? true : false;
@@ -337,6 +335,54 @@ function options_changed() {
 	});
 }
 
+// called when save changes button is clicked in units modal
+function saveUnitsChanges() {
+	var changedUnits = [];
+	
+	// determine glucose unit selection and update hidden data in the DOM if necessary
+	var selectedGlucoseUnits = $('#options_glucoseUnits input:checked').val();
+	if (selectedGlucoseUnits !== $('#glucoseUnits').text()) {
+		$('#glucoseUnits').text(selectedGlucoseUnits);
+		changedUnits.push('glucose');
+	}
+	
+	// determine weight unit selection and update hidden data in the DOM if necessary
+	var selectedWeightUnits = $('#options_weightUnits input:checked').val();
+	if (selectedWeightUnits !== $('#weightUnits').text()) {
+		$('#weightUnits').text(selectedWeightUnits);
+		changedUnits.push('weight');
+	}
+	
+	// update charts/tables/forms
+	$.each(changedUnits, function(index, measType) { unitsModified(measType); });
+	
+	// store changes if something was changed
+	if (changedUnits.length > 0)
+		options_changed();
+}
+
+// called when cancel or X buttons are clicked in units modal
+function cancelUnitsChanges() {
+	var glucoseUnits = $('#glucoseUnits').text();
+	var weightUnits = $('#weightUnits').text();
+	
+	// reset glucose units radio buttons to original selection
+	if (glucoseUnits === 'mg/dL')
+		$('#options_units_glucose_mgdL').prop('checked', true);
+	else if (glucoseUnits === 'mM')
+		$('#options_units_glucose_mM').prop('checked', true);
+	else
+		alert('Unable to revert glucose units in units dialog.');
+	
+	// reset weight units radio buttons to original selection
+	if (weightUnits === 'lbs')
+		$('#options_units_weight_lbs').prop('checked', true);
+	else if (weightUnits === 'kg')
+		$('#options_units_weight_kg').prop('checked', true);
+	else
+		alert('Unable to revert weight units in units dialog.');
+}
+
 // a column visibility dropdown menu item was clicked
 function columnVisibility_clicked(event) {
 	event.preventDefault();
@@ -395,19 +441,6 @@ function timeFormat_selected() {
 	options_changed();
 }
 
-// switch visible unit select tag according to the measurement type selected
-function unitsMeasType_selected() {
-	var measTypeSelected = displayNameToAttributeName($(this).val());
-	if (measTypeSelected === 'calories')
-		measTypeSelected = 'calorie';
-
-	// hide currently displayed units select tag
-	$('#units_form-group select').hide();
-	
-	// show the units select tag for the selected measurement type
-	$('#options_units_' +measTypeSelected).show();
-}
-
 // takes a name like "Blood Pressure" and converts it to its attribute-name-friendly "bloodPressure"
 function displayNameToAttributeName(displayName) {
 	var str = displayName.charAt(0).toLowerCase() + displayName.substr(1);
@@ -423,20 +456,18 @@ function attributeNameToDisplayName(attrName) {
 }
 
 // a unit of measure was selected; switch display of tables/charts/forms accordingly
-function units_selected() {
-	var unitsSelected = $(this).val();
-	var measType = $(this).attr('id').split('_')[2];
+function unitsModified(measType) {
 	var table = $('#' +measType+ '_table').DataTable();
 	var primaryChart = charts[measType+ '_primary'];
 	var secondaryChart = charts[measType+ '_secondary'];
-	var displayUnits = $('#options_units_' +measType).val();
+	var newUnits = $('#'+measType+'Units').text();
 	
 	// update table rows
 	table.rows().invalidate().draw();
 	
 	// update table column header(s)
 	$.each(measurementParts[measType], function(index, partName) {
-		$(table.column(index).header()).text(attributeNameToDisplayName(partName)+ ' (' +unitsSelected+ ')');
+		$(table.column(index).header()).text(attributeNameToDisplayName(partName)+ ' (' +newUnits+ ')');
 	});
 	
 	// function to update a single chart
@@ -448,38 +479,36 @@ function units_selected() {
 				var yVal = point.y;
 				var oldVal = point.old;
 				
-				if (point.units !== displayUnits) {
+				// I think this only works for measurements with two types of units
+				if (point.units !== newUnits) {
 					if (point.old !== null) {
 						yVal = point.old;
-						oldVal = null;
+						oldVal = null; // TODO change this to a proper swap???
 					}
 					else {
 						oldVal = yVal;
-						yVal = convertUnits(yVal, point.units, displayUnits);
+						yVal = convertUnits(yVal, point.units, newUnits);
 					}
 				}
 				
 				point.update({
 					name: point.name,
 					y: yVal,
-					units: displayUnits,
+					units: newUnits,
 					notes: point.notes,
 					old: oldVal
 				}, false);
 			}
 		}
-		chart.yAxis[0].setTitle({ text: displayUnits }, false);
+		chart.yAxis[0].setTitle({ text: newUnits }, false);
 		chart.redraw();
 	}
 	updateChart(primaryChart);
 	updateChart(secondaryChart);
 	
 	// update add/edit forms
-	$('#add_' +measType+ '_section .units-addon').text(displayUnits);
-	$('#edit_' +measType+ '_section .units-addon').text(displayUnits);
-	
-	// store changes
-	options_changed();
+	$('#add_' +measType+ '_section .units-addon').text(newUnits);
+	$('#edit_' +measType+ '_section .units-addon').text(newUnits);
 }
 
 function chartSettingsTab_clicked(event) {
@@ -498,9 +527,6 @@ function tab_clicked(event) {
 	$(this).tab('show');
 	$('#measurements_dropdown_label').text(upperMeasType);
 	$('#measurements_dropdown li').removeClass('active');
-	
-	// update units selection options to current measurement
-	$('#options_units_measurementType').val(attributeNameToDisplayName(measType)).change();
 	
 	// update tabs appearance (in case dropdown triggered this event)
 	$('#measurements_tabs .active').removeClass('active');
@@ -544,7 +570,7 @@ function editMeasurement(event) {
 	measData.notes = $('#notes_' +measType+ '_edit').val().trim();
 	measData.userName = $('#userName_' +measType+ '_add').val().trim();
 	measData.oldDateTime = $('#oldDateTime_' +measType).val().trim();
-	measData.units = $('#options_units_' +measType).val();
+	measData.units = $('#'+measType+'Units').text();
 	measData.json = true;
 
 	// send add request to server
@@ -645,7 +671,7 @@ function addMeasurement(event) {
 	measData.time = convert12To24HourTime($('#time_' +measType+ '_add').val().trim());
 	measData.notes = $('#notes_' +measType+ '_add').val().trim();
 	measData.userName = $('#userName_' +measType+ '_add').val().trim();
-	measData.units = $('#options_units_' +measType).val();
+	measData.units = $('#'+measType+'Units').text();
 	measData.json = true;
 
 	// send add request to server and process response
@@ -756,11 +782,11 @@ function tableOptions(measType) {
 		columns.unshift({
 			name: propNames[i],
 			data: propNames[i],
-			title: attributeNameToDisplayName(propNames[i]) + ' (' +$('#options_units_' +measType).val()+ ')',
+			title: attributeNameToDisplayName(propNames[i]) + ' (' +$('#'+measType+'Units').text()+ ')',
 			render: function(data, type, fullRow, meta) {
 				// for display purposes, it may be necessary to convert data to the units specified in the current measurements options preset
 				if (type === 'display') {
-					var displayUnits = $('#options_units_' +measType).val();
+					var displayUnits = $('#'+measType+'Units').text();
 					if (displayUnits !== fullRow.units)
 						return convertUnits(data, fullRow.units, displayUnits);
 				}
@@ -969,7 +995,6 @@ function table_addEditDeleteButtons_options(measType) {
 function createCharts(measType) {
 	var measNames = measurementParts[measType];
 	var measTypeAdjusted = (measType === 'calorie') ? 'calories' : measType;
-//	measTypeAdjusted = measTypeAdjusted.charAt(0).toUpperCase()+measTypeAdjusted.slice(1);
 	var firstTimePeriod = $('#firstChartType').text();
 	var secondTimePeriod = $('#secondChartType').text();
 	var firstStartDate = $('#' + firstTimePeriod +'_'+ measTypeAdjusted +'_'+ 'chartStart').text();
@@ -993,7 +1018,7 @@ function createChart(measType, timePeriods, startDate, endDate, primOrSec, subti
 		'dataType': 'json',
 		'success': function(response) {
 			var measNames = measurementParts[measType];
-			var displayUnits = $('#options_units_' +measType).val();
+			var displayUnits = $('#'+measType+'Units').text();
 			var data = [];
 			var partName;
 			
@@ -1103,7 +1128,7 @@ function createChart_Options(measType, title, data, name, per, subtitle, idSuffi
 				}
 			},
 			yAxis: {
-				title: { text: $('#options_units_' +measType).val() }
+				title: { text: $('#'+measType+'Units').text() }
 			},
 			series: data,
 			tooltip: {
@@ -1117,7 +1142,7 @@ function createChart_Options(measType, title, data, name, per, subtitle, idSuffi
 					var secondLineHeader = '<br /><span style="font-size: smaller;">';
 					var secondLineBody;
 					var secondLineFooter = '</span>';
-					var displayUnits = $('#options_units_' +measType).val();
+					var displayUnits = $('#'+measType+'Units').text();
 
 					if (per === 'all' || per === 'individual') {
 						var date = new Date(this.key);

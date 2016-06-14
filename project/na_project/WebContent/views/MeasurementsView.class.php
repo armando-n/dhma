@@ -46,31 +46,23 @@ class MeasurementsView{
         $sleepActive = ($activeMeasurement === 'sleep') ? $msmtActive : '';
         
         // options that use select/option tags are retrieved here
-        $glucoseUnits_mgdL = ($activeOptions->getGlucoseUnits() === 'mg/dL') ? $optionSelected : '';
-        $glucoseUnits_mM = ($activeOptions->getGlucoseUnits() === 'mM') ? $optionSelected : '';
-        $bloodPressureUnits_mmHg = ($activeOptions->getBloodPressureUnits() === 'mm Hg') ? $optionSelected : '';
-        $weightUnits_lbs = ($activeOptions->getWeightUnits() === 'lbs') ? $optionSelected : '';
-        $weightUnits_kg = ($activeOptions->getWeightUnits() === 'kg') ? $optionSelected : '';
-        $calorieUnits_calories = ($activeOptions->getCalorieUnits() === 'calories') ? $optionSelected : '';
-        $exerciseUnits_minutes = ($activeOptions->getExerciseUnits() === 'minutes') ? $optionSelected : '';
-        $exerciseUnits_hours = ($activeOptions->getExerciseUnits() === 'hours') ? $optionSelected : '';
-        $exerciseUnits_hoursMinutes = ($activeOptions->getExerciseUnits() === 'hours:minutes') ? $optionSelected : '';
-        $sleepUnits_minutes = ($activeOptions->getSleepUnits() === 'minutes') ? $optionSelected : '';
-        $sleepUnits_hours = ($activeOptions->getSleepUnits() === 'hours') ? $optionSelected : '';
-        $sleepUnits_hoursMinutes = ($activeOptions->getSleepUnits() === 'hours:minutes') ? $optionSelected : '';
         $timeFormat_12hour = ($activeOptions->getTimeFormat() === '12 hour') ? $optionSelected : '';
         $timeFormat_24hour = ($activeOptions->getTimeFormat() === '24 hour') ? $optionSelected : '';
         $durationFormat_minutes = ($activeOptions->getDurationFormat() === 'minutes') ? $optionSelected : '';
         $durationFormat_hours = ($activeOptions->getDurationFormat() === 'hours') ? $optionSelected : '';
         $durationFormat_hoursMinutes = ($activeOptions->getDurationFormat() === 'hours:minutes') ? $optionSelected : '';
         
-        // options that use checkboxes are retrieved here
+        // options that use checkboxes or radio buttons are retrieved here
         $showTooltips = $activeOptions->getShowTooltips() ? $optionChecked : '';
         $showTable = $activeOptions->getShowTable() ? $optionChecked : '';
         $showFirstChart = $activeOptions->getShowFirstChart() ? $optionChecked : '';
         $showSecondChart = $activeOptions->getShowSecondChart() ? $optionChecked : '';
         $chartLastYear = $activeOptions->getChartLastYear() ? $optionChecked : '';
         $chartGroupDays = $activeOptions->getChartGroupDays() ? $optionChecked : '';
+        $weightUnits_lbs = ($activeOptions->getWeightUnits() === 'lbs') ? $optionChecked : '';
+        $weightUnits_kg = ($activeOptions->getWeightUnits() === 'kg') ? $optionChecked : '';
+        $glucoseUnits_mgdL = ($activeOptions->getGlucoseUnits() === 'mg/dL') ? $optionChecked : '';
+        $glucoseUnits_mM = ($activeOptions->getGlucoseUnits() === 'mM') ? $optionChecked : '';
         
         // options that use an ok glyphicon (check mark icon) are retrieved here
         $showSecondaryCols = $activeOptions->getShowSecondaryCols() ? $optionOk : '';
@@ -97,49 +89,95 @@ class MeasurementsView{
                 <div id="options" class="collapse">
                     <div class="well well-lg">
             
-                        <form action="meausrementsOptions_post" id="measurementsOptionsForm" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+                        <form action="meausrementsOptions_edit" id="measurementsOptionsForm" method="post" role="form" class="form-horizontal">
                             <div class="row">
                                 <fieldset class="col-sm-4">
                                     <legend>General Options</legend>
                                     
                                     <!-- General Options -->
+                                    
                                     <div class="form-group">
-                                        <label for="options_units_measurementType">Units</label>
-                                        <select id="options_units_measurementType" class="form-control">
-                                            <option>Glucose</option>
-                                            <option>Blood Pressure</option>
-                                            <option>Weight</option>
-                                            <option>Calories</option>
-                                            <option>Exercise</option>
-                                            <option>Sleep</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group" id="units_form-group">
-<!--                                         <label for="options_units_glucose">Units</label> -->
-                                        <select id="options_units_glucose" name="glucoseUnits" class="form-control">
-                                            <option<?=$glucoseUnits_mgdL?>>mg/dL</option>
-                                            <option<?=$glucoseUnits_mM?>>mM</option>
-                                        </select>
-                                        <select id="options_units_bloodPressure" name="bloodPressureUnits" class="form-control">
-                                            <option<?=$bloodPressureUnits_mmHg?>>mm Hg</option>
-                                        </select>
-                                        <select id="options_units_weight" name="weightUnits" class="form-control">
-                                            <option<?=$weightUnits_lbs?>>lbs</option>
-                                            <option<?=$weightUnits_kg?>>kg</option>
-                                        </select>
-                                        <select id="options_units_calorie" name="calorieUnits" class="form-control">
-                                            <option<?=$calorieUnits_calories?>>calories</option>
-                                        </select>
-                                        <select id="options_units_exercise" name="exerciseUnits" class="form-control">
-                                            <option<?=$exerciseUnits_minutes?>>minutes</option>
-                                            <option<?=$exerciseUnits_hours?>>hours</option>
-                                            <!-- <option<?php//$exerciseUnits_hoursMinutes?>>hours:minutes</option> -->
-                                        </select>
-                                        <select id="options_units_sleep" name="sleepUnits" class="form-control">
-                                            <option<?=$sleepUnits_minutes?>>minutes</option>
-                                            <option<?=$sleepUnits_hours?>>hours</option>
-                                            <!-- <option<?php//$sleepUnits_hoursMinutes?>>hours:minutes</option> -->
-                                        </select>
+                                        <div class="col-sm-6">
+                                            <button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#unitsOptions_modal">
+                                                <span class="glyphicon glyphicon-modal-window" aria-hidden="true"></span>&nbsp; Units
+                                            </button>
+                                            
+                                            <div id="unitsOptions_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelldby="unitsOptions_label">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                    
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            <h4 id="unitsOptions_label" class="modal-title">Units of Measurement</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                        
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <p>Only those types of measurements that have multiple choices for units of measurement are shown.</p>
+                                                                </div>
+                                                            </div>
+                                                        
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                        
+                                                                    <div class="form-group">
+                                                                        <label class="control-label col-md-4 col-lg-3">Glucose:</label>
+                                                                        <div class="radio col-md-8 col-lg-9" id="options_glucoseUnits">
+                                                                            <div class="row">
+                                                                                <div class="col-xs-4 col-xs-offset-2">
+                                                                                    <label>
+                                                                                        <input type="radio" id="options_units_glucose_mgdL" name="glucoseUnits" value="mg/dL"<?=$glucoseUnits_mgdL?> />mg/dL
+                                                                                    </label>
+                                                                                </div>
+                                                                                <div class="col-xs-4 col-xs-offset-1">
+                                                                                    <label>
+                                                                                        <input type="radio" id="options_units_glucose_mM" name="glucoseUnits" value="mM"<?=$glucoseUnits_mM?> />mM
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                        
+                                                                    <div class="form-group">
+                                                                        <label class="control-label col-md-4 col-lg-3">Weight:</label>
+                                                                        <div class="radio col-md-8 col-lg-9" id="options_weightUnits">
+                                                                            <div class="row">
+                                                                                <div class="col-xs-4 col-xs-offset-2">
+                                                                                    <label>
+                                                                                        <input type="radio" id="options_units_weight_lbs" name="weightUnits" value="lbs"<?=$weightUnits_lbs?> />lbs
+                                                                                    </label>
+                                                                                </div>
+                                                                                <div class="col-xs-4 col-xs-offset-1">
+                                                                                    <label>
+                                                                                        <input type="radio" id="options_units_weight_kg" name="weightUnits" value="kg"<?=$weightUnits_kg?> />kg
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        
+                                                        <div class="modal-footer">
+                                                            <button type="button" id="saveUnitsChanges_btn" class="btn btn-primary" data-dismiss="modal">Save Changes</button>
+                                                            <button type="button" id="cancelUnitsChanges_btn" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="options_timeFormat">Time Format</label>
@@ -323,6 +361,12 @@ class MeasurementsView{
                                             <div id="firstChartType"><?=$activeOptions->getFirstChartType()?></div>
                                             <div id="secondChartType"><?=$activeOptions->getSecondChartType()?></div>
                                             <div id="activeMeasurement"><?=$activeOptions->getActiveMeasurement()?></div>
+                                            <div id="bloodPressureUnits"><?=$activeOptions->getBloodPressureUnits()?></div>
+                                            <div id="calorieUnits"><?=$activeOptions->getCalorieUnits()?></div>
+                                            <div id="exerciseUnits"><?=$activeOptions->getExerciseUnits()?></div>
+                                            <div id="glucoseUnits"><?=$activeOptions->getGlucoseUnits()?></div>
+                                            <div id="sleepUnits"><?=$activeOptions->getSleepUnits()?></div>
+                                            <div id="weightUnits"><?=$activeOptions->getWeightUnits()?></div>
                                             <div id="individual_bloodPressure_chartStart"><?=$activeOptions->getIndividualBloodPressureChartStart()?></div>
                                             <div id="individual_bloodPressure_chartEnd"><?=$activeOptions->getIndividualBloodPressureChartEnd()?></div>
                                             <div id="daily_bloodPressure_chartStart"><?=$activeOptions->getDailyBloodPressureChartStart()?></div>
@@ -418,12 +462,12 @@ class MeasurementsView{
             <!-- tabs for small screens and larger -->
             <div id="measurements_nav" class="panel-heading collapse navbar-collapse">
                 <ul id="measurements_tabs" class="nav nav-tabs nav-justified" role="tablist">
-                	<li class="measurement-tab<?=$glucoseActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#glucose" id="glucose_tab_btn" aria-controls="glucose" role="tab" data-toggle="tooltip" title="Switch to glucose tracker">Glucose</a></li>
-                	<li class="measurement-tab<?=$bloodPressureActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#bloodPressure" id="bloodPressure_tab_btn" aria-controls="bloodPressure" role="tab" data-toggle="tooltip" title="Switch to blood pressure tracker">Blood Pressure</a></li>
-                	<li class="measurement-tab<?=$weightActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#weight" id="weight_tab_btn" aria-controls="weight" role="tab" data-toggle="tooltip" title="Switch to weight tracker">Weight</a></li>
-                	<li class="measurement-tab<?=$caloriesActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#calories" id="calories_tab_btn" aria-controls="calories" role="tab" data-toggle="tooltip" title="Switch to calorie tracker">Calories</a></li>
-                	<li class="measurement-tab<?=$exerciseActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#exercise" id="exercise_tab_btn" aria-controls="exercise" role="tab" data-toggle="tooltip" title="Switch to exercise tracker">Exercise</a></li>
-                	<li class="measurement-tab<?=$sleepActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#sleep" id="sleep_tab_btn" aria-controls="sleep" role="tab" data-toggle="tooltip" title="Switch to sleep tracker">Sleep</a></li>
+                    <li class="measurement-tab<?=$glucoseActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#glucose" id="glucose_tab_btn" aria-controls="glucose" role="tab" data-toggle="tooltip" title="Switch to glucose tracker">Glucose</a></li>
+                    <li class="measurement-tab<?=$bloodPressureActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#bloodPressure" id="bloodPressure_tab_btn" aria-controls="bloodPressure" role="tab" data-toggle="tooltip" title="Switch to blood pressure tracker">Blood Pressure</a></li>
+                    <li class="measurement-tab<?=$weightActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#weight" id="weight_tab_btn" aria-controls="weight" role="tab" data-toggle="tooltip" title="Switch to weight tracker">Weight</a></li>
+                    <li class="measurement-tab<?=$caloriesActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#calories" id="calories_tab_btn" aria-controls="calories" role="tab" data-toggle="tooltip" title="Switch to calorie tracker">Calories</a></li>
+                    <li class="measurement-tab<?=$exerciseActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#exercise" id="exercise_tab_btn" aria-controls="exercise" role="tab" data-toggle="tooltip" title="Switch to exercise tracker">Exercise</a></li>
+                    <li class="measurement-tab<?=$sleepActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#sleep" id="sleep_tab_btn" aria-controls="sleep" role="tab" data-toggle="tooltip" title="Switch to sleep tracker">Sleep</a></li>
                 </ul>
             </div>
 
