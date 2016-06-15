@@ -1,3 +1,12 @@
+span.link-text {
+	cursor: pointer;
+}
+span.link-text:hover {
+	color: #ffffff;
+	background-color: #337ab7;
+	border-radius: 4px;
+}
+
 a.disabled, label.disabled {
 	color: gray;
 	cursor: not-allowed;
@@ -81,8 +90,17 @@ legend {
 	color: #777;
 }
 
-.panel > .panel-heading > h2 {
-	font-size: 1.5em;
+.panel.panel-primary {
+	margin-bottom: 0;
+}
+
+.panel-body {
+	padding: 1px;
+}
+
+#measurement_sections section[role='tabpanel'] {
+	padding-left: 0;
+	padding-right: 0;
 }
 
 .deletedRow {
@@ -99,7 +117,7 @@ legend {
 
 /* extra small devices */
 @media screen and (max-width: 749px) {    
-    .chart-secondary {
+    .chart-secondary, #secondChartType_btns, #secondChartOptions_tab, #options_showSecondChart_label {
        display: none;
     }
 }

@@ -187,81 +187,11 @@ class ExerciseMeasurementsView {
 
 <!-- Charts Section -->
 <section id="exercise_charts_row" class="row">
-    <div id="exercise_charts_primary_section" class="col-sm-12 col-md-6">
-        <div class="row">
-            <div id="exercise_chart_primary" class="col-sm-12">
-                <!-- Primary Chart -->
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12 btn-group btn-group-justified" role="group">
-            
-                <div class="btn-group" role="group">
-                    <button type="button" id="exercise_individual_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help active" data-toggle="tooltip" title="Show a chart of individual exercise entries">
-                        Individual
-                    </button>
-                </div>
-                <div class="btn-group" role="group">
-                    <button type="button" id="exercise_daily_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily exercise totals">
-                        Daily
-                    </button>
-                </div>
-                <div class="btn-group" role="group">
-                    <button type="button" id="exercise_weekly_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly exercise totals">
-                        Weekly
-                    </button>
-                </div>
-                <div class="btn-group" role="group">
-                    <button type="button" id="exercise_monthly_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of monthly exercise totals">
-                        Monthly
-                    </button>
-                </div>
-                <div class="btn-group" role="group">
-                    <button type="button" id="exercise_yearly_chart_btn_primary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly exercise totals">
-                        Yearly
-                    </button>
-                </div>
-                
-            </div>
-        </div>    
+    <div id="firstChart_exercise" class="col-sm-12 col-md-6">
+        <!-- Primary Chart -->
     </div>
-    
-    <div id="exercise_charts_secondary_section" class="col-sm-12 col-md-6 chart-secondary">
-        <div class="row">
-            <div id="exercise_chart_secondary" class="col-sm-12">
-                <!-- Secondary Chart -->
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12 btn-group btn-group-justified" role="group">
-            
-                <div class="btn-group" role="group">
-                    <button type="button" id="exercise_individual_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of individual exercise entries">
-                        Individual
-                    </button>
-                </div>
-                <div class="btn-group" role="group">
-                    <button type="button" id="exercise_daily_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of daily exercise totals">
-                        Daily
-                    </button>
-                </div><div class="btn-group" role="group">
-                    <button type="button" id="exercise_weekly_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of weekly exercise totals">
-                        Weekly
-                    </button>
-                </div>
-                <div class="btn-group" role="group">
-                    <button type="button" id="exercise_monthly_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help active" data-toggle="tooltip" title="Show a chart of monthly exercise totals">
-                        Monthly
-                    </button>
-                </div>
-                <div class="btn-group" role="group">
-                    <button type="button" id="exercise_yearly_chart_btn_secondary" class="btn btn-default btn-change-chart tooltip-help" data-toggle="tooltip" title="Show a chart of yearly exercise totals">
-                        Yearly
-                    </button>
-                </div>
-                
-            </div>
-        </div>
+    <div id="secondChart_exercise" class="col-sm-12 col-md-6 chart-secondary">
+        <!-- Secondary Chart -->
     </div>
 </section>
 

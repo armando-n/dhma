@@ -44,6 +44,12 @@ class MeasurementsView{
         $caloriesActive = ($activeMeasurement === 'calories') ? $msmtActive : '';
         $exerciseActive = ($activeMeasurement === 'exercise') ? $msmtActive : '';
         $sleepActive = ($activeMeasurement === 'sleep') ? $msmtActive : '';
+        foreach (array('firstChart', 'secondChart') as $whichChart) {
+            foreach (array('individual', 'daily', 'weekly', 'monthly', 'yearly') as $timePeriod) {
+                // example: $firstChart_daily = ($activeOptions->getFirstChartType() === 'daily') ? $msmtActive : '';
+                ${$whichChart.'_'.$timePeriod} = (call_user_func(array($activeOptions, 'get'.ucfirst($whichChart).'Type')) === $timePeriod) ? $msmtActive : '';
+            }
+        }
         
         // options that use select/option tags are retrieved here
         $timeFormat_12hour = ($activeOptions->getTimeFormat() === '12 hour') ? $optionSelected : '';
@@ -248,7 +254,7 @@ class MeasurementsView{
                                         </div>
                                         <div class="col-xs-6">
                                             <div class="checkbox">
-                                                <label>
+                                                <label id="options_showSecondChart_label">
                                                     <input type="checkbox" id="options_showSecondChart" name="showSecondChart"<?=$showSecondChart?> />Show second chart
                                                 </label>
                                             </div>
@@ -293,8 +299,8 @@ class MeasurementsView{
                                                 <div class="form-group">
                                                     <div class="col-xs-6">
                                                         <label for="options_startDate_primary-chart">Start Date</label>
-                                                        <div id="startDate-picker_primary" class="input-group date date-picker">
-                                                            <input type="text" id="options_startDate_primary-chart" name="firstChartStartDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
+                                                        <div id="firstChart_startDate_picker" class="input-group date date-picker">
+                                                            <input type="text" id="options_firstChart_startDate" name="firstChartStartDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
                                                             <span class="input-group-addon">
                                                                 <span class="glyphicon glyphicon-calendar"></span>
                                                             </span>
@@ -302,8 +308,8 @@ class MeasurementsView{
                                                     </div>
                                                     <div class="col-xs-6">
                                                         <label for="options_endDate_primary-chart">End Date</label>
-                                                        <div id="endDate-picker_primary" class="input-group date date-picker">
-                                                            <input type="text" id="options_endDate_primary-chart" name="firstChartEndDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
+                                                        <div id="firstChart_endDate_picker" class="input-group date date-picker">
+                                                            <input type="text" id="options_firstChart_endDate" name="firstChartEndDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
                                                             <span class="input-group-addon">
                                                                 <span class="glyphicon glyphicon-calendar"></span>
                                                             </span>
@@ -312,7 +318,7 @@ class MeasurementsView{
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="col-xs-8 col-xs-offset-2">
-                                                        <button id="updateCharts_primary" type="button" class="btn btn-default btn-block updateCharts-btn">
+                                                        <button id="firstChart_update_btn" type="button" class="btn btn-default btn-block updateCharts-btn">
                                                             <span>Update Chart</span>
                                                         </button>
                                                     </div>
@@ -328,8 +334,8 @@ class MeasurementsView{
                                                 <div class="form-group">
                                                     <div class="col-xs-6">
                                                         <label for="options_startDate_secondary-chart">Start Date</label>
-                                                        <div id="startDate-picker_secondary" class="input-group date date-picker">
-                                                            <input type="text" id="options_startDate_secondary-chart" name="secondChartStartDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
+                                                        <div id="secondChart_startDate_picker" class="input-group date date-picker">
+                                                            <input type="text" id="options_secondChart_startDate" name="secondChartStartDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
                                                             <span class="input-group-addon">
                                                                 <span class="glyphicon glyphicon-calendar"></span>
                                                             </span>
@@ -337,8 +343,8 @@ class MeasurementsView{
                                                     </div>
                                                     <div class="col-xs-6">
                                                         <label for="options_endDate_secondary-chart">End Date</label>
-                                                        <div id="endDate-picker_secondary" class="input-group date date-picker">
-                                                            <input type="text" id="options_endDate_secondary-chart" name="secondChartEndDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
+                                                        <div id="secondChart_endDate_picker" class="input-group date date-picker">
+                                                            <input type="text" id="options_secondChart_endDate" name="secondChartEndDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
                                                             <span class="input-group-addon">
                                                                 <span class="glyphicon glyphicon-calendar"></span>
                                                             </span>
@@ -347,7 +353,7 @@ class MeasurementsView{
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="col-xs-8 col-xs-offset-2">
-                                                        <button id="updateCharts_secondary" type="button" class="btn btn-default btn-block updateCharts-btn">
+                                                        <button id="secondChart_update_btn" type="button" class="btn btn-default btn-block updateCharts-btn">
                                                             <span>Update Chart</span>
                                                         </button>
                                                     </div>
@@ -440,77 +446,127 @@ class MeasurementsView{
             </div>
         </section>
     
-        <div class="panel panel-primary">
-            
-            <!-- dropdown menu for extra small screens -->
-            <div id="measurements_dropdown" class="dropdown tooltip-help" data-toggle="tooltip" title="Switch to a different measurement tracker">
-                <button type="button" class="dropdown-toggle btn btn-primary btn-block" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    <span id="measurements_dropdown_label">Glucose</span>
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="measurements_dropdown_label">
-                    <li><a href="#glucose" id="glucose_dropdown_btn">Glucose</a></li>
-                    <li><a href="#bloodPressure" id="bloodPressure_dropdown_btn">Blood Pressure</a></li>
-                    <li><a href="#weight" id="weight_dropdown_btn">Weight</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#calories" id="calories_dropdown_btn">Calories</a></li>
-                    <li><a href="#exercise" id="exercise_dropdown_btn">Exercise</a></li>
-                    <li><a href="#sleep" id="sleep_dropdown_btn">Sleep</a></li>
-                </ul>
-            </div>
-        
-            <!-- tabs for small screens and larger -->
-            <div id="measurements_nav" class="panel-heading collapse navbar-collapse">
-                <ul id="measurements_tabs" class="nav nav-tabs nav-justified" role="tablist">
-                    <li class="measurement-tab<?=$glucoseActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#glucose" id="glucose_tab_btn" aria-controls="glucose" role="tab" data-toggle="tooltip" title="Switch to glucose tracker">Glucose</a></li>
-                    <li class="measurement-tab<?=$bloodPressureActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#bloodPressure" id="bloodPressure_tab_btn" aria-controls="bloodPressure" role="tab" data-toggle="tooltip" title="Switch to blood pressure tracker">Blood Pressure</a></li>
-                    <li class="measurement-tab<?=$weightActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#weight" id="weight_tab_btn" aria-controls="weight" role="tab" data-toggle="tooltip" title="Switch to weight tracker">Weight</a></li>
-                    <li class="measurement-tab<?=$caloriesActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#calories" id="calories_tab_btn" aria-controls="calories" role="tab" data-toggle="tooltip" title="Switch to calorie tracker">Calories</a></li>
-                    <li class="measurement-tab<?=$exerciseActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#exercise" id="exercise_tab_btn" aria-controls="exercise" role="tab" data-toggle="tooltip" title="Switch to exercise tracker">Exercise</a></li>
-                    <li class="measurement-tab<?=$sleepActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#sleep" id="sleep_tab_btn" aria-controls="sleep" role="tab" data-toggle="tooltip" title="Switch to sleep tracker">Sleep</a></li>
-                </ul>
-            </div>
-
-            <!-- Main content -->
-            <div class="tab-content">
-                <section role="tabpanel" id="glucose" class="row tab-pane<?=$glucoseActive?>">
-                    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-primary">
+                    <!-- dropdown menu for extra small screens -->
+                    <div id="measurements_dropdown" class="dropdown tooltip-help" data-toggle="tooltip" title="Switch to a different measurement tracker">
+                        <button type="button" class="dropdown-toggle btn btn-primary btn-block" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <span id="measurements_dropdown_label">Glucose</span>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="measurements_dropdown_label">
+                            <li><a href="#glucose" id="glucose_dropdown_btn">Glucose</a></li>
+                            <li><a href="#bloodPressure" id="bloodPressure_dropdown_btn">Blood Pressure</a></li>
+                            <li><a href="#weight" id="weight_dropdown_btn">Weight</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#calories" id="calories_dropdown_btn">Calories</a></li>
+                            <li><a href="#exercise" id="exercise_dropdown_btn">Exercise</a></li>
+                            <li><a href="#sleep" id="sleep_dropdown_btn">Sleep</a></li>
+                        </ul>
+                    </div>
+                
+                    <!-- tabs for small screens and larger -->
+                    <div id="measurements_nav" class="panel-heading collapse navbar-collapse">
+                        <ul id="measurements_tabs" class="nav nav-tabs nav-justified" role="tablist">
+                            <li class="measurement-tab<?=$glucoseActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#glucose" id="glucose_tab_btn" aria-controls="glucose" role="tab" data-toggle="tooltip" title="Switch to glucose tracker">Glucose</a></li>
+                            <li class="measurement-tab<?=$bloodPressureActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#bloodPressure" id="bloodPressure_tab_btn" aria-controls="bloodPressure" role="tab" data-toggle="tooltip" title="Switch to blood pressure tracker">Blood Pressure</a></li>
+                            <li class="measurement-tab<?=$weightActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#weight" id="weight_tab_btn" aria-controls="weight" role="tab" data-toggle="tooltip" title="Switch to weight tracker">Weight</a></li>
+                            <li class="measurement-tab<?=$caloriesActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#calories" id="calories_tab_btn" aria-controls="calories" role="tab" data-toggle="tooltip" title="Switch to calorie tracker">Calories</a></li>
+                            <li class="measurement-tab<?=$exerciseActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#exercise" id="exercise_tab_btn" aria-controls="exercise" role="tab" data-toggle="tooltip" title="Switch to exercise tracker">Exercise</a></li>
+                            <li class="measurement-tab<?=$sleepActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#sleep" id="sleep_tab_btn" aria-controls="sleep" role="tab" data-toggle="tooltip" title="Switch to sleep tracker">Sleep</a></li>
+                        </ul>
+                    </div>
+    
+                    <!-- Main content -->
+                    <div id="measurement_sections" class="tab-content panel-body">
+                        <section role="tabpanel" id="glucose" class="col-sm-12 tab-pane<?=$glucoseActive?>">
                             <?php GlucoseMeasurementsView::showBody($activeOptions); ?>
+                        </section>
+                        
+                        <section role="tabpanel" id="bloodPressure" class="col-sm-12 tab-pane<?=$bloodPressureActive?>">
+                            <?php BloodPressureMeasurementsView::showBody($activeOptions); ?>
+                        </section>
+                        
+                        <section role="tabpanel" id="calories" class="col-sm-12 tab-pane<?=$caloriesActive?>">
+                            <?php CalorieMeasurementsView::showBody($activeOptions); ?>
+                        </section>
+                        
+                        <section role="tabpanel" id="exercise" class="col-sm-12 tab-pane<?=$exerciseActive?>">
+                            <?php ExerciseMeasurementsView::showBody($activeOptions); ?>
+                        </section>
+                        
+                        <section role="tabpanel" id="sleep" class="col-sm-12 tab-pane<?=$sleepActive?>">
+                            <?php SleepMeasurementsView::showBody($activeOptions); ?>
+                        </section>
+                        
+                        <section role="tabpanel" id="weight" class="col-sm-12 tab-pane<?=$weightActive?>">
+                            <?php WeightMeasurementsView::showBody($activeOptions); ?>
+                        </section>
                     </div>
-                </section>
-                
-                <section role="tabpanel" id="bloodPressure" class="row tab-pane<?=$bloodPressureActive?>">
-                    <div class="col-sm-12">
-                        <?php BloodPressureMeasurementsView::showBody($activeOptions); ?>
-                    </div>
-                </section>
-                
-                <section role="tabpanel" id="calories" class="row tab-pane<?=$caloriesActive?>">
-                    <div class="col-sm-12">
-                        <?php CalorieMeasurementsView::showBody($activeOptions); ?>
-                    </div>
-                </section>
-                
-                <section role="tabpanel" id="exercise" class="row tab-pane<?=$exerciseActive?>">
-                    <div class="col-sm-12">
-                        <?php ExerciseMeasurementsView::showBody($activeOptions); ?>
-                    </div>
-                </section>
-                
-                <section role="tabpanel" id="sleep" class="row tab-pane<?=$sleepActive?>">
-                    <div class="col-sm-12">
-                        <?php SleepMeasurementsView::showBody($activeOptions); ?>
-                    </div>
-                </section>
-                
-                <section role="tabpanel" id="weight" class="row tab-pane<?=$weightActive?>">
-                    <div class="col-sm-12">
-                        <?php WeightMeasurementsView::showBody($activeOptions); ?>
-                    </div>
-                </section>
+                </div>
             </div>
-
         </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div id="firstChartType_btns" class="btn-group btn-group-justified" role="group">
+                    <div class="btn-group" role="group">
+                        <button type="button" id="firstChart_individual_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_individual?>" data-toggle="tooltip" title="Show a chart of individual blood pressure entries">
+                            Individual
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" id="firstChart_daily_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_daily?>" data-toggle="tooltip" title="Show a chart of daily blood pressure averages">
+                            Daily
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" id="firstChart_weekly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_weekly?>" data-toggle="tooltip" title="Show a chart of weekly blood pressure averages">
+                            Weekly
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" id="firstChart_monthly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_monthly?>" data-toggle="tooltip" title="Show a chart of monthly blood pressure averages">
+                            Monthly
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" id="firstChart_yearly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_yearly?>" data-toggle="tooltip" title="Show a chart of yearly blood pressure averages">
+                            Yearly
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div id="secondChartType_btns" class="btn-group btn-group-justified" role="group">
+                    <div class="btn-group" role="group">
+                        <button type="button" id="secondChart_individual_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_individual?>" data-toggle="tooltip" title="Show a chart of individual blood pressure entries">
+                            Individual
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" id="secondChart_daily_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_daily?>" data-toggle="tooltip" title="Show a chart of daily blood pressure averages">
+                            Daily
+                        </button>
+                    </div><div class="btn-group" role="group">
+                        <button type="button" id="secondChart_weekly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_weekly?>" data-toggle="tooltip" title="Show a chart of weekly blood pressure averages">
+                            Weekly
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" id="secondChart_monthly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_monthly?>" data-toggle="tooltip" title="Show a monthly of daily blood pressure averages">
+                            Monthly
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" id="secondChart_yearly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_yearly?>" data-toggle="tooltip" title="Show a chart of yearly blood pressure averages">
+                            Yearly
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
         
