@@ -28,6 +28,7 @@ class MeasurementsView{
         
         // html attribute strings required to activate/select/check/mark active options
         $msmtActive = ' active';
+        $msmtActiveClass = ' class="active"';
         $optionSelected = ' selected="selected"';
         $optionChecked = ' checked="checked"';
         $optionOk = ' class="glyphicon glyphicon-ok"';
@@ -50,6 +51,12 @@ class MeasurementsView{
                 ${$whichChart.'_'.$timePeriod} = (call_user_func(array($activeOptions, 'get'.ucfirst($whichChart).'Type')) === $timePeriod) ? $msmtActive : '';
             }
         }
+        $glucoseDropdownActive = ($activeMeasurement === 'glucose') ? $msmtActiveClass : '';
+        $bloodPressureDropdownActive = ($activeMeasurement === 'bloodPressure') ? $msmtActiveClass : '';
+        $weightDropdownActive =  ($activeMeasurement === 'weight') ? $msmtActiveClass : '';
+        $caloriesDropdownActive = ($activeMeasurement === 'calories') ? $msmtActiveClass : '';
+        $exerciseDropdownActive = ($activeMeasurement === 'exercise') ? $msmtActiveClass : '';
+        $sleepDropdownActive = ($activeMeasurement === 'sleep') ? $msmtActiveClass : '';
         
         // options that use select/option tags are retrieved here
         $timeFormat_12hour = ($activeOptions->getTimeFormat() === '12 hour') ? $optionSelected : '';
@@ -452,17 +459,17 @@ class MeasurementsView{
                     <!-- dropdown menu for extra small screens -->
                     <div id="measurements_dropdown" class="dropdown tooltip-help" data-toggle="tooltip" title="Switch to a different measurement tracker">
                         <button type="button" class="dropdown-toggle btn btn-primary btn-block" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            <span id="measurements_dropdown_label">Glucose</span>
+                            <span id="measurements_dropdown_label"><?php echo ucfirst($activeMeasurement); ?></span>
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="measurements_dropdown_label">
-                            <li><a href="#glucose" id="glucose_dropdown_btn">Glucose</a></li>
-                            <li><a href="#bloodPressure" id="bloodPressure_dropdown_btn">Blood Pressure</a></li>
-                            <li><a href="#weight" id="weight_dropdown_btn">Weight</a></li>
+                            <li<?=$glucoseDropdownActive?>><a href="#glucose" id="glucose_dropdown_btn">Glucose</a></li>
+                            <li<?=$bloodPressureDropdownActive?>><a href="#bloodPressure" id="bloodPressure_dropdown_btn">Blood Pressure</a></li>
+                            <li<?=$weightDropdownActive?>><a href="#weight" id="weight_dropdown_btn">Weight</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="#calories" id="calories_dropdown_btn">Calories</a></li>
-                            <li><a href="#exercise" id="exercise_dropdown_btn">Exercise</a></li>
-                            <li><a href="#sleep" id="sleep_dropdown_btn">Sleep</a></li>
+                            <li<?=$caloriesDropdownActive?>><a href="#calories" id="calories_dropdown_btn">Calories</a></li>
+                            <li<?=$exerciseDropdownActive?>><a href="#exercise" id="exercise_dropdown_btn">Exercise</a></li>
+                            <li<?=$sleepDropdownActive?>><a href="#sleep" id="sleep_dropdown_btn">Sleep</a></li>
                         </ul>
                     </div>
                 

@@ -1,16 +1,16 @@
 var charts = {
-	glucose_primary: null,
-	glucose_secondary: null,
-	bloodPressure_primary: null,
-	bloodPressure_secondary: null,
-	calorie_primary: null,
-	calorie_secondary: null,
-	exercise_primary: null,
-	exercise_secondary: null,
-	sleep_primary: null,
-	sleep_secondary: null,
-	weight_primary: null,
-	weight_secondary: null
+	glucose_firstChart: null,
+	glucose_secondChart: null,
+	bloodPressure_firstChart: null,
+	bloodPressure_secondChart: null,
+	calorie_firstChart: null,
+	calorie_secondChart: null,
+	exercise_firstChart: null,
+	exercise_secondChart: null,
+	sleep_firstChart: null,
+	sleep_secondChart: null,
+	weight_firstChart: null,
+	weight_secondChart: null
 }
 
 var measurementParts = {
@@ -50,7 +50,7 @@ var timePeriodStrings = {
 	monthly: {
 		period: 'month',
 		xProperty: 'month',
-		title: 'Weekly'
+		title: 'Monthly'
 	},
 	yearly: {
 		period: 'year',
@@ -82,34 +82,34 @@ $(document).ready(function() {
 	var secondChartEndID = '#'+$('#secondChartType').text()+'_'+$('#activeMeasurement').text()+'_chartEnd';
 	
 	// add date pickers for chart options
-	$('#startDate-picker_primary').datetimepicker( {
+	$('#firstChart_startDate_picker').datetimepicker( {
 		format: 'YYYY-MM-DD',
 		defaultDate: $(firstChartStartID).text(),
 //		maxDate: $(firstChartEnd).text() // I'm not sure why setting min/max dates doesn't work here...API bug?
 	} );
-	$('#startDate-picker_secondary').datetimepicker( {
+	$('#secondChart_startDate_picker').datetimepicker( {
 		format: 'YYYY-MM-DD',
 		defaultDate: $(secondChartStartID).text(),
 //		maxDate: new Date($(secondChartEnd).text())
 	} );
-	$('#endDate-picker_primary').datetimepicker( {
+	$('#firstChart_endDate_picker').datetimepicker( {
 		format: 'YYYY-MM-DD',
 		useCurrent: false, // important due to some issue with the API
 		defaultDate: $(firstChartEndID).text(),
 //		minDate: $(firstChartStart).text(),
 		showTodayButton: true
 	} );
-	$('#endDate-picker_secondary').datetimepicker( {
+	$('#secondChart_endDate_picker').datetimepicker( {
 		format: 'YYYY-MM-DD',
 		useCurrent: false, // important due to some issue with the API
 		defaultDate: $(secondChartEndID).text(),
 //		minDate: $(secondChartStart).text(),
 		showTodayButton: true
 	} );
-	var firstStartDatePicker = $('#startDate-picker_primary').data("DateTimePicker");
-	var firstEndDatePicker = $('#endDate-picker_primary').data("DateTimePicker");
-	var secondStartDatePicker = $('#startDate-picker_secondary').data("DateTimePicker");
-	var secondEndDatePicker = $('#endDate-picker_secondary').data("DateTimePicker");
+	var firstStartDatePicker = $('#firstChart_startDate_picker').data("DateTimePicker");
+	var firstEndDatePicker = $('#firstChart_endDate_picker').data("DateTimePicker");
+	var secondStartDatePicker = $('#secondChart_startDate_picker').data("DateTimePicker");
+	var secondEndDatePicker = $('#secondChart_endDate_picker').data("DateTimePicker");
 	firstStartDatePicker.maxDate(firstEndDatePicker.date());
 	firstEndDatePicker.minDate(firstStartDatePicker.date());
 	secondStartDatePicker.maxDate(secondEndDatePicker.date());
@@ -153,18 +153,24 @@ $(document).ready(function() {
 	// show/hide charts according to loaded measurements options, and disable showSecondChart checkbox if needed
 	if (!$('#options_showFirstChart').is(':checked')) {
 		$.each(measurementTypes, function(index, measType) {
-			$('#'+measType+'_charts_primary_section').hide();
-			$('#'+measType+'_charts_secondary_section').hide();
+			$('#firstChart_'+measType).hide();
+			$('#secondChart_'+measType).hide();
 		});
 		$('#options_showSecondChart').prop('disabled', true);
 		$('#options_showSecondChart').parent().addClass('disabled');
 	}
 	else if (!$('#options_showSecondChart').is(':checked')) {
 		$.each(measurementTypes, function(index, measType) {
-			$('#'+measType+'_charts_secondary_section').hide();
-			$('#'+measType+'_charts_primary_section').removeClass('col-md-6').addClass('col-md-12');
+			$('#secondChart_'+measType).hide();
+			$('#firstChart_'+measType).removeClass('col-md-6').addClass('col-md-12');
 		});
 	}
+	
+	// make chart date subtitles clickable to allow easy start/end date editing
+	$('#measurement_sections').on('click', '.firstChart-startDate', chartSubtitle_clicked);
+	$('#measurement_sections').on('click', '.firstChart-endDate', chartSubtitle_clicked);
+	$('#measurement_sections').on('click', '.secondChart-startDate', chartSubtitle_clicked);
+	$('#measurement_sections').on('click', '.secondChart-endDate', chartSubtitle_clicked);
 	
 	// assign handlers for chart date range buttons 
 	$('.btn-change-chart').click(viewNewChart);
@@ -238,10 +244,10 @@ function setOptionsChangedListeners() {
 	$('.updateCharts-btn').click(chartRange_update);
 	
 	// chart date pickers changed
-	$('#startDate-picker_primary').on('dp.change', chartStartDate_picked);
-	$('#startDate-picker_secondary').on('dp.change', chartStartDate_picked);
-	$('#endDate-picker_primary').on('dp.change', chartEndDate_picked);
-	$('#endDate-picker_secondary').on('dp.change', chartEndDate_picked);
+	$('#firstChart_startDate_picker').on('dp.change', chartStartDate_picked);
+	$('#secondChart_startDate_picker').on('dp.change', chartStartDate_picked);
+	$('#firstChart_endDate_picker').on('dp.change', chartEndDate_picked);
+	$('#secondChart_endDate_picker').on('dp.change', chartEndDate_picked);
 }
 
 // fires when any option is changed, storing the change in the server
@@ -274,8 +280,8 @@ function options_changed() {
 	optionsData.chartPlacement = 'bottom'; // TODO change this when fully implemented
 	optionsData.showFirstChart = $('#options_showFirstChart').is(':checked') ? true : false;
 	optionsData.showSecondChart = $('#options_showSecondChart').is(':checked') ? true : false;
-	optionsData.firstChartType = $('#' +moddedActMeasurement+ '_charts_primary_section .btn-change-chart.active').attr('id').split('_')[1]; // based on active chart type button
-	optionsData.secondChartType = $('#' +moddedActMeasurement+ '_charts_secondary_section .btn-change-chart.active').attr('id').split('_')[1]; // based on active chart type button
+	optionsData.firstChartType = $('#firstChartType').text();
+	optionsData.secondChartType = $('#secondChartType').text();
 	optionsData.chartLastYear = $('#options_chartLastYear').is(':checked') ? true : false;
 	optionsData.chartGroupDays = $('#options_chartGroupDays').is(':checked') ? true : false;
 	optionsData.individualBloodPressureChartStart = $('#individual_bloodPressure_chartStart').text();
@@ -373,8 +379,9 @@ function showFirstChart_clicked() {
 		
 		// hide all first charts
 		$.each(measurementTypes, function(index, measType) {
-			$('#'+measType+'_charts_primary_section').hide();        
+			$('#firstChart_'+measType).hide(); 
 		});
+		$('#firstChartType_btns').hide();
 		
 		firstChart_tab.click();
 		
@@ -384,14 +391,15 @@ function showFirstChart_clicked() {
 		secondChart_tab.removeAttr('data-toggle');
 		
 		// disable showSecondChart checkbox
-		secondChart_checkbox.prop('disabled', true);        
+		secondChart_checkbox.prop('disabled', true);
 		secondChart_checkbox.parent().addClass('disabled');
 		
 		// hide second charts if visible and uncheck second chart checkbox
-		if ($('#'+activeMeasurement+'_charts_secondary_section').is(':visible')) {
+		if ($('#secondChart_'+activeMeasurement).is(':visible')) {
 			$.each(measurementTypes, function(index, measType) {
-				$('#'+measType+'_charts_secondary_section').hide();
+				$('#secondChart_'+measType).hide();
 			});
+			$('#secondChartType_btns').hide();
 			secondChart_checkbox.prop('checked', false);
 		}
 	}
@@ -400,11 +408,13 @@ function showFirstChart_clicked() {
 	else {
 		// show all first charts, stretching first charts if needed
 		$.each(measurementTypes, function(index, measType) {
-			var firstChart = $('#'+measType+'_charts_primary_section');
+			var firstChart = $('#firstChart_'+measType);
 			firstChart.show();
+			$('#firstChartType_btns').show();
 			if (firstChart.hasClass('col-md-6'))
 				firstChart.removeClass('col-md-6').addClass('col-md-12');
 		});
+		$('#firstChartType_btns').parent().removeClass('col-md-6').addClass('col-md-12');
 		
 		// enable second chart tab
 		secondChart_tab.removeClass('disabled');
@@ -415,10 +425,10 @@ function showFirstChart_clicked() {
 		secondChart_checkbox.prop('disabled', false);
 		secondChart_checkbox.parent().removeClass('disabled');
 		
-		charts[activeMeasurement+'_primary'].reflow();
+		charts[activeMeasurement+'_firstChart'].reflow();
 	}
 	
-	options_changed();
+	options_changed(); // store optoins changes on server
 }
 
 function showSecondChart_clicked() {
@@ -428,23 +438,29 @@ function showSecondChart_clicked() {
 	
 	// showSecondChart is being unchecked
 	if (! $('#options_showSecondChart').is(':checked')) {
+		// hide all second charts and stretch all first charts
 		$.each(measurementTypes, function(index, measType) {
-			$('#'+measType+'_charts_secondary_section').hide();                                       // hide all second charts
-			$('#'+measType+'_charts_primary_section').removeClass('col-md-6').addClass('col-md-12'); // stretch all first charts
+			$('#secondChart_'+measType).hide();
+			$('#firstChart_'+measType).removeClass('col-md-6').addClass('col-md-12');
 		});
+		$('#secondChartType_btns').hide();
+		$('#firstChartType_btns').parent().removeClass('col-md-6').addClass('col-md-12');
 	}
 	
 	// showSecondChart is being checked
 	else {
+		// show all second charts and shrink all first charts
 		$.each(measurementTypes, function(index, measType) {
-			$('#'+measType+'_charts_secondary_section').show();                                       // show all second charts
-			$('#'+measType+'_charts_primary_section').removeClass('col-md-12').addClass('col-md-6');  // shrink all first charts
+			$('#secondChart_'+measType).show();
+			$('#firstChart_'+measType).removeClass('col-md-12').addClass('col-md-6');
 		});
-		charts[activeMeasurement+'_secondary'].reflow();
+		$('#secondChartType_btns').show();
+		$('#firstChartType_btns').parent().removeClass('col-md-12').addClass('col-md-6');
+		charts[activeMeasurement+'_secondChart'].reflow();
 	}
-	charts[activeMeasurement+'_primary'].reflow();
+	charts[activeMeasurement+'_firstChart'].reflow();
 	
-	options_changed();
+	options_changed(); // store options changes on server
 }
 
 // called when save changes button is clicked in units modal
@@ -570,8 +586,8 @@ function attributeNameToDisplayName(attrName) {
 // a unit of measure was selected; switch display of tables/charts/forms accordingly
 function unitsModified(measType) {
 	var table = $('#' +measType+ '_table').DataTable();
-	var primaryChart = charts[measType+ '_primary'];
-	var secondaryChart = charts[measType+ '_secondary'];
+	var primaryChart = charts[measType+ '_firstChart'];
+	var secondaryChart = charts[measType+ '_secondChart'];
 	var newUnits = $('#'+measType+'Units').text();
 	
 	// update table rows
@@ -635,17 +651,22 @@ function tab_clicked(event) {
 	var upperMeasType = measType.replace(/([a-z])([A-Z])/g, function(match, p1, p2) { return [p1, p2].join(' '); } );
 	upperMeasType = upperMeasType.replace(/^[a-z]/, function (match) { return match.toUpperCase(); } );
 
-	// show tab, change dropdown label, and deselect menu item
+	// show tab, change dropdown label, deselect menu item and select correct menu item
 	$(this).tab('show');
 	$('#measurements_dropdown_label').text(upperMeasType);
 	$('#measurements_dropdown li').removeClass('active');
+	$('#'+measType+'_dropdown_btn').parent().addClass('active');
 	
 	// update tabs appearance (in case dropdown triggered this event)
 	$('#measurements_tabs .active').removeClass('active');
 	$('#' +measType+ '_tab_btn').parent().addClass('active');
 	
-	// update current option values stored in hidden DOM data
+	// update activeMeasurement option value stored in hidden DOM data
 	$('#activeMeasurement').text(measType);
+
+	// update chart date-pickers
+	updateChartDatePickers(measType, $('#firstChartType').text(), 'firstChart');
+	updateChartDatePickers(measType, $('#secondChartType').text(), 'secondChart');
 	
 	if (measType === 'calories')
 		measType = 'calorie';
@@ -656,12 +677,18 @@ function tab_clicked(event) {
 	else
 		$('.col-visibility-exercise').hide();
 	
+	// update the charts for the new active measurement if necessary
+	if (charts[measType+'_firstChart'].options.title.text.split(' ')[0].toLowerCase() !== $('#firstChartType').text())
+		createChart(measType, $('#firstChartType').text(), 'firstChart');
+	if (charts[measType+'_secondChart'].options.title.text.split(' ')[0].toLowerCase() !== $('#secondChartType').text())
+		createChart(measType, $('#secondChartType').text(), 'secondChart');
+	
 	// redraw charts and table to avoid overflow and column alignment issues
-	charts[measType+ '_primary'].reflow();
-	charts[measType+ '_secondary'].reflow();
+	charts[measType+ '_firstChart'].reflow();
+	charts[measType+ '_secondChart'].reflow();
 	$('#' +measType+ '_table').DataTable().draw();
 	
-	options_changed();
+	options_changed(); // store options changes on server
 	
 	event.preventDefault();
 }
@@ -706,8 +733,8 @@ function editMeasurement(event) {
 				$('#oldDateTime_' +measType).val(measData.date+ ' ' +measData.time);
 				
 				// refresh charts
-				$('#' +measType+ '_charts_primary_section .active').click();
-				$('#' +measType+ '_charts_secondary_section .active').click();
+				$('#firstChartType_btns .active').click();
+				$('#secondChartType_btns .active').click();
 				
 				// change Cancel button to Done button
 				$('#cancel_edit_' +measType+ '_text').text('Done');
@@ -757,8 +784,8 @@ function deleteMeasurement(e, dt, node, config) {
 					}, 100);
 					
 					// refresh charts
-					$('#' +measType+ '_charts_primary_section .active').click();
-					$('#' +measType+ '_charts_secondary_section .active').click();
+					$('#firstChartType_btns .active').click();
+					$('#secondChartType_btns .active').click();
 				}
 				else
 					alert('delete failed: ' +response.error);
@@ -803,8 +830,8 @@ function addMeasurement(event) {
 				setTimeout(function() { $(newRow.node()).removeClass('success'); }, 3000);
 				
 				// refresh charts
-				$('#' +measType+ '_charts_primary_section .active').click();
-				$('#' +measType+ '_charts_secondary_section .active').click();
+				$('#firstChartType_btns .active').click();
+				$('#secondChartType_btns .active').click();
 				
 				// change Cancel button to Done button
 				$('#cancel_add_' +measType+ '_text').text('Done');
@@ -1117,15 +1144,24 @@ function createCharts(measType) {
 	var secondEndDate = $('#' + secondTimePeriod +'_'+ measTypeAdjusted +'_'+ 'chartEnd').text();
 	
 	// create two charts, a primary chart w/ individual view, and a secondary chart w/ monthly view
-	createChart(measType, firstTimePeriod, firstStartDate, firstEndDate, 'primary', 'Over Past Month');
-	createChart(measType, secondTimePeriod, secondStartDate, secondEndDate, 'secondary', 'Over Past Year');
+	createChart(measType, firstTimePeriod, 'firstChart');
+	createChart(measType, secondTimePeriod, 'secondChart');
 }
 
 // create a chart with the specified properties
-function createChart(measType, timePeriods, startDate, endDate, primOrSec, subtitle) {
+function createChart(measType, timePeriods, whichChart) {
 	var avgOrTotal = '';
 	if (timePeriods !== 'individual')
 		avgOrTotal = ($.inArray(measType, cumulativeMeasurements) === -1) ? ' Averages' : ' Totals';
+	
+	if (measType === 'calorie')
+		measType = 'calories';
+	
+	var startDate = $('#'+timePeriods+'_'+measType+'_chartStart').text();
+	var endDate = $('#'+timePeriods+'_'+measType+'_chartEnd').text();
+	
+	if (measType === 'calories')
+		measType = 'calorie';
 	
 	$.ajax({
 		'url': 'measurements_get_' +measType+ '_' +timePeriodStrings[timePeriods]['period']+ '_' +startDate+ '_' +endDate,
@@ -1144,12 +1180,14 @@ function createChart(measType, timePeriods, startDate, endDate, primOrSec, subti
 					data: createChartSeries(response, timePeriodStrings[timePeriods]['xProperty'], partName, displayUnits)
 				} );
 			}
-			
+
 			// create chart
-			var chartOptions = createChart_Options(measType, timePeriodStrings[timePeriods]['title']+avgOrTotal, data, measNames, timePeriodStrings[timePeriods]['period'], subtitle, primOrSec);
-			if (charts[measType+ '_' +primOrSec] !== null)
-				charts[measType+ '_' +primOrSec].destroy();
-			charts[measType+ '_' +primOrSec] = new Highcharts.Chart(chartOptions);
+			var title = timePeriodStrings[timePeriods]['title']+avgOrTotal;
+			var subtitle = '<span class="link-text '+whichChart+'-startDate">'+startDate+'</span> to <span class="link-text '+whichChart+'-endDate">'+endDate+'</span>';
+			var chartOptions = createChart_Options(measType, title, data, timePeriodStrings[timePeriods]['period'], subtitle, whichChart);
+			if (charts[measType+'_'+whichChart] !== null)
+				charts[measType+'_'+whichChart].destroy();
+			charts[measType+'_'+whichChart] = new Highcharts.Chart(chartOptions);
 		},
 		'error': function() { alert('Error retreiving measurements'); }
 	});
@@ -1180,9 +1218,8 @@ function createChartSeries(response, xValPropertyName, partName, displayUnits) {
 	return currentSeries;
 }
 
-function createChart_Options(measType, title, data, name, per, subtitle, idSuffix) {
+function createChart_Options(measType, title, data, per, subtitle, whichChart) {
 	var series = [];
-	var numOfSeriesData = data.length;
 	var xValue;
 	
 	var dayValue = function(value) {
@@ -1215,11 +1252,12 @@ function createChart_Options(measType, title, data, name, per, subtitle, idSuffi
 	var chartOptions =
 		{
 			chart: {
-				renderTo: measType+ '_chart_' +idSuffix,
+				renderTo: whichChart+'_'+measType,
 				type: 'line'
 			},
 			title: { text: title },
-			subtitle: { text: subtitle },
+			subtitle: { text: subtitle, useHTML: true },
+			credits: { enabled: false },
 			xAxis: {
 				type: 'category',
 				labels: {
@@ -1298,13 +1336,13 @@ function createChart_Options(measType, title, data, name, per, subtitle, idSuffi
 
 // called by the update chart button in options
 function chartRange_update() {
-	var primOrSec = $(this).attr('id').split('_')[1]; // update charts button ID example: updateCharts_primary
+	var whichChart = $(this).attr('id').split('_')[0]; // update charts button ID example: firstChart_update_btn
 	var measType = $('#activeMeasurement').text();
-	var startDate = $('#options_startDate_' +primOrSec+ '-chart').val();       // appropriate text input box controlled by a date picker
-	var endDate = $('#options_endDate_' +primOrSec+ '-chart').val();           // appropriate text input box controlled by a date picker
+	var startDate = $('#options_'+whichChart+'_startDate').val();       // appropriate text input box controlled by a date picker
+	var endDate = $('#options_'+whichChart+'_endDate').val();           // appropriate text input box controlled by a date picker
 	measType = (measType === 'calories') ? 'calorie' : measType;
 	var avgOrTotal = ($.inArray(measType, cumulativeMeasurements) === -1) ? 'Averages' : 'Totals';
-	var timePeriods = $('#' +measType+ '_charts_' +primOrSec+ '_section .btn-change-chart.active').attr('id').split('_')[1];
+	var timePeriods = $('#'+whichChart+'Type').text();
 	
 	// store updated start and end data for this chart in the DOM
 	var measTypeAdjusted = (measType === 'calorie') ? 'calories' : measType;
@@ -1312,7 +1350,7 @@ function chartRange_update() {
 	$('#' + timePeriods +'_'+ measTypeAdjusted +'_'+ 'chartEnd').text(endDate);
 	
 	// create the new chart
-	createChart(measType, timePeriods, startDate, endDate, primOrSec, 'Over Past Month');
+	createChart(measType, timePeriods, whichChart);
 	
 	// store changes
 	options_changed();
@@ -1320,43 +1358,76 @@ function chartRange_update() {
 
 // called by the chart selection buttons below each chart
 function viewNewChart(event) {
-	// deactivate/activate associated buttons
-	$(this).parent().parent().find('.active').removeClass('active');
-	$(this).addClass('active');
-	
 	// collect information on the new chart to load
 	var id_pieces = $(this).attr('id').split('_');
-	var measType = id_pieces[0];
+	var measType = $('#activeMeasurement').text();
+	var whichChart = id_pieces[0];
 	var chartType = id_pieces[1];
-	var primOrSec = id_pieces[4];
-	var measTypeAdjusted = (measType === 'calorie') ? 'calories' : measType;
-	var startDate = $('#' + chartType +'_'+ measTypeAdjusted +'_chartStart').text();
-	var endDate = $('#' + chartType +'_'+ measTypeAdjusted +'_chartEnd').text();
+	var startDate = $('#'+chartType+'_'+measType+'_chartStart').text();
+	var endDate = $('#'+chartType+'_'+measType+'_chartEnd').text();
 	
-	// clear min/max on date pickers so no conflicts arise when setting the new dates
-	$('#startDate-picker_'+primOrSec).data("DateTimePicker").maxDate(false);
-	$('#endDate-picker_'+primOrSec).data("DateTimePicker").minDate(false);
+	// deactivate/activate associated buttons
+	$('#'+whichChart+'Type_btns').find('.active').removeClass('active');
+	$(this).addClass('active');
+	
+	// update chart type in hidden DOM data
+	$('#'+whichChart+'Type').text(chartType);
 	
 	// update dates in options area
-	$('#startDate-picker_' +primOrSec).data('DateTimePicker').date(startDate);
-	$('#endDate-picker_' +primOrSec).data('DateTimePicker').date(endDate);
+	updateChartDatePickers(measType, chartType, whichChart);
 	
-	// create the new chart
-	createChart(measType, chartType, startDate, endDate, primOrSec, 'Over Past Month');
+	// store changes on server
+	options_changed();
+	
+	// create new chart for the active measurement
+	createChart(measType, chartType, whichChart);
+}
+
+function chartSubtitle_clicked() {
+	var pieces = $(this).attr('class').split(' ')[1].split('-');
+	var whichChart = pieces[0];
+	var startOrEnd = pieces[1];
+
+	// open options well if necessary and select the correct chart options tab
+	if (! $('#options').is(':visible'))
+		$('#options_btn').click();
+	$('#'+whichChart+'Options_tab').click();
+	
+	// scroll-animate to charts tab and then open the correct date-picker
+	$('html, body').animate({
+        scrollTop: $("#firstChartOptions_tab").offset().top
+    }, 200);
+	setTimeout(function() {
+		$('#'+whichChart+'_'+startOrEnd+'_picker').data('DateTimePicker').show();
+	}, 200);
+}
+
+// updates start/end dates in options area for one of the charts
+function updateChartDatePickers(measType, chartType, whichChart) {
+	var startDate = $('#'+chartType+'_'+measType+'_chartStart').text();
+	var endDate = $('#'+chartType+'_'+measType+'_chartEnd').text();
+	
+	// clear min/max on date pickers so no conflicts arise when setting the new dates
+	$('#'+whichChart+'_startDate_picker').data("DateTimePicker").maxDate(false);
+	$('#'+whichChart+'_endDate_picker').data("DateTimePicker").minDate(false);
+	
+	// update dates in options area
+	$('#'+whichChart+'_startDate_picker').data('DateTimePicker').date(startDate);
+	$('#'+whichChart+'_endDate_picker').data('DateTimePicker').date(endDate);
 }
 
 // called when a chart date range date picker date changed in options
 function chartStartDate_picked() {
 	// update linked date picker's limits
-	var primOrSec = $(this).attr('id').split('_')[1];
-	$('#endDate-picker_'+primOrSec).data("DateTimePicker").minDate($('#startDate-picker_'+primOrSec).data("DateTimePicker").date());
+	var whichChart = $(this).attr('id').split('_')[0];
+	$('#'+whichChart+'_endDate_picker').data("DateTimePicker").minDate($('#'+whichChart+'_startDate_picker').data("DateTimePicker").date());
 }
 
 // called when a chart date range date picker date changed in options
 function chartEndDate_picked() {
 	// update linked date picker's limits
-	var primOrSec = $(this).attr('id').split('_')[1];
-	$('#startDate-picker_'+primOrSec).data("DateTimePicker").maxDate($('#endDate-picker_'+primOrSec).data("DateTimePicker").date());
+	var whichChart = $(this).attr('id').split('_')[0];
+	$('#'+whichChart+'_startDate_picker').data("DateTimePicker").maxDate($('#'+whichChart+'_endDate_picker').data("DateTimePicker").date());
 }
 
 function monthNumToShortName(num, isZeroBased) {
