@@ -164,6 +164,8 @@ $(document).ready(function() {
 			$('#secondChart_'+measType).hide();
 			$('#firstChart_'+measType).removeClass('col-md-6').addClass('col-md-12');
 		});
+		$('#secondChartType_btns').hide();
+		$('#firstChartType_btns').parent().removeClass('col-md-6').addClass('col-md-12');
 	}
 	
 	// make chart date subtitles clickable to allow easy start/end date editing
