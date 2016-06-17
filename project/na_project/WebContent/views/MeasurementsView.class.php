@@ -119,7 +119,7 @@ class MeasurementsView{
                                     <div class="form-group">
                                         <div class="col-sm-12">
                                             <button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#unitsOptions_modal">
-                                                <span class="glyphicon glyphicon-modal-window" aria-hidden="true"></span>&nbsp; Choose Units
+                                                Choose Units
                                             </button>
                                             
                                             <div id="unitsOptions_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelldby="unitsOptions_label">

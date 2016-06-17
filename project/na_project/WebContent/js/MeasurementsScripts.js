@@ -147,6 +147,7 @@ $(document).ready(function() {
 		table.button(0, null).container().addClass('btn-group-justified');
 		table.on('select', row_clicked);
 		table.on('deselect', row_deselected);
+		table.page.len($('#options_numRows').val()); // shouldn't be necessary, but initial pageLength option seems buggy
 	});
 	
 	// show/hide table according to loaded measurements options
@@ -234,7 +235,9 @@ function window_resized() {
 			$('.firstChart').removeClass('col-sm-6').addClass('col-sm-12');
 			$('#firstChartType_btns').parent().removeClass('col-sm-6').addClass('col-sm-12');
 			
-			charts[$('#activeMeasurement').text()+'_firstChart'].reflow();
+			var activeMeasurement = $('#activeMeasurement').text();
+			activeMeasurement = ($('#activeMeasurement').text() === 'calories') ? 'calorie' : activeMeasurement;
+			charts[activeMeasurement+'_firstChart'].reflow();
 		}
 	}
 	
@@ -984,14 +987,15 @@ function tableOptions(measType) {
 		scrollCollapse: true,
 		lengthChange: false,
 		processing: true,
+		paging: true,
 		pagingType: 'numbers',
 		pageLength: $('#options_numRows').val(),
 		select: { style: 'single' },
 		dom: 
+			"<'row'<'col-sm-12'B>>" +              // set add/edit/delete buttons as top row
 			"<'row'<'col-sm-6'><'col-sm-6'f>>" +   // sets filter (search) box in upper right
 			"<'row'<'col-sm-12'tr>>" +             // table and processing message
-			"<'row'<'col-sm-5'i><'col-sm-7'p>>" +  // page info and pagination controls in buttom left and right, respectively
-			"<'row'<'col-sm-12'B>>",               // set add/edit/delete buttons as bottom row
+			"<'row'<'col-sm-5'i><'col-sm-7'p>>",   // page info and pagination controls in buttom left and right, respectively
 		createdRow: function (row, data, dataIndex) { // add a tooltip to the row
 			$(row).attr('data-toggle', 'tooltip').attr('title', 'Rows can be selected for editing/deletion').addClass('dynamic-tooltip tooltip-help');
 		},
@@ -1105,6 +1109,7 @@ function table_addEditDeleteButtons_options(measType) {
 					text: 'Add',
 					init: function (dt, node, config) {
 						node.attr('id', measType+ '_add');
+						node.addClass('addMeasurement_btn')
 						node.attr('data-toggle', 'tooltip').attr('title', 'Show a form for adding a new ' +measType+ ' entry.').addClass('tooltip-help');
 						node.prepend('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;');
 					},

@@ -1,3 +1,7 @@
+#measurement_sections .addMeasurement_btn {
+	background-color: #5cb85c;
+}
+
 span.link-text {
 	cursor: pointer;
 }
@@ -150,8 +154,6 @@ legend {
 
 #closeOptions_btn {
 	float: right;
-	color: #ffffff;
-	opacity: 0.4;
 }
 #options > div {
 	padding-bottom: 0;
