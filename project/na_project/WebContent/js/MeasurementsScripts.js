@@ -85,17 +85,20 @@ $(document).ready(function() {
 	$('#firstChart_startDate_picker').datetimepicker( {
 		format: 'YYYY-MM-DD',
 		defaultDate: $(firstChartStartID).text(),
+		focusOnShow: false,
 //		maxDate: $(firstChartEnd).text() // I'm not sure why setting min/max dates doesn't work here...API bug?
 	} );
 	$('#secondChart_startDate_picker').datetimepicker( {
 		format: 'YYYY-MM-DD',
 		defaultDate: $(secondChartStartID).text(),
+		focusOnShow: false,
 //		maxDate: new Date($(secondChartEnd).text())
 	} );
 	$('#firstChart_endDate_picker').datetimepicker( {
 		format: 'YYYY-MM-DD',
 		useCurrent: false, // important due to some issue with the API
 		defaultDate: $(firstChartEndID).text(),
+		focusOnShow: false,
 //		minDate: $(firstChartStart).text(),
 		showTodayButton: true
 	} );
@@ -103,6 +106,7 @@ $(document).ready(function() {
 		format: 'YYYY-MM-DD',
 		useCurrent: false, // important due to some issue with the API
 		defaultDate: $(secondChartEndID).text(),
+		focusOnShow: false,
 //		minDate: $(secondChartStart).text(),
 		showTodayButton: true
 	} );
@@ -202,6 +206,11 @@ $(document).ready(function() {
 	$('#measurements_nav [data-toggle="tooltip"]').tooltip();
 	
 	setOptionsChangedListeners();
+	
+	$('#closeOptions_btn').click(function() {
+		$('#options_btn').click();
+		return false;
+	});
 });
 
 function setOptionsChangedListeners() {
@@ -1389,19 +1398,23 @@ function chartSubtitle_clicked() {
 	var pieces = $(this).attr('class').split(' ')[1].split('-');
 	var whichChart = pieces[0];
 	var startOrEnd = pieces[1];
-
-	// open options well if necessary and select the correct chart options tab
-	if (! $('#options').is(':visible'))
-		$('#options_btn').click();
-	$('#'+whichChart+'Options_tab').click();
 	
-	// scroll-animate to charts tab and then open the correct date-picker
-	$('html, body').animate({
-        scrollTop: $("#firstChartOptions_tab").offset().top
-    }, 200);
-	setTimeout(function() {
-		$('#'+whichChart+'_'+startOrEnd+'_picker').data('DateTimePicker').show();
-	}, 200);
+	// function to scroll-animate to charts tab and then open the correct date-picker
+	var scrollAndClickDatePicker = function() {
+		$('html, body').animate( { scrollTop: $("#firstChartOptions_tab").offset().top }, 200);
+		setTimeout(function() {
+			$('#'+whichChart+'Options_tab').click();
+			$('#'+whichChart+'_'+startOrEnd+'_picker').data('DateTimePicker').show();
+		}, 200);
+	}
+
+	// open options well if necessary and open the correct date-picker
+	if ($('#options').is(':visible'))
+		scrollAndClickDatePicker();
+	else {
+		$('#options_btn').click();
+		setTimeout(scrollAndClickDatePicker, 300);
+	}
 }
 
 // updates start/end dates in options area for one of the charts

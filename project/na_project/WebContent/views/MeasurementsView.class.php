@@ -104,15 +104,22 @@ class MeasurementsView{
             
                         <form action="meausrementsOptions_edit" id="measurementsOptionsForm" method="post" role="form" class="form-horizontal">
                             <div class="row">
-                                <fieldset class="col-sm-4">
+                                <fieldset class="col-sm-4 col-md-3">
                                     <legend>General Options</legend>
                                     
                                     <!-- General Options -->
                                     
                                     <div class="form-group">
-                                        <div class="col-sm-6">
+                                        <div class="checkbox col-sm-12">
+                                            <label>
+                                                <input type="checkbox" id="options_showTooltips" name="showTooltips"<?=$showTooltips?> />Show Help Tooltips
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
                                             <button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#unitsOptions_modal">
-                                                <span class="glyphicon glyphicon-modal-window" aria-hidden="true"></span>&nbsp; Units
+                                                <span class="glyphicon glyphicon-modal-window" aria-hidden="true"></span>&nbsp; Choose Units
                                             </button>
                                             
                                             <div id="unitsOptions_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelldby="unitsOptions_label">
@@ -129,7 +136,7 @@ class MeasurementsView{
                                                         
                                                             <div class="row">
                                                                 <div class="col-xs-12">
-                                                                    <p>Only those types of measurements that have multiple choices for units of measurement are shown.</p>
+                                                                    <p>Only those types of measurements that have multiple choices of units are shown.</p>
                                                                 </div>
                                                             </div>
                                                         
@@ -192,12 +199,14 @@ class MeasurementsView{
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="options_timeFormat">Time Format</label>
-                                        <select id="options_timeFormat" name="timeFormat" class="form-control">
-                                            <option<?=$timeFormat_12hour?>>12 hour</option>
-                                            <option<?=$timeFormat_24hour?>>24 hour</option>
-                                        </select>
+                                    <div class="form-group select-form-group">
+                                        <label for="options_timeFormat" class="control-label col-xs-5 col-sm-6">Time Format:</label>
+                                        <div class="col-xs-7 col-sm-6">
+                                            <select id="options_timeFormat" name="timeFormat" class="form-control">
+                                                <option<?=$timeFormat_12hour?>>12 hour</option>
+                                                <option<?=$timeFormat_24hour?>>24 hour</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <!-- 
                                     <div class="form-group">
@@ -209,29 +218,22 @@ class MeasurementsView{
                                         </select>
                                     </div>
                                      -->
-                                    <div class="form-group">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" id="options_showTooltips" name="showTooltips"<?=$showTooltips?> />Show Help Tooltips
-                                            </label>
-                                        </div>
-                                    </div>
                                 
                                 </fieldset>
-                                <fieldset class="col-sm-4">
+                                <fieldset class="col-sm-4 col-md-3">
                                     <legend>Table Options</legend>
                                 
                                     <!-- Table Options -->
                                     <div class="form-group">
-                                        <div class="checkbox">
+                                        <div class="checkbox col-sm-12">
                                             <label>
                                                 <input type="checkbox" id="options_showTable" name="showTable"<?=$showTable?> />Show table
                                             </label>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <div id="columns_dropdown" class="dropdown" data-toggle="tooltip" title="Choose the columns you want shown in the table">
-                                            <button type="button" class="dropdown-toggle btn btn-default" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <div id="columns_dropdown" class="dropdown col-sm-12" data-toggle="tooltip" title="Choose the columns you want shown in the table">
+                                            <button type="button" class="dropdown-toggle btn btn-default btn-block" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                                 <span id="columns_dropdown_label">Show/Hide Columns</span>
                                                 <span class="caret"></span>
                                             </button>
@@ -245,206 +247,203 @@ class MeasurementsView{
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="options_numRows">Rows per page</label>
-                                        <input type="text" id="options_numRows" name="numRows" value="<?=$activeOptions->getNumRows()?>" class="form-control" size="5" maxlength="5" pattern="^[0-9]+$" title="Enter a positive number of 5 digits or less" />
+                                        <label for="options_numRows" class="control-label col-xs-5 col-sm-8">Rows per page:</label>
+                                        <div class="col-xs-7 col-sm-4">
+                                            <input type="text" id="options_numRows" name="numRows" value="<?=$activeOptions->getNumRows()?>" class="form-control" size="5" maxlength="5" pattern="^[0-9]+$" title="Enter a positive number of 5 digits or less" />
+                                        </div>
                                     </div>
                                     
                                 </fieldset>
-                                <fieldset class="col-sm-4">
+                                <fieldset class="col-sm-4 col-md-6">
+                                    <legend>Chart Options</legend>
+                                    
+                                    <div class="form-group">
+                                        <div class="checkbox col-xs-6">
+                                            <label>
+                                                <input type="checkbox" id="options_showFirstChart" name="showFirstChart"<?=$showFirstChart?> />1<sup>st</sup> chart
+                                            </label>
+                                        </div>
+                                        <div class="checkbox col-xs-6" id="options_showSecondChart_checkbox">
+                                            <label>
+                                                <input type="checkbox" id="options_showSecondChart" name="showSecondChart"<?=$showSecondChart?> />2<sup>nd</sup> chart
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <!-- 
                                     <div class="form-group">
                                         <div class="col-xs-6">
                                             <div class="checkbox">
                                                 <label>
-                                                    <input type="checkbox" id="options_showFirstChart" name="showFirstChart"<?=$showFirstChart?> />Show chart
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="checkbox">
-                                                <label id="options_showSecondChart_label">
-                                                    <input type="checkbox" id="options_showSecondChart" name="showSecondChart"<?=$showSecondChart?> />Show second chart
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-xs-6">
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" id="options_lastYear" name="lastYear"<?=$chartLastYear?> />Show last year
+                                                    <input type="checkbox" id="options_lastYear" name="lastYear"<?php//$chartLastYear?> />Show last year
                                                 </label>
                                             </div>
                                         </div>
                                         <div class="col-xs-6">
                                             <div class="checkbox">
                                                 <label>
-                                                    <input type="checkbox" id="options_dailyAverages" name="dailyAverages"<?=$chartGroupDays?> />Group days
+                                                    <input type="checkbox" id="options_dailyAverages" name="dailyAverages"<?php//$chartGroupDays?> />Group days
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
+                                     -->
                                     
                                     <!-- tabs for each chart's settings -->
                                     <div>
                                         <ul id="chartsOptions_tabs" class="nav nav-tabs nav-justified" role="tablist">
                                             <li class="active" role="presentation">
-                                                <a class="tooltip-help" href="#firstChartOptions" id="firstChartOptions_tab" aria-controls="firstChartOptions" role="tab" data-toggle="tab" title="Settings for the first chart">First Chart</a>
+                                                <a class="tooltip-help" href="#firstChartOptions" id="firstChartOptions_tab" aria-controls="firstChartOptions" role="tab" data-toggle="tab" title="Settings for the first chart">1<sup>st</sup> Chart</a>
                                             </li>
                                             <li role="presentation">
-                                                <a class="tooltip-help" href="#secondChartOptions" id="secondChartOptions_tab" aria-controls="secondChartOptions" role="tab" data-toggle="tab" title="Settings for a second chart, which is available for larger screen sizes">Second Chart</a>
+                                                <a class="tooltip-help" href="#secondChartOptions" id="secondChartOptions_tab" aria-controls="secondChartOptions" role="tab" data-toggle="tab" title="Settings for a second chart, which is available for larger screen sizes">2<sup>nd</sup> Chart</a>
                                             </li>
                                         </ul>
                                     </div>
                                     
-                                    <!-- Chart Settings -->
                                     <div class="tab-content">
-                                    
                                         <!-- First Chart's Settings -->
-                                        <section role="tabpanel" id="firstChartOptions" class="row tab-pane active">
-                                            <div class="col-sm-12">
-                                            
-                                                <div class="form-group">
-                                                    <div class="col-xs-6">
-                                                        <label for="options_firstChart_startDate">Start Date</label>
-                                                        <div id="firstChart_startDate_picker" class="input-group date date-picker">
-                                                            <input type="text" id="options_firstChart_startDate" name="firstChartStartDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
-                                                            <span class="input-group-addon">
-                                                                <span class="glyphicon glyphicon-calendar"></span>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xs-6">
-                                                        <label for="options_firstChart_endDate">End Date</label>
-                                                        <div id="firstChart_endDate_picker" class="input-group date date-picker">
-                                                            <input type="text" id="options_firstChart_endDate" name="firstChartEndDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
-                                                            <span class="input-group-addon">
-                                                                <span class="glyphicon glyphicon-calendar"></span>
-                                                            </span>
-                                                        </div>
-                                                    </div>
+                                        <section role="tabpanel" id="firstChartOptions" class="tab-pane active">
+                                            <div class="form-group">
+                                                <label for="options_firstChart_startDate" class="control-label col-xs-5 col-md-4 col-md-offset-2">Start Date:</label>
+                                                <div id="firstChart_startDate_picker" class="input-group date date-picker col-xs-7 col-md-4">
+                                                    <input type="text" id="options_firstChart_startDate" name="firstChartStartDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
+                                                    <span class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                    </span>
                                                 </div>
-                                                <div class="form-group">
-                                                    <div class="col-xs-8 col-xs-offset-2">
-                                                        <button id="firstChart_update_btn" type="button" class="btn btn-default btn-block updateCharts-btn">
-                                                            <span>Update Chart</span>
-                                                        </button>
-                                                    </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="options_firstChart_endDate" class="control-label col-xs-5 col-md-4 col-md-offset-2">End Date:</label>
+                                                <div id="firstChart_endDate_picker" class="input-group date date-picker col-xs-7 col-md-4">
+                                                    <input type="text" id="options_firstChart_endDate" name="firstChartEndDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
+                                                    <span class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                    </span>
                                                 </div>
-                                                
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-xs-8 col-xs-offset-2">
+                                                    <button id="firstChart_update_btn" type="button" class="btn btn-default btn-block updateCharts-btn">
+                                                        <span>Update Chart</span>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </section>
                                         
                                         <!-- Second Chart's Settings -->
-                                        <section role="tabpanel" id="secondChartOptions" class="row tab-pane">
-                                            <div class="col-sm-12">
-                                            
-                                                <div class="form-group">
-                                                    <div class="col-xs-6">
-                                                        <label for="options_secondChart_startDate">Start Date</label>
-                                                        <div id="secondChart_startDate_picker" class="input-group date date-picker">
-                                                            <input type="text" id="options_secondChart_startDate" name="secondChartStartDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
-                                                            <span class="input-group-addon">
-                                                                <span class="glyphicon glyphicon-calendar"></span>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xs-6">
-                                                        <label for="options_secondChart_endDate">End Date</label>
-                                                        <div id="secondChart_endDate_picker" class="input-group date date-picker">
-                                                            <input type="text" id="options_secondChart_endDate" name="secondChartEndDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
-                                                            <span class="input-group-addon">
-                                                                <span class="glyphicon glyphicon-calendar"></span>
-                                                            </span>
-                                                        </div>
-                                                    </div>
+                                        <section role="tabpanel" id="secondChartOptions" class="tab-pane">
+                                            <div class="form-group">
+                                                <label for="options_secondChart_startDate" class="control-label col-xs-5 col-md-4 col-md-offset-2">Start Date:</label>
+                                                <div id="secondChart_startDate_picker" class="input-group date date-picker col-xs-7 col-md-4">
+                                                    <input type="text" id="options_secondChart_startDate" name="secondChartStartDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
+                                                    <span class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                    </span>
                                                 </div>
-                                                <div class="form-group">
-                                                    <div class="col-xs-8 col-xs-offset-2">
-                                                        <button id="secondChart_update_btn" type="button" class="btn btn-default btn-block updateCharts-btn">
-                                                            <span>Update Chart</span>
-                                                        </button>
-                                                    </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="options_secondChart_endDate" class="control-label col-xs-5 col-md-4 col-md-offset-2">End Date:</label>
+                                                <div id="secondChart_endDate_picker" class="input-group date date-picker col-xs-7 col-md-4">
+                                                    <input type="text" id="options_secondChart_endDate" name="secondChartEndDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
+                                                    <span class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                    </span>
                                                 </div>
-                                                
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-xs-8 col-xs-offset-2">
+                                                    <button id="secondChart_update_btn" type="button" class="btn btn-default btn-block updateCharts-btn">
+                                                        <span>Update Chart</span>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </section>
-                                        <section id="chart-data" class="hidden-data">
-                                            <div id="userName"><?=$_SESSION['profile']->getUserName()?></div>
-                                            <div id="firstChartType"><?=$activeOptions->getFirstChartType()?></div>
-                                            <div id="secondChartType"><?=$activeOptions->getSecondChartType()?></div>
-                                            <div id="activeMeasurement"><?=$activeOptions->getActiveMeasurement()?></div>
-                                            <div id="bloodPressureUnits"><?=$activeOptions->getBloodPressureUnits()?></div>
-                                            <div id="calorieUnits"><?=$activeOptions->getCalorieUnits()?></div>
-                                            <div id="exerciseUnits"><?=$activeOptions->getExerciseUnits()?></div>
-                                            <div id="glucoseUnits"><?=$activeOptions->getGlucoseUnits()?></div>
-                                            <div id="sleepUnits"><?=$activeOptions->getSleepUnits()?></div>
-                                            <div id="weightUnits"><?=$activeOptions->getWeightUnits()?></div>
-                                            <div id="durationFormat"><?=$activeOptions->getDurationFormat()?></div>
-                                            <div id="individual_bloodPressure_chartStart"><?=$activeOptions->getIndividualBloodPressureChartStart()?></div>
-                                            <div id="individual_bloodPressure_chartEnd"><?=$activeOptions->getIndividualBloodPressureChartEnd()?></div>
-                                            <div id="daily_bloodPressure_chartStart"><?=$activeOptions->getDailyBloodPressureChartStart()?></div>
-                                            <div id="daily_bloodPressure_chartEnd"><?=$activeOptions->getDailyBloodPressureChartEnd()?></div>
-                                            <div id="weekly_bloodPressure_chartStart"><?=$activeOptions->getWeeklyBloodPressureChartStart()?></div>
-                                            <div id="weekly_bloodPressure_chartEnd"><?=$activeOptions->getWeeklyBloodPressureChartEnd()?></div>
-                                            <div id="monthly_bloodPressure_chartStart"><?=$activeOptions->getMonthlyBloodPressureChartStart()?></div>
-                                            <div id="monthly_bloodPressure_chartEnd"><?=$activeOptions->getMonthlyBloodPressureChartEnd()?></div>
-                                            <div id="yearly_bloodPressure_chartStart"><?=$activeOptions->getYearlyBloodPressureChartStart()?></div>
-                                            <div id="yearly_bloodPressure_chartEnd"><?=$activeOptions->getYearlyBloodPressureChartEnd()?></div>
-                                            <div id="individual_calories_chartStart"><?=$activeOptions->getIndividualCaloriesChartStart()?></div>
-                                            <div id="individual_calories_chartEnd"><?=$activeOptions->getIndividualCaloriesChartEnd()?></div>
-                                            <div id="daily_calories_chartStart"><?=$activeOptions->getDailyCaloriesChartStart()?></div>
-                                            <div id="daily_calories_chartEnd"><?=$activeOptions->getDailyCaloriesChartEnd()?></div>
-                                            <div id="weekly_calories_chartStart"><?=$activeOptions->getWeeklyCaloriesChartStart()?></div>
-                                            <div id="weekly_calories_chartEnd"><?=$activeOptions->getWeeklyCaloriesChartEnd()?></div>
-                                            <div id="monthly_calories_chartStart"><?=$activeOptions->getMonthlyCaloriesChartStart()?></div>
-                                            <div id="monthly_calories_chartEnd"><?=$activeOptions->getMonthlyCaloriesChartEnd()?></div>
-                                            <div id="yearly_calories_chartStart"><?=$activeOptions->getYearlyCaloriesChartStart()?></div>
-                                            <div id="yearly_calories_chartEnd"><?=$activeOptions->getYearlyCaloriesChartEnd()?></div>
-                                            <div id="individual_exercise_chartStart"><?=$activeOptions->getIndividualExerciseChartStart()?></div>
-                                            <div id="individual_exercise_chartEnd"><?=$activeOptions->getIndividualExerciseChartEnd()?></div>
-                                            <div id="daily_exercise_chartStart"><?=$activeOptions->getDailyExerciseChartStart()?></div>
-                                            <div id="daily_exercise_chartEnd"><?=$activeOptions->getDailyExerciseChartEnd()?></div>
-                                            <div id="weekly_exercise_chartStart"><?=$activeOptions->getWeeklyExerciseChartStart()?></div>
-                                            <div id="weekly_exercise_chartEnd"><?=$activeOptions->getWeeklyExerciseChartEnd()?></div>
-                                            <div id="monthly_exercise_chartStart"><?=$activeOptions->getMonthlyExerciseChartStart()?></div>
-                                            <div id="monthly_exercise_chartEnd"><?=$activeOptions->getMonthlyExerciseChartEnd()?></div>
-                                            <div id="yearly_exercise_chartStart"><?=$activeOptions->getYearlyExerciseChartStart()?></div>
-                                            <div id="yearly_exercise_chartEnd"><?=$activeOptions->getYearlyExerciseChartEnd()?></div>
-                                            <div id="individual_glucose_chartStart"><?=$activeOptions->getIndividualGlucoseChartStart()?></div>
-                                            <div id="individual_glucose_chartEnd"><?=$activeOptions->getIndividualGlucoseChartEnd()?></div>
-                                            <div id="daily_glucose_chartStart"><?=$activeOptions->getDailyGlucoseChartStart()?></div>
-                                            <div id="daily_glucose_chartEnd"><?=$activeOptions->getDailyGlucoseChartEnd()?></div>
-                                            <div id="weekly_glucose_chartStart"><?=$activeOptions->getWeeklyGlucoseChartStart()?></div>
-                                            <div id="weekly_glucose_chartEnd"><?=$activeOptions->getWeeklyGlucoseChartEnd()?></div>
-                                            <div id="monthly_glucose_chartStart"><?=$activeOptions->getMonthlyGlucoseChartStart()?></div>
-                                            <div id="monthly_glucose_chartEnd"><?=$activeOptions->getMonthlyGlucoseChartEnd()?></div>
-                                            <div id="yearly_glucose_chartStart"><?=$activeOptions->getYearlyGlucoseChartStart()?></div>
-                                            <div id="yearly_glucose_chartEnd"><?=$activeOptions->getYearlyGlucoseChartEnd()?></div>
-                                            <div id="individual_sleep_chartStart"><?=$activeOptions->getIndividualSleepChartStart()?></div>
-                                            <div id="individual_sleep_chartEnd"><?=$activeOptions->getIndividualSleepChartEnd()?></div>
-                                            <div id="daily_sleep_chartStart"><?=$activeOptions->getDailySleepChartStart()?></div>
-                                            <div id="daily_sleep_chartEnd"><?=$activeOptions->getDailySleepChartEnd()?></div>
-                                            <div id="weekly_sleep_chartStart"><?=$activeOptions->getWeeklySleepChartStart()?></div>
-                                            <div id="weekly_sleep_chartEnd"><?=$activeOptions->getWeeklySleepChartEnd()?></div>
-                                            <div id="monthly_sleep_chartStart"><?=$activeOptions->getMonthlySleepChartStart()?></div>
-                                            <div id="monthly_sleep_chartEnd"><?=$activeOptions->getMonthlySleepChartEnd()?></div>
-                                            <div id="yearly_sleep_chartStart"><?=$activeOptions->getYearlySleepChartStart()?></div>
-                                            <div id="yearly_sleep_chartEnd"><?=$activeOptions->getYearlySleepChartEnd()?></div>
-                                            <div id="individual_weight_chartStart"><?=$activeOptions->getIndividualWeightChartStart()?></div>
-                                            <div id="individual_weight_chartEnd"><?=$activeOptions->getIndividualWeightChartEnd()?></div>
-                                            <div id="daily_weight_chartStart"><?=$activeOptions->getDailyWeightChartStart()?></div>
-                                            <div id="daily_weight_chartEnd"><?=$activeOptions->getDailyWeightChartEnd()?></div>
-                                            <div id="weekly_weight_chartStart"><?=$activeOptions->getWeeklyWeightChartStart()?></div>
-                                            <div id="weekly_weight_chartEnd"><?=$activeOptions->getWeeklyWeightChartEnd()?></div>
-                                            <div id="monthly_weight_chartStart"><?=$activeOptions->getMonthlyWeightChartStart()?></div>
-                                            <div id="monthly_weight_chartEnd"><?=$activeOptions->getMonthlyWeightChartEnd()?></div>
-                                            <div id="yearly_weight_chartStart"><?=$activeOptions->getYearlyWeightChartStart()?></div>
-                                            <div id="yearly_weight_chartEnd"><?=$activeOptions->getYearlyWeightChartEnd()?></div>
-                                        </section>
+                                    </div> <!-- / tab content -->
+                                </fieldset> <!-- / Chart Options -->
+                                
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <a href="#" id="closeOptions_btn">Close Options</a>
+                                        <!-- <button type="button" id="closeOptions_btn">
+                                            <span aria-hidden="true">Close Options</span>
+                                        </button> -->
+                                    </div>
+                                </div>
                                         
-                                    </div> <!-- End Chart Settings -->
+                                    <section class="hidden-data">
+                                        <div id="userName"><?=$_SESSION['profile']->getUserName()?></div>
+                                        <div id="firstChartType"><?=$activeOptions->getFirstChartType()?></div>
+                                        <div id="secondChartType"><?=$activeOptions->getSecondChartType()?></div>
+                                        <div id="activeMeasurement"><?=$activeOptions->getActiveMeasurement()?></div>
+                                        <div id="bloodPressureUnits"><?=$activeOptions->getBloodPressureUnits()?></div>
+                                        <div id="calorieUnits"><?=$activeOptions->getCalorieUnits()?></div>
+                                        <div id="exerciseUnits"><?=$activeOptions->getExerciseUnits()?></div>
+                                        <div id="glucoseUnits"><?=$activeOptions->getGlucoseUnits()?></div>
+                                        <div id="sleepUnits"><?=$activeOptions->getSleepUnits()?></div>
+                                        <div id="weightUnits"><?=$activeOptions->getWeightUnits()?></div>
+                                        <div id="durationFormat"><?=$activeOptions->getDurationFormat()?></div>
+                                        <div id="individual_bloodPressure_chartStart"><?=$activeOptions->getIndividualBloodPressureChartStart()?></div>
+                                        <div id="individual_bloodPressure_chartEnd"><?=$activeOptions->getIndividualBloodPressureChartEnd()?></div>
+                                        <div id="daily_bloodPressure_chartStart"><?=$activeOptions->getDailyBloodPressureChartStart()?></div>
+                                        <div id="daily_bloodPressure_chartEnd"><?=$activeOptions->getDailyBloodPressureChartEnd()?></div>
+                                        <div id="weekly_bloodPressure_chartStart"><?=$activeOptions->getWeeklyBloodPressureChartStart()?></div>
+                                        <div id="weekly_bloodPressure_chartEnd"><?=$activeOptions->getWeeklyBloodPressureChartEnd()?></div>
+                                        <div id="monthly_bloodPressure_chartStart"><?=$activeOptions->getMonthlyBloodPressureChartStart()?></div>
+                                        <div id="monthly_bloodPressure_chartEnd"><?=$activeOptions->getMonthlyBloodPressureChartEnd()?></div>
+                                        <div id="yearly_bloodPressure_chartStart"><?=$activeOptions->getYearlyBloodPressureChartStart()?></div>
+                                        <div id="yearly_bloodPressure_chartEnd"><?=$activeOptions->getYearlyBloodPressureChartEnd()?></div>
+                                        <div id="individual_calories_chartStart"><?=$activeOptions->getIndividualCaloriesChartStart()?></div>
+                                        <div id="individual_calories_chartEnd"><?=$activeOptions->getIndividualCaloriesChartEnd()?></div>
+                                        <div id="daily_calories_chartStart"><?=$activeOptions->getDailyCaloriesChartStart()?></div>
+                                        <div id="daily_calories_chartEnd"><?=$activeOptions->getDailyCaloriesChartEnd()?></div>
+                                        <div id="weekly_calories_chartStart"><?=$activeOptions->getWeeklyCaloriesChartStart()?></div>
+                                        <div id="weekly_calories_chartEnd"><?=$activeOptions->getWeeklyCaloriesChartEnd()?></div>
+                                        <div id="monthly_calories_chartStart"><?=$activeOptions->getMonthlyCaloriesChartStart()?></div>
+                                        <div id="monthly_calories_chartEnd"><?=$activeOptions->getMonthlyCaloriesChartEnd()?></div>
+                                        <div id="yearly_calories_chartStart"><?=$activeOptions->getYearlyCaloriesChartStart()?></div>
+                                        <div id="yearly_calories_chartEnd"><?=$activeOptions->getYearlyCaloriesChartEnd()?></div>
+                                        <div id="individual_exercise_chartStart"><?=$activeOptions->getIndividualExerciseChartStart()?></div>
+                                        <div id="individual_exercise_chartEnd"><?=$activeOptions->getIndividualExerciseChartEnd()?></div>
+                                        <div id="daily_exercise_chartStart"><?=$activeOptions->getDailyExerciseChartStart()?></div>
+                                        <div id="daily_exercise_chartEnd"><?=$activeOptions->getDailyExerciseChartEnd()?></div>
+                                        <div id="weekly_exercise_chartStart"><?=$activeOptions->getWeeklyExerciseChartStart()?></div>
+                                        <div id="weekly_exercise_chartEnd"><?=$activeOptions->getWeeklyExerciseChartEnd()?></div>
+                                        <div id="monthly_exercise_chartStart"><?=$activeOptions->getMonthlyExerciseChartStart()?></div>
+                                        <div id="monthly_exercise_chartEnd"><?=$activeOptions->getMonthlyExerciseChartEnd()?></div>
+                                        <div id="yearly_exercise_chartStart"><?=$activeOptions->getYearlyExerciseChartStart()?></div>
+                                        <div id="yearly_exercise_chartEnd"><?=$activeOptions->getYearlyExerciseChartEnd()?></div>
+                                        <div id="individual_glucose_chartStart"><?=$activeOptions->getIndividualGlucoseChartStart()?></div>
+                                        <div id="individual_glucose_chartEnd"><?=$activeOptions->getIndividualGlucoseChartEnd()?></div>
+                                        <div id="daily_glucose_chartStart"><?=$activeOptions->getDailyGlucoseChartStart()?></div>
+                                        <div id="daily_glucose_chartEnd"><?=$activeOptions->getDailyGlucoseChartEnd()?></div>
+                                        <div id="weekly_glucose_chartStart"><?=$activeOptions->getWeeklyGlucoseChartStart()?></div>
+                                        <div id="weekly_glucose_chartEnd"><?=$activeOptions->getWeeklyGlucoseChartEnd()?></div>
+                                        <div id="monthly_glucose_chartStart"><?=$activeOptions->getMonthlyGlucoseChartStart()?></div>
+                                        <div id="monthly_glucose_chartEnd"><?=$activeOptions->getMonthlyGlucoseChartEnd()?></div>
+                                        <div id="yearly_glucose_chartStart"><?=$activeOptions->getYearlyGlucoseChartStart()?></div>
+                                        <div id="yearly_glucose_chartEnd"><?=$activeOptions->getYearlyGlucoseChartEnd()?></div>
+                                        <div id="individual_sleep_chartStart"><?=$activeOptions->getIndividualSleepChartStart()?></div>
+                                        <div id="individual_sleep_chartEnd"><?=$activeOptions->getIndividualSleepChartEnd()?></div>
+                                        <div id="daily_sleep_chartStart"><?=$activeOptions->getDailySleepChartStart()?></div>
+                                        <div id="daily_sleep_chartEnd"><?=$activeOptions->getDailySleepChartEnd()?></div>
+                                        <div id="weekly_sleep_chartStart"><?=$activeOptions->getWeeklySleepChartStart()?></div>
+                                        <div id="weekly_sleep_chartEnd"><?=$activeOptions->getWeeklySleepChartEnd()?></div>
+                                        <div id="monthly_sleep_chartStart"><?=$activeOptions->getMonthlySleepChartStart()?></div>
+                                        <div id="monthly_sleep_chartEnd"><?=$activeOptions->getMonthlySleepChartEnd()?></div>
+                                        <div id="yearly_sleep_chartStart"><?=$activeOptions->getYearlySleepChartStart()?></div>
+                                        <div id="yearly_sleep_chartEnd"><?=$activeOptions->getYearlySleepChartEnd()?></div>
+                                        <div id="individual_weight_chartStart"><?=$activeOptions->getIndividualWeightChartStart()?></div>
+                                        <div id="individual_weight_chartEnd"><?=$activeOptions->getIndividualWeightChartEnd()?></div>
+                                        <div id="daily_weight_chartStart"><?=$activeOptions->getDailyWeightChartStart()?></div>
+                                        <div id="daily_weight_chartEnd"><?=$activeOptions->getDailyWeightChartEnd()?></div>
+                                        <div id="weekly_weight_chartStart"><?=$activeOptions->getWeeklyWeightChartStart()?></div>
+                                        <div id="weekly_weight_chartEnd"><?=$activeOptions->getWeeklyWeightChartEnd()?></div>
+                                        <div id="monthly_weight_chartStart"><?=$activeOptions->getMonthlyWeightChartStart()?></div>
+                                        <div id="monthly_weight_chartEnd"><?=$activeOptions->getMonthlyWeightChartEnd()?></div>
+                                        <div id="yearly_weight_chartStart"><?=$activeOptions->getYearlyWeightChartStart()?></div>
+                                        <div id="yearly_weight_chartEnd"><?=$activeOptions->getYearlyWeightChartEnd()?></div>
+                                    </section>
                                     
-                                </fieldset>
                             </div>
                         </form>
                 

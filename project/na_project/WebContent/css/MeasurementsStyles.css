@@ -103,6 +103,65 @@ legend {
 	padding-right: 0;
 }
 
+#chartsOptions_tabs > li > a {
+	padding-top: 2px;
+	padding-bottom: 2px
+}
+
+#options button, #options span[class="input-group-addon"] {
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+#options input[type="text"], #options select {
+	height: 26px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+#firstChartOptions {
+	padding-top: 6px;
+}
+#firstChartOptions > div[class="form-group"] {
+	margin-bottom: 6px;
+}
+#firstChartOptions input[type="text"] {
+	padding-right: 0;
+}
+#firstChartOptions label {
+	text-align: left;
+	padding-right: 3px;
+	padding-top: 6px;
+}
+#secondChartOptions {
+    padding-top: 6px;
+}
+#secondChartOptions > div[class="form-group"] {
+    margin-bottom: 6px;
+}
+#secondChartOptions input[type="text"] {
+    padding-right: 0;
+}
+#secondChartOptions label {
+    text-align: left;
+    padding-right: 3px;
+    padding-top: 6px;
+}
+
+#closeOptions_btn {
+	float: right;
+	color: #ffffff;
+	opacity: 0.4;
+}
+#options > div {
+	padding-bottom: 0;
+}
+
+#options .control-label {
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
 .deletedRow {
 	background-color: #FF0000 !important;
 }
@@ -115,32 +174,38 @@ legend {
 	text-align: center;
 }
 
+#columns_dropdown > ul {
+	left: 15px;
+}
+
 /* extra small devices */
 @media screen and (max-width: 749px) {    
-    .chart-secondary, #secondChartType_btns, #secondChartOptions_tab, #options_showSecondChart_label {
+    .chart-secondary, #secondChartType_btns {
        display: none;
+    }
+    #chartsOptions_tabs > li {
+        display: table-cell;
+        width: 1%;
+    }
+    #chartsOptions_tabs > li > a {
+        border-bottom: 1px solid #DDDDDD;
+        border-radius: 4px 4px 0 0;
     }
 }
 
 /* small devices */
 @media screen and (min-width: 750px) and (max-width: 991px) {
 	.form-horizontal .meas-label {
-	   text-align: left;
+	    text-align: left;
 	}
-	
-	.chart-secondary {
-       display: none;
+	.chart-secondary, #secondChartType_btns {
+        display: none;
     }
     #measurements_dropdown {
         display: none;
     }
-    #options select, #options_numRows {
-	    width: 50%;
-	}
-	#units_form-group {
-        width: 90%;
-        margin-left: auto;
-        margin-right: 0;
+    #options .select-form-group > div {
+        padding-left: 0;
     }
 }
 
@@ -149,13 +214,8 @@ legend {
     #measurements_dropdown {
         display: none;
     }
-    #options select, #options_numRows {
-        width: 50%;
-    }
-    #units_form-group {
-        width: 90%;
-        margin-left: auto;
-        margin-right: 0;
+    #options .select-form-group > div {
+        padding-left: 0;
     }
 }
 
