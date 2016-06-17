@@ -305,7 +305,7 @@ class MeasurementsView{
                                             
                                                 <div class="form-group">
                                                     <div class="col-xs-6">
-                                                        <label for="options_startDate_primary-chart">Start Date</label>
+                                                        <label for="options_firstChart_startDate">Start Date</label>
                                                         <div id="firstChart_startDate_picker" class="input-group date date-picker">
                                                             <input type="text" id="options_firstChart_startDate" name="firstChartStartDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
                                                             <span class="input-group-addon">
@@ -314,7 +314,7 @@ class MeasurementsView{
                                                         </div>
                                                     </div>
                                                     <div class="col-xs-6">
-                                                        <label for="options_endDate_primary-chart">End Date</label>
+                                                        <label for="options_firstChart_endDate">End Date</label>
                                                         <div id="firstChart_endDate_picker" class="input-group date date-picker">
                                                             <input type="text" id="options_firstChart_endDate" name="firstChartEndDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
                                                             <span class="input-group-addon">
@@ -340,7 +340,7 @@ class MeasurementsView{
                                             
                                                 <div class="form-group">
                                                     <div class="col-xs-6">
-                                                        <label for="options_startDate_secondary-chart">Start Date</label>
+                                                        <label for="options_secondChart_startDate">Start Date</label>
                                                         <div id="secondChart_startDate_picker" class="input-group date date-picker">
                                                             <input type="text" id="options_secondChart_startDate" name="secondChartStartDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
                                                             <span class="input-group-addon">
@@ -349,7 +349,7 @@ class MeasurementsView{
                                                         </div>
                                                     </div>
                                                     <div class="col-xs-6">
-                                                        <label for="options_endDate_secondary-chart">End Date</label>
+                                                        <label for="options_secondChart_endDate">End Date</label>
                                                         <div id="secondChart_endDate_picker" class="input-group date date-picker">
                                                             <input type="text" id="options_secondChart_endDate" name="secondChartEndDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
                                                             <span class="input-group-addon">

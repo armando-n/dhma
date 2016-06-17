@@ -246,10 +246,10 @@ function setOptionsChangedListeners() {
 	$('.updateCharts-btn').click(chartRange_update);
 	
 	// chart date pickers changed
-	$('#firstChart_startDate_picker').on('dp.change', chartStartDate_picked);
-	$('#secondChart_startDate_picker').on('dp.change', chartStartDate_picked);
-	$('#firstChart_endDate_picker').on('dp.change', chartEndDate_picked);
-	$('#secondChart_endDate_picker').on('dp.change', chartEndDate_picked);
+	$('#firstChart_startDate_picker').on('dp.change', chartDate_picked);
+	$('#secondChart_startDate_picker').on('dp.change', chartDate_picked);
+	$('#firstChart_endDate_picker').on('dp.change', chartDate_picked);
+	$('#secondChart_endDate_picker').on('dp.change', chartDate_picked);
 }
 
 // fires when any option is changed, storing the change in the server
@@ -1406,30 +1406,35 @@ function chartSubtitle_clicked() {
 
 // updates start/end dates in options area for one of the charts
 function updateChartDatePickers(measType, chartType, whichChart) {
-	var startDate = $('#'+chartType+'_'+measType+'_chartStart').text();
-	var endDate = $('#'+chartType+'_'+measType+'_chartEnd').text();
+	var startDate_picker = $('#'+whichChart+'_startDate_picker').data("DateTimePicker");
+	var endDate_picker = $('#'+whichChart+'_endDate_picker').data("DateTimePicker");
+	var oldStartDate = startDate_picker.date().format('YYYY-MM-DD');
+	var oldEndDate = endDate_picker.date().format('YYYY-MM-DD');
+	var newStartDate = $('#'+chartType+'_'+measType+'_chartStart').text();
+	var newEndDate = $('#'+chartType+'_'+measType+'_chartEnd').text();
 	
-	// clear min/max on date pickers so no conflicts arise when setting the new dates
-	$('#'+whichChart+'_startDate_picker').data("DateTimePicker").maxDate(false);
-	$('#'+whichChart+'_endDate_picker').data("DateTimePicker").minDate(false);
+	/* clear min/max on date pickers if necessary so no conflicts arise when setting the new dates.
+	 * (clearing unnecessarily results in date-picker change event not firing, failing to apply min/max) */
+	if (oldEndDate !== newEndDate)
+		startDate_picker.maxDate(false);
+	if (oldStartDate !== newStartDate)
+		endDate_picker.minDate(false);
 	
 	// update dates in options area
-	$('#'+whichChart+'_startDate_picker').data('DateTimePicker').date(startDate);
-	$('#'+whichChart+'_endDate_picker').data('DateTimePicker').date(endDate);
+	startDate_picker.date(newStartDate);
+	endDate_picker.date(newEndDate);
 }
 
-// called when a chart date range date picker date changed in options
-function chartStartDate_picked() {
+//called when a chart date range date picker date changed in options
+function chartDate_picked() {
+	var pieces = $(this).attr('id').split('_');
+	var whichChart = pieces[0];
+	var chosenDate = pieces[1];
+	var dateToLimit =  (chosenDate === 'startDate') ? 'endDate' : 'startDate';
+	var minOrMax = (chosenDate === 'startDate') ? 'min' : 'max';
+	
 	// update linked date picker's limits
-	var whichChart = $(this).attr('id').split('_')[0];
-	$('#'+whichChart+'_endDate_picker').data("DateTimePicker").minDate($('#'+whichChart+'_startDate_picker').data("DateTimePicker").date());
-}
-
-// called when a chart date range date picker date changed in options
-function chartEndDate_picked() {
-	// update linked date picker's limits
-	var whichChart = $(this).attr('id').split('_')[0];
-	$('#'+whichChart+'_startDate_picker').data("DateTimePicker").maxDate($('#'+whichChart+'_endDate_picker').data("DateTimePicker").date());
+	$('#'+whichChart+'_'+dateToLimit+'_picker').data("DateTimePicker")[minOrMax+'Date']($('#'+whichChart+'_'+chosenDate+'_picker').data("DateTimePicker").date());
 }
 
 function monthNumToShortName(num, isZeroBased) {
