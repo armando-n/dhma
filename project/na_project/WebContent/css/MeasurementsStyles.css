@@ -179,10 +179,7 @@ legend {
 }
 
 /* extra small devices */
-@media screen and (max-width: 749px) {    
-    .chart-secondary, #secondChartType_btns {
-       display: none;
-    }
+@media screen and (max-width: 749px) {   
     #chartsOptions_tabs > li {
         display: table-cell;
         width: 1%;
@@ -198,14 +195,15 @@ legend {
 	.form-horizontal .meas-label {
 	    text-align: left;
 	}
-	.chart-secondary, #secondChartType_btns {
-        display: none;
-    }
     #measurements_dropdown {
         display: none;
     }
     #options .select-form-group > div {
         padding-left: 0;
+    }
+    #measurements_tabs > li > a {
+        padding-left: 6px;
+        padding-right: 6px;
     }
 }
 
@@ -218,21 +216,3 @@ legend {
         padding-left: 0;
     }
 }
-
-/* medium devices */
-/*@media screen and (min-width: 992px) and (max-width: 1199px) {
-    
-}*/
-
-/*@media screen and (min-width: 650px) {
-	#charts_bloodPressure {
-    width: 625px;
-    height: 400px;
-}
-
-
-@media screen and (max-width: 649px) {
-    #charts_bloodPressure {
-    width: 400px;
-    height: 325px;
-}*/

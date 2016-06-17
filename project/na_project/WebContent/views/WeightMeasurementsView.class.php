@@ -175,10 +175,10 @@ class WeightMeasurementsView {
 
 <!-- Charts Section -->
 <section id="weight_charts_row" class="row">
-    <div id="firstChart_weight" class="col-sm-12 col-md-6">
+    <div id="firstChart_weight" class="col-sm-6 firstChart">
         <!-- Primary Chart -->
     </div>
-    <div id="secondChart_weight" class="col-sm-12 col-md-6 chart-secondary">
+    <div id="secondChart_weight" class="col-sm-6 secondChart">
         <!-- Secondary Chart -->
     </div>
 </section>

@@ -259,12 +259,12 @@ class MeasurementsView{
                                     
                                     <div class="form-group">
                                         <div class="checkbox col-xs-6">
-                                            <label>
+                                            <label title="Show a chart">
                                                 <input type="checkbox" id="options_showFirstChart" name="showFirstChart"<?=$showFirstChart?> />1<sup>st</sup> chart
                                             </label>
                                         </div>
                                         <div class="checkbox col-xs-6" id="options_showSecondChart_checkbox">
-                                            <label>
+                                            <label title="Show a second chart, which is only available for larger screen sizes">
                                                 <input type="checkbox" id="options_showSecondChart" name="showSecondChart"<?=$showSecondChart?> />2<sup>nd</sup> chart
                                             </label>
                                         </div>
@@ -295,7 +295,7 @@ class MeasurementsView{
                                                 <a class="tooltip-help" href="#firstChartOptions" id="firstChartOptions_tab" aria-controls="firstChartOptions" role="tab" data-toggle="tab" title="Settings for the first chart">1<sup>st</sup> Chart</a>
                                             </li>
                                             <li role="presentation">
-                                                <a class="tooltip-help" href="#secondChartOptions" id="secondChartOptions_tab" aria-controls="secondChartOptions" role="tab" data-toggle="tab" title="Settings for a second chart, which is available for larger screen sizes">2<sup>nd</sup> Chart</a>
+                                                <a class="tooltip-help" href="#secondChartOptions" id="secondChartOptions_tab" aria-controls="secondChartOptions" role="tab" data-toggle="tab" title="Settings for a second chart, which is only available for larger screen sizes">2<sup>nd</sup> Chart</a>
                                             </li>
                                         </ul>
                                     </div>
