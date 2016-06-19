@@ -33,3 +33,8 @@
         margin: .5em auto;
     }
 }
+
+#isProfilePublic_label, #isPicturePublic_label, #sendReminders_label, #stayLoggedIn_label {
+	text-decoration: line-through;
+	cursor: not-allowed;
+}

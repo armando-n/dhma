@@ -403,22 +403,22 @@ class SignupView {
                     <div class="form-group<?=$colorStatus?>">
                         <label for="accentColor" class="control-label col-sm-4 col-md-3 col-lg-3">Theme Accent Color</label>
                         <div class="col-sm-8 col-md-3 col-lg-9" data-toggle="tooltip" title="Coming soon!">
-                            <input type="color" id="accentColor" name="accentColor" class="form-control" value="<?=$colorVal?>" aria-describedby="colorHelp" disabled="disabled" tabindex="15" />
+                            <input type="color" id="accentColor" name="accentColor" class="form-control" value="<?=$colorVal?>" aria-describedby="colorHelp" disabled="disabled" data-toggle="tooltip" title="Coming soon!" tabindex="15" />
                             <span id="colorHelp" class="help-block"><?=$colorErr?></span>
                         </div>
                     </div>
                     <div class="from-group">
                         <div class="col-xs-12">
-                            <label data-toggle="tooltip" title="Coming soon!" class="checkbox">
-                                <input type="checkbox" id="isProfilePublic" name="isProfilePublic"<?=$pubProfileVal?> disabled="disabled" tabindex="16" />Make profile public
+                            <label data-toggle="tooltip" title="Coming soon!" class="checkbox" id="isProfilePublic_label">
+                                <input type="checkbox" id="isProfilePublic" name="isProfilePublic"<?=$pubProfileVal?> disabled="disabled" checked="checked" tabindex="16" />Make profile public
                             </label>
-                            <label data-toggle="tooltip" title="Coming soon!" class="checkbox">
-                                <input type="checkbox" id="isPicturePublic" name="isPicturePublic"<?=$pubPicVal?> disabled="disabled" tabindex="17" />Show picture in profile
+                            <label data-toggle="tooltip" title="Coming soon!" class="checkbox" id="isPicturePublic_label">
+                                <input type="checkbox" id="isPicturePublic" name="isPicturePublic"<?=$pubPicVal?> disabled="disabled" checked="checked" tabindex="17" />Show picture in profile
                             </label>
-                            <label data-toggle="tooltip" title="Coming soon!" class="checkbox">
-                                <input type="checkbox" id="showReminders" name="showReminders"<?=$remindVal?> disabled="disabled" tabindex="18" />E-mail reminders after prolonged inactivity
+                            <label data-toggle="tooltip" title="Coming soon!" class="checkbox" id="sendReminders_label">
+                                <input type="checkbox" id="sendReminders" name="sendReminders"<?=$remindVal?> disabled="disabled" tabindex="18" />E-mail reminders after prolonged inactivity
                             </label>
-                            <label data-toggle="tooltip" title="Coming soon!" class="checkbox">
+                            <label data-toggle="tooltip" title="Coming soon!" class="checkbox" id="stayLoggedIn_label">
                                 <input type="checkbox" id="stayLoggedIn" name="stayLoggedIn"<?=$stayLoggedVal?> disabled="disabled" tabindex="19" />Keep me logged in
                             </label>
                         </div>

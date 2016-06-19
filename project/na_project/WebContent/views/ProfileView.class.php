@@ -492,26 +492,26 @@ class ProfileView {
         <div class="form-group">
             <label for="accentColor" class="control-label col-md-4 col-lg-3">Theme Accent Color:</label>
             <div class="col-md-8 col-lg-9">
-                <input type="color" id="accentColor" name="accentColor" value="<?=$profile->getAccentColor()?>" class="form-control" aria-describedby="aColorHelp" tabindex="15" />
+                <input type="color" id="accentColor" name="accentColor" value="<?=$profile->getAccentColor()?>" class="form-control" aria-describedby="aColorHelp" disabled="disabled" title="Coming soon!" tabindex="15" />
                 <span id="aColorHelp" class="help-block"><?=$profile->getError("accentColor")?></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-xs-10 col-xs-offset-2">
-                <label class="checkbox">
-                    <input type="checkbox" id="isProfilePublic" name="isProfilePublic"<?=$pubProfileVal?> tabindex="16" />
+                <label class="checkbox" id="isProfilePublic_label" title="Coming soon!">
+                    <input type="checkbox" id="isProfilePublic" name="isProfilePublic"<?=$pubProfileVal?> disabled="disabled" tabindex="16" />
                     Profile Public
                 </label>
-                <label class="checkbox">
-                    <input type="checkbox" id="isPicturePublic" name="isPicturePublic"<?=$pubPicVal?> tabindex="17" />
+                <label class="checkbox" id="isPicturePublic_label" title="Coming soon!">
+                    <input type="checkbox" id="isPicturePublic" name="isPicturePublic"<?=$pubPicVal?> disabled="disabled" tabindex="17" />
                     Picture Public
                 </label>
-                <label class="checkbox">
-                    <input type="checkbox" id="sendReminders" name="sendReminders"<?=$remindVal?> tabindex="18" />
+                <label class="checkbox" id="sendReminders_label" title="Coming soon!">
+                    <input type="checkbox" id="sendReminders" name="sendReminders"<?=$remindVal?> disabled="disabled" tabindex="18" />
                     E-mail Reminders
                 </label>
-                <label class="checkbox">
-                    <input type="checkbox" id="stayLoggedIn" name="stayLoggedIn"<?=$stayLoggedVal?> tabindex="19" />
+                <label class="checkbox" id="stayLoggedIn_label" title="Coming soon!">
+                    <input type="checkbox" id="stayLoggedIn" name="stayLoggedIn"<?=$stayLoggedVal?> disabled="disabled" tabindex="19" />
                     Stay Logged In
                 </label>
             </div>

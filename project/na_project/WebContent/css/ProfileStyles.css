@@ -23,6 +23,11 @@
 	margin: 0 auto;
 }
 
+#isProfilePublic_label, #isPicturePublic_label, #sendReminders_label, #stayLoggedIn_label {
+    text-decoration: line-through;
+    cursor: not-allowed;
+}
+
 /* extra small devices */
 @media screen and (max-width: 749px) {    
     #profileImg {
