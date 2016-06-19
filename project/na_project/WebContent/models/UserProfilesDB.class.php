@@ -99,6 +99,36 @@ class UserProfilesDB {
         }
     }
     
+    public static function editTheme($userName, $theme) {
+        $allowed = array('light', 'dark');
+        $returnData = new stdClass();
+        $returnData->rowsAffected = 0;
+        
+        try {
+            if (!in_array($theme, $allowed))
+                throw new IllegalArgumentException('Unrecognized theme requested');
+    
+            $stmt = Database::getDB()->prepare(
+                'update UserProfiles
+                set theme = :theme
+                where userID in
+                    (select userID from Users where userName = :userName)'
+            );
+            $stmt->execute(array(
+                ':theme' => $theme,
+                ':userName' => $userName
+            ));
+            $returnData->rowsAffected = $stmt->rowCount();
+            
+        } catch (PDOException $e) {
+            return array('success' => false, 'error' => $e->getMessage());
+        } catch (RuntimeException $e) {
+            return array('success' => false, 'error' => $e->getMessage());
+        }
+        
+        return array('success' => true, 'data' => $returnData);
+    }
+    
     // returns an array of UserProfile objects for all user profiles in the database
     public static function getAllUserProfiles() {
         $allUsers = array();

@@ -25,3 +25,65 @@ td .glyphicon {
 .text-success {
 	color: #5cb85c;
 }
+
+div.navbar-header > .changeTheme {
+	display: inline-block;
+	float: right;
+	padding-right: 20px;
+}
+.changeTheme > .lightTheme {
+	display: inline-block;
+	line-height: 20px;
+	font-variant: small-caps;
+	font-size: small;
+	font-weight: bold;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: #000000;
+	background-color: #E5E5E5;
+	border: 1px solid #337ab7;
+	border-radius: 10px 0px 0px 10px;
+	padding-left: 8px;
+	padding-right: 8px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.changeTheme > span.lightTheme {
+	cursor: default;
+}
+.changeTheme > .darkTheme {
+    display: inline-block;
+    line-height: 20px;
+    font-variant: small-caps;
+    font-size: small;
+    font-weight: bold;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #FFFFFF;
+    background-color: #222222;
+    border: 1px solid #337ab7;
+    border-radius: 0px 10px 10px 0px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.changeTheme > span.darkTheme {
+    cursor: default;
+}
+
+/* extra small devices */
+@media screen and (max-width: 767px) {   
+    #mainNav > ul > li.changeTheme {
+        display: none;
+    }
+}
+
+/* small/medium/large devices */
+@media screen and (min-width: 768px) {   
+    div.navbar-header > .changeTheme {
+        display: none;
+    }
+}

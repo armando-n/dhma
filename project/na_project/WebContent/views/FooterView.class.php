@@ -46,16 +46,8 @@ class FooterView {
         
         <div class="col-sm-1">
         
-        </div>
-            
+        </div>   
     </footer>
-    
-    <div class="row">
-        <div class="col-sm-12 text-center">
-            Use username &quot;member&quot; with password &quot;pass123&quot;
-            or username &quot;admin&quot; with password &quot;admin&quot;
-        </div>
-    </div>
 
 </div>
 

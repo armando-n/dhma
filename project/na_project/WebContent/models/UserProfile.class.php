@@ -72,6 +72,11 @@ class UserProfile extends GenericModelObject implements JsonSerializable {
         return $this->theme;
     }
     
+    public function setTheme($newTheme) {
+        $this->formInput['theme'] = $newTheme;
+        $this->validateTheme();
+    }
+    
     public function getAccentColor() {
         return $this->accentColor;
     }

@@ -25,7 +25,8 @@ class HeaderView {
             unset($_SESSION['styles']);
         endif; ?>
     <script src="//<?= $host_base . '/js/jquery-1.11.3.js' ?>"></script>
-    <script src="//<?= $host_base . '/js/bootstrap.min.js' ?>"></script><?php
+    <script src="//<?= $host_base . '/js/bootstrap.min.js' ?>"></script>
+    <script src="//<?= $host_base . '/js/generalScripts.js' ?>"></script><?php
         if (isset($_SESSION['scripts'])):
             foreach ($_SESSION['scripts'] as $script): ?>
     <script src="//<?= $host_base . '/js/' . $script ?>"></script><?php
@@ -55,7 +56,16 @@ class HeaderView {
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <img src="//<?= $host_base . $logo ?>" class="img-responsive" alt="DHMA Logo" width="99" height="58" />
+            <img src="//<?= $host_base . $logo ?>" class="img-responsive" alt="DHMA Logo" width="99" height="58" style="display: inline-block" /><?php
+                if (isset($_SESSION['profile'])): ?>
+            	<div class="changeTheme"><?php
+                    if ($_SESSION['profile']->getTheme() === 'light'): ?>
+                	<span class="lightTheme" title="The light theme is enabled">light</span><a href="profile_theme_dark" class="darkTheme" title="Enable the dark theme for this site">dark</a><?php
+                	else: ?>
+                	<a href="profile_theme_light" class="lightTheme" title="Enable the light theme for this site">light</a><span class="darkTheme" title="The dark theme is enabled">dark</span><?php
+                	endif; ?>
+            	</div><?php
+            	endif; ?>
         </div>
         
         <div class="collapse navbar-collapse" id="mainNav">
@@ -72,6 +82,13 @@ class HeaderView {
             </ul>
             <ul class="nav navbar-nav navbar-right"><?php
                 if (isset($_SESSION['profile'])): ?>
+                <li class="changeTheme"><?php
+                    if ($_SESSION['profile']->getTheme() === 'light'): ?>
+                	<span class="lightTheme" title="The light theme is enabled">light</span><a href="profile_theme_dark" class="darkTheme" title="Enable the dark theme for this site">dark</a><?php
+                	else: ?>
+                	<a href="profile_theme_light" class="lightTheme" title="Enable the light theme for this site">light</a><span class="darkTheme" title="The dark theme is enabled">dark</span><?php
+                	endif; ?>
+            	</li>
                 <li><a href="login_logout">Logout</a></li><?php
                 else: ?> 
                 <li><a href="signup_show">Sign Up</a></li>

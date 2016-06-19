@@ -110,6 +110,13 @@ class ProfileController {
                 ProfileView::showProfile($profile);
             }
         }
+        
+        // argument 'theme' switching light/dark theme
+        else if (explode('_', $_SESSION['arguments'])[0] === 'theme') {
+            $newTheme = explode('_', $_SESSION['arguments'])[1];
+            $_SESSION['profile']->setTheme($newTheme);
+            echo json_encode(UserProfilesDB::editTheme($_SESSION['profile']->getUserName(), $newTheme), JSON_PRETTY_PRINT);
+        }
     }
     
     private static function processImage() {

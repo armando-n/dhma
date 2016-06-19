@@ -989,8 +989,8 @@ function tableOptions(measType) {
 		pageLength: $('#options_numRows').val(),
 		select: { style: 'single' },
 		dom: 
-			"<'row'<'col-sm-12'B>>" +              // set add/edit/delete buttons as top row
 			"<'row'<'col-sm-6'><'col-sm-6'f>>" +   // sets filter (search) box in upper right
+			"<'row'<'col-sm-12'B>>" +              // set add/edit/delete buttons as top row
 			"<'row'<'col-sm-12'tr>>" +             // table and processing message
 			"<'row'<'col-sm-5'i><'col-sm-7'p>>",   // page info and pagination controls in buttom left and right, respectively
 		createdRow: function (row, data, dataIndex) { // add a tooltip to the row
