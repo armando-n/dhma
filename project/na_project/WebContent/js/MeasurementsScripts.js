@@ -213,6 +213,10 @@ $(document).ready(function() {
 	$('body').tooltip( { selector: '.dynamic-tooltip' } );
 	$('#measurements_dropdown').tooltip();
 	$('#measurements_nav [data-toggle="tooltip"]').tooltip();
+	if (! $('#options_showTooltips').is(':checked'))
+		$('.tooltip-help').tooltip('disable');
+	else
+		$('.tooltip-help').tooltip('enable');
 	
 	setOptionsChangedListeners();
 	
@@ -414,7 +418,7 @@ function options_changed() {
 		success: function(response) {
 			if (response.success) {
 				if (response.data.rowsAffected < 1) {
-					alert('Stored options not affected. Either options name not found, or stored option was already set to current selection.');
+					console.log('Stored options not affected. Either options name not found, or stored option was already set to current selection.');
 					return;
 				}
 //				alert('Options change successfully stored.');
@@ -999,15 +1003,12 @@ function tableOptions(measType) {
 			"<'row'<'col-sm-5'i><'col-sm-7'p>>",   // page info and pagination controls in buttom left and right, respectively
 		createdRow: function (row, data, dataIndex) { // add a tooltip to the row
 			$(row).attr('data-toggle', 'tooltip').attr('title', 'Rows can be selected for editing/deletion').addClass('dynamic-tooltip tooltip-help');
+			if (! $('#options_showTooltips').is(':checked'))
+				$(row).tooltip('disable');
 		},
 		initComplete: function (settings, json) { // when the table is finished loading, add tooltips to column headers
 			$('#' +measType+ '_table_section th').each(function (index, element) {
-				$(element).attr('data-toggle', 'tooltip').attr('data-placement', 'bottom').attr('title', 'Click to sort by this column');
-				
-//				if (index < propNames_colHeaders.len)
-//					$(element).text($(element).text() + '(' + )
-				
-//				$(element).addClass('dynamic-tooltip'); // TODO figure out why this doesn't work
+				$(element).attr('data-toggle', 'tooltip').attr('data-placement', 'bottom').attr('title', 'Sort by this column');
 			});
 		},
 		buttons: table_addEditDeleteButtons_options(measType) // creates the add/edit/delete buttons for the table
@@ -1235,7 +1236,7 @@ function createChart(measType, timePeriods, whichChart) {
 
 			// create chart
 			var title = timePeriodStrings[timePeriods]['title']+avgOrTotal;
-			var subtitle = '<span class="link-text '+whichChart+'-startDate">'+startDate+'</span> to <span class="link-text '+whichChart+'-endDate">'+endDate+'</span>';
+			var subtitle = '<span class="link-text '+whichChart+'-startDate tooltip-help dynamic-tooltip" data-toggle="tooltip" data-placement="left" title="Modify start date">'+startDate+'</span> to <span class="link-text '+whichChart+'-endDate tooltip-help dynamic-tooltip" data-toggle="tooltip" data-placement="right" title="Modify end date">'+endDate+'</span>';
 			var chartOptions = createChart_Options(measType, title, data, timePeriodStrings[timePeriods]['period'], subtitle, whichChart);
 			if (charts[measType+'_'+whichChart] !== null)
 				charts[measType+'_'+whichChart].destroy();
@@ -1488,6 +1489,8 @@ function chartSubtitle_clicked() {
 		$('html, body').animate( { scrollTop: $("#firstChartOptions_tab").offset().top }, 200);
 		setTimeout(function() {
 			$('#'+whichChart+'Options_tab').click();
+			console.log('#'+whichChart+'_'+startOrEnd+'_picker');
+			console.log($('#'+whichChart+'_'+startOrEnd+'_picker'));
 			$('#'+whichChart+'_'+startOrEnd+'_picker').data('DateTimePicker').show();
 		}, 200);
 	}

@@ -56,13 +56,13 @@ class HeaderView {
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <img src="//<?= $host_base . $logo ?>" class="img-responsive" alt="DHMA Logo" width="99" height="58" style="display: inline-block" /><?php
+            <img src="//<?= $host_base . $logo ?>" id="brand-image" class="img-responsive" alt="DHMA Logo" width="99" height="58" /><?php
                 if (isset($_SESSION['profile'])): ?>
             	<div class="changeTheme"><?php
                     if ($_SESSION['profile']->getTheme() === 'light'): ?>
-                	<span class="lightTheme" title="The light theme is enabled">light</span><a href="profile_theme_dark" class="darkTheme" title="Enable the dark theme for this site">dark</a><?php
+                	<span class="lightTheme" title="The light site theme is active">light</span><a href="profile_theme_dark" class="darkTheme" title="Enable the dark site theme">dark</a><?php
                 	else: ?>
-                	<a href="profile_theme_light" class="lightTheme" title="Enable the light theme for this site">light</a><span class="darkTheme" title="The dark theme is enabled">dark</span><?php
+                	<a href="profile_theme_light" class="lightTheme" title="Enable the light site theme">light</a><span class="darkTheme" title="The dark site theme is active">dark</span><?php
                 	endif; ?>
             	</div><?php
             	endif; ?>
@@ -84,9 +84,9 @@ class HeaderView {
                 if (isset($_SESSION['profile'])): ?>
                 <li class="changeTheme"><?php
                     if ($_SESSION['profile']->getTheme() === 'light'): ?>
-                	<span class="lightTheme" title="The light theme is enabled">light</span><a href="profile_theme_dark" class="darkTheme" title="Enable the dark theme for this site">dark</a><?php
+                	<span class="lightTheme" data-toggle="tooltip" data-placement="bottom" title="The light site theme is active">light</span><a href="profile_theme_dark" class="darkTheme" data-toggle="tooltip" data-placement="bottom" title="Enable the dark site theme">dark</a><?php
                 	else: ?>
-                	<a href="profile_theme_light" class="lightTheme" title="Enable the light theme for this site">light</a><span class="darkTheme" title="The dark theme is enabled">dark</span><?php
+                	<a href="profile_theme_light" class="lightTheme" data-toggle="tooltip" data-placement="bottom" title="Enable the light site theme">light</a><span class="darkTheme" data-toggle="tooltip" data-placement="bottom" title="The dark site theme is active">dark</span><?php
                 	endif; ?>
             	</li>
                 <li><a href="login_logout">Logout</a></li><?php

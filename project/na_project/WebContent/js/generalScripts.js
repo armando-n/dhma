@@ -3,6 +3,7 @@
 $(document).ready(function() {
 	$('.changeTheme > a.lightTheme').click(changeTheme);
 	$('.changeTheme > a.darkTheme').click(changeTheme);
+	$('#main-nav [data-toggle="tooltip"]').tooltip( { container: 'body' } );
 });
 
 function changeTheme() {

@@ -47,7 +47,7 @@ create table MeasurementsOptions(
     weightUnits                   enum('lbs', 'kg') default 'lbs',
     timeFormat                    enum('12 hour', '24 hour') default '12 hour',
     durationFormat                enum('minutes', 'hours', 'hours:minutes') default 'hours:minutes',
-    showTooltips                  boolean default true,
+    showTooltips                  boolean default false,
     showSecondaryCols             boolean default true, -- e.g. exercise type column
     showDateCol                   boolean default true,
     showTimeCol                   boolean default true,

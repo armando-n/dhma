@@ -91,7 +91,7 @@ class MeasurementsView{
         <div class="row">
             <div class="col-sm-12">
 
-                <button type="button" id="options_btn" class="btn btn-default" data-toggle="collapse" data-target="#options" aria-expanded="false" aria-controls="options">
+                <button type="button" id="options_btn" class="btn btn-default tooltip-help" data-toggle="collapse" data-target="#options" aria-expanded="false" aria-controls="options" title="Options">
                     <span class="glyphicon glyphicon-cog"></span>
                 </button>
 
@@ -111,14 +111,14 @@ class MeasurementsView{
                                     
                                     <div class="form-group">
                                         <div class="checkbox col-sm-12">
-                                            <label>
+                                            <label class="tooltip-help" data-toggle="tooltip" title="Show/hide these tooltips">
                                                 <input type="checkbox" id="options_showTooltips" name="showTooltips"<?=$showTooltips?> />Show Help Tooltips
                                             </label>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="col-sm-12">
-                                            <button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#unitsOptions_modal">
+                                            <button type="button" class="btn btn-default btn-block tooltip-help" data-toggle="modal" data-target="#unitsOptions_modal" title="Choose the units to use for applicable measurements">
                                                 Choose Units
                                             </button>
                                             
@@ -148,12 +148,12 @@ class MeasurementsView{
                                                                         <div class="radio col-md-8 col-lg-9" id="options_glucoseUnits">
                                                                             <div class="row">
                                                                                 <div class="col-xs-4 col-xs-offset-2">
-                                                                                    <label>
+                                                                                    <label class="tooltip-help" title="milligrams per deciliter">
                                                                                         <input type="radio" id="options_units_glucose_mgdL" name="glucoseUnits" value="mg/dL"<?=$glucoseUnits_mgdL?> />mg/dL
                                                                                     </label>
                                                                                 </div>
                                                                                 <div class="col-xs-4 col-xs-offset-1">
-                                                                                    <label>
+                                                                                    <label class="tooltip-help" title="millimolar (millimoles per litre)">
                                                                                         <input type="radio" id="options_units_glucose_mM" name="glucoseUnits" value="mM"<?=$glucoseUnits_mM?> />mM
                                                                                     </label>
                                                                                 </div>
@@ -171,12 +171,12 @@ class MeasurementsView{
                                                                         <div class="radio col-md-8 col-lg-9" id="options_weightUnits">
                                                                             <div class="row">
                                                                                 <div class="col-xs-4 col-xs-offset-2">
-                                                                                    <label>
+                                                                                    <label class="tooltip-help" title="pounds">
                                                                                         <input type="radio" id="options_units_weight_lbs" name="weightUnits" value="lbs"<?=$weightUnits_lbs?> />lbs
                                                                                     </label>
                                                                                 </div>
                                                                                 <div class="col-xs-4 col-xs-offset-1">
-                                                                                    <label>
+                                                                                    <label class="tooltip-help" title="kilograms">
                                                                                         <input type="radio" id="options_units_weight_kg" name="weightUnits" value="kg"<?=$weightUnits_kg?> />kg
                                                                                     </label>
                                                                                 </div>
@@ -202,7 +202,7 @@ class MeasurementsView{
                                     <div class="form-group select-form-group">
                                         <label for="options_timeFormat" class="control-label col-xs-5 col-sm-6">Time Format:</label>
                                         <div class="col-xs-7 col-sm-6">
-                                            <select id="options_timeFormat" name="timeFormat" class="form-control">
+                                            <select id="options_timeFormat" name="timeFormat" class="form-control tooltip-help" data-toggle="tooltip" title="Choose between 12 hour (e.g. 2:00 pm) or 24 hour (e.g. 14:00) format for displaying time">
                                                 <option<?=$timeFormat_12hour?>>12 hour</option>
                                                 <option<?=$timeFormat_24hour?>>24 hour</option>
                                             </select>
@@ -226,13 +226,13 @@ class MeasurementsView{
                                     <!-- Table Options -->
                                     <div class="form-group">
                                         <div class="checkbox col-sm-12">
-                                            <label>
+                                            <label class="tooltip-help" data-toggle="tooltip" title="Show/hide the table of measurement entries. The table is where entries can be added/edited/deleted">
                                                 <input type="checkbox" id="options_showTable" name="showTable"<?=$showTable?> />Show table
                                             </label>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <div id="columns_dropdown" class="dropdown col-sm-12" data-toggle="tooltip" title="Choose the columns you want shown in the table">
+                                        <div id="columns_dropdown" class="dropdown tooltip-help col-sm-12" data-toggle="tooltip" title="Choose the columns you want shown in the table">
                                             <button type="button" class="dropdown-toggle btn btn-default btn-block" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                                 <span id="columns_dropdown_label">Show/Hide Columns</span>
                                                 <span class="caret"></span>
@@ -249,7 +249,7 @@ class MeasurementsView{
                                     <div class="form-group">
                                         <label for="options_numRows" class="control-label col-xs-5 col-sm-8">Rows per page:</label>
                                         <div class="col-xs-7 col-sm-4">
-                                            <input type="text" id="options_numRows" name="numRows" value="<?=$activeOptions->getNumRows()?>" class="form-control" size="5" maxlength="5" pattern="^[0-9]+$" title="Enter a positive number of 5 digits or less" />
+                                            <input type="text" id="options_numRows" name="numRows" value="<?=$activeOptions->getNumRows()?>" class="form-control tooltip-help" size="5" maxlength="5" pattern="^[0-9]+$" data-toggle="tooltip" title="Enter the number of entries/rows to show per page in the table" />
                                         </div>
                                     </div>
                                     
@@ -259,12 +259,12 @@ class MeasurementsView{
                                     
                                     <div class="form-group">
                                         <div class="checkbox col-xs-6">
-                                            <label title="Show a chart">
+                                            <label class="tooltip-help" data-toggle="tooltip" title="Show a chart">
                                                 <input type="checkbox" id="options_showFirstChart" name="showFirstChart"<?=$showFirstChart?> />1<sup>st</sup> chart
                                             </label>
                                         </div>
                                         <div class="checkbox col-xs-6" id="options_showSecondChart_checkbox">
-                                            <label title="Show a second chart, which is only available for larger screen sizes">
+                                            <label class="tooltip-help" data-toggle="tooltip" title="Show a second chart, which is only available for larger screen sizes">
                                                 <input type="checkbox" id="options_showSecondChart" name="showSecondChart"<?=$showSecondChart?> />2<sup>nd</sup> chart
                                             </label>
                                         </div>
@@ -305,8 +305,8 @@ class MeasurementsView{
                                         <section role="tabpanel" id="firstChartOptions" class="tab-pane active">
                                             <div class="form-group">
                                                 <label for="options_firstChart_startDate" class="control-label col-xs-5 col-md-4 col-md-offset-2">Start Date:</label>
-                                                <div id="firstChart_startDate_picker" class="input-group date date-picker col-xs-7 col-md-4">
-                                                    <input type="text" id="options_firstChart_startDate" name="firstChartStartDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
+                                                <div id="firstChart_startDate_picker" class="input-group date date-picker tooltip-help col-xs-7 col-md-4" title="Change the start date for the first chart (yyyy-mm-dd format)">
+                                                    <input type="text" id="options_firstChart_startDate" name="firstChartStartDate" class="form-control" />
                                                     <span class="input-group-addon">
                                                         <span class="glyphicon glyphicon-calendar"></span>
                                                     </span>
@@ -314,8 +314,8 @@ class MeasurementsView{
                                             </div>
                                             <div class="form-group">
                                                 <label for="options_firstChart_endDate" class="control-label col-xs-5 col-md-4 col-md-offset-2">End Date:</label>
-                                                <div id="firstChart_endDate_picker" class="input-group date date-picker col-xs-7 col-md-4">
-                                                    <input type="text" id="options_firstChart_endDate" name="firstChartEndDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
+                                                <div id="firstChart_endDate_picker" class="input-group date date-picker tooltip-help col-xs-7 col-md-4" title="Change the end date for the first chart (yyyy-mm-dd format)">
+                                                    <input type="text" id="options_firstChart_endDate" name="firstChartEndDate" class="form-control" />
                                                     <span class="input-group-addon">
                                                         <span class="glyphicon glyphicon-calendar"></span>
                                                     </span>
@@ -323,7 +323,7 @@ class MeasurementsView{
                                             </div>
                                             <div class="form-group">
                                                 <div class="col-xs-8 col-xs-offset-2">
-                                                    <button id="firstChart_update_btn" type="button" class="btn btn-default btn-block updateCharts-btn">
+                                                    <button id="firstChart_update_btn" type="button" class="btn btn-default btn-block updateCharts-btn tooltip-help" data-toggle="tooltip" title="Update the first chart to match the dates selected above">
                                                         <span>Update Chart</span>
                                                     </button>
                                                 </div>
@@ -334,7 +334,7 @@ class MeasurementsView{
                                         <section role="tabpanel" id="secondChartOptions" class="tab-pane">
                                             <div class="form-group">
                                                 <label for="options_secondChart_startDate" class="control-label col-xs-5 col-md-4 col-md-offset-2">Start Date:</label>
-                                                <div id="secondChart_startDate_picker" class="input-group date date-picker col-xs-7 col-md-4">
+                                                <div id="secondChart_startDate_picker" class="input-group date date-picker tooltip-help col-xs-7 col-md-4" title="Change the start date for the second chart">
                                                     <input type="text" id="options_secondChart_startDate" name="secondChartStartDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
                                                     <span class="input-group-addon">
                                                         <span class="glyphicon glyphicon-calendar"></span>
@@ -343,7 +343,7 @@ class MeasurementsView{
                                             </div>
                                             <div class="form-group">
                                                 <label for="options_secondChart_endDate" class="control-label col-xs-5 col-md-4 col-md-offset-2">End Date:</label>
-                                                <div id="secondChart_endDate_picker" class="input-group date date-picker col-xs-7 col-md-4">
+                                                <div id="secondChart_endDate_picker" class="input-group date date-picker tooltip-help col-xs-7 col-md-4" title="Change the end date for the second chart">
                                                     <input type="text" id="options_secondChart_endDate" name="secondChartEndDate" class="form-control" title="mm/dd/yyyy or mm-dd-yyyy" />
                                                     <span class="input-group-addon">
                                                         <span class="glyphicon glyphicon-calendar"></span>
@@ -352,7 +352,7 @@ class MeasurementsView{
                                             </div>
                                             <div class="form-group">
                                                 <div class="col-xs-8 col-xs-offset-2">
-                                                    <button id="secondChart_update_btn" type="button" class="btn btn-default btn-block updateCharts-btn">
+                                                    <button id="secondChart_update_btn" type="button" class="btn btn-default btn-block updateCharts-btn tooltip-help" data-toggle="tooltip" title="Update the second chart to match the dates selected above">
                                                         <span>Update Chart</span>
                                                     </button>
                                                 </div>
@@ -517,27 +517,27 @@ class MeasurementsView{
             <div class="col-sm-6">
                 <div id="firstChartType_btns" class="btn-group btn-group-justified" role="group">
                     <div class="btn-group" role="group">
-                        <button type="button" id="firstChart_individual_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_individual?>" data-toggle="tooltip" title="Show a chart of individual blood pressure entries">
+                        <button type="button" id="firstChart_individual_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_individual?>" data-toggle="tooltip" title="Show a chart of individual entries">
                             Individual
                         </button>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" id="firstChart_daily_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_daily?>" data-toggle="tooltip" title="Show a chart of daily blood pressure averages">
+                        <button type="button" id="firstChart_daily_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_daily?>" data-toggle="tooltip" title="Show a chart of daily averages/totals">
                             Daily
                         </button>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" id="firstChart_weekly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_weekly?>" data-toggle="tooltip" title="Show a chart of weekly blood pressure averages">
+                        <button type="button" id="firstChart_weekly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_weekly?>" data-toggle="tooltip" title="Show a chart of weekly averages/totals">
                             Weekly
                         </button>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" id="firstChart_monthly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_monthly?>" data-toggle="tooltip" title="Show a chart of monthly blood pressure averages">
+                        <button type="button" id="firstChart_monthly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_monthly?>" data-toggle="tooltip" title="Show a chart of monthly averages/totals">
                             Monthly
                         </button>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" id="firstChart_yearly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_yearly?>" data-toggle="tooltip" title="Show a chart of yearly blood pressure averages">
+                        <button type="button" id="firstChart_yearly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_yearly?>" data-toggle="tooltip" title="Show a chart of yearly averages/totals">
                             Yearly
                         </button>
                     </div>
@@ -546,26 +546,26 @@ class MeasurementsView{
             <div class="col-sm-6">
                 <div id="secondChartType_btns" class="btn-group btn-group-justified" role="group">
                     <div class="btn-group" role="group">
-                        <button type="button" id="secondChart_individual_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_individual?>" data-toggle="tooltip" title="Show a chart of individual blood pressure entries">
+                        <button type="button" id="secondChart_individual_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_individual?>" data-toggle="tooltip" title="Show a chart of individual entries">
                             Individual
                         </button>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" id="secondChart_daily_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_daily?>" data-toggle="tooltip" title="Show a chart of daily blood pressure averages">
+                        <button type="button" id="secondChart_daily_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_daily?>" data-toggle="tooltip" title="Show a chart of daily averages/totals">
                             Daily
                         </button>
                     </div><div class="btn-group" role="group">
-                        <button type="button" id="secondChart_weekly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_weekly?>" data-toggle="tooltip" title="Show a chart of weekly blood pressure averages">
+                        <button type="button" id="secondChart_weekly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_weekly?>" data-toggle="tooltip" title="Show a chart of weekly averages/totals">
                             Weekly
                         </button>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" id="secondChart_monthly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_monthly?>" data-toggle="tooltip" title="Show a monthly of daily blood pressure averages">
+                        <button type="button" id="secondChart_monthly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_monthly?>" data-toggle="tooltip" title="Show a monthly of daily averages/totals">
                             Monthly
                         </button>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" id="secondChart_yearly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_yearly?>" data-toggle="tooltip" title="Show a chart of yearly blood pressure averages">
+                        <button type="button" id="secondChart_yearly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_yearly?>" data-toggle="tooltip" title="Show a chart of yearly averages/totals">
                             Yearly
                         </button>
                     </div>

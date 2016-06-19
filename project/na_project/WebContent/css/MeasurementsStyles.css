@@ -9,6 +9,8 @@ span.link-text:hover {
 	color: #ffffff;
 	background-color: #337ab7;
 	border-radius: 4px;
+	font-weight: bold;
+	border: 1px solid #000000;
 }
 
 a.disabled, label.disabled {

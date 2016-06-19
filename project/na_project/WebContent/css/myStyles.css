@@ -26,6 +26,9 @@ td .glyphicon {
 	color: #5cb85c;
 }
 
+#brand-image {
+	display: inline-block;
+}
 div.navbar-header > .changeTheme {
 	display: inline-block;
 	float: right;
@@ -38,7 +41,7 @@ div.navbar-header > .changeTheme {
 	font-size: small;
 	font-weight: bold;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	color: #000000;
+	color: #444444;
 	background-color: #E5E5E5;
 	border: 1px solid #337ab7;
 	border-radius: 10px 0px 0px 10px;
@@ -49,17 +52,22 @@ div.navbar-header > .changeTheme {
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
+div.changeTheme > a.lightTheme:hover, li.changeTheme > a.lightTheme:hover {
+	background-color: #2669A3;
+	border-color: #C8C8C8;
+	text-decoration: none;
+}
 .changeTheme > span.lightTheme {
 	cursor: default;
 }
-.changeTheme > .darkTheme {
+div.changeTheme > a.darkTheme, div.changeTheme > span.darkTheme, li.changeTheme > a.darkTheme, li.changeTheme > span.darkTheme {
     display: inline-block;
     line-height: 20px;
     font-variant: small-caps;
     font-size: small;
     font-weight: bold;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    color: #FFFFFF;
+    color: #C8C8C8;
     background-color: #222222;
     border: 1px solid #337ab7;
     border-radius: 0px 10px 10px 0px;
@@ -69,6 +77,11 @@ div.navbar-header > .changeTheme {
     padding-bottom: 5px;
     margin-top: 10px;
     margin-bottom: 10px;
+}
+div.changeTheme > a.darkTheme:hover, li.changeTheme > a.darkTheme:hover {
+	background-color: #2669A3;
+	border-color: #000000;
+	text-decoration: none;
 }
 .changeTheme > span.darkTheme {
     cursor: default;
