@@ -78,7 +78,6 @@ class MeasurementsController {
         }
         
         // measurements of a specific type requested, either as individual measurements or as daily/weekly/monthly/yearly averages
-        // TODO I'm working on this to implement date range selections
         $allowedMeasTypes = array('bloodPressure', 'calorie', 'exercise', 'glucose', 'sleep', 'weight');
         $allowedPeriods = array('individual', 'day', 'week', 'month', 'year', 'all');
         $allowedAvgPeriods = array('week', 'month', 'year', 'all');
@@ -122,12 +121,6 @@ class MeasurementsController {
             $minDate = null;
             $maxDate = null;
         }
-        
-//         echo "arguments: {$_SESSION['arguments']}\n\t";
-//         echo "timePeriod: $timePeriod\n\t";
-//         echo "groupEachDay: " .($groupEachDay ? 'true' : 'false'). "\n\t";
-//         echo "minDate: " .(is_null($minDate) ? 'null' : $minDate). "\n\t";
-//         echo "maxDate: " .(is_null($maxDate) ? 'null' : $maxDate). "\n";
             
         /* class/function to call depends on measurement type and what data was requested.
          * The data requested can be individual measurements, daily/weekly/monthly/yearly averages,
@@ -222,12 +215,10 @@ class MeasurementsController {
     
     private static function add() {
         if (!isset($_SESSION['arguments'])) {
-            self::error('Error: arguments expected');
             $_SESSION['error'] = 'arguments expected';
             return false;
         }
         if (!isset($_POST) || empty($_POST)) {
-            self::error('Error: post data missing');
             $_SESSION['error'] = 'post data missing';
             return false;
         }
@@ -246,8 +237,26 @@ class MeasurementsController {
         }
         
         if ($measurement->getErrorCount() > 0) {
-            self::setVars('danger', 'Add failed. Correct any errors and try again.', 'show', 'all', 'show');
-            $_SESSION['error'] = 'Add failed. Correct any errors and try again.';
+            $_SESSION['error'] = 'Add failed: '.array_shift($measurement->getErrors());
+            return false;
+        }
+        
+        // make sure a measurement with the specified date and time does not already exist
+        $dateAndTime = $_POST['date'].' '.$_POST['time'];
+        switch ($_SESSION['arguments']) {
+            case 'bloodPressure': $existingMeasurement = BloodPressureMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $dateAndTime); break;
+            case 'calories': case 'calorie': $existingMeasurement = CalorieMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $dateAndTime); break;
+            case 'exercise': $existingMeasurement = ExerciseMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $dateAndTime); break;
+            case 'glucose': $existingMeasurement = GlucoseMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $dateAndTime); break;
+            case 'sleep': $existingMeasurement = SleepMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $dateAndTime); break;
+            case 'weight': $existingMeasurement = WeightMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $dateAndTime); break;
+            default:
+                $_SESSION['error'] = "Unrecognized measurement type argument: $args[1]";
+                return false;
+        }
+        
+        if (! is_null($existingMeasurement)) {
+            $_SESSION['error'] = 'A measurement with the specified date and time already exists. Update the date and time to a unique value, then try again.';
             return false;
         }
         
@@ -293,13 +302,11 @@ class MeasurementsController {
     
     private static function edit() {
         if (!isset($_SESSION['arguments'])) {
-            self::error('Error: arguments expected');
             $_SESSION['error'] = 'arguments expected';
             return false;
         }
         
         if (strpos($_SESSION['arguments'], '_') === false) {
-            self::error('Error: multiple arguments expected');
             $_SESSION['error'] = 'multiple arguments expected';
             return false;
         }
@@ -345,12 +352,10 @@ class MeasurementsController {
     
     private static function post($args) {
         if (!isset($_POST['oldDateTime']) || empty($_POST['oldDateTime'])) {
-            self::error('Error: original measurement date and time not found');
             $_SESSION['error'] = 'original measurement date and time not found';
             return false;
         }
         if (!isset($_POST) || empty($_POST)) {
-            self::error('Error: post data missing');
             $_SESSION['error'] = 'post data missing';
             return false;
         }
@@ -406,14 +411,14 @@ class MeasurementsController {
                 $_SESSION['error'] = 'Edit failed. Correct any errors and try again.';
                 return false;
             }
-            
-            self::setVars('danger', 'Edit failed. Correct any errors and try again.', 'show', 'all', 'show');
+            else
+                self::setVars('danger', 'Edit failed. Correct any errors and try again.', 'show', 'all', 'show');
         }
         else {
             if (isset($_POST['json']))
                 return true;
-            
-            self::setVars('success', 'Measurement edited', 'show', 'all', 'show');
+            else
+                self::setVars('success', 'Measurement edited', 'show', 'all', 'show');
         }
         
         unset($_SESSION['measurement']);

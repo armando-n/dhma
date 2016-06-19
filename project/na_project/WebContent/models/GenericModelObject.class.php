@@ -21,7 +21,7 @@ abstract class GenericModelObject {
     }
     
     public function setError($errorName, $errorValue) {
-        $this->errors[$errorName] =  Messages::getError($errorValue);
+        $this->errors[$errorName] = trim(Messages::getError($errorValue));
         $this->errorCount++;
     }
     

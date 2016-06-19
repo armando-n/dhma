@@ -131,6 +131,7 @@ $(document).ready(function() {
 	$('.add_measurement_section .time-picker').datetimepicker( {
 		format: 'h:mm a',
 		defaultDate: Date.now(),
+		showTodayButton: true,
 		focusOnShow: false,
 	} );
 	$('.edit_measurement_section .date-picker').datetimepicker( {
@@ -142,6 +143,7 @@ $(document).ready(function() {
 	$('.edit_measurement_section .time-picker').datetimepicker( {
 		format: 'h:mm a',
 		defaultDate: Date.now(),
+		showTodayButton: true,
 		focusOnShow: false,
 	} );
 	
@@ -418,7 +420,7 @@ function options_changed() {
 		success: function(response) {
 			if (response.success) {
 				if (response.data.rowsAffected < 1) {
-					console.log('Stored options not affected. Either options name not found, or stored option was already set to current selection.');
+//					console.log('Stored options not affected. Either options name not found, or stored option was already set to current selection.');
 					return;
 				}
 //				alert('Options change successfully stored.');
@@ -887,7 +889,7 @@ function addMeasurement(event) {
 				$('#' +measurementParts[measType][0]+ '_' +measType+ '_add').val('').focus();
 			}
 			else
-				alert('add failed: check input for errors and try again: ' +response.error);
+				alert('Add failed: ' +response.error);
 		},
 		error: function() { alert('error: check values and try again.'); }
 	});
@@ -1427,21 +1429,24 @@ function viewNewChart(event) {
 	var measType = $('#activeMeasurement').text();
 	var whichChart = id_pieces[0];
 	var chartType = id_pieces[1];
+	var oldChartType = $('#'+whichChart+'Type_btns').find('.active').attr('id').split('_')[1];
 	var startDate = $('#'+chartType+'_'+measType+'_chartStart').text();
 	var endDate = $('#'+chartType+'_'+measType+'_chartEnd').text();
 	
-	// deactivate/activate associated buttons
-	$('#'+whichChart+'Type_btns').find('.active').removeClass('active');
-	$(this).addClass('active');
-	
-	// update chart type in hidden DOM data
-	$('#'+whichChart+'Type').text(chartType);
-	
-	// update dates in options area
-	updateChartDatePickers(measType, chartType, whichChart);
-	
-	// store changes on server
-	options_changed();
+	if (chartType !== oldChartType) {
+		// deactivate/activate associated buttons
+		$('#'+whichChart+'Type_btns').find('.active').removeClass('active');
+		$(this).addClass('active');
+		
+		// update chart type in hidden DOM data
+		$('#'+whichChart+'Type').text(chartType);
+		
+		// update dates in options area
+		updateChartDatePickers(measType, chartType, whichChart);
+		
+		// store changes on server
+		options_changed();
+	}
 	
 	// create new chart for the active measurement
 	createChart(measType, chartType, whichChart);
@@ -1489,8 +1494,6 @@ function chartSubtitle_clicked() {
 		$('html, body').animate( { scrollTop: $("#firstChartOptions_tab").offset().top }, 200);
 		setTimeout(function() {
 			$('#'+whichChart+'Options_tab').click();
-			console.log('#'+whichChart+'_'+startOrEnd+'_picker');
-			console.log($('#'+whichChart+'_'+startOrEnd+'_picker'));
 			$('#'+whichChart+'_'+startOrEnd+'_picker').data('DateTimePicker').show();
 		}, 200);
 	}

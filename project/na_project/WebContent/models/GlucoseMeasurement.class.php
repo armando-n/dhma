@@ -168,13 +168,13 @@ class GlucoseMeasurement extends GenericModelObject implements JsonSerializable 
             return;
         }
         
-        $options = array("options" => array("regexp" => "/^((\d+)|(\d*\.\d))$/"));
+        $options = array("options" => array("regexp" => "/^((\d+)|(\d*\.\d+))$/"));
         if (!filter_var($this->glucose, FILTER_VALIDATE_REGEXP, $options)) {
             $this->setError("glucose", "GLUCOSE_HAS_INVALID_CHARS");
             return;
         }
         
-        $this->glucose = (int)$this->glucose;
+        $this->glucose = floatval($this->glucose);
     }
 
     private function validateUnits() {
