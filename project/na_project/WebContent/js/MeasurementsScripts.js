@@ -166,7 +166,7 @@ $(document).ready(function() {
 			$('#firstChart_'+measType).hide();
 			$('#secondChart_'+measType).hide();
 		});
-		disableSecondChartOptions();
+		disableSecondChartOptions(true, true);
 	}
 	else if (!$('#options_showSecondChart').is(':checked') || $(window).width() < smallScreen_limit) {
 		$.each(measurementTypes, function(index, measType) {
@@ -175,10 +175,10 @@ $(document).ready(function() {
 		});
 		$('#secondChartType_btns').hide();
 		$('#firstChartType_btns').parent().removeClass('col-sm-6').addClass('col-sm-12');
-		disableSecondChartTab();
+		disableSecondChartOptions(false, true);
 	}
 	if ($(window).width() < smallScreen_limit)
-		disableSecondChartOptions();
+		disableSecondChartOptions(true, true);
 	
 	// make chart date subtitles clickable to allow easy start/end date editing
 	$('#measurement_sections').on('click', '.firstChart-startDate', chartSubtitle_clicked);
@@ -224,7 +224,7 @@ function window_resized() {
 	// small size screens
 	if ($(window).width() < smallScreen_limit) {
 		if (! $('#options_showSecondChart').is(':disabled'))
-			disableSecondChartOptions();
+			disableSecondChartOptions(true, true);
 		if ($('#firstChartType_btns').parent().hasClass('col-sm-6')) {
 			
 			// hide second charts and associated buttons for all measurements
@@ -244,7 +244,7 @@ function window_resized() {
 	// medium and large screen sizes
 	else {
 		if ($('#options_showSecondChart').is(':disabled'))
-			enableSecondChartOptions();
+			enableSecondChartOptions(true, true);
 		if ($('#options_showSecondChart').is(':checked') && $('#firstChartType_btns').parent().hasClass('col-sm-12')) {
 			// show second charts and associated buttons for all measurements
 			$('.secondChart').show();
@@ -298,11 +298,12 @@ function setOptionsChangedListeners() {
 	// update charts button clicked
 	$('.updateCharts-btn').click(chartRange_update);
 	
-	// chart date pickers changed
-	$('#firstChart_startDate_picker').on('dp.change', chartDate_picked);
-	$('#secondChart_startDate_picker').on('dp.change', chartDate_picked);
-	$('#firstChart_endDate_picker').on('dp.change', chartDate_picked);
-	$('#secondChart_endDate_picker').on('dp.change', chartDate_picked);
+	// chart date pickers changed, and show/hide
+	$('#firstChart_startDate_picker').on('dp.change', chartDate_picked).on('dp.show', chartDate_clicked);
+	$('#secondChart_startDate_picker').on('dp.change', chartDate_picked).on('dp.show', chartDate_clicked);
+	$('#firstChart_endDate_picker').on('dp.change', chartDate_picked).on('dp.show', chartDate_clicked);
+	$('#secondChart_endDate_picker').on('dp.change', chartDate_picked).on('dp.show', chartDate_clicked);
+	
 }
 
 // fires when any option is changed, storing the change in the server
@@ -438,7 +439,7 @@ function showFirstChart_clicked() {
 		$('#firstChartType_btns').hide();
 		
 		firstChart_tab.click();
-		disableSecondChartOptions();
+		disableSecondChartOptions(true, true);
 		
 		// hide second charts if visible and uncheck second chart checkbox
 		if ($('#secondChart_'+activeMeasurement).is(':visible')) {
@@ -463,7 +464,7 @@ function showFirstChart_clicked() {
 		$('#firstChartType_btns').parent().removeClass('col-sm-6').addClass('col-sm-12');
 		
 		if ($(window).width() >= smallScreen_limit)
-			enableSecondChartOptions();
+			enableSecondChartOptions(true, false);
 		
 		charts[activeMeasurement+'_firstChart'].reflow();
 	}
@@ -485,7 +486,7 @@ function showSecondChart_clicked() {
 		});
 		$('#secondChartType_btns').hide();
 		$('#firstChartType_btns').parent().removeClass('col-sm-6').addClass('col-sm-12');
-		disableSecondChartTab();
+		disableSecondChartOptions(false, true);
 	}
 	
 	// showSecondChart is being checked
@@ -497,7 +498,7 @@ function showSecondChart_clicked() {
 		});
 		$('#secondChartType_btns').show();
 		$('#firstChartType_btns').parent().removeClass('col-sm-12').addClass('col-sm-6');
-		enableSecondChartTab();
+		enableSecondChartOptions(false, true);
 		charts[activeMeasurement+'_secondChart'].reflow();
 	}
 	charts[activeMeasurement+'_firstChart'].reflow();
@@ -1427,44 +1428,36 @@ function viewNewChart(event) {
 	createChart(measType, chartType, whichChart);
 }
 
-function disableSecondChartOptions() {
-	var secondChart_checkbox = $('#options_showSecondChart');
+function disableSecondChartOptions(checkbox, tab) {
+	if (checkbox) { // disable showSecondChart checkbox
+		var secondChart_checkbox = $('#options_showSecondChart');
+		secondChart_checkbox.prop('disabled', true);
+		secondChart_checkbox.parent().addClass('disabled');
+	}
 	
-	disableSecondChartTab();
-	
-	// disable showSecondChart checkbox
-	secondChart_checkbox.prop('disabled', true);
-	secondChart_checkbox.parent().addClass('disabled');
+	if (tab) { // click first chart tab and disable second chart tab
+		var firstChart_tab = $('#chartsOptions_tabs a[href="#firstChartOptions"]');
+		var secondChart_tab = $('#chartsOptions_tabs a[href="#secondChartOptions"]');
+		firstChart_tab.click();
+		secondChart_tab.addClass('disabled');
+		secondChart_tab.off('click', chartSettingsTab_clicked);
+		secondChart_tab.removeAttr('data-toggle');
+	}
 }
 
-function disableSecondChartTab() {
-	var firstChart_tab = $('#chartsOptions_tabs a[href="#firstChartOptions"]');
-	var secondChart_tab = $('#chartsOptions_tabs a[href="#secondChartOptions"]');
+function enableSecondChartOptions(checkbox, tab) {
+	if (checkbox) { // enable showSecondChart checkbox
+		var secondChart_checkbox = $('#options_showSecondChart');
+		secondChart_checkbox.prop('disabled', false);
+		secondChart_checkbox.parent().removeClass('disabled');
+	}
 	
-	// click first chart tab and disable second chart tab
-	firstChart_tab.click();
-	secondChart_tab.addClass('disabled');
-	secondChart_tab.off('click', chartSettingsTab_clicked);
-	secondChart_tab.removeAttr('data-toggle');
-}
-
-function enableSecondChartOptions() {
-	var secondChart_checkbox = $('#options_showSecondChart');
-	
-	enableSecondChartTab();
-	
-	// enable showSecondChart checkbox
-	secondChart_checkbox.prop('disabled', false);
-	secondChart_checkbox.parent().removeClass('disabled');
-}
-
-function enableSecondChartTab() {
-	var secondChart_tab = $('#chartsOptions_tabs a[href="#secondChartOptions"]');
-	
-	// enable second chart tab
-	secondChart_tab.removeClass('disabled');
-	secondChart_tab.on('click', chartSettingsTab_clicked);
-	secondChart_tab.attr('data-toggle', 'tab');
+	if (tab) { // enable second chart tab
+		var secondChart_tab = $('#chartsOptions_tabs a[href="#secondChartOptions"]');
+		secondChart_tab.removeClass('disabled');
+		secondChart_tab.on('click', chartSettingsTab_clicked);
+		secondChart_tab.attr('data-toggle', 'tab');
+	}
 }
 
 function chartSubtitle_clicked() {
@@ -1511,7 +1504,16 @@ function updateChartDatePickers(measType, chartType, whichChart) {
 	endDate_picker.date(newEndDate);
 }
 
-//called when a chart date range date picker date changed in options
+function chartDate_clicked() {
+	var pieces = $(this).attr('id').split('_');
+	var whichChart = pieces[0];
+	var whichDate = pieces[1];
+	var otherDate = (whichDate === 'startDate') ? 'endDate' : 'startDate';
+	
+	$('#'+whichChart+'_'+otherDate+'_picker').data('DateTimePicker').hide();
+}
+
+// called when a chart date range date picker date changed in options
 function chartDate_picked() {
 	var pieces = $(this).attr('id').split('_');
 	var whichChart = pieces[0];
