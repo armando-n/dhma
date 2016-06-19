@@ -95,15 +95,16 @@ class HeaderView {
         </div>
     </div>
 </div><?php
-                endif; ?>
-
+                endif;
+                if (!is_null($title)): ?>
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
             <h1 id="pagetitle" class="page-header"><?=$title?></h1>
         </div>
     </div>
-</div>
+</div><?php
+                endif; ?>
 
 <div class="container">
 

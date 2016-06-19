@@ -13,7 +13,7 @@ class MeasurementsView{
         
         if (isset($_SESSION['profile']) && $_SESSION['profile']->getTheme() === 'dark')
             $_SESSION['libraries'][] = 'highcharts/dark-unica.js';
-        HeaderView::show("Your Past Measurements");
+        HeaderView::show();
         MeasurementsView::showBody();
         FooterView::show();
     }

@@ -689,14 +689,10 @@ function chartSettingsTab_clicked(event) {
 
 function tab_clicked(event) {
 	var measType = $(this).attr('id').split('_')[0];
-	
-	// change something like 'bloodPressure' to 'Blood Pressure', or 'exercise' to 'Exericse'
-	var upperMeasType = measType.replace(/([a-z])([A-Z])/g, function(match, p1, p2) { return [p1, p2].join(' '); } );
-	upperMeasType = upperMeasType.replace(/^[a-z]/, function (match) { return match.toUpperCase(); } );
 
 	// show tab, change dropdown label, deselect menu item and select correct menu item
 	$(this).tab('show');
-	$('#measurements_dropdown_label').text(upperMeasType);
+	$('#measurements_dropdown_label').text(attributeNameToDisplayName(measType));
 	$('#measurements_dropdown li').removeClass('active');
 	$('#'+measType+'_dropdown_btn').parent().addClass('active');
 	
@@ -1328,7 +1324,9 @@ function createChart_Options(measType, title, data, per, subtitle, whichChart) {
 				title: { text: $('#'+measType+'Units').text() }
 			},
 			series: data,
+			legend: { labelFormatter: function() { return this.name.replace(/([a-z])([A-Z])/, "$1 $2").toLowerCase(); } },
 			tooltip: {
+				shared: (measType === 'bloodPressure'),
 				formatter: function() {
 					var resultStr;
 					var firstLine;
@@ -1340,28 +1338,37 @@ function createChart_Options(measType, title, data, per, subtitle, whichChart) {
 					var secondLineBody;
 					var secondLineFooter = '</span>';
 					var displayUnits = $('#'+measType+'Units').text();
+					var key = (measType === 'bloodPressure') ? this.points[0].key : this.key;
 
 					if (per === 'all' || per === 'individual') {
-						var date = new Date(this.key);
+						var date = new Date(key);
 						firstLineBody = date.toDateString();
 						secondLineBody = dateToLocalTimeString(date);
 					} else if (per === 'day')
-						firstLineBody = dayValue(this.key);
+						firstLineBody = dayValue(key);
 					else if (per === 'week')
-						firstLineBody = weekValue(this.key, false);
+						firstLineBody = weekValue(key, false);
 					else if (per === 'month')
-						firstLineBody = monthValue(this.key, false);
+						firstLineBody = monthValue(key, false);
 					else if (per === 'year')
-						firstLineBody = this.key;
+						firstLineBody = key;
 					
 					firstLine = firstLineHeader + firstLineBody + firstLineFooter;
 					if (per === 'all' || per === 'individual')
 						secondLine += secondLineHeader + secondLineBody + secondLineFooter;
 
 					resultStr = firstLine + secondLine;
-					resultStr +=
-						'<br /><span style="color: ' +this.series.color+ '">\u25CF</span> ' +
-						this.series.name+ ': <strong>' +this.y+ ' ' +displayUnits+ '</strong>';
+					if (measType === 'bloodPressure') {
+						$.each(this.points, function() {
+							resultStr +=
+								'<br /><span style="color: ' +this.series.color+ '">\u25CF</span> ' +
+								this.series.name.replace(/([a-z])([A-Z])/, "$1 $2").toLowerCase()+ ': <strong>' +this.y+ ' ' +displayUnits+ '</strong>';
+						});
+					} else {
+						resultStr +=
+							'<br /><span style="color: ' +this.series.color+ '">\u25CF</span> ' +
+							this.series.name+ ': <strong>' +this.y+ ' ' +displayUnits+ '</strong>';
+					}
 					
 					if (measType === 'exercise' || measType === 'sleep') {
 						if (displayUnits === 'minutes') {
