@@ -125,20 +125,24 @@ $(document).ready(function() {
 	$('.add_measurement_section .date-picker').datetimepicker( {
 		format: 'YYYY-MM-DD',
 		defaultDate: Date.now(),
-		showTodayButton: true
+		showTodayButton: true,
+		focusOnShow: false,
 	} );
 	$('.add_measurement_section .time-picker').datetimepicker( {
 		format: 'h:mm a',
-		defaultDate: Date.now()
+		defaultDate: Date.now(),
+		focusOnShow: false,
 	} );
 	$('.edit_measurement_section .date-picker').datetimepicker( {
 		format: 'YYYY-MM-DD',
 		defaultDate: Date.now(),
-		showTodayButton: true
+		showTodayButton: true,
+		focusOnShow: false,
 	} );
 	$('.edit_measurement_section .time-picker').datetimepicker( {
 		format: 'h:mm a',
-		defaultDate: Date.now()
+		defaultDate: Date.now(),
+		focusOnShow: false,
 	} );
 	
 	// request data from server and create tables
@@ -1129,8 +1133,12 @@ function table_addEditDeleteButtons_options(measType) {
 						// fill in date/time fields of add form with current date and time
 						$('#add_' +measType+ '_section .time-picker').data('DateTimePicker').date(new Date());
 						
-						// clear and put focus in first field of form
-						$('#' +measurementParts[measType][0]+ '_' +measType+ '_add').val('').focus();
+						// clear and scroll to first field of form on extra-small screens
+						$('#' +measurementParts[measType][0]+ '_' +measType+ '_add').val('');
+						if ($(window).width() < smallScreen_limit)
+							$('html, body').animate( { scrollTop: $('#add_'+measType+'_section').offset().top }, 200);
+						else
+							$('#' +measurementParts[measType][0]+ '_' +measType+ '_add').focus();
 					}
 				},
 				
@@ -1151,9 +1159,12 @@ function table_addEditDeleteButtons_options(measType) {
 	            		$('#edit_' +measType+ '_section .time-picker').data('DateTimePicker').date(row.time);
 	            		$('#oldDateTime_' + measType).val(row.date + ' ' + row.time);
 	            		
-	            		// show the edit form and put focus on first field
+	            		// show the edit form and scroll to first field on extra-small screens
 	            		showFormSection(measType, 'edit', dt);
-	            		$('#' +measurementParts[measType][0]+ '_' +measType+ '_edit').focus();
+	            		if ($(window).width() < smallScreen_limit)
+							$('html, body').animate( { scrollTop: $('#edit_'+measType+'_section').offset().top }, 200);
+	            		else
+	            			$('#' +measurementParts[measType][0]+ '_' +measType+ '_edit').focus();
 	            	}
 	            },
 	            
