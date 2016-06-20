@@ -922,9 +922,17 @@ function row_clicked(e, dt, type, indexes) {
 	
 	// if edit form is visible, fill the edit form with data from the currently selected measurement
 	if (indexes.length == 1 && $('#edit_' +measType+ '_section').is(':visible')) {
+		var displayUnits = $('#'+measType+'Units').text();
+		var nonMeasParts = ['date', 'time', 'notes', 'type'];
 		var row = selectedRows[0].data(); // this is the original object returned from the server to create the row
-		for (var key in row)
-			$('#' +key+ '_' +measType+ '_edit').val(row[key]);
+		var cellValue;
+		for (var key in row) {
+			if (displayUnits !== row.units && $.inArray(key, nonMeasParts) === -1)
+				cellValue = convertUnits(row[key], row.units, displayUnits);
+			else
+				cellValue = row[key];
+			$('#' +key+ '_' +measType+ '_edit').val(cellValue);
+		}
 		$('#edit_' +measType+ '_section .time-picker').data('DateTimePicker').date(row.time);
 		$('#oldDateTime_' + measType).val(row.date + ' ' + row.time);
 	}
@@ -938,6 +946,8 @@ function row_deselected(e, dt, type, indexes) {
 	var measType = $(this).attr('id').split('_')[0];
 	dt.button($('#' +measType+ '_edit')).node().hide();
 	dt.button($('#' +measType+ '_delete')).node().hide();
+	if (selectedRows.length === 0)
+		hideFormSection(measType, 'edit');
 }
 
 // returns the table options object for the specified type of measurement (e.g. for bloodPressure, or exercise, etc.)
@@ -1123,7 +1133,7 @@ function table_addEditDeleteButtons_options(measType) {
 						node.prepend('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;');
 					},
 					action: function (e, dt, node, config) {
-						showFormSection(measType, 'add', dt); // show add form
+						showFormSection(measType, 'add'); // show add form
 						if (selectedRows.length > 0) {
 							
 							// deselect rows
@@ -1161,14 +1171,22 @@ function table_addEditDeleteButtons_options(measType) {
 					},
 	            	action: function (e, dt, node, config) {
 	            		// fill the edit form with data from the currently selected measurement
+	            		var displayUnits = $('#'+measType+'Units').text();
+	            		var nonMeasParts = ['date', 'time', 'notes', 'type'];
 	            		var row = selectedRows[0].data(); // this is the original object returned from the server to create the row
-	            		for (var key in row)
-	            			$('#' +key+ '_' +measType+ '_edit').val(row[key]);
+	            		var cellValue;
+	            		for (var key in row) {
+	            			if (displayUnits !== row.units && $.inArray(key, nonMeasParts) === -1)
+	            				cellValue = convertUnits(row[key], row.units, displayUnits);
+	            			else
+	            				cellValue = row[key];
+	            			$('#' +key+ '_' +measType+ '_edit').val(cellValue);
+	            		}
 	            		$('#edit_' +measType+ '_section .time-picker').data('DateTimePicker').date(row.time);
 	            		$('#oldDateTime_' + measType).val(row.date + ' ' + row.time);
 	            		
 	            		// show the edit form and scroll to first field on extra-small screens
-	            		showFormSection(measType, 'edit', dt);
+	            		showFormSection(measType, 'edit');
 	            		if ($(window).width() < smallScreen_limit)
 							$('html, body').animate( { scrollTop: $('#edit_'+measType+'_section').offset().top }, 200);
 	            		else
@@ -1675,7 +1693,7 @@ function hideFormSection(meas_type, form_type) {
 }
 
 // show the specified measurement form section for the associated measurement type and jump to it
-function showFormSection(meas_type, form_type, dt) {
+function showFormSection(meas_type, form_type) {
 	
 	// hide other section if it is visible, and deactivate its corresponding button
 	if (form_type == 'add' && $('#edit_' + meas_type + '_section').is(':visible'))

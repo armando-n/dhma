@@ -344,21 +344,22 @@ class MeasurementsController {
         }
         
         $newDateAndTime = $_POST['date'].' '.$_POST['time'];
-        switch ($args[1]) {
-            case 'bloodPressure': $newMeasurement = BloodPressureMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $newDateAndTime); break;
-            case 'calories': case 'calorie': $newMeasurement = CalorieMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $newDateAndTime); break;
-            case 'exercise': $newMeasurement = ExerciseMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $newDateAndTime); break;
-            case 'glucose': $newMeasurement = GlucoseMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $newDateAndTime); break;
-            case 'sleep': $newMeasurement = SleepMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $newDateAndTime); break;
-            case 'weight': $newMeasurement = WeightMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $newDateAndTime); break;
-            default:
-                $_SESSION['error'] = 'Unrecognized type of measurement : '.htmlspecialchars($args[1]);
+        if ($_POST['oldDateTime'] !== $newDateAndTime) {
+            switch ($args[1]) {
+                case 'bloodPressure': $newMeasurement = BloodPressureMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $newDateAndTime); break;
+                case 'calories': case 'calorie': $newMeasurement = CalorieMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $newDateAndTime); break;
+                case 'exercise': $newMeasurement = ExerciseMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $newDateAndTime); break;
+                case 'glucose': $newMeasurement = GlucoseMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $newDateAndTime); break;
+                case 'sleep': $newMeasurement = SleepMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $newDateAndTime); break;
+                case 'weight': $newMeasurement = WeightMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $newDateAndTime); break;
+                default:
+                    $_SESSION['error'] = 'Unrecognized type of measurement : '.htmlspecialchars($args[1]);
+                    return false;
+            }
+            if (! is_null($newMeasurement)) {
+                $_SESSION['error'] = 'A measurement already exists with the specified new date and time. Change the date and time to a value unique for this type of measurement and try again.';
                 return false;
-        }
-        
-        if (! is_null($newMeasurement)) {
-            $_SESSION['error'] = 'A measurement already exists with the specified new date and time. Change the date and time to a value unique for this type of measurement and try again.';
-            return false;
+            }
         }
         
         switch ($args[1]) {
