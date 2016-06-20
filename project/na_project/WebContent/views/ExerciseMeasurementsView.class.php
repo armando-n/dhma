@@ -56,10 +56,14 @@ class ExerciseMeasurementsView {
                     <label for="date_exercise_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Date</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
                         <div class="input-group date date-picker">
-                            <input type="text" id="date_exercise_add" name="date" required="required" class="form-control" tabindex="3" title="mm/dd/yyyy or mm-dd-yyyy" />
-                            <span class="input-group-addon">
+                        	<span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
+                            <input type="text" id="date_exercise_add" name="date" required="required" class="form-control" tabindex="3" title="yyyy-mm-dd" />
+                            <span class="input-group-btn">
+                        		<label for="exercise_add_date_now" class=".sr-only">Set date to today</label>
+                        		<button type="button" class="btn btn-default tooltip-help today-btn" id="exercise_add_date_now" data-placement="left" title="Set the date to today">today</button>
+                        	</span>
                         </div>
                     </div>
                 </div>
@@ -67,10 +71,14 @@ class ExerciseMeasurementsView {
                     <label for="time_exercise_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Time</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
                         <div class="input-group date time-picker">
-                            <input type="text" id="time_exercise_add" name="time" required="required" class="form-control" tabindex="4" title="H:M" />
-                            <span class="input-group-addon">
+                        	<span class="input-group-addon">
                                 <span class="glyphicon glyphicon-time"></span>
                             </span>
+                            <input type="text" id="time_exercise_add" name="time" required="required" class="form-control" tabindex="4" title="H:M" />
+                            <span class="input-group-btn">
+                        		<label for="exercise_add_time_now" class=".sr-only">Set time to now</label>
+                        		<button type="button" class="btn btn-default tooltip-help now-btn" id="exercise_add_time_now" data-placement="left" title="Set the time to now">now</button>
+                        	</span>
                         </div>
                     </div>
                 </div>
@@ -132,10 +140,14 @@ class ExerciseMeasurementsView {
                     <label for="date_exercise_edit" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Date</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
                         <div class="input-group date date-picker">
-                            <input type="text" id="date_exercise_edit" name="date" required="required" class="form-control" tabindex="3" title="mm/dd/yyyy or mm-dd-yyyy" />
-                            <span class="input-group-addon">
+                        	<span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
+                            <input type="text" id="date_exercise_edit" name="date" required="required" class="form-control" tabindex="3" title="yyyy-mm-dd" />
+                            <span class="input-group-btn">
+                        		<label for="exercise_edit_date_now" class=".sr-only">Set date to today</label>
+                        		<button type="button" class="btn btn-default tooltip-help today-btn" id="exercise_edit_date_now" data-placement="left" title="Set the date to today">today</button>
+                        	</span>
                         </div>
                     </div>
                 </div>
@@ -143,10 +155,14 @@ class ExerciseMeasurementsView {
                     <label for="time_exercise_edit" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Time</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
                         <div class="input-group date time-picker">
-                            <input type="text" id="time_exercise_edit" name="time" required="required" class="form-control" tabindex="4" title="H:M" />
-                            <span class="input-group-addon">
+                        	<span class="input-group-addon">
                                 <span class="glyphicon glyphicon-time"></span>
                             </span>
+                            <input type="text" id="time_exercise_edit" name="time" required="required" class="form-control" tabindex="4" title="H:M" />
+                            <span class="input-group-btn">
+                        		<label for="exercise_edit_time_now" class=".sr-only">Set time to now</label>
+                        		<button type="button" class="btn btn-default tooltip-help now-btn" id="exercise_edit_time_now" data-placement="left" title="Set the time to now">now</button>
+                        	</span>
                         </div>
                     </div>
                 </div>

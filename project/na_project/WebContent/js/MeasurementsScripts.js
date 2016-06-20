@@ -131,7 +131,6 @@ $(document).ready(function() {
 	$('.add_measurement_section .time-picker').datetimepicker( {
 		format: 'h:mm a',
 		defaultDate: Date.now(),
-		showTodayButton: true,
 		focusOnShow: false,
 	} );
 	$('.edit_measurement_section .date-picker').datetimepicker( {
@@ -143,9 +142,15 @@ $(document).ready(function() {
 	$('.edit_measurement_section .time-picker').datetimepicker( {
 		format: 'h:mm a',
 		defaultDate: Date.now(),
-		showTodayButton: true,
 		focusOnShow: false,
 	} );
+	$('#measurement_sections .today-btn, #measurement_sections .now-btn').click(function() {
+		var pieces = $(this).attr('id').split('_');
+		var measType = pieces[0];
+		var addOrEdit = pieces[1];
+		var dateOrTime = pieces[2];
+		$('#'+addOrEdit+'_'+measType+'_section .'+dateOrTime+'-picker').data('DateTimePicker').date(new Date());
+	});
 	
 	// request data from server and create tables
 	$.each(measurementTypes, function(index, measType) {
@@ -792,9 +797,9 @@ function editMeasurement(event) {
 				$('#' +measurementParts[measType][0]+ '_' +measType+ '_edit').focus();
 			}
 			else
-				alert('edit failed: check input for errors and try again.');
+				alert('Edit failed: '+response.error);
 		},
-		error: function() { alert('error: check values and try again.'); }
+		error: function() { alert('Error: unable to communiate with server. Try again later.'); }
 	});
 	
 	event.preventDefault();
@@ -891,7 +896,7 @@ function addMeasurement(event) {
 			else
 				alert('Add failed: ' +response.error);
 		},
-		error: function() { alert('error: check values and try again.'); }
+		error: function() { alert('Error: unable to communiate with server. Try again later.'); }
 	});
 	
 	event.preventDefault();

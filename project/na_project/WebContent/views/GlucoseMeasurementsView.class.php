@@ -50,10 +50,14 @@ class GlucoseMeasurementsView {
                     <label for="date_glucose_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Date</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
                         <div class="input-group date date-picker">
-                            <input type="text" id="date_glucose_add" name="date" required="required" class="form-control date-input" tabindex="3" title="mm/dd/yyyy or mm-dd-yyyy" />
-                            <span class="input-group-addon">
+                        	<span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
+                            <input type="text" id="date_glucose_add" name="date" required="required" class="form-control date-input" tabindex="3" title="yyyy-mm-dd" />
+                            <span class="input-group-btn">
+                        		<label for="glucose_add_date_now" class=".sr-only">Set date to today</label>
+                        		<button type="button" class="btn btn-default tooltip-help today-btn" id="glucose_add_date_now" data-placement="left" title="Set the date to today">today</button>
+                        	</span>
                         </div>
                     </div>
                 </div>
@@ -61,10 +65,14 @@ class GlucoseMeasurementsView {
                     <label for="time_glucose_add" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Time</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
                         <div class="input-group date time-picker">
-                            <input type="text" id="time_glucose_add" name="time" required="required" class="form-control" tabindex="4" title="H:M" />
-                            <span class="input-group-addon">
+                        	<span class="input-group-addon">
                                 <span class="glyphicon glyphicon-time"></span>
                             </span>
+                            <input type="text" id="time_glucose_add" name="time" required="required" class="form-control" tabindex="4" title="H:M" />
+                            <span class="input-group-btn">
+                        		<label for="glucose_add_time_now" class=".sr-only">Set time to now</label>
+                        		<button type="button" class="btn btn-default tooltip-help now-btn" id="glucose_add_time_now" data-placement="left" title="Set the time to now">now</button>
+                        	</span>
                         </div>
                     </div>
                 </div>
@@ -120,10 +128,14 @@ class GlucoseMeasurementsView {
                     <label for="date_glucose_edit" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Date</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
                         <div class="input-group date date-picker">
-                            <input type="text" id="date_glucose_edit" name="date" required="required" class="form-control" tabindex="3" title="mm/dd/yyyy or mm-dd-yyyy" />
-                            <span class="input-group-addon">
+                        	<span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
+                            <input type="text" id="date_glucose_edit" name="date" required="required" class="form-control" tabindex="3" title="yyyy-mm-dd" />
+                            <span class="input-group-btn">
+                        		<label for="glucose_edit_date_now" class=".sr-only">Set date to today</label>
+                        		<button type="button" class="btn btn-default tooltip-help today-btn" id="glucose_edit_date_now" data-placement="left" title="Set the date to today">today</button>
+                        	</span>
                         </div>
                     </div>
                 </div>
@@ -131,10 +143,14 @@ class GlucoseMeasurementsView {
                     <label for="time_glucose_edit" class="control-label meas-label col-xs-3 col-sm-12 col-md-4">Time</label>
                     <div class="col-xs-9 col-sm-12 col-md-8">
                         <div class="input-group date time-picker">
-                            <input type="text" id="time_glucose_edit" name="time" required="required" class="form-control" tabindex="4" title="H:M" />
-                            <span class="input-group-addon">
+                        	<span class="input-group-addon">
                                 <span class="glyphicon glyphicon-time"></span>
                             </span>
+                            <input type="text" id="time_glucose_edit" name="time" required="required" class="form-control" tabindex="4" title="H:M" />
+                            <span class="input-group-btn">
+                        		<label for="glucose_edit_time_now" class=".sr-only">Set time to now</label>
+                        		<button type="button" class="btn btn-default tooltip-help now-btn" id="glucose_edit_time_now" data-placement="left" title="Set the time to now">now</button>
+                        	</span>
                         </div>
                     </div>
                 </div>

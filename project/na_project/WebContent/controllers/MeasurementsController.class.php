@@ -9,7 +9,7 @@ class MeasurementsController {
         }
         
         if (!isset($_SESSION['profile'])) {
-            self::redirect('login_show', 'warning', 'You must log in before you can see your measurements. You can use &quot;member&quot; for user name with &quot;pass123&quot; for password or &quot;admin&quot; for user name with &quot;admin&quot; for password.');
+            self::redirect('login_show', 'warning', 'You must log in before you can see your measurements.');
             return;
         }
         
@@ -256,7 +256,7 @@ class MeasurementsController {
         }
         
         if (! is_null($existingMeasurement)) {
-            $_SESSION['error'] = 'A measurement with the specified date and time already exists. Update the date and time to a unique value, then try again.';
+            $_SESSION['error'] = 'A measurement with the specified date and time already exists. Change the date and time to a value unique to this type of measurement and try again.';
             return false;
         }
         
@@ -360,8 +360,6 @@ class MeasurementsController {
             return false;
         }
         
-//         $oldDateAndTime = (new DateTime($_POST['oldDateTime'])).format();
-        
         switch ($args[1]) {
             case 'bloodPressure': $oldMeasurement = BloodPressureMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $_POST['oldDateTime']); break;
             case 'calories': case 'calorie': $oldMeasurement = CalorieMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $_POST['oldDateTime']); break;
@@ -370,12 +368,30 @@ class MeasurementsController {
             case 'sleep': $oldMeasurement = SleepMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $_POST['oldDateTime']); break;
             case 'weight': $oldMeasurement = WeightMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $_POST['oldDateTime']); break;
             default:
-                $_SESSION['error'] = "Unrecognized measurement type argument: $args[1]";
+                $_SESSION['error'] = 'Unrecognized type of measurement : '.htmlspecialchars($args[1]);
                 return false;
         }
         
         if (is_null($oldMeasurement)) {
-            $_SESSION['error'] = "Failed to fetch old measurement. Profile: " . $_SESSION['profile']->getUserName() . "; oldDateTime: " . $_POST['oldDateTime'];
+            $_SESSION['error'] = 'Hmm, a measurement with the original date and time specified could not be found for some reason. Perhaps try refreshing the page and trying again.';
+            return false;
+        }
+        
+        $newDateAndTime = $_POST['date'].' '.$_POST['time'];
+        switch ($args[1]) {
+            case 'bloodPressure': $newMeasurement = BloodPressureMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $newDateAndTime); break;
+            case 'calories': case 'calorie': $newMeasurement = CalorieMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $newDateAndTime); break;
+            case 'exercise': $newMeasurement = ExerciseMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $newDateAndTime); break;
+            case 'glucose': $newMeasurement = GlucoseMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $newDateAndTime); break;
+            case 'sleep': $newMeasurement = SleepMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $newDateAndTime); break;
+            case 'weight': $newMeasurement = WeightMeasurementsDB::getMeasurement($_SESSION['profile']->getUserName(), $newDateAndTime); break;
+            default:
+                $_SESSION['error'] = 'Unrecognized type of measurement : '.htmlspecialchars($args[1]);
+                return false;
+        }
+        
+        if (! is_null($newMeasurement)) {
+            $_SESSION['error'] = 'A measurement already exists with the specified new date and time. Change the date and time to a value unique for this type of measurement and try again.';
             return false;
         }
         
@@ -407,21 +423,12 @@ class MeasurementsController {
         }
         
         if ($newMeasurement->getErrorCount() > 0) {
-            if (isset($_POST['json'])) {
-                $_SESSION['error'] = 'Edit failed. Correct any errors and try again.';
-                return false;
-            }
-            else
-                self::setVars('danger', 'Edit failed. Correct any errors and try again.', 'show', 'all', 'show');
-        }
-        else {
-            if (isset($_POST['json']))
-                return true;
-            else
-                self::setVars('success', 'Measurement edited', 'show', 'all', 'show');
+            $_SESSION['error'] = 'An unknown error occured.';
+            return false;
         }
         
         unset($_SESSION['measurement']);
+        return true;
     }
     
     private static function delete() {
