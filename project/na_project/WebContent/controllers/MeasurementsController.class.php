@@ -160,57 +160,23 @@ class MeasurementsController {
     }
     
     private static function show() {
-        if (!isset($_SESSION['arguments'])) {
-            self::error('Error: arguments expected');
-            return;
-        }
+        // note that 'all' is being passed in $_SESSION['arguments'], but it no longer serves any purpose
         
-        switch ($_SESSION['arguments']) {
-            case 'bloodPressure':
-                $_SESSION['measurements']['bloodPressure'] = BloodPressureMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                MeasurementsView::show();
+        // retrieve all measurements options for the user
+        $_SESSION['allMeasurementsOptions'] = MeasurementsOptionsDB::getOptionsFor($_SESSION['profile']->getUserName());
+        
+        // find and store the MeasurementsOptions object for the active measurements options
+        foreach ($_SESSION['allMeasurementsOptions'] as $currentOptions) {
+            if ($currentOptions->isActive()) {
+                $_SESSION['activeMeasurementsOptions'] = $currentOptions;
                 break;
-            case 'calories':
-                $_SESSION['measurements']['calories'] = CalorieMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                CalorieMeasurementsView::show();
-                break;
-            case 'exercise':
-                $_SESSION['measurements']['exercise'] = ExerciseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                ExerciseMeasurementsView::show();
-                break;
-            case 'glucose':
-                $_SESSION['measurements']['glucose'] = GlucoseMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                GlucoseMeasurementsView::show();
-                break;
-            case 'sleep':
-                $_SESSION['measurements']['sleep'] = SleepMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                SleepMeasurementsView::show();
-                break;
-            case 'weight':
-                $_SESSION['measurements']['weight'] = WeightMeasurementsDB::getMeasurementsBy('userName', $_SESSION['profile']->getUserName());
-                WeightMeasurementsView::show();
-                break;
-            case 'all':
-                // retrieve all measurements options for the user
-                $allOptions = MeasurementsOptionsDB::getOptionsFor($_SESSION['profile']->getUserName());
-                if (empty($allOptions))
-                    $_SESSION['flash'] = 'Error: failed retrieviing your measurements options';
-                $_SESSION['allMeasurementsOptions'] = $allOptions;
-                
-                // find and store the MeasurementsOptions object for the active measurements options
-                $activeOptions = null;
-                foreach ($_SESSION['allMeasurementsOptions'] as $currentOptions) {
-                    if ($currentOptions->isActive())
-                        $activeOptions = $currentOptions;
-                }
-                if ($activeOptions === null)
-                    $_SESSION['flash'] = 'Error: failed to find your active measurements options';
-                $_SESSION['activeMeasurementsOptions'] = $activeOptions;
-                
-                // show the measurements page
-                MeasurementsView::show();
-                break;
+            }
         }
+        if (! isset($_SESSION['activeMeasurementsOptions']))
+            $_SESSION['flash'] = 'Error: failed to find your active measurements options';
+        
+        // show the measurements page
+        MeasurementsView::show();
     }
     
     private static function add() {

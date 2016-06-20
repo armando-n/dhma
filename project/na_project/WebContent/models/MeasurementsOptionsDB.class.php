@@ -4,6 +4,18 @@ class MeasurementsOptionsDB {
     const DATE_FORMAT = "Y-m-d";
     const FOREVER_AGO = '1970-01-01';
     
+    public static function createSessionOptions($userID) {
+        $resultData = new stdClass();
+        $resultData->optionsID = -1;
+        
+        $db = Database::getDB();
+        $stmt = $db->prepare('call defaultMeasurementsOptions(:userID)');
+        $stmt->execute(array(':userID' => $userID));
+        $resultData->optionsID = $db->lastInsertId('optionsID');
+        
+        return $resultData;
+    }
+    
     /* Adds the specified MeasurementsOptions object to the appropriate user in the database.
      * Returns a stdClass object containing the assigned optionsID on success,
      * or throws an exception on failure. */
@@ -18,7 +30,8 @@ class MeasurementsOptionsDB {
         $userID = self::findUserID($options->getUserName());
             
         // create and run database query
-        $stmt = Database::getDB()->prepare(
+        $db = Database::getDB();
+        $stmt = $db->prepare(
             "insert into MeasurementsOptions (userID, optionsName, isActive, activeMeasurement,
                 bloodPressureUnits, calorieUnits, exerciseUnits, glucoseUnits, sleepUnits, weightUnits,
                 timeFormat, durationFormat, showTooltips, showSecondaryCols, showDateCol, showTimeCol,

@@ -60,34 +60,36 @@ class SignupController {
             $_SESSION['profileSignup'] = $profile;
             self::alertMessage('danger', 'Sign up failed. Correct any errors and try again.');
             SignupView::show();
+            return;
         }
         
-        // user name available
-        else {
-            $userID = UsersDB::addUser($user);
-    
-            // add user to database failed. re-show signup view with error message
-            if ($user->getErrorCount() > 0 || $userID == -1) {
-                self::alertMessage('danger', 'Error: Failed to add member. Try again later.');
-                SignupView::show();
-                return;
-            }
-    
-            // add profile to database failed. delete user and re-show sign up view with error message
-            UserProfilesDB::addUserProfile($profile, $userID);
-            if ($profile->getErrorCount() > 0) {
-                self::alertMessage('danger', 'Error: Failed to add profile. Try again later.');
-                UsersDB::deleteUser($profile->getUserName());
-                SignupView::show();
-                return;
-            }
-    
-            // user and profile successfully added to database. show profile
-            unset($_SESSION['userSignup']);
-            unset($_SESSION['profileSignup']);
-            $_SESSION['profile'] = $profile;
-            self::redirect('profile_show', 'success', 'Welcome to DHMS! You can review your profile below. You can also go to the <a href="measurements_show_all">Measurements page</a> to start adding measurement information.');
+        // user name available; send add request to database
+        $userID = UsersDB::addUser($user);
+
+        // add user to database failed. re-show signup view with error message
+        if ($user->getErrorCount() > 0 || $userID == -1) {
+            self::alertMessage('danger', 'Error: Failed to add member. Try again later.');
+            SignupView::show();
+            return;
         }
+
+        // add profile to database failed. delete user and re-show sign up view with error message
+        UserProfilesDB::addUserProfile($profile, $userID);
+        if ($profile->getErrorCount() > 0) {
+            self::alertMessage('danger', 'Error: Failed to add profile. Try again later.');
+            UsersDB::deleteUser($profile->getUserName());
+            SignupView::show();
+            return;
+        }
+        
+        // create default measurements options for the user
+        MeasurementsOptionsDB::createSessionOptions($userID);
+
+        // user and profile successfully added to database. show profile
+        unset($_SESSION['userSignup']);
+        unset($_SESSION['profileSignup']);
+        $_SESSION['profile'] = $profile;
+        self::redirect('measurements_show', 'success', 'Welcome to DHMS! You can start adding measurement information by clicking the green &quot;Add&quot; button below. The measurements added will automatically appear in a table and in the chart(s) below.');
     }
     
 //     private static function loadImage() {

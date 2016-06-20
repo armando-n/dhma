@@ -37,17 +37,16 @@ class LoginController {
             return;
         }
         
-        // login success
-        else {
-            foreach ($_POST as $key => $value)
-                unset($_POST[$key]);
-            
-            if ($user->isAdministrator())
-                $_SESSION['admin'] = true; 
-                
-            $_SESSION['profile'] = $profile;
-            self::redirect('home', 'success', 'Welcome back, ' . $profile->getFirstName() . '!');
-        }
+        // login successful; clean up, store profile & admin flag, then show measurements page
+        
+        foreach ($_POST as $key => $value)
+            unset($_POST[$key]);
+        
+        $_SESSION['profile'] = $profile;
+        if ($user->isAdministrator())
+            $_SESSION['admin'] = true; 
+        
+        self::redirect('measurements_show', 'success', 'Welcome back, ' . $profile->getFirstName() . '!');
     }
     
     private static function logout() {
@@ -69,13 +68,13 @@ class LoginController {
         self::redirect('home', 'success', 'You have been successfully logged out');
     }
     
-    private static function redirect($control = '', $alertType = 'info', $message = '') {
+    private static function redirect($command = '', $alertType = 'info', $message = '') {
         if (strlen($message) > 0)
             self::alertMessage($alertType, $message);
-        if (!empty($control))
-            $control = '/' . $control;
+        if (!empty($command))
+            $command = '/' . $command;
     
-        header('Location: https://' . $_SERVER['HTTP_HOST'] . '/' . $_SESSION['base'] . $control);
+        header('Location: https://' . $_SERVER['HTTP_HOST'] . '/' . $_SESSION['base'] . $command);
     }
     
     private static function alertMessage($alertType, $alertMessage) {
