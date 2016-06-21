@@ -191,10 +191,10 @@ class SleepMeasurementsView {
 
 <!-- Charts Section -->
 <section id="sleep_charts_row" class="row">
-    <div id="firstChart_sleep" class="col-sm-6 firstChart">
+    <div id="firstChart_sleep" class="col-sm-6">
         <!-- Primary Chart -->
     </div>
-    <div id="secondChart_sleep" class="col-sm-6 secondChart">
+    <div id="secondChart_sleep" class="col-sm-6">
         <!-- Secondary Chart -->
     </div>
 </section>

@@ -45,6 +45,7 @@ create table MeasurementsOptions(
     glucoseUnits                  enum('mg/dL', 'mM') default 'mg/dL',
     sleepUnits                    enum('minutes') default 'minutes',
     weightUnits                   enum('lbs', 'kg') default 'lbs',
+    dateFormat                    enum('YYYY-MM-DD', 'MM-DD','MM/DD/YYYY', 'MM/DD','Mon DD, YYYY', 'Mon DD YY') default 'Mon DD, YYYY', -- last one is really Mon DD 'YY
     timeFormat                    enum('12 hour', '24 hour') default '12 hour',
     durationFormat                enum('minutes', 'hours', 'hours:minutes') default 'hours:minutes',
     showTooltips                  boolean default false,

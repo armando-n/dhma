@@ -191,10 +191,10 @@ class GlucoseMeasurementsView {
 
 <!-- Charts Section -->
 <section id="glucose_charts_row" class="row">
-    <div id="firstChart_glucose" class="col-sm-6 firstChart">
+    <div id="firstChart_glucose" class="col-sm-6">
         <!-- Primary Chart -->
     </div>
-    <div id="secondChart_glucose" class="col-sm-6 secondChart">
+    <div id="secondChart_glucose" class="col-sm-6">
         <!-- Secondary Chart -->
     </div>
 </section>
