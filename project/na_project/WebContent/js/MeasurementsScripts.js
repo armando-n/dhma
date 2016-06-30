@@ -995,7 +995,6 @@ var tables = (function() {
                         init: function (dt, node, config) {
                             node.attr('id', measType+'_add');
                             node.addClass('addMeasurement_btn');
-                            node.attr('data-toggle', 'tooltip').attr('title', 'Show a form for adding a new '+measType+' entry.').addClass('tooltip-help');
                             node.prepend('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;');
                         },
                         action: function (e, dt, node, config) {
@@ -1032,7 +1031,6 @@ var tables = (function() {
                         text: 'Edit',
                         init: function (dt, node, config) {
                             node.hide().attr('id', measType+ '_edit');
-                            node.attr('data-toggle', 'tooltip').attr('title', 'Show a form for editing the selected '+measType+' entry.').addClass('tooltip-help');
                             node.prepend('<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;');
                         },
                         action: function (e, dt, node, config) {
@@ -1065,7 +1063,6 @@ var tables = (function() {
                         text: 'Delete',
                         init: function(dt, node, config) {
                             node.hide().attr('id', measType+'_delete').addClass('btn-danger');
-                            node.attr('data-toggle', 'tooltip').attr('title', 'Delete the selected '+measType+' entry.').addClass('tooltip-help');
                             node.prepend('<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;');
                         },
                         action: function(e, dt, node, config) {
@@ -2025,10 +2022,7 @@ function initializePage() {
     $('#measurements_tabs a, #measurements_dropdown li a').click(tab_clicked);
 
     // add tooltips
-    $('.btn-group [data-toggle="tooltip"]').tooltip( { container: 'body' } );
     $('body').tooltip( { selector: '.dynamic-tooltip' } );
-    $('#measurements_dropdown').tooltip();
-    $('#measurements_nav [data-toggle="tooltip"]').tooltip();
     if (! $('#options_showTooltips').is(':checked'))
         $('.tooltip-help').tooltip('disable');
     else

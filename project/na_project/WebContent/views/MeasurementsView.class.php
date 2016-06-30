@@ -468,7 +468,7 @@ class MeasurementsView{
             <div class="col-sm-12">
                 <div class="panel panel-primary">
                     <!-- dropdown menu for extra small screens -->
-                    <div id="measurements_dropdown" class="dropdown tooltip-help" data-toggle="tooltip" title="Switch to a different measurement tracker">
+                    <div id="measurements_dropdown" class="dropdown">
                         <button type="button" class="dropdown-toggle btn btn-primary btn-block" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <span id="measurements_dropdown_label"><?php echo ucfirst($activeMeasurement); ?></span>
                             <span class="caret"></span>
@@ -487,12 +487,12 @@ class MeasurementsView{
                     <!-- tabs for small screens and larger -->
                     <div id="measurements_nav" class="panel-heading collapse navbar-collapse">
                         <ul id="measurements_tabs" class="nav nav-tabs nav-justified" role="tablist">
-                            <li class="measurement-tab<?=$glucoseActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#glucose" id="glucose_tab_btn" aria-controls="glucose" role="tab" data-toggle="tooltip" title="Switch to glucose tracker">Glucose</a></li>
-                            <li class="measurement-tab<?=$bloodPressureActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#bloodPressure" id="bloodPressure_tab_btn" aria-controls="bloodPressure" role="tab" data-toggle="tooltip" title="Switch to blood pressure tracker">Blood Pressure</a></li>
-                            <li class="measurement-tab<?=$weightActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#weight" id="weight_tab_btn" aria-controls="weight" role="tab" data-toggle="tooltip" title="Switch to weight tracker">Weight</a></li>
-                            <li class="measurement-tab<?=$caloriesActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#calories" id="calories_tab_btn" aria-controls="calories" role="tab" data-toggle="tooltip" title="Switch to calorie tracker">Calories</a></li>
-                            <li class="measurement-tab<?=$exerciseActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#exercise" id="exercise_tab_btn" aria-controls="exercise" role="tab" data-toggle="tooltip" title="Switch to exercise tracker">Exercise</a></li>
-                            <li class="measurement-tab<?=$sleepActive?>" role="presentation"><a class="measurement-tab tooltip-help" href="#sleep" id="sleep_tab_btn" aria-controls="sleep" role="tab" data-toggle="tooltip" title="Switch to sleep tracker">Sleep</a></li>
+                            <li class="measurement-tab<?=$glucoseActive?>" role="presentation"><a class="measurement-tab" href="#glucose" id="glucose_tab_btn" aria-controls="glucose" role="tab">Glucose</a></li>
+                            <li class="measurement-tab<?=$bloodPressureActive?>" role="presentation"><a class="measurement-tab" href="#bloodPressure" id="bloodPressure_tab_btn" aria-controls="bloodPressure" role="tab">Blood Pressure</a></li>
+                            <li class="measurement-tab<?=$weightActive?>" role="presentation"><a class="measurement-tab" href="#weight" id="weight_tab_btn" aria-controls="weight" role="tab">Weight</a></li>
+                            <li class="measurement-tab<?=$caloriesActive?>" role="presentation"><a class="measurement-tab" href="#calories" id="calories_tab_btn" aria-controls="calories" role="tab">Calories</a></li>
+                            <li class="measurement-tab<?=$exerciseActive?>" role="presentation"><a class="measurement-tab" href="#exercise" id="exercise_tab_btn" aria-controls="exercise" role="tab">Exercise</a></li>
+                            <li class="measurement-tab<?=$sleepActive?>" role="presentation"><a class="measurement-tab" href="#sleep" id="sleep_tab_btn" aria-controls="sleep" role="tab">Sleep</a></li>
                         </ul>
                     </div>
 
@@ -529,27 +529,27 @@ class MeasurementsView{
             <div class="col-sm-6">
                 <div id="first_chartType_btns" class="btn-group btn-group-justified" role="group">
                     <div class="btn-group" role="group">
-                        <button type="button" id="first_individual_chart_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_individual?>" data-toggle="tooltip" title="Show a chart of individual entries">
+                        <button type="button" id="first_individual_chart_btn" class="btn btn-primary btn-change-chart<?=$firstChart_individual?>">
                             Individual
                         </button>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" id="first_daily_chart_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_daily?>" data-toggle="tooltip" title="Show a chart of daily averages/totals">
+                        <button type="button" id="first_daily_chart_btn" class="btn btn-primary btn-change-chart<?=$firstChart_daily?>">
                             Daily
                         </button>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" id="first_weekly_chart_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_weekly?>" data-toggle="tooltip" title="Show a chart of weekly averages/totals">
+                        <button type="button" id="first_weekly_chart_btn" class="btn btn-primary btn-change-chart<?=$firstChart_weekly?>">
                             Weekly
                         </button>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" id="first_monthly_chart_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_monthly?>" data-toggle="tooltip" title="Show a chart of monthly averages/totals">
+                        <button type="button" id="first_monthly_chart_btn" class="btn btn-primary btn-change-chart<?=$firstChart_monthly?>">
                             Monthly
                         </button>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" id="first_yearly_chart_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$firstChart_yearly?>" data-toggle="tooltip" title="Show a chart of yearly averages/totals">
+                        <button type="button" id="first_yearly_chart_btn" class="btn btn-primary btn-change-chart<?=$firstChart_yearly?>">
                             Yearly
                         </button>
                     </div>
@@ -558,26 +558,26 @@ class MeasurementsView{
             <div class="col-sm-6">
                 <div id="second_chartType_btns" class="btn-group btn-group-justified" role="group">
                     <div class="btn-group" role="group">
-                        <button type="button" id="second_individual_chart_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_individual?>" data-toggle="tooltip" title="Show a chart of individual entries">
+                        <button type="button" id="second_individual_chart_btn" class="btn btn-primary btn-change-chart<?=$secondChart_individual?>">
                             Individual
                         </button>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" id="second_daily_chart_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_daily?>" data-toggle="tooltip" title="Show a chart of daily averages/totals">
+                        <button type="button" id="second_daily_chart_btn" class="btn btn-primary btn-change-chart<?=$secondChart_daily?>">
                             Daily
                         </button>
                     </div><div class="btn-group" role="group">
-                        <button type="button" id="second_weekly_chart_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_weekly?>" data-toggle="tooltip" title="Show a chart of weekly averages/totals">
+                        <button type="button" id="second_weekly_chart_btn" class="btn btn-primary btn-change-chart<?=$secondChart_weekly?>">
                             Weekly
                         </button>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" id="second_monthly_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_monthly?>" data-toggle="tooltip" title="Show a monthly of daily averages/totals">
+                        <button type="button" id="second_monthly_btn" class="btn btn-primary btn-change-chart<?=$secondChart_monthly?>">
                             Monthly
                         </button>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" id="second_yearly_chart_btn" class="btn btn-primary btn-change-chart tooltip-help<?=$secondChart_yearly?>" data-toggle="tooltip" title="Show a chart of yearly averages/totals">
+                        <button type="button" id="second_yearly_chart_btn" class="btn btn-primary btn-change-chart<?=$secondChart_yearly?>">
                             Yearly
                         </button>
                     </div>
