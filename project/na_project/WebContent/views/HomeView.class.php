@@ -11,6 +11,11 @@ class HomeView {
         ?>
 <div class="jumbotron">
     <h1>DHMA</h1>
+    <div>
+        <a href="demo" class="btn btn-info btn-lg">
+            Try Demo!
+        </a>
+    </div>
     <p>
         Track measurements important to diabetics: blood glucose levels,
         exercise, sleep, blood pressure, calories consumed, and weight.
