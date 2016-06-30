@@ -41,7 +41,7 @@ class HeaderView {
         endif; ?>
     <title>DHMA | <?= $title ?></title>
 </head>
-<body>
+<body><a name="top"></a>
 
 <!-- <h1 class="hidden"><?php// $title ?></h1> -->
 

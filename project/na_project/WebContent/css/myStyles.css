@@ -44,7 +44,7 @@ div.navbar-header > .changeTheme {
 	color: #444444;
 	background-color: #E5E5E5;
 	border: 1px solid #337ab7;
-	border-radius: 10px 0px 0px 10px;
+	border-radius: 6px 0px 0px 6px;
 	padding-left: 8px;
 	padding-right: 8px;
 	padding-top: 5px;
@@ -70,7 +70,7 @@ div.changeTheme > a.darkTheme, div.changeTheme > span.darkTheme, li.changeTheme 
     color: #C8C8C8;
     background-color: #222222;
     border: 1px solid #337ab7;
-    border-radius: 0px 10px 10px 0px;
+    border-radius: 0px 6px 6px 0px;
     padding-left: 8px;
     padding-right: 8px;
     padding-top: 5px;

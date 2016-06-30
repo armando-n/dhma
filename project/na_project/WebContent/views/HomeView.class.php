@@ -28,10 +28,8 @@ class HomeView {
                     This web site serves as a helpful tool which diabetics can use to assist
                     in keeping track of blood glucose level measurements, as well as a few
                     other measurements that are important to someone with diabetes. Charts
-                    allow you to see trends over time. Targets can be set. Recommendations
-                    from your doctor can be set up once and show up whenever your targets
-                    are not reached. The other measurements that can be kept track of are
-                    blood pressure, weight, calories consumed, sleep, and exercise.
+                    allow you to see trends over time. The other measurements that can be kept
+                    track of are blood pressure, weight, calories consumed, sleep, and exercise.
                 </p>
             </div>
             
@@ -79,8 +77,8 @@ class HomeView {
         <aside id="faq">
             <h2>Frequently Asked Questions</h2>
             <ul class="list-unstyled list-group">
-                <li class="list-group-item"><a href="faq#purpose">What is the purpose of this site??</a></li>
-                <li class="list-group-item"><a href="faq#privacy">Who can see my information?</a></li>
+                <li class="list-group-item"><a href="faq#use">Should I use this site?</a></li>
+                <li class="list-group-item"><a href="faq#purpose">Why does this site exist?</a></li>
             </ul>
             <a href="faq">More Questions ...</a>
         </aside>
