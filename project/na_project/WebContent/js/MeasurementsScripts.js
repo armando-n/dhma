@@ -658,104 +658,13 @@ var options = (function() {
 
     /** Stores the current session's options in the server database. */
     function storeChanges() {
+        // add some constants to some options until those features get fully implemented
         measurementsOptions.optionsName = 'Session';
         measurementsOptions.oldOptionsName = 'Session';
         measurementsOptions.isActive = true;
         measurementsOptions.showSecondaryCols = true;
         measurementsOptions.tableSize = 35;
         measurementsOptions.chartPlacement = 'bottom';
-        // var optionsData = {};
-        // var moddedActMeasurement = $('#activeMeasurement').text();
-        // if (moddedActMeasurement === 'calories')
-        //     moddedActMeasurement = 'calorie';
-        // optionsData.userName = $('#userName').text();
-        // optionsData.optionsName = 'Session';
-        // optionsData.oldOptionsName = 'Session';
-        // optionsData.isActive = true;
-        // optionsData.activeMeasurement = $('#activeMeasurement').text();
-        // optionsData.bloodPressureUnits = $('#bloodPressureUnits').text();
-        // optionsData.calorieUnits = $('#calorieUnits').text();
-        // optionsData.exerciseUnits = $('#exerciseUnits').text();
-        // optionsData.glucoseUnits = $('#glucoseUnits').text();
-        // optionsData.sleepUnits = $('#sleepUnits').text();
-        // optionsData.weightUnits = $('#weightUnits').text();
-        // optionsData.timeFormat = $('#options_timeFormat').val();
-        // optionsData.durationFormat = $('#durationFormat').text();
-        // optionsData.showTooltips = $('#options_showTooltips').is(':checked') ? true : false;
-        // optionsData.showSecondaryCols = true; // TODO change this when fully implemented
-        // optionsData.showDateCol = $('#colvis_date span:first').hasClass('glyphicon') ? true : false;
-        // optionsData.showTimeCol = $('#colvis_time span:first').hasClass('glyphicon') ? true : false;
-        // optionsData.showNotesCol = $('#colvis_notes span:first').hasClass('glyphicon') ? true : false;
-        // optionsData.numRows = $('#options_numRows').val();
-        // optionsData.showTable = $('#options_showTable').is(':checked') ? true : false;
-        // optionsData.tableSize = 35; // TODO change this when fully implemeneted
-        // optionsData.chartPlacement = 'bottom'; // TODO change this when fully implemented
-        // optionsData.showFirstChart = $('#options_showFirstChart').is(':checked') ? true : false;
-        // optionsData.showSecondChart = $('#options_showSecondChart').is(':checked') ? true : false;
-        // optionsData.firstChartType = $('#firstChartType').text();
-        // optionsData.secondChartType = $('#secondChartType').text();
-        // optionsData.chartLastYear = $('#options_chartLastYear').is(':checked') ? true : false;
-        // optionsData.chartGroupDays = $('#options_chartGroupDays').is(':checked') ? true : false;
-        // optionsData.individualBloodPressureChartStart = $('#individual_bloodPressure_chartStart').text();
-        // optionsData.individualBloodPressureChartEnd = $('#individual_bloodPressure_chartEnd').text();
-        // optionsData.dailyBloodPressureChartStart = $('#daily_bloodPressure_chartStart').text();
-        // optionsData.dailyBloodPressureChartEnd = $('#daily_bloodPressure_chartEnd').text();
-        // optionsData.weeklyBloodPressureChartStart = $('#weekly_bloodPressure_chartStart').text();
-        // optionsData.weeklyBloodPressureChartEnd = $('#weekly_bloodPressure_chartEnd').text();
-        // optionsData.monthlyBloodPressureChartStart = $('#monthly_bloodPressure_chartStart').text();
-        // optionsData.monthlyBloodPressureChartEnd = $('#monthly_bloodPressure_chartEnd').text();
-        // optionsData.yearlyBloodPressureChartStart = $('#yearly_bloodPressure_chartStart').text();
-        // optionsData.yearlyBloodPressureChartEnd = $('#yearly_bloodPressure_chartEnd').text();
-        // optionsData.individualCaloriesChartStart = $('#individual_calories_chartStart').text();
-        // optionsData.individualCaloriesChartEnd = $('#individual_calories_chartEnd').text();
-        // optionsData.dailyCaloriesChartStart = $('#daily_calories_chartStart').text();
-        // optionsData.dailyCaloriesChartEnd = $('#daily_calories_chartEnd').text();
-        // optionsData.weeklyCaloriesChartStart = $('#weekly_calories_chartStart').text();
-        // optionsData.weeklyCaloriesChartEnd = $('#weekly_calories_chartEnd').text();
-        // optionsData.monthlyCaloriesChartStart = $('#monthly_calories_chartStart').text();
-        // optionsData.monthlyCaloriesChartEnd = $('#monthly_calories_chartEnd').text();
-        // optionsData.yearlyCaloriesChartStart = $('#yearly_calories_chartStart').text();
-        // optionsData.yearlyCaloriesChartEnd = $('#yearly_calories_chartEnd').text();
-        // optionsData.individualExerciseChartStart = $('#individual_exercise_chartStart').text();
-        // optionsData.individualExerciseChartEnd = $('#individual_exercise_chartEnd').text();
-        // optionsData.dailyExerciseChartStart = $('#daily_exercise_chartStart').text();
-        // optionsData.dailyExerciseChartEnd = $('#daily_exercise_chartEnd').text();
-        // optionsData.weeklyExerciseChartStart = $('#weekly_exercise_chartStart').text();
-        // optionsData.weeklyExerciseChartEnd = $('#weekly_exercise_chartEnd').text();
-        // optionsData.monthlyExerciseChartStart = $('#monthly_exercise_chartStart').text();
-        // optionsData.monthlyExerciseChartEnd = $('#monthly_exercise_chartEnd').text();
-        // optionsData.yearlyExerciseChartStart = $('#yearly_exercise_chartStart').text();
-        // optionsData.yearlyExerciseChartEnd = $('#yearly_exercise_chartEnd').text();
-        // optionsData.individualGlucoseChartStart = $('#individual_glucose_chartStart').text();
-        // optionsData.individualGlucoseChartEnd = $('#individual_glucose_chartEnd').text();
-        // optionsData.dailyGlucoseChartStart = $('#daily_glucose_chartStart').text();
-        // optionsData.dailyGlucoseChartEnd = $('#daily_glucose_chartEnd').text();
-        // optionsData.weeklyGlucoseChartStart = $('#weekly_glucose_chartStart').text();
-        // optionsData.weeklyGlucoseChartEnd = $('#weekly_glucose_chartEnd').text();
-        // optionsData.monthlyGlucoseChartStart = $('#monthly_glucose_chartStart').text();
-        // optionsData.monthlyGlucoseChartEnd = $('#monthly_glucose_chartEnd').text();
-        // optionsData.yearlyGlucoseChartStart = $('#yearly_glucose_chartStart').text();
-        // optionsData.yearlyGlucoseChartEnd = $('#yearly_glucose_chartEnd').text();
-        // optionsData.individualSleepChartStart = $('#individual_sleep_chartStart').text();
-        // optionsData.individualSleepChartEnd = $('#individual_sleep_chartEnd').text();
-        // optionsData.dailySleepChartStart = $('#daily_sleep_chartStart').text();
-        // optionsData.dailySleepChartEnd = $('#daily_sleep_chartEnd').text();
-        // optionsData.weeklySleepChartStart = $('#weekly_sleep_chartStart').text();
-        // optionsData.weeklySleepChartEnd = $('#weekly_sleep_chartEnd').text();
-        // optionsData.monthlySleepChartStart = $('#monthly_sleep_chartStart').text();
-        // optionsData.monthlySleepChartEnd = $('#monthly_sleep_chartEnd').text();
-        // optionsData.yearlySleepChartStart = $('#yearly_sleep_chartStart').text();
-        // optionsData.yearlySleepChartEnd = $('#yearly_sleep_chartEnd').text();
-        // optionsData.individualWeightChartStart = $('#individual_weight_chartStart').text();
-        // optionsData.individualWeightChartEnd = $('#individual_weight_chartEnd').text();
-        // optionsData.dailyWeightChartStart = $('#daily_weight_chartStart').text();
-        // optionsData.dailyWeightChartEnd = $('#daily_weight_chartEnd').text();
-        // optionsData.weeklyWeightChartStart = $('#weekly_weight_chartStart').text();
-        // optionsData.weeklyWeightChartEnd = $('#weekly_weight_chartEnd').text();
-        // optionsData.monthlyWeightChartStart = $('#monthly_weight_chartStart').text();
-        // optionsData.monthlyWeightChartEnd = $('#monthly_weight_chartEnd').text();
-        // optionsData.yearlyWeightChartStart = $('#yearly_weight_chartStart').text();
-        // optionsData.yearlyWeightChartEnd = $('#yearly_weight_chartEnd').text();
 
         // send add request to server
         $.ajax({
@@ -1814,29 +1723,16 @@ var forms = (function() {
 
         // add date/time pickers for add/edit forms
         $('.date-picker').datetimepicker( {
-        // $('.add_measurement_section .date-picker').datetimepicker( {
             format: 'YYYY-MM-DD',
             defaultDate: Date.now(),
             showTodayButton: true,
             focusOnShow: false,
         } );
         $('.time-picker').datetimepicker( {
-        // $('.add_measurement_section .time-picker').datetimepicker( {
             format: 'h:mm a',
             defaultDate: Date.now(),
             focusOnShow: false,
         } );
-        // $('.edit_measurement_section .date-picker').datetimepicker( {
-        //     format: 'YYYY-MM-DD',
-        //     defaultDate: Date.now(),
-        //     showTodayButton: true,
-        //     focusOnShow: false,
-        // } );
-        // $('.edit_measurement_section .time-picker').datetimepicker( {
-        //     format: 'h:mm a',
-        //     defaultDate: Date.now(),
-        //     focusOnShow: false,
-        // } );
 
         // add today/now buttons to add/edit date/time form fields
         $('#measurement_sections .today-btn, #measurement_sections .now-btn').click(function() {
