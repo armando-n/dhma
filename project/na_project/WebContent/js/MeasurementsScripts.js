@@ -539,8 +539,13 @@ var options = (function() {
     }
 
     function showTable_clicked(event) {
+        var activeMeasurement = get('activeMeasurement');
+        if (activeMeasurement === 'calories')
+            activeMeasurement = 'calorie';
         set('showTable', ! get('showTable'));
         tables.toggleTables();
+        forms.hide(activeMeasurement, 'add');
+        forms.hide(activeMeasurement, 'edit');
         storeChanges();
     }
 
