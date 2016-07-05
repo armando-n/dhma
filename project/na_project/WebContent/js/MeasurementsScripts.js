@@ -960,7 +960,7 @@ var tables = (function() {
 
         // request data from server, then create and return table options object
         return {
-            ajax: { url: '/na_project/measurements_get_'+measType+'_all', dataSrc: '' },
+            ajax: { url: '/dhma/measurements_get_'+measType+'_all', dataSrc: '' },
             columns: columns,
             order: [[orderIndex, 'desc'], [orderIndex+1, 'desc']], // order descending by date then by time
             scrollY: '35vh',

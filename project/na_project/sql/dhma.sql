@@ -1,6 +1,6 @@
-drop database if exists na_projectdb;
-create database na_projectdb;
-use na_projectdb;
+drop database if exists dhmadb;
+create database dhmadb;
+use dhmadb;
 
 drop table if exists Users;
 create table Users(

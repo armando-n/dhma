@@ -4,7 +4,7 @@ $(document).ready(function() {
 	// initialize the members table
 	var membersTable = $('#membertable').DataTable( {
 		ajax: {
-			url: '/na_project/users_getAll',
+			url: '/dhma/users_getAll',
 			dataSrc: ''
 		},
 		columns: [
@@ -64,8 +64,8 @@ $(document).ready(function() {
 });
 
 function data_showPicture(data, type, row, meta) {
-	var result = '<a href="/na_project/profile_show_' +row.userName+ '">';
-	result = result +  '<img src="/na_project/images/profile/' +data+ '" class="img-circle" alt="' +row.userName+ '\'s profile picture" width="45" height="45" />';
+	var result = '<a href="/dhma/profile_show_' +row.userName+ '">';
+	result = result +  '<img src="/dhma/images/profile/' +data+ '" class="img-circle" alt="' +row.userName+ '\'s profile picture" width="45" height="45" />';
 	result = result + '</a>';
 	return result;
 }
@@ -75,18 +75,18 @@ function data_linkEmail(data, type, row, meta) {
 }
 
 function data_linkProfile(data, type, row, meta) {
-	return '<a href="/na_project/profile_show_' +row.userName+ '">' +data+ '</a>';
+	return '<a href="/dhma/profile_show_' +row.userName+ '">' +data+ '</a>';
 }
 
 function editMember(e, dt, button, config) {
 	var selectedRow = dt.row( {selected: true} ).data();
-	window.location.assign('/na_project/profile_edit_show_' +selectedRow.userName);
+	window.location.assign('/dhma/profile_edit_show_' +selectedRow.userName);
 }
 
 function deleteMember(e, dt, button, config) {
 	var rows = dt.rows( {selected: true} );
 	var rowCount = rows.count();
-	var url = '/na_project/members_delete';
+	var url = '/dhma/members_delete';
 	
 	if (window.confirm('Are you sure you want to delete the ' +rowCount+ ' selected member(s)?')) {
 		for (var i = 0; i < rowCount; i++)

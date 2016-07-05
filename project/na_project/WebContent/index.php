@@ -8,7 +8,7 @@ if (!isset($_SESSION)) {
     $_SESSION['styles'] = array();
     $_SESSION['scripts'] = array();
     $_SESSION['libraries'] = array();
-    $_SESSION['dbName'] = 'na_projectdb';
+    $_SESSION['dbName'] = 'dhmadb';
     $_SESSION['configFile'] = 'myConfig.ini';
 }
 

@@ -1,7 +1,7 @@
 <?php
 
 $numOfInserts = 730; // 1 insert per day, so also num of days
-$dbName = "na_projectdb";
+$dbName = "dhmadb";
 
 $outputStr = "use $dbName;\n";
 for ($i = 1; $i <= 10; $i++)

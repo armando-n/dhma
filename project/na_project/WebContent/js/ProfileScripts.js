@@ -18,7 +18,7 @@ function loadPicture() {
 	var latestFile = files[files.length-1];
 	
 	// show loading icon
-	$('#picture-wrapper').html('<img src="/na_project/images/icon_loading_small.gif" class="img-responsive" alt="Loading picture icon" />');
+	$('#picture-wrapper').html('<img src="/dhma/images/icon_loading_small.gif" class="img-responsive" alt="Loading picture icon" />');
 	
 	// make sure the file is an image
 	if (!latestFile.type.match('image.*')) {

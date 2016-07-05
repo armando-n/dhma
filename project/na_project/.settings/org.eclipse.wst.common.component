@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="na_project">
+    <wb-module deploy-name="dhma">
         <wb-resource deploy-path="/" source-path="/WebContent"/>
-        <property name="context-root" value="na_project"/>
+        <property name="context-root" value="dhma"/>
     </wb-module>
 </project-modules>
