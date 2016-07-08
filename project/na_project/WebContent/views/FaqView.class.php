@@ -16,7 +16,7 @@ class FaqView {
 
         <h2 class="hidden">Table of Contents</h2>
         <ul id="toc">
-            <li><a href="#use">Should I start using this site?</a></li>
+            <li><a href="#use">Should I use this site?</a></li>
             <li><a href="#purpose">Why does this site exist?</a></li>
             <li><a href="#function">What does this site do?</a></li>
             <li><a href="#privacy">Who can see my data?</a></li>
