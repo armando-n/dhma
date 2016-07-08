@@ -1,6 +1,6 @@
 #toc {
 	list-style-type: none;
-	font-size: 1.6em;
+	font-size: 1.3em;
 	padding-left: 0;
 	margin-bottom: 3em;
 }
@@ -9,14 +9,14 @@
 	margin-bottom: 0.5em;
 }
 
-.question {
+/*.question {
 	font-weight: bold;
 	font-size: 125%;
 	display: block;
-}
+}*/
 
-p {
+/*p {
 	font-size: 1.5em;
 	margin-top: 1.5em;
 	margin-bottom: 1.5em;
-}
+}*/
