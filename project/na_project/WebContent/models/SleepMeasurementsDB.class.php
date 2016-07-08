@@ -326,7 +326,7 @@ class SleepMeasurementsDB {
         try {
             $db = Database::getDB();
             $stmt = $db->prepare(
-            "delete from SLeepMeasurements
+            "delete from SleepMeasurements
                 where userID in
                     (select userID from Users
                     where userName = :userName)
