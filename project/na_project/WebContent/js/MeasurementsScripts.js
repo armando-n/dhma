@@ -1287,6 +1287,8 @@ var charts = (function() {
 
         // assign handlers for chart type buttons
         $('.btn-change-chart').click(viewNewChart);
+        
+        $('#refreshCharts').click(refreshAll);
     }
 
     /** Returns the actual Charts object for the first/second chart of the specified measurement type.
@@ -1303,9 +1305,12 @@ var charts = (function() {
      * @param {String} whichChart Must be either 'first' or 'second'.
      * @param {Object} newChartOptions Must be an object containing options for the HighCharts.Chart object initialization. */
     function setChart(measType, whichChart, newChartOptions) {
+        if (measType === 'calories')
+            measType = 'calorie';
         if (getChart(measType, whichChart) !== null)
             getChart(measType, whichChart).destroy();
-        chartObjs[measType+'_'+whichChart+'Chart'] = new Highcharts.Chart(newChartOptions);;
+
+        chartObjs[measType+'_'+whichChart+'Chart'] = new Highcharts.Chart(newChartOptions);
     }
 
     function getChartParent(measType, whichChart) {
@@ -1682,6 +1687,13 @@ var charts = (function() {
             whichChart
         );
     }
+    
+    function refreshAll() {
+        $.each(measurementTypes, function(index, measType) {
+            createChart(measType, options.get('firstChartType'), 'first');
+            createChart(measType, options.get('secondChartType'), 'second');
+        });
+    }
 
     return {
         /** get(measType, whichChart) : Returns the actual Charts object for the first/second chart of the specified measurement type.
@@ -1706,7 +1718,8 @@ var charts = (function() {
         /** refresh(changedMeasurements) : Goes through the chart's points for the specified chart types and converts any values that are not already in the units specified.
          * changedMeasurements must be an array of measurement type names, e.g. 'bloodPressure', 'exercise', etc. */
         updateUnits: updateUnits,
-        refresh: refreshChart
+        refresh: refreshChart,
+        refreshAll: refreshAll
     };
 })(); // end charts module
 

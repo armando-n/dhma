@@ -43,7 +43,7 @@ div.navbar-header > .changeTheme {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: #444444;
 	background-color: #E5E5E5;
-	border: 1px solid #337ab7;
+	border: 1px solid #133451;
 	border-radius: 6px 0px 0px 6px;
 	padding-left: 8px;
 	padding-right: 8px;
@@ -51,16 +51,19 @@ div.navbar-header > .changeTheme {
 	padding-bottom: 5px;
 	margin-top: 10px;
 	margin-bottom: 10px;
-}
-div.changeTheme > a.lightTheme:hover, li.changeTheme > a.lightTheme:hover {
-	background-color: #2669A3;
-	border-color: #C8C8C8;
 	text-decoration: none;
 }
-.changeTheme > span.lightTheme {
-	cursor: default;
+#main-nav .changeTheme > a.disable.lightTheme, #main-nav .changeTheme > a.disable.lightTheme:hover {
+    color: #AAAAAA;
+    cursor: default;
+    background-color: #2669A3;
 }
-div.changeTheme > a.darkTheme, div.changeTheme > span.darkTheme, li.changeTheme > a.darkTheme, li.changeTheme > span.darkTheme {
+#main-nav .changeTheme > a.disable.darkTheme, #main-nav .changeTheme > a.disable.darkTheme:hover {
+    color: #222222;
+    cursor: default;
+    background-color: #2669A3;
+}
+.changeTheme > .darkTheme {
     display: inline-block;
     line-height: 20px;
     font-variant: small-caps;
@@ -69,7 +72,7 @@ div.changeTheme > a.darkTheme, div.changeTheme > span.darkTheme, li.changeTheme 
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #C8C8C8;
     background-color: #222222;
-    border: 1px solid #337ab7;
+    border: 1px solid #133451;
     border-radius: 0px 6px 6px 0px;
     padding-left: 8px;
     padding-right: 8px;
@@ -77,14 +80,7 @@ div.changeTheme > a.darkTheme, div.changeTheme > span.darkTheme, li.changeTheme 
     padding-bottom: 5px;
     margin-top: 10px;
     margin-bottom: 10px;
-}
-div.changeTheme > a.darkTheme:hover, li.changeTheme > a.darkTheme:hover {
-	background-color: #2669A3;
-	border-color: #000000;
-	text-decoration: none;
-}
-.changeTheme > span.darkTheme {
-    cursor: default;
+    text-decoration: none;
 }
 
 /* extra small devices */

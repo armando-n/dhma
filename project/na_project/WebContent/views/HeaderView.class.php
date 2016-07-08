@@ -6,10 +6,19 @@ class HeaderView {
         if (isset($_SESSION['profile']) && $_SESSION['profile']->getTheme() == 'dark') {
             $bootstrap_css = '/css/bootstrap.dark.min.css';
             $logo = '/images/logo_dark.png';
+            $disabledLight = '';
+            $disabledDark = ' disable';
+            $titleLight = 'Enable the light theme';
+            $titleDark = 'The dark theme is enabled';
         } else {
             $bootstrap_css = '/css/bootstrap.min.css';
             $logo = '/images/logo.png';
+            $disabledLight = ' disable';
+            $disabledDark = '';
+            $titleLight = 'The light theme is enabled';
+            $titleDark = 'Enable the dark theme';
         }
+        
 ?><!DOCTYPE html>
 <html>
 <head>
@@ -58,12 +67,8 @@ class HeaderView {
             </button>
             <img src="//<?= $host_base . $logo ?>" id="brand-image" class="img-responsive" alt="DHMA Logo" width="99" height="58" /><?php
                 if (isset($_SESSION['profile'])): ?>
-            	<div class="changeTheme"><?php
-                    if ($_SESSION['profile']->getTheme() === 'light'): ?>
-                	<span class="lightTheme" title="The light site theme is active">light</span><a href="profile_theme_dark" class="darkTheme" title="Enable the dark site theme">dark</a><?php
-                	else: ?>
-                	<a href="profile_theme_light" class="lightTheme" title="Enable the light site theme">light</a><span class="darkTheme" title="The dark site theme is active">dark</span><?php
-                	endif; ?>
+            	<div class="changeTheme">
+                	<a href="profile_theme_light" class="lightTheme<?=$disabledLight?>" title="<?=$titleLight?>">light</a><a href="profile_theme_dark" class="darkTheme<?=$disabledDark?>" title="<?=$titleDark?>">dark</a>
             	</div><?php
             	endif; ?>
         </div>
@@ -82,12 +87,8 @@ class HeaderView {
             </ul>
             <ul class="nav navbar-nav navbar-right"><?php
                 if (isset($_SESSION['profile'])): ?>
-                <li class="changeTheme"><?php
-                    if ($_SESSION['profile']->getTheme() === 'light'): ?>
-                	<span class="lightTheme" data-toggle="tooltip" data-placement="bottom" title="The light site theme is active">light</span><a href="profile_theme_dark" class="darkTheme" data-toggle="tooltip" data-placement="bottom" title="Enable the dark site theme">dark</a><?php
-                	else: ?>
-                	<a href="profile_theme_light" class="lightTheme" data-toggle="tooltip" data-placement="bottom" title="Enable the light site theme">light</a><span class="darkTheme" data-toggle="tooltip" data-placement="bottom" title="The dark site theme is active">dark</span><?php
-                	endif; ?>
+                <li class="changeTheme">
+                	<a href="profile_theme_light" class="lightTheme<?=$disabledLight?>" data-toggle="tooltip" data-placement="bottom" title="<?=$titleLight?>">light</a><a href="profile_theme_dark" class="darkTheme<?=$disabledDark?>" data-toggle="tooltip" data-placement="bottom" title="<?=$titleDark?>">dark</a>
             	</li>
                 <li><a href="login_logout">Logout</a></li><?php
                 else: ?> 

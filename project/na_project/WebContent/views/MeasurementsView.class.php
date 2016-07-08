@@ -454,6 +454,8 @@ class MeasurementsView{
                                         <div id="monthly_weight_chartEnd"><?=$activeOptions->getMonthlyWeightChartEnd()?></div>
                                         <div id="yearly_weight_chartStart"><?=$activeOptions->getYearlyWeightChartStart()?></div>
                                         <div id="yearly_weight_chartEnd"><?=$activeOptions->getYearlyWeightChartEnd()?></div>
+                                        
+                                        <button type="button" id="refreshCharts">Refresh Charts</button>
                                     </section>
 
                             </div>
