@@ -28,15 +28,15 @@ Highcharts.theme = {
 	},
 	title: {
 		style: {
-			color: '#E0E0E3',
-			textTransform: 'uppercase'/*,
+			color: '#E0E0E3'/*,
+			textTransform: 'uppercase',
 			fontSize: '20px'*/
 		}
 	},
 	subtitle: {
 		style: {
-			color: '#E0E0E3',
-			textTransform: 'uppercase'
+			color: '#E0E0E3'/*,
+			textTransform: 'uppercase'*/
 		}
 	},
 	xAxis: {
@@ -66,7 +66,7 @@ Highcharts.theme = {
 		lineColor: '#707073',
 		minorGridLineColor: '#505053',
 		tickColor: '#707073',
-		tickWidth: 1,
+		//tickWidth: 1,
 		title: {
 			style: {
 				color: '#A0A0A3'

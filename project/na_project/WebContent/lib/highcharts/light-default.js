@@ -10,8 +10,8 @@ Highcharts.theme = {
    },
    title: {
       style: {
-            color: '#274b6d',//#3E576F',
-            fontSize: '16px'
+            color: '#274b6d'//,#3E576F',
+            //fontSize: '16px'
       }
    },
    subtitle: {
@@ -20,7 +20,7 @@ Highcharts.theme = {
        }
    },
    xAxis: {
-      gridLineWidth: 0,
+      //gridLineWidth: 0,
       lineColor: '#C0D0E0',
       tickColor: '#C0D0E0',
       labels: {
@@ -39,30 +39,30 @@ Highcharts.theme = {
       }
    },
    yAxis: {
-      minorTickInterval: null,
+      //minorTickInterval: null,
       lineColor: '#C0D0E0',
-      lineWidth: 1,
-      tickWidth: 1,
+      //lineWidth: 1,
+      //tickWidth: 1,
       tickColor: '#C0D0E0',
       labels: {
          style: {
             color: '#666',
-            cursor: 'default',
-            fontSize: '11px',
-            lineHeight: '14px'
+            cursor: 'default'//,
+            //fontSize: '11px',
+            //lineHeight: '14px'
          }
       },
       title: {
          style: {
-                color: '#4d759e',
-                fontWeight: 'bold'
+                color: '#4d759e'//,
+                //fontWeight: 'bold'
         }
       }
    },
    legend: {
       itemStyle: {
-            color: '#274b6d',
-            fontSize: '12px'
+            color: '#274b6d'//,
+            //fontSize: '12px'
       },
       itemHoverStyle: {
          color: '#000'
