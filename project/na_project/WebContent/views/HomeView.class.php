@@ -13,7 +13,7 @@ class HomeView {
     <h1>DHMA</h1>
     <div>
         <a href="demo" class="btn btn-info btn-lg">
-            Try Demo!
+            View Demo!
         </a>
     </div>
     <p>
