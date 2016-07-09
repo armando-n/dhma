@@ -47,31 +47,23 @@ class HomeView {
                 </div>
             </div>
             <div class="row">    
-                <div class="col-sm-6">
-                    <a href="images/screenshots/ss_measurements-default_light.png">
-                        <img src="images/screenshots/ss_measurements-default_light.png" alt="Screenshot of default measurements view (light)" class="img-responsive img-thumbnail" />
+                <div class="col-sm-6 col-lg-4">
+                    <a href="images/screenshots/ss_measurements-default.png">
+                        <img src="images/screenshots/ss_measurements-default.png" alt="Screenshot of default measurements view" class="img-responsive img-thumbnail" />
                     </a>
-                    <p>Measurements View (light)</p>
+                    <p>Measurements View</p>
                 </div>
-                <div class="col-sm-6">
-                    <a href="images/screenshots/ss_measurements-default_dark.png">
-                        <img src="images/screenshots/ss_measurements-default_dark.png" alt="Screenshot of default measurements view (dark)" class="img-responsive img-thumbnail" />
+                <div class="col-sm-6 col-lg-4">
+                    <a href="images/screenshots/ss_measurements-edit.png">
+                        <img src="images/screenshots/ss_measurements-edit.png" alt="Screenshot of edit measurements view" class="img-responsive img-thumbnail" />
                     </a>
-                    <p>Measurements View (dark)</p>
+                    <p>Editing Measurements</p>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <a href="images/screenshots/ss_measurements-edit_light.png">
-                        <img src="images/screenshots/ss_measurements-edit_light.png" alt="Screenshot of edit measurements view (light)" class="img-responsive img-thumbnail" />
+                <div class="col-sm-6 col-sm-offset-3 col-lg-4 col-lg-offset-0">
+                    <a href="images/screenshots/ss_measurements-options.png">
+                        <img src="images/screenshots/ss_measurements-options.png" alt="Screenshot of measurements options view" class="img-responsive img-thumbnail" />
                     </a>
-                    <p>Editing Measurements (light)</p>
-                </div>
-                <div class="col-sm-6">
-                    <a href="images/screenshots/ss_measurements-edit_dark.png">
-                        <img src="images/screenshots/ss_measurements-edit_dark.png" alt="Screenshot of edit measurements view (dark)" class="img-responsive img-thumbnail" />
-                    </a>
-                    <p>Editing Measurements (dark)</p>
+                    <p>Measurements Options</p>
                 </div>
             </div>
         </section>
