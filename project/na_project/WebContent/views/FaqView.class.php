@@ -36,6 +36,7 @@ class FaqView {
         <p>
             This site was created for an assignment in a Web Technologies course I took while studying to earn a degree in Computer Science.
             Although it's not fully fleshed out yet, it is on the internet so that potential employers and the curious can check it out.
+            More details about the course project this was created for can be found at the <a href="https://manprojects.me/dhma-project">DHMA Project page</a> on my projects site.
         </p>
     
         <h3 id="function">What does this site do?</h3>
