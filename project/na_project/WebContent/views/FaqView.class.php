@@ -54,7 +54,7 @@ class FaqView {
         <p>
             The measurement tracking functions are all that are currently provided. In the short term, more health tracking features
             and measurements will be added. In the distant future, I hope to allow you to enhance the calorie tracking function to
-            allow you to create meal plans, specify the calorie content of foods you eat, and share this information with other memembers.
+            allow you to create meal plans, specify the calorie content of foods you eat, and share this information with other members.
         </p>
 
         <p><a href="#top">Back to Top</a></p>
