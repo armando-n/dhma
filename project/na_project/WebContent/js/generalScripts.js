@@ -71,12 +71,10 @@ function changeTheme() {
 				// remove and replace js for charts old theme
 				var control = window.location.pathname.split('/')[2];
 				if (control.includes('measurements') || control === 'demo') {
-				    $('body').hide();
-				    $('script[src*="'+jsRemove+'"]').remove();
-    				$('<script src="lib/highcharts/'+js+'"></script>').appendTo('head');
-    				$('#refreshCharts').click();
-    				$('body').show();
-                }
+					$('script[src*="'+jsRemove+'"]').remove();
+					$('<script src="lib/highcharts/'+js+'"></script>').appendTo('head');
+					$('#refreshCharts').click();
+	   	   	   	}
                 
                 // replace brand image
                 $('#brand-image').attr('src', urlBase+img);

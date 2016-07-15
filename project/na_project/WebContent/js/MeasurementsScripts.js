@@ -1311,6 +1311,7 @@ var charts = (function() {
             getChart(measType, whichChart).destroy();
 
         chartObjs[measType+'_'+whichChart+'Chart'] = new Highcharts.Chart(newChartOptions);
+        return chartObjs[measType+'_'+whichChart+'Chart'];
     }
 
     function getChartParent(measType, whichChart) {
@@ -1326,8 +1327,9 @@ var charts = (function() {
     /** Create a chart with the specified properties.
      * @param measType The type of measurement, e.g. 'bloodPressure', 'exercise', etc.
      * @param chartType A.K.A. chartType, e.g. 'individual', 'weekly', etc.
-     * @param whichChart Either 'first' or 'second' */
-    function createChart(measType, chartType, whichChart) {
+     * @param whichChart Either 'first' or 'second'
+     * @param reflow If true, the active charts will be reflowed after this chart is created. */
+    function createChart(measType, chartType, whichChart, reflow) {
         var avgOrTotal = '';
         if (chartType !== 'individual')
             avgOrTotal = ($.inArray(measType, cumulativeMeasurements) === -1) ? ' Averages' : ' Totals';
@@ -1362,7 +1364,11 @@ var charts = (function() {
                 var title = chartTypeStrings[chartType]['title']+avgOrTotal;
                 var subtitle = '<span class="link-text '+whichChart+'-chart-start-date tooltip-help dynamic-tooltip" data-toggle="tooltip" data-placement="left" title="Modify start date">'+startDate+'</span> to <span class="link-text '+whichChart+'-chart-end-date tooltip-help dynamic-tooltip" data-toggle="tooltip" data-placement="right" title="Modify end date">'+endDate+'</span>';
                 var chartOpts = chartOptions(measType, title, data, chartTypeStrings[chartType]['type'], subtitle, whichChart);
-                setChart(measType, whichChart, chartOpts);
+                var chart = setChart(measType, whichChart, chartOpts);
+                if (reflow) {
+                    getChart(options.get('activeMeasurement'), 'first').reflow();
+                    getChart(options.get('activeMeasurement'), 'second').reflow();
+                }
             },
             'error': function() { alert('Error retreiving measurements'); }
         });
@@ -1689,9 +1695,10 @@ var charts = (function() {
     }
     
     function refreshAll() {
+        var lastIndex = measurementTypes.length - 1;
         $.each(measurementTypes, function(index, measType) {
-            createChart(measType, options.get('firstChartType'), 'first');
-            createChart(measType, options.get('secondChartType'), 'second');
+            createChart(measType, options.get('firstChartType'), 'first', false);
+            createChart(measType, options.get('secondChartType'), 'second', index === lastIndex);
         });
     }
 
@@ -1702,8 +1709,9 @@ var charts = (function() {
         get: getChart,
         /** init() : Creates first and second charts for all measurement types using the current options for chartType and start/end dates. */
         init: initialize,
-        /** create(measType, chartType, whichChart) : Create a chart with the specified properties.
-         * chartType A.K.A. chartType examples: 'individual', 'weekly', etc. whichChart is either 'firstChart' or 'secondChart' */
+        /** create(measType, chartType, whichChart, reflow) : Create a chart with the specified properties.
+         * chartType examples: 'individual', 'weekly', etc. whichChart is either 'firstChart' or 'secondChart'.
+         * reflow is boolean, and if true, the active charts will be reflowed after this chart is created. */
         create: createChart,
         /** isVisible(whichCharts) : Returns true if the specified charts are visible, false otherwise. whichCharts must be either 'first' or 'second'. */
         isVisible: isVisible,
