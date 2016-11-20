@@ -38,6 +38,7 @@ class DemoController {
             $_SESSION['profile'] = $profile;
             $_SESSION['action'] = 'show';
             $_SESSION['arguments'] = 'all';
+            self::alertMessage('info', "Feel free to play around and add/edit/delete any data you'd like.  Although this app normally remembers your changes from one login to the next, I personally reset the data and options of this demo account every couple of days or so.  I hope you like what you see. - Armando");
             MeasurementsController::run();
         }
     }
